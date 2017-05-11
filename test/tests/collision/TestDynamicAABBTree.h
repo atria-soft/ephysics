@@ -27,7 +27,7 @@
 #define TEST_DYNAMIC_AABB_TREE_H
 
 // Libraries
-#include <ephysics/Test.h>
+#include <test/Test.h>
 #include <ephysics/collision/broadphase/DynamicAABBTree.h>
 #include <vector>
 

@@ -35,5 +35,6 @@ def configure(target, my_module):
 	    'gtest',
 	    'test-debug'
 	    ])
+	my_module.add_path(".")
 	return True
 

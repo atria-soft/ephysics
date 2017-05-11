@@ -27,7 +27,7 @@
 #define TEST_TRANSFORM_H
 
 // Libraries
-#include <ephysics/Test.h>
+#include <test/Test.h>
 #include <ephysics/mathematics/Transform.h>
 
 /// Reactphysics3D namespace

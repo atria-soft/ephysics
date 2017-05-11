@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/SliderJoint.h>
+#include <ephysics/constraint/SliderJoint.h>
 
 using namespace reactphysics3d;
 

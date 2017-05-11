@@ -27,7 +27,7 @@
 #define TEST_RAYCAST_H
 
 // Libraries
-#include <ephysics/Test.h>
+#include <test/Test.h>
 #include <ephysics/engine/CollisionWorld.h>
 #include <ephysics/body/CollisionBody.h>
 #include <ephysics/collision/shapes/BoxShape.h>

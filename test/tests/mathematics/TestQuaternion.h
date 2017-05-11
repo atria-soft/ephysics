@@ -27,7 +27,7 @@
 #define TEST_QUATERNION_H
 
 // Libraries
-#include <ephysics/Test.h>
+#include <test/Test.h>
 #include <ephysics/mathematics/Quaternion.h>
 
 /// Reactphysics3D namespace

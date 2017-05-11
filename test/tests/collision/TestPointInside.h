@@ -27,7 +27,7 @@
 #define TEST_POINT_INSIDE_H
 
 // Libraries
-#include <ephysics/Test.h>
+#include <test/Test.h>
 #include <ephysics/collision/shapes/BoxShape.h>
 #include <ephysics/collision/shapes/SphereShape.h>
 #include <ephysics/collision/shapes/CapsuleShape.h>

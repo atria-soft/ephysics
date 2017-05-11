@@ -24,19 +24,19 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/TestSuite.h>
-#include <ephysics/tests/mathematics/TestVector2.h>
-#include <ephysics/tests/mathematics/TestVector3.h>
-#include <ephysics/tests/mathematics/TestTransform.h>
-#include <ephysics/tests/mathematics/TestQuaternion.h>
-#include <ephysics/tests/mathematics/TestMatrix2x2.h>
-#include <ephysics/tests/mathematics/TestMatrix3x3.h>
-#include <ephysics/tests/mathematics/TestMathematicsFunctions.h>
-#include <ephysics/tests/collision/TestPointInside.h>
-#include <ephysics/tests/collision/TestRaycast.h>
-#include <ephysics/tests/collision/TestCollisionWorld.h>
-#include <ephysics/tests/collision/TestAABB.h>
-#include <ephysics/tests/collision/TestDynamicAABBTree.h>
+#include <test/TestSuite.h>
+#include <test/tests/mathematics/TestVector2.h>
+#include <test/tests/mathematics/TestVector3.h>
+#include <test/tests/mathematics/TestTransform.h>
+#include <test/tests/mathematics/TestQuaternion.h>
+#include <test/tests/mathematics/TestMatrix2x2.h>
+#include <test/tests/mathematics/TestMatrix3x3.h>
+#include <test/tests/mathematics/TestMathematicsFunctions.h>
+#include <test/tests/collision/TestPointInside.h>
+#include <test/tests/collision/TestRaycast.h>
+#include <test/tests/collision/TestCollisionWorld.h>
+#include <test/tests/collision/TestAABB.h>
+#include <test/tests/collision/TestDynamicAABBTree.h>
 
 using namespace reactphysics3d;
 

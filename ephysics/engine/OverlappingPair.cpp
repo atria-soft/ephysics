@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/OverlappingPair.h>
+#include <ephysics/engine/OverlappingPair.h>
 
 using namespace reactphysics3d;
 
