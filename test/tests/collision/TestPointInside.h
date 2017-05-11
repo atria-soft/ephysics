@@ -27,13 +27,13 @@
 #define TEST_POINT_INSIDE_H
 
 // Libraries
-#include "Test.h"
-#include "collision/shapes/BoxShape.h"
-#include "collision/shapes/SphereShape.h"
-#include "collision/shapes/CapsuleShape.h"
-#include "collision/shapes/ConeShape.h"
-#include "collision/shapes/ConvexMeshShape.h"
-#include "collision/shapes/CylinderShape.h"
+#include <ephysics/Test.h>
+#include <ephysics/collision/shapes/BoxShape.h>
+#include <ephysics/collision/shapes/SphereShape.h>
+#include <ephysics/collision/shapes/CapsuleShape.h>
+#include <ephysics/collision/shapes/ConeShape.h>
+#include <ephysics/collision/shapes/ConvexMeshShape.h>
+#include <ephysics/collision/shapes/CylinderShape.h>
 
 /// Reactphysics3D namespace
 namespace reactphysics3d {

@@ -27,8 +27,8 @@
 #define TEST_DYNAMIC_AABB_TREE_H
 
 // Libraries
-#include "Test.h"
-#include "collision/broadphase/DynamicAABBTree.h"
+#include <ephysics/Test.h>
+#include <ephysics/collision/broadphase/DynamicAABBTree.h>
 #include <vector>
 
 /// Reactphysics3D namespace

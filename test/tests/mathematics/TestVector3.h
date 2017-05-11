@@ -27,8 +27,8 @@
 #define TEST_VECTOR3_H
 
 // Libraries
-#include "Test.h"
-#include "mathematics/Vector3.h"
+#include <ephysics/Test.h>
+#include <ephysics/mathematics/Vector3.h>
 
 /// Reactphysics3D namespace
 namespace reactphysics3d {

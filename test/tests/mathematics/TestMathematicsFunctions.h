@@ -27,8 +27,8 @@
 #define TEST_MATHEMATICS_FUNCTIONS_H
 
 // Libraries
-#include "Test.h"
-#include "mathematics/mathematics_functions.h"
+#include <ephysics/Test.h>
+#include <ephysics/mathematics/mathematics_functions.h>
 
 /// Reactphysics3D namespace
 namespace reactphysics3d {

@@ -27,18 +27,18 @@
 #define TEST_RAYCAST_H
 
 // Libraries
-#include "Test.h"
-#include "engine/CollisionWorld.h"
-#include "body/CollisionBody.h"
-#include "collision/shapes/BoxShape.h"
-#include "collision/shapes/SphereShape.h"
-#include "collision/shapes/CapsuleShape.h"
-#include "collision/shapes/ConeShape.h"
-#include "collision/shapes/ConvexMeshShape.h"
-#include "collision/shapes/CylinderShape.h"
-#include "collision/shapes/TriangleShape.h"
-#include "collision/shapes/ConcaveMeshShape.h"
-#include "collision/shapes/HeightFieldShape.h"
+#include <ephysics/Test.h>
+#include <ephysics/engine/CollisionWorld.h>
+#include <ephysics/body/CollisionBody.h>
+#include <ephysics/collision/shapes/BoxShape.h>
+#include <ephysics/collision/shapes/SphereShape.h>
+#include <ephysics/collision/shapes/CapsuleShape.h>
+#include <ephysics/collision/shapes/ConeShape.h>
+#include <ephysics/collision/shapes/ConvexMeshShape.h>
+#include <ephysics/collision/shapes/CylinderShape.h>
+#include <ephysics/collision/shapes/TriangleShape.h>
+#include <ephysics/collision/shapes/ConcaveMeshShape.h>
+#include <ephysics/collision/shapes/HeightFieldShape.h>
 
 /// Reactphysics3D namespace
 namespace reactphysics3d {

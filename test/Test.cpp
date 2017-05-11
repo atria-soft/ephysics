@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include "Test.h"
+#include <ephysics/Test.h>
 #include <typeinfo>
 #include <iomanip>
 

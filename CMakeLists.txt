@@ -183,7 +183,7 @@ SET (REACTPHYSICS3D_SOURCES
 ADD_LIBRARY(reactphysics3d STATIC ${REACTPHYSICS3D_SOURCES})
 
 # If we need to compile the testbed application
-add_subdirectory(testbed/)
+add_subdirectory(tools/testbed/)
 
 # If we need to compile the tests
 add_subdirectory(test/)

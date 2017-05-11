@@ -27,7 +27,7 @@
 #define TEST_SUITE_H
 
 // Libraries
-#include "Test.h"
+#include <ephysics/Test.h>
 #include <vector>
 #include <stdexcept>
 

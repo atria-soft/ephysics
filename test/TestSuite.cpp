@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Librairies
-#include "TestSuite.h"
+#include <ephysics/TestSuite.h>
 
 using namespace reactphysics3d;
 
