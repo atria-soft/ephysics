@@ -169,7 +169,8 @@ def configure(target, my_module):
 	    'etk',
 	    'ememory'
 	    ])
-	
+	# TODO: Remove this ...
+	my_module.add_flag('c++', "-Wno-overloaded-virtual", export=True)
 	my_module.add_path(".")
 	return True
 

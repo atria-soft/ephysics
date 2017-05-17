@@ -118,49 +118,56 @@ DynamicsWorld::~DynamicsWorld() {
  */
 void DynamicsWorld::update(decimal timeStep) {
 
-#ifdef IS_PROFILING_ACTIVE
-    // Increment the frame counter of the profiler
-    Profiler::incrementFrameCounter();
-#endif
+	#ifdef IS_PROFILING_ACTIVE
+		// Increment the frame counter of the profiler
+		Profiler::incrementFrameCounter();
+	#endif
 
-    PROFILE("DynamicsWorld::update()");
-
-    mTimeStep = timeStep;
-
-    // Notify the event listener about the beginning of an internal tick
-    if (mEventListener != NULL) mEventListener->beginInternalTick();
-
-    // Reset all the contact manifolds lists of each body
-    resetContactManifoldListsOfBodies();
-
-    // Compute the collision detection
-    mCollisionDetection.computeCollisionDetection();
-
-    // Compute the islands (separate groups of bodies with constraints between each others)
-    computeIslands();
-
-    // Integrate the velocities
-    integrateRigidBodiesVelocities();
-
-    // Solve the contacts and constraints
-    solveContactsAndConstraints();
-
-    // Integrate the position and orientation of each body
-    integrateRigidBodiesPositions();
-
-    // Solve the position correction for constraints
-    solvePositionCorrection();
-
-    // Update the state (positions and velocities) of the bodies
-    updateBodiesState();
-
-    if (mIsSleepingEnabled) updateSleepingBodies();
-
-    // Notify the event listener about the end of an internal tick
-    if (mEventListener != NULL) mEventListener->endInternalTick();
-
-    // Reset the external force and torque applied to the bodies
-    resetBodiesForceAndTorque();
+	PROFILE("DynamicsWorld::update()");
+	
+	mTimeStep = timeStep;
+	
+	// Notify the event listener about the beginning of an internal tick
+	if (mEventListener != NULL) {
+		mEventListener->beginInternalTick();
+	}
+	
+	// Reset all the contact manifolds lists of each body
+	resetContactManifoldListsOfBodies();
+	
+	if (mRigidBodies.size() == 0) {
+		// no rigid body ==> no process to do ...
+		return;
+	}
+	
+	// Compute the collision detection
+	mCollisionDetection.computeCollisionDetection();
+	
+	// Compute the islands (separate groups of bodies with constraints between each others)
+	computeIslands();
+	
+	// Integrate the velocities
+	integrateRigidBodiesVelocities();
+	
+	// Solve the contacts and constraints
+	solveContactsAndConstraints();
+	
+	// Integrate the position and orientation of each body
+	integrateRigidBodiesPositions();
+	
+	// Solve the position correction for constraints
+	solvePositionCorrection();
+	
+	// Update the state (positions and velocities) of the bodies
+	updateBodiesState();
+	
+	if (mIsSleepingEnabled) updateSleepingBodies();
+	
+	// Notify the event listener about the end of an internal tick
+	if (mEventListener != NULL) mEventListener->endInternalTick();
+	
+	// Reset the external force and torque applied to the bodies
+	resetBodiesForceAndTorque();
 }
 
 // Integrate position and orientation of the rigid bodies.

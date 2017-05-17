@@ -44,10 +44,10 @@ CubesScene::CubesScene(const std::string& name)
     rp3d::Vector3 gravity(0, rp3d::decimal(-9.81), 0);
 
     // Create the dynamics world for the physics simulation
-    mDynamicsWorld = new rp3d::DynamicsWorld(gravity);
+    m_dynamicsWorld = new rp3d::DynamicsWorld(gravity);
 
     // Set the number of iterations of the constraint solver
-    mDynamicsWorld->setNbIterationsVelocitySolver(15);
+    m_dynamicsWorld->setNbIterationsVelocitySolver(15);
 
     float radius = 2.0f;
 
@@ -61,7 +61,7 @@ CubesScene::CubesScene(const std::string& name)
                                           0);
 
         // Create a cube and a corresponding rigid in the dynamics world
-        Box* cube = new Box(BOX_SIZE, position , BOX_MASS, mDynamicsWorld);
+        Box* cube = new Box(BOX_SIZE, position , BOX_MASS, m_dynamicsWorld);
 
         // Set the box color
         cube->setColor(mDemoColors[i % mNbDemoColors]);
@@ -77,7 +77,7 @@ CubesScene::CubesScene(const std::string& name)
 
     // Create the floor
     openglframework::Vector3 floorPosition(0, 0, 0);
-    mFloor = new Box(FLOOR_SIZE, floorPosition, FLOOR_MASS, mDynamicsWorld);
+    mFloor = new Box(FLOOR_SIZE, floorPosition, FLOOR_MASS, m_dynamicsWorld);
     mFloor->setColor(mGreyColorDemo);
     mFloor->setSleepingColor(mGreyColorDemo);
 
@@ -89,15 +89,15 @@ CubesScene::CubesScene(const std::string& name)
     material.setBounciness(rp3d::decimal(0.3));
 
     // Get the physics engine parameters
-    mEngineSettings.isGravityEnabled = mDynamicsWorld->isGravityEnabled();
-    rp3d::Vector3 gravityVector = mDynamicsWorld->getGravity();
+    mEngineSettings.isGravityEnabled = m_dynamicsWorld->isGravityEnabled();
+    rp3d::Vector3 gravityVector = m_dynamicsWorld->getGravity();
     mEngineSettings.gravity = openglframework::Vector3(gravityVector.x, gravityVector.y, gravityVector.z);
-    mEngineSettings.isSleepingEnabled = mDynamicsWorld->isSleepingEnabled();
-    mEngineSettings.sleepLinearVelocity = mDynamicsWorld->getSleepLinearVelocity();
-    mEngineSettings.sleepAngularVelocity = mDynamicsWorld->getSleepAngularVelocity();
-    mEngineSettings.nbPositionSolverIterations = mDynamicsWorld->getNbIterationsPositionSolver();
-    mEngineSettings.nbVelocitySolverIterations = mDynamicsWorld->getNbIterationsVelocitySolver();
-    mEngineSettings.timeBeforeSleep = mDynamicsWorld->getTimeBeforeSleep();
+    mEngineSettings.isSleepingEnabled = m_dynamicsWorld->isSleepingEnabled();
+    mEngineSettings.sleepLinearVelocity = m_dynamicsWorld->getSleepLinearVelocity();
+    mEngineSettings.sleepAngularVelocity = m_dynamicsWorld->getSleepAngularVelocity();
+    mEngineSettings.nbPositionSolverIterations = m_dynamicsWorld->getNbIterationsPositionSolver();
+    mEngineSettings.nbVelocitySolverIterations = m_dynamicsWorld->getNbIterationsVelocitySolver();
+    mEngineSettings.timeBeforeSleep = m_dynamicsWorld->getTimeBeforeSleep();
 }
 
 // Destructor
@@ -107,39 +107,39 @@ CubesScene::~CubesScene() {
     for (std::vector<Box*>::iterator it = mBoxes.begin(); it != mBoxes.end(); ++it) {
 
         // Destroy the corresponding rigid body from the dynamics world
-        mDynamicsWorld->destroyRigidBody((*it)->getRigidBody());
+        m_dynamicsWorld->destroyRigidBody((*it)->getRigidBody());
 
         // Destroy the cube
         delete (*it);
     }
 
     // Destroy the rigid body of the floor
-    mDynamicsWorld->destroyRigidBody(mFloor->getRigidBody());
+    m_dynamicsWorld->destroyRigidBody(mFloor->getRigidBody());
 
     // Destroy the floor
     delete mFloor;
 
     // Destroy the dynamics world
-    delete mDynamicsWorld;
+    delete m_dynamicsWorld;
 }
 
 // Update the physics world (take a simulation step)
 void CubesScene::updatePhysics() {
 
     // Update the physics engine parameters
-    mDynamicsWorld->setIsGratityEnabled(mEngineSettings.isGravityEnabled);
+    m_dynamicsWorld->setIsGratityEnabled(mEngineSettings.isGravityEnabled);
     rp3d::Vector3 gravity(mEngineSettings.gravity.x, mEngineSettings.gravity.y,
                                      mEngineSettings.gravity.z);
-    mDynamicsWorld->setGravity(gravity);
-    mDynamicsWorld->enableSleeping(mEngineSettings.isSleepingEnabled);
-    mDynamicsWorld->setSleepLinearVelocity(mEngineSettings.sleepLinearVelocity);
-    mDynamicsWorld->setSleepAngularVelocity(mEngineSettings.sleepAngularVelocity);
-    mDynamicsWorld->setNbIterationsPositionSolver(mEngineSettings.nbPositionSolverIterations);
-    mDynamicsWorld->setNbIterationsVelocitySolver(mEngineSettings.nbVelocitySolverIterations);
-    mDynamicsWorld->setTimeBeforeSleep(mEngineSettings.timeBeforeSleep);
+    m_dynamicsWorld->setGravity(gravity);
+    m_dynamicsWorld->enableSleeping(mEngineSettings.isSleepingEnabled);
+    m_dynamicsWorld->setSleepLinearVelocity(mEngineSettings.sleepLinearVelocity);
+    m_dynamicsWorld->setSleepAngularVelocity(mEngineSettings.sleepAngularVelocity);
+    m_dynamicsWorld->setNbIterationsPositionSolver(mEngineSettings.nbPositionSolverIterations);
+    m_dynamicsWorld->setNbIterationsVelocitySolver(mEngineSettings.nbVelocitySolverIterations);
+    m_dynamicsWorld->setTimeBeforeSleep(mEngineSettings.timeBeforeSleep);
 
     // Take a simulation step
-    mDynamicsWorld->update(mEngineSettings.timeStep);
+    m_dynamicsWorld->update(mEngineSettings.timeStep);
 }
 
 // Update the scene
