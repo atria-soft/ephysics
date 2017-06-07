@@ -41,6 +41,7 @@ namespace reactphysics3d {
 class TriangleCallback {
 
     public:
+    	virtual ~TriangleCallback() = default;
 
         /// Report a triangle
         virtual void testTriangle(const Vector3* trianglePoints)=0;

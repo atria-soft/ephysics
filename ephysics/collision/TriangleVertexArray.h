@@ -87,7 +87,7 @@ class TriangleVertexArray {
                             VertexDataType vertexDataType, IndexDataType indexDataType);
 
         /// Destructor
-        ~TriangleVertexArray();
+        virtual ~TriangleVertexArray();
 
         /// Return the vertex data type
         VertexDataType getVertexDataType() const;

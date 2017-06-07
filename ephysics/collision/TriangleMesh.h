@@ -54,7 +54,7 @@ class TriangleMesh {
         TriangleMesh();
 
         /// Destructor
-        ~TriangleMesh();
+        virtual ~TriangleMesh();
 
         /// Add a subpart of the mesh
         void addSubpart(TriangleVertexArray* triangleVertexArray);

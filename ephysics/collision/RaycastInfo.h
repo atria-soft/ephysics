@@ -88,7 +88,7 @@ struct RaycastInfo {
         }
 
         /// Destructor
-        ~RaycastInfo() {
+        virtual ~RaycastInfo() {
 
         }
 };

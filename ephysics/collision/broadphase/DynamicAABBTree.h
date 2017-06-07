@@ -97,6 +97,7 @@ struct TreeNode {
 class DynamicAABBTreeOverlapCallback {
 
     public :
+    	virtual ~DynamicAABBTreeOverlapCallback() = default;
 
         // Called when a overlapping node has been found during the call to
         // DynamicAABBTree:reportAllShapesOverlappingWithAABB()
@@ -111,6 +112,7 @@ class DynamicAABBTreeOverlapCallback {
 class DynamicAABBTreeRaycastCallback {
 
     public:
+    	virtual ~DynamicAABBTreeRaycastCallback() = default;
 
         // Called when the AABB of a leaf node is hit by a ray
         virtual decimal raycastBroadPhaseShape(int32 nodeId, const Ray& ray)=0;
@@ -194,7 +196,7 @@ class DynamicAABBTree {
         DynamicAABBTree(decimal extraAABBGap = decimal(0.0));
 
         /// Destructor
-        ~DynamicAABBTree();
+        virtual ~DynamicAABBTree();
 
         /// Add an object into the tree (where node data are two integers)
         int addObject(const AABB& aabb, int32 data1, int32 data2);

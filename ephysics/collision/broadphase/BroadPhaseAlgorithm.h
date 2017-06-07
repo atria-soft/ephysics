@@ -176,7 +176,7 @@ class BroadPhaseAlgorithm {
         BroadPhaseAlgorithm(CollisionDetection& collisionDetection);
 
         /// Destructor
-        ~BroadPhaseAlgorithm();
+        virtual ~BroadPhaseAlgorithm();
         
         /// Add a proxy collision shape into the broad-phase collision detection
         void addProxyCollisionShape(ProxyShape* proxyShape, const AABB& aabb);
