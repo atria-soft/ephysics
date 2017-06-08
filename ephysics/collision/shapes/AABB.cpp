@@ -20,13 +20,13 @@ AABB::AABB() {
 
 // Constructor
 AABB::AABB(const Vector3& minCoordinates, const Vector3& maxCoordinates)
-	 :mMinCoordinates(minCoordinates), mMaxCoordinates(maxCoordinates) {
+	 :m_minCoordinates(minCoordinates), m_maxCoordinates(maxCoordinates) {
 
 }
 
 // Copy-constructor
 AABB::AABB(const AABB& aabb)
-	 : mMinCoordinates(aabb.mMinCoordinates), mMaxCoordinates(aabb.mMaxCoordinates) {
+	 : m_minCoordinates(aabb.m_minCoordinates), m_maxCoordinates(aabb.m_maxCoordinates) {
 
 }
 
@@ -37,37 +37,37 @@ AABB::~AABB() {
 
 // Merge the AABB in parameter with the current one
 void AABB::mergeWithAABB(const AABB& aabb) {
-	mMinCoordinates.x = std::min(mMinCoordinates.x, aabb.mMinCoordinates.x);
-	mMinCoordinates.y = std::min(mMinCoordinates.y, aabb.mMinCoordinates.y);
-	mMinCoordinates.z = std::min(mMinCoordinates.z, aabb.mMinCoordinates.z);
+	m_minCoordinates.x = std::min(m_minCoordinates.x, aabb.m_minCoordinates.x);
+	m_minCoordinates.y = std::min(m_minCoordinates.y, aabb.m_minCoordinates.y);
+	m_minCoordinates.z = std::min(m_minCoordinates.z, aabb.m_minCoordinates.z);
 
-	mMaxCoordinates.x = std::max(mMaxCoordinates.x, aabb.mMaxCoordinates.x);
-	mMaxCoordinates.y = std::max(mMaxCoordinates.y, aabb.mMaxCoordinates.y);
-	mMaxCoordinates.z = std::max(mMaxCoordinates.z, aabb.mMaxCoordinates.z);
+	m_maxCoordinates.x = std::max(m_maxCoordinates.x, aabb.m_maxCoordinates.x);
+	m_maxCoordinates.y = std::max(m_maxCoordinates.y, aabb.m_maxCoordinates.y);
+	m_maxCoordinates.z = std::max(m_maxCoordinates.z, aabb.m_maxCoordinates.z);
 }
 
 // Replace the current AABB with a new AABB that is the union of two AABBs in parameters
 void AABB::mergeTwoAABBs(const AABB& aabb1, const AABB& aabb2) {
-	mMinCoordinates.x = std::min(aabb1.mMinCoordinates.x, aabb2.mMinCoordinates.x);
-	mMinCoordinates.y = std::min(aabb1.mMinCoordinates.y, aabb2.mMinCoordinates.y);
-	mMinCoordinates.z = std::min(aabb1.mMinCoordinates.z, aabb2.mMinCoordinates.z);
+	m_minCoordinates.x = std::min(aabb1.m_minCoordinates.x, aabb2.m_minCoordinates.x);
+	m_minCoordinates.y = std::min(aabb1.m_minCoordinates.y, aabb2.m_minCoordinates.y);
+	m_minCoordinates.z = std::min(aabb1.m_minCoordinates.z, aabb2.m_minCoordinates.z);
 
-	mMaxCoordinates.x = std::max(aabb1.mMaxCoordinates.x, aabb2.mMaxCoordinates.x);
-	mMaxCoordinates.y = std::max(aabb1.mMaxCoordinates.y, aabb2.mMaxCoordinates.y);
-	mMaxCoordinates.z = std::max(aabb1.mMaxCoordinates.z, aabb2.mMaxCoordinates.z);
+	m_maxCoordinates.x = std::max(aabb1.m_maxCoordinates.x, aabb2.m_maxCoordinates.x);
+	m_maxCoordinates.y = std::max(aabb1.m_maxCoordinates.y, aabb2.m_maxCoordinates.y);
+	m_maxCoordinates.z = std::max(aabb1.m_maxCoordinates.z, aabb2.m_maxCoordinates.z);
 }
 
 // Return true if the current AABB contains the AABB given in parameter
 bool AABB::contains(const AABB& aabb) const {
 
 	bool isInside = true;
-	isInside = isInside && mMinCoordinates.x <= aabb.mMinCoordinates.x;
-	isInside = isInside && mMinCoordinates.y <= aabb.mMinCoordinates.y;
-	isInside = isInside && mMinCoordinates.z <= aabb.mMinCoordinates.z;
+	isInside = isInside && m_minCoordinates.x <= aabb.m_minCoordinates.x;
+	isInside = isInside && m_minCoordinates.y <= aabb.m_minCoordinates.y;
+	isInside = isInside && m_minCoordinates.z <= aabb.m_minCoordinates.z;
 
-	isInside = isInside && mMaxCoordinates.x >= aabb.mMaxCoordinates.x;
-	isInside = isInside && mMaxCoordinates.y >= aabb.mMaxCoordinates.y;
-	isInside = isInside && mMaxCoordinates.z >= aabb.mMaxCoordinates.z;
+	isInside = isInside && m_maxCoordinates.x >= aabb.m_maxCoordinates.x;
+	isInside = isInside && m_maxCoordinates.y >= aabb.m_maxCoordinates.y;
+	isInside = isInside && m_maxCoordinates.z >= aabb.m_maxCoordinates.z;
 	return isInside;
 }
 
@@ -102,9 +102,9 @@ AABB AABB::createAABBForTriangle(const Vector3* trianglePoints) {
 bool AABB::testRayIntersect(const Ray& ray) const {
 
 	const Vector3 point2 = ray.point1 + ray.maxFraction * (ray.point2 - ray.point1);
-	const Vector3 e = mMaxCoordinates - mMinCoordinates;
+	const Vector3 e = m_maxCoordinates - m_minCoordinates;
 	const Vector3 d = point2 - ray.point1;
-	const Vector3 m = ray.point1 + point2 - mMinCoordinates - mMaxCoordinates;
+	const Vector3 m = ray.point1 + point2 - m_minCoordinates - m_maxCoordinates;
 
 	// Test if the AABB face normals are separating axis
 	float adx = std::abs(d.x);

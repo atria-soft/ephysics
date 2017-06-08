@@ -14,7 +14,7 @@ using namespace reactphysics3d;
 Joint::Joint(const JointInfo& jointInfo)
 		   :mBody1(jointInfo.body1), mBody2(jointInfo.body2), mType(jointInfo.type),
 			mPositionCorrectionTechnique(jointInfo.positionCorrectionTechnique),
-			mIsCollisionEnabled(jointInfo.isCollisionEnabled), mIsAlreadyInIsland(false) {
+			mIsCollisionEnabled(jointInfo.isCollisionEnabled), m_isAlreadyInIsland(false) {
 
 	assert(mBody1 != NULL);
 	assert(mBody2 != NULL);

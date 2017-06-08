@@ -40,7 +40,7 @@ class CollisionWorld {
 		// -------------------- Attributes -------------------- //
 
 		/// Reference to the collision detection
-		CollisionDetection mCollisionDetection;
+		CollisionDetection m_collisionDetection;
 
 		/// All the bodies (rigid and soft) of the world
 		std::set<CollisionBody*> mBodies;
@@ -163,7 +163,7 @@ inline std::set<CollisionBody*>::iterator CollisionWorld::getBodiesEndIterator()
  * which collision detection algorithm to use for two given collision shapes
  */
 inline void CollisionWorld::setCollisionDispatch(CollisionDispatch* collisionDispatch) {
-	mCollisionDetection.setCollisionDispatch(collisionDispatch);
+	m_collisionDetection.setCollisionDispatch(collisionDispatch);
 }
 
 // Ray cast method
@@ -176,7 +176,7 @@ inline void CollisionWorld::setCollisionDispatch(CollisionDispatch* collisionDis
 inline void CollisionWorld::raycast(const Ray& ray,
 									RaycastCallback* raycastCallback,
 									unsigned short raycastWithCategoryMaskBits) const {
-	mCollisionDetection.raycast(raycastCallback, ray, raycastWithCategoryMaskBits);
+	m_collisionDetection.raycast(raycastCallback, ray, raycastWithCategoryMaskBits);
 }
 
 // Test if the AABBs of two proxy shapes overlap
@@ -188,7 +188,7 @@ inline void CollisionWorld::raycast(const Ray& ray,
 inline bool CollisionWorld::testAABBOverlap(const ProxyShape* shape1,
 											const ProxyShape* shape2) const {
 
-	return mCollisionDetection.testAABBOverlap(shape1, shape2);
+	return m_collisionDetection.testAABBOverlap(shape1, shape2);
 }
 
 // Class CollisionCallback

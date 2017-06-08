@@ -121,7 +121,7 @@ class Joint {
 		bool mIsCollisionEnabled;
 
 		/// True if the joint has already been added int32_to an island
-		bool mIsAlreadyInIsland;
+		bool m_isAlreadyInIsland;
 
 		// -------------------- Methods -------------------- //
 
@@ -224,7 +224,7 @@ inline bool Joint::isCollisionEnabled() const {
 
 // Return true if the joint has already been added int32_to an island
 inline bool Joint::isAlreadyInIsland() const {
-	return mIsAlreadyInIsland;
+	return m_isAlreadyInIsland;
 }
 
 }

@@ -23,6 +23,6 @@ NarrowPhaseAlgorithm::~NarrowPhaseAlgorithm() {
 
 // Initalize the algorithm
 void NarrowPhaseAlgorithm::init(CollisionDetection* collisionDetection, MemoryAllocator* memoryAllocator) {
-	mCollisionDetection = collisionDetection;
+	m_collisionDetection = collisionDetection;
 	mMemoryAllocator = memoryAllocator;
 }

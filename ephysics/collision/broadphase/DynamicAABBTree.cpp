@@ -169,27 +169,27 @@ bool DynamicAABBTree::updateObject(int32_t nodeID, const AABB& newAABB, const Ve
 	// Compute the fat AABB by inflating the AABB with a constant gap
 	mNodes[nodeID].aabb = newAABB;
 	const Vector3 gap(mExtraAABBGap, mExtraAABBGap, mExtraAABBGap);
-	mNodes[nodeID].aabb.mMinCoordinates -= gap;
-	mNodes[nodeID].aabb.mMaxCoordinates += gap;
+	mNodes[nodeID].aabb.m_minCoordinates -= gap;
+	mNodes[nodeID].aabb.m_maxCoordinates += gap;
 
 	// Inflate the fat AABB in direction of the linear motion of the AABB
 	if (displacement.x < float(0.0)) {
-	  mNodes[nodeID].aabb.mMinCoordinates.x += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.x;
+	  mNodes[nodeID].aabb.m_minCoordinates.x += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.x;
 	}
 	else {
-	  mNodes[nodeID].aabb.mMaxCoordinates.x += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.x;
+	  mNodes[nodeID].aabb.m_maxCoordinates.x += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.x;
 	}
 	if (displacement.y < float(0.0)) {
-	  mNodes[nodeID].aabb.mMinCoordinates.y += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.y;
+	  mNodes[nodeID].aabb.m_minCoordinates.y += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.y;
 	}
 	else {
-	  mNodes[nodeID].aabb.mMaxCoordinates.y += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.y;
+	  mNodes[nodeID].aabb.m_maxCoordinates.y += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.y;
 	}
 	if (displacement.z < float(0.0)) {
-	  mNodes[nodeID].aabb.mMinCoordinates.z += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.z;
+	  mNodes[nodeID].aabb.m_minCoordinates.z += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.z;
 	}
 	else {
-	  mNodes[nodeID].aabb.mMaxCoordinates.z += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.z;
+	  mNodes[nodeID].aabb.m_maxCoordinates.z += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.z;
 	}
 
 	assert(mNodes[nodeID].aabb.contains(newAABB));

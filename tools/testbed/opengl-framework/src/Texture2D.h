@@ -43,7 +43,7 @@ class Texture2D {
 		// -------------------- Attributes -------------------- //
 
 		// OpenGL texture ID
-		GLuint32_t mID;
+		GLuint32_t m_id;
 
 		// Current texture unit for this texture
 		GLuint32_t mUnit;
@@ -102,21 +102,21 @@ class Texture2D {
 
 // Bind the texture
 inline void Texture2D::bind() const {
-	assert(mID != 0);
+	assert(m_id != 0);
 	glActiveTexture(GL_TEXTURE0 + mUnit);
-	glBindTexture(GL_TEXTURE_2D, mID);
+	glBindTexture(GL_TEXTURE_2D, m_id);
 }
 
 // Unbind the texture
 inline void Texture2D::unbind() const {
-	assert(mID != 0);
+	assert(m_id != 0);
 	glActiveTexture(GL_TEXTURE0 + mUnit);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 // Get the OpenGL texture ID
 inline uint32_t Texture2D::getID() const {
-	return mID;
+	return m_id;
 }
 
 // Get the unit of the texture

@@ -36,7 +36,7 @@ class BoxShape : public ConvexShape {
 		// -------------------- Attributes -------------------- //
 
 		/// Extent sizes of the box in the x, y and z direction
-		Vector3 mExtent;
+		Vector3 m_extent;
 
 		// -------------------- Methods -------------------- //
 
@@ -87,13 +87,13 @@ class BoxShape : public ConvexShape {
  * @return The vector with the three extents of the box shape (in meters)
  */
 inline Vector3 BoxShape::getExtent() const {
-	return mExtent + Vector3(mMargin, mMargin, mMargin);
+	return m_extent + Vector3(mMargin, mMargin, mMargin);
 }
 
 // Set the scaling vector of the collision shape
 inline void BoxShape::setLocalScaling(const Vector3& scaling) {
 
-	mExtent = (mExtent / mScaling) * scaling;
+	m_extent = (m_extent / mScaling) * scaling;
 
 	CollisionShape::setLocalScaling(scaling);
 }
@@ -107,7 +107,7 @@ inline void BoxShape::setLocalScaling(const Vector3& scaling) {
 inline void BoxShape::getLocalBounds(Vector3& min, Vector3& max) const {
 
 	// Maximum bounds
-	max = mExtent + Vector3(mMargin, mMargin, mMargin);
+	max = m_extent + Vector3(mMargin, mMargin, mMargin);
 
 	// Minimum bounds
 	min = -max;
@@ -122,16 +122,16 @@ inline size_t BoxShape::getSizeInBytes() const {
 inline Vector3 BoxShape::getLocalSupportPointWithoutMargin(const Vector3& direction,
 														   void** cachedCollisionData) const {
 
-	return Vector3(direction.x < 0.0 ? -mExtent.x : mExtent.x,
-				   direction.y < 0.0 ? -mExtent.y : mExtent.y,
-				   direction.z < 0.0 ? -mExtent.z : mExtent.z);
+	return Vector3(direction.x < 0.0 ? -m_extent.x : m_extent.x,
+				   direction.y < 0.0 ? -m_extent.y : m_extent.y,
+				   direction.z < 0.0 ? -m_extent.z : m_extent.z);
 }
 
 // Return true if a point is inside the collision shape
 inline bool BoxShape::testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const {
-	return (localPoint.x < mExtent[0] && localPoint.x > -mExtent[0] &&
-			localPoint.y < mExtent[1] && localPoint.y > -mExtent[1] &&
-			localPoint.z < mExtent[2] && localPoint.z > -mExtent[2]);
+	return (localPoint.x < m_extent[0] && localPoint.x > -m_extent[0] &&
+			localPoint.y < m_extent[1] && localPoint.y > -m_extent[1] &&
+			localPoint.z < m_extent[2] && localPoint.z > -m_extent[2]);
 }
 
 }

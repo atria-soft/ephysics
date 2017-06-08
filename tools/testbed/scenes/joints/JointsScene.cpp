@@ -296,8 +296,8 @@ void JointsScene::createBallAndSocketJoints() {
 		rp3d::RigidBody* body2 = mBallAndSocketJointChainBoxes[i+1]->getRigidBody();
 		rp3d::Vector3 body1Position = body1->getTransform().getPosition();
 		rp3d::Vector3 body2Position = body2->getTransform().getPosition();
-		const rp3d::Vector3 anchorPointWorldSpace = 0.5 * (body1Position + body2Position);
-		rp3d::BallAndSocketJointInfo jointInfo(body1, body2, anchorPointWorldSpace);
+		const rp3d::Vector3 m_m_m_m_anchorPointWorldSpace = 0.5 * (body1Position + body2Position);
+		rp3d::BallAndSocketJointInfo jointInfo(body1, body2, m_m_m_m_anchorPointWorldSpace);
 
 		// Create the joint in the dynamics world
 		mBallAndSocketJoints[i] = dynamic_cast<rp3d::BallAndSocketJoint*>(
@@ -352,9 +352,9 @@ void JointsScene::createSliderJoint() {
 	rp3d::RigidBody* body2 = mSliderJointTopBox->getRigidBody();
 	const rp3d::Vector3& body1Position = body1->getTransform().getPosition();
 	const rp3d::Vector3& body2Position = body2->getTransform().getPosition();
-	const rp3d::Vector3 anchorPointWorldSpace = rp3d::float(0.5) * (body2Position + body1Position);
+	const rp3d::Vector3 m_m_m_m_anchorPointWorldSpace = rp3d::float(0.5) * (body2Position + body1Position);
 	const rp3d::Vector3 sliderAxisWorldSpace = (body2Position - body1Position);
-	rp3d::SliderJointInfo jointInfo(body1, body2, anchorPointWorldSpace, sliderAxisWorldSpace,
+	rp3d::SliderJointInfo jointInfo(body1, body2, m_m_m_m_anchorPointWorldSpace, sliderAxisWorldSpace,
 									rp3d::float(-1.7), rp3d::float(1.7));
 	jointInfo.isMotorEnabled = true;
 	jointInfo.motorSpeed = 0.0;
@@ -392,9 +392,9 @@ void JointsScene::createPropellerHingeJoint() {
 	rp3d::RigidBody* body2 = mSliderJointTopBox->getRigidBody();
 	const rp3d::Vector3& body1Position = body1->getTransform().getPosition();
 	const rp3d::Vector3& body2Position = body2->getTransform().getPosition();
-	const rp3d::Vector3 anchorPointWorldSpace = 0.5 * (body2Position + body1Position);
+	const rp3d::Vector3 m_m_m_m_anchorPointWorldSpace = 0.5 * (body2Position + body1Position);
 	const rp3d::Vector3 hingeAxisWorldSpace(0, 1, 0);
-	rp3d::HingeJointInfo jointInfo(body1, body2, anchorPointWorldSpace, hingeAxisWorldSpace);
+	rp3d::HingeJointInfo jointInfo(body1, body2, m_m_m_m_anchorPointWorldSpace, hingeAxisWorldSpace);
 	jointInfo.isMotorEnabled = true;
 	jointInfo.motorSpeed = - rp3d::float(0.5) * PI;
 	jointInfo.maxMotorTorque = rp3d::float(60.0);
@@ -445,8 +445,8 @@ void JointsScene::createFixedJoints() {
 	// Create the joint info object
 	rp3d::RigidBody* body1 = mFixedJointBox1->getRigidBody();
 	rp3d::RigidBody* propellerBody = mPropellerBox->getRigidBody();
-	const rp3d::Vector3 anchorPointWorldSpace1(5, 7, 0);
-	rp3d::FixedJointInfo jointInfo1(body1, propellerBody, anchorPointWorldSpace1);
+	const rp3d::Vector3 m_m_m_m_anchorPointWorldSpace1(5, 7, 0);
+	rp3d::FixedJointInfo jointInfo1(body1, propellerBody, m_m_m_m_anchorPointWorldSpace1);
 	jointInfo1.isCollisionEnabled = false;
 
 	// Create the joint in the dynamics world
@@ -456,8 +456,8 @@ void JointsScene::createFixedJoints() {
 
 	// Create the joint info object
 	rp3d::RigidBody* body2 = mFixedJointBox2->getRigidBody();
-	const rp3d::Vector3 anchorPointWorldSpace2(-5, 7, 0);
-	rp3d::FixedJointInfo jointInfo2(body2, propellerBody, anchorPointWorldSpace2);
+	const rp3d::Vector3 m_m_m_m_anchorPointWorldSpace2(-5, 7, 0);
+	rp3d::FixedJointInfo jointInfo2(body2, propellerBody, m_m_m_m_anchorPointWorldSpace2);
 	jointInfo2.isCollisionEnabled = false;
 
 	// Create the joint in the dynamics world

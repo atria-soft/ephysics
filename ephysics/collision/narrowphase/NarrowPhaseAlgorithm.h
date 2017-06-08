@@ -46,7 +46,7 @@ class NarrowPhaseAlgorithm {
 		// -------------------- Attributes -------------------- //
 
 		/// Pointer to the collision detection object
-		CollisionDetection* mCollisionDetection;
+		CollisionDetection* m_collisionDetection;
 
 		/// Pointer to the memory allocator
 		MemoryAllocator* mMemoryAllocator;

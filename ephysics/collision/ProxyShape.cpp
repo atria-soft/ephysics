@@ -18,7 +18,7 @@ using namespace reactphysics3d;
  */
 ProxyShape::ProxyShape(CollisionBody* body, CollisionShape* shape, const Transform& transform, float mass)
 		   :mBody(body), mCollisionShape(shape), mLocalToBodyTransform(transform), mMass(mass),
-			mNext(NULL), mBroadPhaseID(-1), mCachedCollisionData(NULL), mUserData(NULL),
+			mNext(NULL), mBroadPhaseID(-1), mCachedCollisionData(NULL), m_userData(NULL),
 			mCollisionCategoryBits(0x0001), mCollideWithMaskBits(0xFFFF) {
 
 }

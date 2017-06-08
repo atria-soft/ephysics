@@ -14,7 +14,7 @@ using namespace std;
 
 // Constructor
 CollisionWorld::CollisionWorld()
-			   : mCollisionDetection(this, mMemoryAllocator), mCurrentBodyID(0),
+			   : m_collisionDetection(this, mMemoryAllocator), mCurrentBodyID(0),
 				 mEventListener(NULL) {
 
 }
@@ -147,7 +147,7 @@ void CollisionWorld::testCollision(const ProxyShape* shape,
 	std::set<uint32_t> emptySet;
 
 	// Perform the collision detection and report contacts
-	mCollisionDetection.testCollisionBetweenShapes(callback, shapes, emptySet);
+	m_collisionDetection.testCollisionBetweenShapes(callback, shapes, emptySet);
 }
 
 // Test and report collisions between two given shapes
@@ -170,7 +170,7 @@ void CollisionWorld::testCollision(const ProxyShape* shape1,
 	shapes2.insert(shape2->mBroadPhaseID);
 
 	// Perform the collision detection and report contacts
-	mCollisionDetection.testCollisionBetweenShapes(callback, shapes1, shapes2);
+	m_collisionDetection.testCollisionBetweenShapes(callback, shapes1, shapes2);
 }
 
 // Test and report collisions between a body and all the others bodies of the
@@ -197,7 +197,7 @@ void CollisionWorld::testCollision(const CollisionBody* body,
 	std::set<uint32_t> emptySet;
 
 	// Perform the collision detection and report contacts
-	mCollisionDetection.testCollisionBetweenShapes(callback, shapes1, emptySet);
+	m_collisionDetection.testCollisionBetweenShapes(callback, shapes1, emptySet);
 }
 
 // Test and report collisions between two bodies
@@ -227,7 +227,7 @@ void CollisionWorld::testCollision(const CollisionBody* body1,
 	}
 
 	// Perform the collision detection and report contacts
-	mCollisionDetection.testCollisionBetweenShapes(callback, shapes1, shapes2);
+	m_collisionDetection.testCollisionBetweenShapes(callback, shapes1, shapes2);
 }
 
 // Test and report collisions between all shapes of the world
@@ -242,6 +242,6 @@ void CollisionWorld::testCollision(CollisionCallback* callback) {
 	std::set<uint32_t> emptySet;
 
 	// Perform the collision detection and report contacts
-	mCollisionDetection.testCollisionBetweenShapes(callback, emptySet, emptySet);
+	m_collisionDetection.testCollisionBetweenShapes(callback, emptySet, emptySet);
 }
 

@@ -50,7 +50,7 @@ class Light : public Object3D {
 		Color mSpecularColor;
 
 		// True if the light is active
-		bool mIsActive;
+		bool m_isActive;
 
 	public:
 
@@ -112,13 +112,13 @@ inline void Light::setSpecularColor(const Color& color) {
 
 // Return true if the light is active
 inline bool Light::getIsActive() const {
-	return mIsActive;
+	return m_isActive;
 }
 
 // Enable the light
 inline void Light::enable() {
 
-	mIsActive = true;
+	m_isActive = true;
 
 	// Enable the light
 	//glEnable(GL_LIGHTING);
@@ -128,7 +128,7 @@ inline void Light::enable() {
 // Disable the light
 inline void Light::disable() {
 
-	mIsActive = false;
+	m_isActive = false;
 
 	// Disable the light
 	//glDisable(GL_LIGHT0 + mLightID);

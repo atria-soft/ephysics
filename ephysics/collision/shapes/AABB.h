@@ -25,10 +25,10 @@ class AABB {
 		// -------------------- Attributes -------------------- //
 
 		/// Minimum world coordinates of the AABB on the x,y and z axis
-		Vector3 mMinCoordinates;
+		Vector3 m_minCoordinates;
 
 		/// Maximum world coordinates of the AABB on the x,y and z axis
-		Vector3 mMaxCoordinates;
+		Vector3 m_maxCoordinates;
 
 	public :
 
@@ -104,68 +104,68 @@ class AABB {
 
 // Return the center point of the AABB in world coordinates
 inline Vector3 AABB::getCenter() const {
-	return (mMinCoordinates + mMaxCoordinates) * float(0.5);
+	return (m_minCoordinates + m_maxCoordinates) * float(0.5);
 }
 
 // Return the minimum coordinates of the AABB
 inline const Vector3& AABB::getMin() const {
-	return mMinCoordinates;
+	return m_minCoordinates;
 }
 
 // Set the minimum coordinates of the AABB
 inline void AABB::setMin(const Vector3& min) {
-	mMinCoordinates = min;
+	m_minCoordinates = min;
 }
 
 // Return the maximum coordinates of the AABB
 inline const Vector3& AABB::getMax() const {
-	return mMaxCoordinates;
+	return m_maxCoordinates;
 }
 
 // Set the maximum coordinates of the AABB
 inline void AABB::setMax(const Vector3& max) {
-	mMaxCoordinates = max;
+	m_maxCoordinates = max;
 }
 
 // Return the size of the AABB in the three dimension x, y and z
 inline Vector3 AABB::getExtent() const {
-  return  mMaxCoordinates - mMinCoordinates;
+  return  m_maxCoordinates - m_minCoordinates;
 }
 
 // Inflate each side of the AABB by a given size
 inline void AABB::inflate(float dx, float dy, float dz) {
-	mMaxCoordinates += Vector3(dx, dy, dz);
-	mMinCoordinates -= Vector3(dx, dy, dz);
+	m_maxCoordinates += Vector3(dx, dy, dz);
+	m_minCoordinates -= Vector3(dx, dy, dz);
 }
 
 // Return true if the current AABB is overlapping with the AABB in argument.
 /// Two AABBs overlap if they overlap in the three x, y and z axis at the same time
 inline bool AABB::testCollision(const AABB& aabb) const {
-	if (mMaxCoordinates.x < aabb.mMinCoordinates.x ||
-		aabb.mMaxCoordinates.x < mMinCoordinates.x) return false;
-	if (mMaxCoordinates.y < aabb.mMinCoordinates.y ||
-		aabb.mMaxCoordinates.y < mMinCoordinates.y) return false;
-	if (mMaxCoordinates.z < aabb.mMinCoordinates.z||
-		aabb.mMaxCoordinates.z < mMinCoordinates.z) return false;
+	if (m_maxCoordinates.x < aabb.m_minCoordinates.x ||
+		aabb.m_maxCoordinates.x < m_minCoordinates.x) return false;
+	if (m_maxCoordinates.y < aabb.m_minCoordinates.y ||
+		aabb.m_maxCoordinates.y < m_minCoordinates.y) return false;
+	if (m_maxCoordinates.z < aabb.m_minCoordinates.z||
+		aabb.m_maxCoordinates.z < m_minCoordinates.z) return false;
 	return true;
 }
 
 // Return the volume of the AABB
 inline float AABB::getVolume() const {
-	const Vector3 diff = mMaxCoordinates - mMinCoordinates;
+	const Vector3 diff = m_maxCoordinates - m_minCoordinates;
 	return (diff.x * diff.y * diff.z);
 }
 
 // Return true if the AABB of a triangle int32_tersects the AABB
 inline bool AABB::testCollisionTriangleAABB(const Vector3* trianglePoints) const {
 
-	if (min3(trianglePoints[0].x, trianglePoints[1].x, trianglePoints[2].x) > mMaxCoordinates.x) return false;
-	if (min3(trianglePoints[0].y, trianglePoints[1].y, trianglePoints[2].y) > mMaxCoordinates.y) return false;
-	if (min3(trianglePoints[0].z, trianglePoints[1].z, trianglePoints[2].z) > mMaxCoordinates.z) return false;
+	if (min3(trianglePoints[0].x, trianglePoints[1].x, trianglePoints[2].x) > m_maxCoordinates.x) return false;
+	if (min3(trianglePoints[0].y, trianglePoints[1].y, trianglePoints[2].y) > m_maxCoordinates.y) return false;
+	if (min3(trianglePoints[0].z, trianglePoints[1].z, trianglePoints[2].z) > m_maxCoordinates.z) return false;
 
-	if (max3(trianglePoints[0].x, trianglePoints[1].x, trianglePoints[2].x) < mMinCoordinates.x) return false;
-	if (max3(trianglePoints[0].y, trianglePoints[1].y, trianglePoints[2].y) < mMinCoordinates.y) return false;
-	if (max3(trianglePoints[0].z, trianglePoints[1].z, trianglePoints[2].z) < mMinCoordinates.z) return false;
+	if (max3(trianglePoints[0].x, trianglePoints[1].x, trianglePoints[2].x) < m_minCoordinates.x) return false;
+	if (max3(trianglePoints[0].y, trianglePoints[1].y, trianglePoints[2].y) < m_minCoordinates.y) return false;
+	if (max3(trianglePoints[0].z, trianglePoints[1].z, trianglePoints[2].z) < m_minCoordinates.z) return false;
 
 	return true;
 }
@@ -173,16 +173,16 @@ inline bool AABB::testCollisionTriangleAABB(const Vector3* trianglePoints) const
 // Return true if a point is inside the AABB
 inline bool AABB::contains(const Vector3& point) const {
 
-	return (point.x >= mMinCoordinates.x - MACHINE_EPSILON && point.x <= mMaxCoordinates.x + MACHINE_EPSILON &&
-			point.y >= mMinCoordinates.y - MACHINE_EPSILON && point.y <= mMaxCoordinates.y + MACHINE_EPSILON &&
-			point.z >= mMinCoordinates.z - MACHINE_EPSILON && point.z <= mMaxCoordinates.z + MACHINE_EPSILON);
+	return (point.x >= m_minCoordinates.x - MACHINE_EPSILON && point.x <= m_maxCoordinates.x + MACHINE_EPSILON &&
+			point.y >= m_minCoordinates.y - MACHINE_EPSILON && point.y <= m_maxCoordinates.y + MACHINE_EPSILON &&
+			point.z >= m_minCoordinates.z - MACHINE_EPSILON && point.z <= m_maxCoordinates.z + MACHINE_EPSILON);
 }
 
 // Assignment operator
 inline AABB& AABB::operator=(const AABB& aabb) {
 	if (this != &aabb) {
-		mMinCoordinates = aabb.mMinCoordinates;
-		mMaxCoordinates = aabb.mMaxCoordinates;
+		m_minCoordinates = aabb.m_minCoordinates;
+		m_maxCoordinates = aabb.m_maxCoordinates;
 	}
 	return *this;
 }

@@ -25,7 +25,7 @@ class ConvexVsTriangleCallback : public TriangleCallback {
 	protected:
 
 		/// Pointer to the collision detection object
-		CollisionDetection* mCollisionDetection;
+		CollisionDetection* m_collisionDetection;
 
 		/// Narrow-phase collision callback
 		NarrowPhaseCallback* mNarrowPhaseCallback;
@@ -53,7 +53,7 @@ class ConvexVsTriangleCallback : public TriangleCallback {
 
 		/// Set the collision detection pointer
 		void setCollisionDetection(CollisionDetection* collisionDetection) {
-			mCollisionDetection = collisionDetection;
+			m_collisionDetection = collisionDetection;
 		}
 
 		/// Set the narrow-phase collision callback

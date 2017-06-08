@@ -69,7 +69,7 @@ ProxyShape* CollisionBody::addCollisionShape(CollisionShape* collisionShape,
 	collisionShape->computeAABB(aabb, mTransform * transform);
 
 	// Notify the collision detection about this new collision shape
-	mWorld.mCollisionDetection.addProxyCollisionShape(proxyShape, aabb);
+	mWorld.m_collisionDetection.addProxyCollisionShape(proxyShape, aabb);
 
 	mNbCollisionShapes++;
 
@@ -92,8 +92,8 @@ void CollisionBody::removeCollisionShape(const ProxyShape* proxyShape) {
 	if (current == proxyShape) {
 		mProxyCollisionShapes = current->mNext;
 
-		if (mIsActive) {
-			mWorld.mCollisionDetection.removeProxyCollisionShape(current);
+		if (m_isActive) {
+			mWorld.m_collisionDetection.removeProxyCollisionShape(current);
 		}
 
 		current->~ProxyShape();
@@ -112,8 +112,8 @@ void CollisionBody::removeCollisionShape(const ProxyShape* proxyShape) {
 			ProxyShape* elementToRemove = current->mNext;
 			current->mNext = elementToRemove->mNext;
 
-			if (mIsActive) {
-				mWorld.mCollisionDetection.removeProxyCollisionShape(elementToRemove);
+			if (m_isActive) {
+				mWorld.m_collisionDetection.removeProxyCollisionShape(elementToRemove);
 			}
 
 			elementToRemove->~ProxyShape();
@@ -138,8 +138,8 @@ void CollisionBody::removeAllCollisionShapes() {
 		// Remove the proxy collision shape
 		ProxyShape* nextElement = current->mNext;
 
-		if (mIsActive) {
-			mWorld.mCollisionDetection.removeProxyCollisionShape(current);
+		if (m_isActive) {
+			mWorld.m_collisionDetection.removeProxyCollisionShape(current);
 		}
 
 		current->~ProxyShape();
@@ -188,7 +188,7 @@ void CollisionBody::updateProxyShapeInBroadPhase(ProxyShape* proxyShape, bool fo
 	proxyShape->getCollisionShape()->computeAABB(aabb, mTransform * proxyShape->getLocalToBodyTransform());
 
 	// Update the broad-phase state for the proxy collision shape
-	mWorld.mCollisionDetection.updateProxyCollisionShape(proxyShape, aabb, Vector3(0, 0, 0), forceReinsert);
+	mWorld.m_collisionDetection.updateProxyCollisionShape(proxyShape, aabb, Vector3(0, 0, 0), forceReinsert);
 }
 
 // Set whether or not the body is active
@@ -198,7 +198,7 @@ void CollisionBody::updateProxyShapeInBroadPhase(ProxyShape* proxyShape, bool fo
 void CollisionBody::setIsActive(bool isActive) {
 
 	// If the state does not change
-	if (mIsActive == isActive) return;
+	if (m_isActive == isActive) return;
 
 	Body::setIsActive(isActive);
 
@@ -213,7 +213,7 @@ void CollisionBody::setIsActive(bool isActive) {
 			shape->getCollisionShape()->computeAABB(aabb, mTransform * shape->mLocalToBodyTransform);
 
 			// Add the proxy shape to the collision detection
-			mWorld.mCollisionDetection.addProxyCollisionShape(shape, aabb);
+			mWorld.m_collisionDetection.addProxyCollisionShape(shape, aabb);
 		}
 	}
 	else {  // If we have to deactivate the body
@@ -222,7 +222,7 @@ void CollisionBody::setIsActive(bool isActive) {
 		for (ProxyShape* shape = mProxyCollisionShapes; shape != NULL; shape = shape->mNext) {
 
 			// Remove the proxy shape from the collision detection
-			mWorld.mCollisionDetection.removeProxyCollisionShape(shape);
+			mWorld.m_collisionDetection.removeProxyCollisionShape(shape);
 		}
 
 		// Reset the contact manifold list of the body
@@ -237,23 +237,23 @@ void CollisionBody::askForBroadPhaseCollisionCheck() const {
 	// For all the proxy collision shapes of the body
 	for (ProxyShape* shape = mProxyCollisionShapes; shape != NULL; shape = shape->mNext) {
 
-		mWorld.mCollisionDetection.askForBroadPhaseCollisionCheck(shape);  
+		mWorld.m_collisionDetection.askForBroadPhaseCollisionCheck(shape);  
 	}
 }
 
-// Reset the mIsAlreadyInIsland variable of the body and contact manifolds.
+// Reset the m_isAlreadyInIsland variable of the body and contact manifolds.
 /// This method also returns the number of contact manifolds of the body.
 int32_t CollisionBody::resetIsAlreadyInIslandAndCountManifolds() {
 
-	mIsAlreadyInIsland = false;
+	m_isAlreadyInIsland = false;
 
 	int32_t nbManifolds = 0;
 
-	// Reset the mIsAlreadyInIsland variable of the contact manifolds for
+	// Reset the m_isAlreadyInIsland variable of the contact manifolds for
 	// this body
 	ContactManifoldListElement* currentElement = mContactManifoldsList;
 	while (currentElement != NULL) {
-		currentElement->contactManifold->mIsAlreadyInIsland = false;
+		currentElement->contactManifold->m_isAlreadyInIsland = false;
 		currentElement = currentElement->next;
 		nbManifolds++;
 	}
@@ -290,7 +290,7 @@ bool CollisionBody::testPointInside(const Vector3& worldPoint) const {
 bool CollisionBody::raycast(const Ray& ray, RaycastInfo& raycastInfo) {
 
 	// If the body is not active, it cannot be hit by rays
-	if (!mIsActive) return false;
+	if (!m_isActive) return false;
 
 	bool isHit = false;
 	Ray rayTemp(ray);

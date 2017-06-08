@@ -88,7 +88,7 @@ class CollisionBody : public Body {
 		/// (as if the body has moved).
 		void askForBroadPhaseCollisionCheck() const;
 
-		/// Reset the mIsAlreadyInIsland variable of the body and contact manifolds
+		/// Reset the m_isAlreadyInIsland variable of the body and contact manifolds
 		int32_t resetIsAlreadyInIslandAndCountManifolds();
 
 	public :

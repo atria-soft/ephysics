@@ -47,13 +47,13 @@ class AABBOverlapCallback : public DynamicAABBTreeOverlapCallback {
 
 		BroadPhaseAlgorithm& mBroadPhaseAlgorithm;
 
-		int32_t mReferenceNodeId;
+		int32_t m_referenceNodeId;
 
 	public:
 
 		// Constructor
 		AABBOverlapCallback(BroadPhaseAlgorithm& broadPhaseAlgo, int32_t referenceNodeId)
-			 : mBroadPhaseAlgorithm(broadPhaseAlgo), mReferenceNodeId(referenceNodeId) {
+			 : mBroadPhaseAlgorithm(broadPhaseAlgo), m_referenceNodeId(referenceNodeId) {
 
 		}
 
@@ -113,31 +113,31 @@ class BroadPhaseAlgorithm {
 		/// Array with the broad-phase IDs of all collision shapes that have moved (or have been
 		/// created) during the last simulation step. Those are the shapes that need to be tested
 		/// for overlapping in the next simulation step.
-		int32_t* mMovedShapes;
+		int32_t* m_movedShapes;
 
 		/// Number of collision shapes in the array of shapes that have moved during the last
 		/// simulation step.
-		uint32_t mNbMovedShapes;
+		uint32_t m_numberMovedShapes;
 
 		/// Number of allocated elements for the array of shapes that have moved during the last
 		/// simulation step.
-		uint32_t mNbAllocatedMovedShapes;
+		uint32_t m_numberAllocatedMovedShapes;
 
 		/// Number of non-used elements in the array of shapes that have moved during the last
 		/// simulation step.
-		uint32_t mNbNonUsedMovedShapes;
+		uint32_t m_numberNonUsedMovedShapes;
 
 		/// Temporary array of potential overlapping pairs (with potential duplicates)
-		BroadPhasePair* mPotentialPairs;
+		BroadPhasePair* m_potentialPairs;
 
 		/// Number of potential overlapping pairs
-		uint32_t mNbPotentialPairs;
+		uint32_t m_numberPotentialPairs;
 
 		/// Number of allocated elements for the array of potential overlapping pairs
-		uint32_t mNbAllocatedPotentialPairs;
+		uint32_t m_numberAllocatedPotentialPairs;
 
 		/// Reference to the collision detection object
-		CollisionDetection& mCollisionDetection;
+		CollisionDetection& m_collisionDetection;
 		
 		// -------------------- Methods -------------------- //
 

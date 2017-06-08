@@ -50,7 +50,7 @@ void ConcaveVsConvexAlgorithm::testCollision(const CollisionShapeInfo& shape1Inf
 
 	// Set the parameters of the callback object
 	ConvexVsTriangleCallback convexVsTriangleCallback;
-	convexVsTriangleCallback.setCollisionDetection(mCollisionDetection);
+	convexVsTriangleCallback.setCollisionDetection(m_collisionDetection);
 	convexVsTriangleCallback.setConvexShape(convexShape);
 	convexVsTriangleCallback.setConcaveShape(concaveShape);
 	convexVsTriangleCallback.setProxyShapes(convexProxyShape, concaveProxyShape);
@@ -92,7 +92,7 @@ void ConvexVsTriangleCallback::testTriangle(const Vector3* trianglePoints) {
 	TriangleShape triangleShape(trianglePoints[0], trianglePoints[1], trianglePoints[2], margin);
 
 	// Select the collision algorithm to use between the triangle and the convex shape
-	NarrowPhaseAlgorithm* algo = mCollisionDetection->getCollisionAlgorithm(triangleShape.getType(),
+	NarrowPhaseAlgorithm* algo = m_collisionDetection->getCollisionAlgorithm(triangleShape.getType(),
 																			mConvexShape->getType());
 
 	// If there is no collision algorithm between those two kinds of shapes

@@ -27,13 +27,13 @@ class Body {
 		// -------------------- Attributes -------------------- //
 
 		/// ID of the body
-		bodyindex mID;
+		bodyindex m_id;
 
 		/// True if the body has already been added in an island (for sleeping technique)
-		bool mIsAlreadyInIsland;
+		bool m_isAlreadyInIsland;
 
 		/// True if the body is allowed to go to sleep for better efficiency
-		bool mIsAllowedToSleep;
+		bool m_isAllowedToSleep;
 
 		/// True if the body is active.
 		/// An inactive body does not participate in collision detection,
@@ -43,16 +43,16 @@ class Body {
 		/// removed from the broad-phase. If you set this value to "true",
 		/// all the proxy shapes will be added to the broad-phase. A joint
 		/// connected to an inactive body will also be inactive.
-		bool mIsActive;
+		bool m_isActive;
 
 		/// True if the body is sleeping (for sleeping technique)
-		bool mIsSleeping;
+		bool m_isSleeping;
 
 		/// Elapsed time since the body velocity was bellow the sleep velocity
-		float mSleepTime;
+		float m_sleepTime;
 
 		/// Pointer that can be used to attach user data to the body
-		void* mUserData;
+		void* m_userData;
 
 		// -------------------- Methods -------------------- //
 
@@ -121,7 +121,7 @@ class Body {
  * @return The ID of the body
  */
 inline bodyindex Body::getID() const {
-	return mID;
+	return m_id;
 }
 
 // Return whether or not the body is allowed to sleep
@@ -129,7 +129,7 @@ inline bodyindex Body::getID() const {
  * @return True if the body is allowed to sleep and false otherwise
  */
 inline bool Body::isAllowedToSleep() const {
-	return mIsAllowedToSleep;
+	return m_isAllowedToSleep;
 }
 
 // Set whether or not the body is allowed to go to sleep
@@ -137,9 +137,9 @@ inline bool Body::isAllowedToSleep() const {
  * @param isAllowedToSleep True if the body is allowed to sleep
  */
 inline void Body::setIsAllowedToSleep(bool isAllowedToSleep) {
-	mIsAllowedToSleep = isAllowedToSleep;
+	m_isAllowedToSleep = isAllowedToSleep;
 
-	if (!mIsAllowedToSleep) setIsSleeping(false);
+	if (!m_isAllowedToSleep) setIsSleeping(false);
 }
 
 // Return whether or not the body is sleeping
@@ -147,7 +147,7 @@ inline void Body::setIsAllowedToSleep(bool isAllowedToSleep) {
  * @return True if the body is currently sleeping and false otherwise
  */
 inline bool Body::isSleeping() const {
-	return mIsSleeping;
+	return m_isSleeping;
 }
 
 // Return true if the body is active
@@ -155,7 +155,7 @@ inline bool Body::isSleeping() const {
  * @return True if the body currently active and false otherwise
  */
 inline bool Body::isActive() const {
-	return mIsActive;
+	return m_isActive;
 }
 
 // Set whether or not the body is active
@@ -163,22 +163,22 @@ inline bool Body::isActive() const {
  * @param isActive True if you want to activate the body
  */
 inline void Body::setIsActive(bool isActive) {
-	mIsActive = isActive;
+	m_isActive = isActive;
 }
 
 // Set the variable to know whether or not the body is sleeping
 inline void Body::setIsSleeping(bool isSleeping) {
 
 	if (isSleeping) {
-		mSleepTime = float(0.0);
+		m_sleepTime = float(0.0);
 	}
 	else {
-		if (mIsSleeping) {
-			mSleepTime = float(0.0);
+		if (m_isSleeping) {
+			m_sleepTime = float(0.0);
 		}
 	}
 
-	mIsSleeping = isSleeping;
+	m_isSleeping = isSleeping;
 }
 
 // Return a pointer to the user data attached to this body
@@ -186,7 +186,7 @@ inline void Body::setIsSleeping(bool isSleeping) {
  * @return A pointer to the user data you have attached to the body
  */
 inline void* Body::getUserData() const {
-	return mUserData;
+	return m_userData;
 }
 
 // Attach user data to this body
@@ -194,27 +194,27 @@ inline void* Body::getUserData() const {
  * @param userData A pointer to the user data you want to attach to the body
  */
 inline void Body::setUserData(void* userData) {
-	mUserData = userData;
+	m_userData = userData;
 }
 
 // Smaller than operator
 inline bool Body::operator<(const Body& body2) const {
-	return (mID < body2.mID);
+	return (m_id < body2.m_id);
 } 
 
 // Larger than operator
 inline bool Body::operator>(const Body& body2) const {
-	return (mID > body2.mID);
+	return (m_id > body2.m_id);
 } 
 
 // Equal operator
 inline bool Body::operator==(const Body& body2) const {
-	return (mID == body2.mID);
+	return (m_id == body2.m_id);
 }
 		
 // Not equal operator
 inline bool Body::operator!=(const Body& body2) const {
-	return (mID != body2.mID);
+	return (m_id != body2.m_id);
 }			   
 
 }

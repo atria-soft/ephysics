@@ -23,7 +23,7 @@ struct BallAndSocketJointInfo : public JointInfo {
 		// -------------------- Attributes -------------------- //
 
 		/// Anchor point (in world-space coordinates)
-		Vector3 anchorPointWorldSpace;
+		Vector3 m_m_m_m_anchorPointWorldSpace;
 
 		/// Constructor
 		/**
@@ -35,7 +35,7 @@ struct BallAndSocketJointInfo : public JointInfo {
 		BallAndSocketJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
 							   const Vector3& initAnchorPointWorldSpace)
 							  : JointInfo(rigidBody1, rigidBody2, BALLSOCKETJOINT),
-								anchorPointWorldSpace(initAnchorPointWorldSpace) {}
+								m_m_m_m_anchorPointWorldSpace(initAnchorPointWorldSpace) {}
 };
 
 // Class BallAndSocketJoint
@@ -56,31 +56,31 @@ class BallAndSocketJoint : public Joint {
 		// -------------------- Attributes -------------------- //
 
 		/// Anchor point of body 1 (in local-space coordinates of body 1)
-		Vector3 mLocalAnchorPointBody1;
+		Vector3 m_localAnchorPointBody1;
 
 		/// Anchor point of body 2 (in local-space coordinates of body 2)
-		Vector3 mLocalAnchorPointBody2;
+		Vector3 m_localAnchorPointBody2;
 
 		/// Vector from center of body 2 to anchor point in world-space
-		Vector3 mR1World;
+		Vector3 m_r1World;
 
 		/// Vector from center of body 2 to anchor point in world-space
-		Vector3 mR2World;
+		Vector3 m_r2World;
 
 		/// Inertia tensor of body 1 (in world-space coordinates)
-		Matrix3x3 mI1;
+		Matrix3x3 m_i1;
 
 		/// Inertia tensor of body 2 (in world-space coordinates)
-		Matrix3x3 mI2;
+		Matrix3x3 m_i2;
 
 		/// Bias vector for the constraint
-		Vector3 mBiasVector;
+		Vector3 m_biasVector;
 
 		/// Inverse mass matrix K=JM^-1J^-t of the constraint
-		Matrix3x3 mInverseMassMatrix;
+		Matrix3x3 m_inverseMassMatrix;
 
 		/// Accumulated impulse
-		Vector3 mImpulse;
+		Vector3 m_impulse;
 
 		// -------------------- Methods -------------------- //
 

@@ -389,7 +389,7 @@ inline void RigidBody::applyForceToCenterOfMass(const Vector3& force) {
 	if (mType != DYNAMIC) return;
 
 	// Awake the body if it was sleeping
-	if (mIsSleeping) {
+	if (m_isSleeping) {
 		setIsSleeping(false);
 	}
 
@@ -414,7 +414,7 @@ inline void RigidBody::applyForce(const Vector3& force, const Vector3& point) {
 	if (mType != DYNAMIC) return;
 
 	// Awake the body if it was sleeping
-	if (mIsSleeping) {
+	if (m_isSleeping) {
 		setIsSleeping(false);
 	}
 
@@ -437,7 +437,7 @@ inline void RigidBody::applyTorque(const Vector3& torque) {
 	if (mType != DYNAMIC) return;
 
 	// Awake the body if it was sleeping
-	if (mIsSleeping) {
+	if (m_isSleeping) {
 		setIsSleeping(false);
 	}
 

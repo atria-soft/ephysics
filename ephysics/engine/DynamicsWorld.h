@@ -42,7 +42,7 @@ class DynamicsWorld : public CollisionWorld {
 		uint32_t mNbPositionSolverIterations;
 
 		/// True if the spleeping technique for inactive bodies is enabled
-		bool mIsSleepingEnabled;
+		bool m_isSleepingEnabled;
 
 		/// All the rigid bodies of the physics world
 		std::set<RigidBody*> mRigidBodies;
@@ -429,7 +429,7 @@ inline std::set<RigidBody*>::iterator DynamicsWorld::getRigidBodiesEndIterator()
  * @return True if the sleeping technique is enabled and false otherwise
  */
 inline bool DynamicsWorld::isSleepingEnabled() const {
-	return mIsSleepingEnabled;
+	return m_isSleepingEnabled;
 }
 
 // Return the current sleep linear velocity

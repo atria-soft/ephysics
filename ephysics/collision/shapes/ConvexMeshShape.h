@@ -235,7 +235,7 @@ inline bool ConvexMeshShape::testPointInside(const Vector3& localPoint,
 											 ProxyShape* proxyShape) const {
 
 	// Use the GJK algorithm to test if the point is inside the convex mesh
-	return proxyShape->mBody->mWorld.mCollisionDetection.
+	return proxyShape->mBody->mWorld.m_collisionDetection.
 		   mNarrowPhaseGJKAlgorithm.testPointInside(localPoint, proxyShape);
 }
 

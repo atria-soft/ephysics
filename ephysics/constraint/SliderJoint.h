@@ -23,7 +23,7 @@ struct SliderJointInfo : public JointInfo {
 		// -------------------- Attributes -------------------- //
 
 		/// Anchor point (in world-space coordinates)
-		Vector3 anchorPointWorldSpace;
+		Vector3 m_m_m_m_anchorPointWorldSpace;
 
 		/// Slider axis (in world-space coordinates)
 		Vector3 sliderAxisWorldSpace;
@@ -57,7 +57,7 @@ struct SliderJointInfo : public JointInfo {
 						const Vector3& initAnchorPointWorldSpace,
 						const Vector3& initSliderAxisWorldSpace)
 					   : JointInfo(rigidBody1, rigidBody2, SLIDERJOINT),
-						 anchorPointWorldSpace(initAnchorPointWorldSpace),
+						 m_m_m_m_anchorPointWorldSpace(initAnchorPointWorldSpace),
 						 sliderAxisWorldSpace(initSliderAxisWorldSpace),
 						 isLimitEnabled(false), isMotorEnabled(false), minTranslationLimit(-1.0),
 						 maxTranslationLimit(1.0), motorSpeed(0), maxMotorForce(0) {}
@@ -76,7 +76,7 @@ struct SliderJointInfo : public JointInfo {
 						const Vector3& initSliderAxisWorldSpace,
 						float initMinTranslationLimit, float initMaxTranslationLimit)
 					   : JointInfo(rigidBody1, rigidBody2, SLIDERJOINT),
-						 anchorPointWorldSpace(initAnchorPointWorldSpace),
+						 m_m_m_m_anchorPointWorldSpace(initAnchorPointWorldSpace),
 						 sliderAxisWorldSpace(initSliderAxisWorldSpace),
 						 isLimitEnabled(true), isMotorEnabled(false),
 						 minTranslationLimit(initMinTranslationLimit),
@@ -100,7 +100,7 @@ struct SliderJointInfo : public JointInfo {
 						float initMinTranslationLimit, float initMaxTranslationLimit,
 						float initMotorSpeed, float initMaxMotorForce)
 					   : JointInfo(rigidBody1, rigidBody2, SLIDERJOINT),
-						 anchorPointWorldSpace(initAnchorPointWorldSpace),
+						 m_m_m_m_anchorPointWorldSpace(initAnchorPointWorldSpace),
 						 sliderAxisWorldSpace(initSliderAxisWorldSpace),
 						 isLimitEnabled(true), isMotorEnabled(true),
 						 minTranslationLimit(initMinTranslationLimit),
@@ -126,19 +126,19 @@ class SliderJoint : public Joint {
 		// -------------------- Attributes -------------------- //
 
 		/// Anchor point of body 1 (in local-space coordinates of body 1)
-		Vector3 mLocalAnchorPointBody1;
+		Vector3 m_localAnchorPointBody1;
 
 		/// Anchor point of body 2 (in local-space coordinates of body 2)
-		Vector3 mLocalAnchorPointBody2;
+		Vector3 m_localAnchorPointBody2;
 
 		/// Slider axis (in local-space coordinates of body 1)
 		Vector3 mSliderAxisBody1;
 
 		/// Inertia tensor of body 1 (in world-space coordinates)
-		Matrix3x3 mI1;
+		Matrix3x3 m_i1;
 
 		/// Inertia tensor of body 2 (in world-space coordinates)
-		Matrix3x3 mI2;
+		Matrix3x3 m_i2;
 
 		/// Inverse of the initial orientation difference between the two bodies
 		Quaternion mInitOrientationDifferenceInv;
@@ -186,31 +186,31 @@ class SliderJoint : public Joint {
 		float mBUpperLimit;
 
 		/// Inverse of mass matrix K=JM^-1J^t for the translation constraint (2x2 matrix)
-		Matrix2x2 mInverseMassMatrixTranslationConstraint;
+		Matrix2x2 m_inverseMassMatrixTranslationConstraint;
 
 		/// Inverse of mass matrix K=JM^-1J^t for the rotation constraint (3x3 matrix)
-		Matrix3x3 mInverseMassMatrixRotationConstraint;
+		Matrix3x3 m_inverseMassMatrixRotationConstraint;
 
 		/// Inverse of mass matrix K=JM^-1J^t for the upper and lower limit constraints (1x1 matrix)
-		float mInverseMassMatrixLimit;
+		float m_inverseMassMatrixLimit;
 
 		/// Inverse of mass matrix K=JM^-1J^t for the motor
-		float mInverseMassMatrixMotor;
+		float m_inverseMassMatrixMotor;
 
 		/// Accumulated impulse for the 2 translation constraints
-		Vector2 mImpulseTranslation;
+		Vector2 m_impulseTranslation;
 
 		/// Accumulated impulse for the 3 rotation constraints
-		Vector3 mImpulseRotation;
+		Vector3 m_impulseRotation;
 
 		/// Accumulated impulse for the lower limit constraint
-		float mImpulseLowerLimit;
+		float m_impulseLowerLimit;
 
 		/// Accumulated impulse for the upper limit constraint
-		float mImpulseUpperLimit;
+		float m_impulseUpperLimit;
 
 		/// Accumulated impulse for the motor
-		float mImpulseMotor;
+		float m_impulseMotor;
 
 		/// True if the slider limits are enabled
 		bool mIsLimitEnabled;
@@ -372,7 +372,7 @@ inline float SliderJoint::getMaxMotorForce() const {
  * @return The current force of the joint motor (in Newton x meters)
  */
 inline float SliderJoint::getMotorForce(float timeStep) const {
-	return mImpulseMotor / timeStep;
+	return m_impulseMotor / timeStep;
 }
 
 // Return the number of bytes used by the joint

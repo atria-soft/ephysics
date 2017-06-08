@@ -19,7 +19,7 @@ using namespace reactphysics3d;
  * @param margin The collision margin (in meters) around the collision shape
  */
 BoxShape::BoxShape(const Vector3& extent, float margin)
-		 : ConvexShape(BOX, margin), mExtent(extent - Vector3(margin, margin, margin)) {
+		 : ConvexShape(BOX, margin), m_extent(extent - Vector3(margin, margin, margin)) {
 	assert(extent.x > float(0.0) && extent.x > margin);
 	assert(extent.y > float(0.0) && extent.y > margin);
 	assert(extent.z > float(0.0) && extent.z > margin);
@@ -38,7 +38,7 @@ BoxShape::~BoxShape() {
  */
 void BoxShape::computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const {
 	float factor = (float(1.0) / float(3.0)) * mass;
-	Vector3 realExtent = mExtent + Vector3(mMargin, mMargin, mMargin);
+	Vector3 realExtent = m_extent + Vector3(mMargin, mMargin, mMargin);
 	float xSquare = realExtent.x * realExtent.x;
 	float ySquare = realExtent.y * realExtent.y;
 	float zSquare = realExtent.z * realExtent.z;
@@ -63,17 +63,17 @@ bool BoxShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pro
 		if (std::abs(rayDirection[i]) < MACHINE_EPSILON) {
 
 			// If the ray's origin is not inside the slab, there is no hit
-			if (ray.point1[i] > mExtent[i] || ray.point1[i] < -mExtent[i]) return false;
+			if (ray.point1[i] > m_extent[i] || ray.point1[i] < -m_extent[i]) return false;
 		}
 		else {
 
 			// Compute the int32_tersection of the ray with the near and far plane of the slab
 			float oneOverD = float(1.0) / rayDirection[i];
-			float t1 = (-mExtent[i] - ray.point1[i]) * oneOverD;
-			float t2 = (mExtent[i] - ray.point1[i]) * oneOverD;
-			currentNormal[0] = (i == 0) ? -mExtent[i] : float(0.0);
-			currentNormal[1] = (i == 1) ? -mExtent[i] : float(0.0);
-			currentNormal[2] = (i == 2) ? -mExtent[i] : float(0.0);
+			float t1 = (-m_extent[i] - ray.point1[i]) * oneOverD;
+			float t2 = (m_extent[i] - ray.point1[i]) * oneOverD;
+			currentNormal[0] = (i == 0) ? -m_extent[i] : float(0.0);
+			currentNormal[1] = (i == 1) ? -m_extent[i] : float(0.0);
+			currentNormal[2] = (i == 2) ? -m_extent[i] : float(0.0);
 
 			// Swap t1 and t2 if need so that t1 is int32_tersection with near plane and
 			// t2 with far plane

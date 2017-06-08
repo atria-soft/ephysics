@@ -33,13 +33,13 @@
 using namespace openglframework;
 
 // Constructor
-Texture2D::Texture2D() : mID(0), mUnit(0), mWidth(0), mHeight(0) {
+Texture2D::Texture2D() : m_id(0), mUnit(0), mWidth(0), mHeight(0) {
 
 }
 
 // Constructor
 Texture2D::Texture2D(uint32_t width, uint32_t height, uint32_t int32_ternalFormat, uint32_t format, uint32_t type)
-		  : mID(0), mUnit(0), mWidth(0), mHeight(0) {
+		  : m_id(0), mUnit(0), mWidth(0), mHeight(0) {
 
 	// Create the texture
 	create(width, height, int32_ternalFormat, format, type);
@@ -61,9 +61,9 @@ void Texture2D::create(uint32_t width, uint32_t height, uint32_t int32_ternalFor
 	mHeight = height;
 
 	// Create the OpenGL texture
-	glGenTextures(1, &mID);
-	assert(mID != 0);
-	glBindTexture(GL_TEXTURE_2D, mID);
+	glGenTextures(1, &m_id);
+	assert(m_id != 0);
+	glBindTexture(GL_TEXTURE_2D, m_id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -83,9 +83,9 @@ void Texture2D::create(uint32_t width, uint32_t height, uint32_t int32_ternalFor
 	mHeight = height;
 
 	// Create the OpenGL texture
-	glGenTextures(1, &mID);
-	assert(mID != 0);
-	glBindTexture(GL_TEXTURE_2D, mID);
+	glGenTextures(1, &m_id);
+	assert(m_id != 0);
+	glBindTexture(GL_TEXTURE_2D, m_id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapS);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, maxFilter);
@@ -96,9 +96,9 @@ void Texture2D::create(uint32_t width, uint32_t height, uint32_t int32_ternalFor
 
 // Destroy the texture
 void Texture2D::destroy() {
-	if (mID != 0) {
-		glDeleteTextures(1, &mID);
-		mID = 0;
+	if (m_id != 0) {
+		glDeleteTextures(1, &m_id);
+		m_id = 0;
 		mUnit = 0;
 		mWidth = 0;
 		mHeight = 0;

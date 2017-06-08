@@ -15,13 +15,13 @@ const float FixedJoint::BETA = float(0.2);
 
 // Constructor
 FixedJoint::FixedJoint(const FixedJointInfo& jointInfo)
-		   : Joint(jointInfo), mImpulseTranslation(0, 0, 0), mImpulseRotation(0, 0, 0) {
+		   : Joint(jointInfo), m_impulseTranslation(0, 0, 0), m_impulseRotation(0, 0, 0) {
 
 	// Compute the local-space anchor point for each body
 	const Transform& transform1 = mBody1->getTransform();
 	const Transform& transform2 = mBody2->getTransform();
-	mLocalAnchorPointBody1 = transform1.getInverse() * jointInfo.anchorPointWorldSpace;
-	mLocalAnchorPointBody2 = transform2.getInverse() * jointInfo.anchorPointWorldSpace;
+	m_localAnchorPointBody1 = transform1.getInverse() * jointInfo.m_m_m_m_anchorPointWorldSpace;
+	m_localAnchorPointBody2 = transform2.getInverse() * jointInfo.m_m_m_m_anchorPointWorldSpace;
 
 	// Compute the inverse of the initial orientation difference between the two bodies
 	mInitOrientationDifferenceInv = transform2.getOrientation() *
@@ -49,43 +49,43 @@ void FixedJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 	const Quaternion& orientationBody2 = mBody2->getTransform().getOrientation();
 
 	// Get the inertia tensor of bodies
-	mI1 = mBody1->getInertiaTensorInverseWorld();
-	mI2 = mBody2->getInertiaTensorInverseWorld();
+	m_i1 = mBody1->getInertiaTensorInverseWorld();
+	m_i2 = mBody2->getInertiaTensorInverseWorld();
 
 	// Compute the vector from body center to the anchor point in world-space
-	mR1World = orientationBody1 * mLocalAnchorPointBody1;
-	mR2World = orientationBody2 * mLocalAnchorPointBody2;
+	m_r1World = orientationBody1 * m_localAnchorPointBody1;
+	m_r2World = orientationBody2 * m_localAnchorPointBody2;
 
 	// Compute the corresponding skew-symmetric matrices
-	Matrix3x3 skewSymmetricMatrixU1= Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(mR1World);
-	Matrix3x3 skewSymmetricMatrixU2= Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(mR2World);
+	Matrix3x3 skewSymmetricMatrixU1= Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r1World);
+	Matrix3x3 skewSymmetricMatrixU2= Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r2World);
 
 	// Compute the matrix K=JM^-1J^t (3x3 matrix) for the 3 translation constraints
 	float inverseMassBodies = mBody1->mMassInverse + mBody2->mMassInverse;
 	Matrix3x3 massMatrix = Matrix3x3(inverseMassBodies, 0, 0,
 									0, inverseMassBodies, 0,
 									0, 0, inverseMassBodies) +
-						   skewSymmetricMatrixU1 * mI1 * skewSymmetricMatrixU1.getTranspose() +
-						   skewSymmetricMatrixU2 * mI2 * skewSymmetricMatrixU2.getTranspose();
+						   skewSymmetricMatrixU1 * m_i1 * skewSymmetricMatrixU1.getTranspose() +
+						   skewSymmetricMatrixU2 * m_i2 * skewSymmetricMatrixU2.getTranspose();
 
 	// Compute the inverse mass matrix K^-1 for the 3 translation constraints
-	mInverseMassMatrixTranslation.setToZero();
+	m_inverseMassMatrixTranslation.setToZero();
 	if (mBody1->getType() == DYNAMIC || mBody2->getType() == DYNAMIC) {
-		mInverseMassMatrixTranslation = massMatrix.getInverse();
+		m_inverseMassMatrixTranslation = massMatrix.getInverse();
 	}
 
 	// Compute the bias "b" of the constraint for the 3 translation constraints
 	float biasFactor = (BETA / constraintSolverData.timeStep);
 	mBiasTranslation.setToZero();
 	if (mPositionCorrectionTechnique == BAUMGARTE_JOINTS) {
-		mBiasTranslation = biasFactor * (x2 + mR2World - x1 - mR1World);
+		mBiasTranslation = biasFactor * (x2 + m_r2World - x1 - m_r1World);
 	}
 
 	// Compute the inverse of the mass matrix K=JM^-1J^t for the 3 rotation
 	// contraints (3x3 matrix)
-	mInverseMassMatrixRotation = mI1 + mI2;
+	m_inverseMassMatrixRotation = m_i1 + m_i2;
 	if (mBody1->getType() == DYNAMIC || mBody2->getType() == DYNAMIC) {
-		mInverseMassMatrixRotation = mInverseMassMatrixRotation.getInverse();
+		m_inverseMassMatrixRotation = m_inverseMassMatrixRotation.getInverse();
 	}
 
 	// Compute the bias "b" for the 3 rotation constraints
@@ -101,8 +101,8 @@ void FixedJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 	if (!constraintSolverData.isWarmStartingActive) {
 
 		// Reset the accumulated impulses
-		mImpulseTranslation.setToZero();
-		mImpulseRotation.setToZero();
+		m_impulseTranslation.setToZero();
+		m_impulseRotation.setToZero();
 	}
 }
 
@@ -120,25 +120,25 @@ void FixedJoint::warmstart(const ConstraintSolverData& constraintSolverData) {
 	const float inverseMassBody2 = mBody2->mMassInverse;
 
 	// Compute the impulse P=J^T * lambda for the 3 translation constraints for body 1
-	Vector3 linearImpulseBody1 = -mImpulseTranslation;
-	Vector3 angularImpulseBody1 = mImpulseTranslation.cross(mR1World);
+	Vector3 linearImpulseBody1 = -m_impulseTranslation;
+	Vector3 angularImpulseBody1 = m_impulseTranslation.cross(m_r1World);
 
 	// Compute the impulse P=J^T * lambda for the 3 rotation constraints for body 1
-	angularImpulseBody1 += -mImpulseRotation;
+	angularImpulseBody1 += -m_impulseRotation;
 
 	// Apply the impulse to the body 1
 	v1 += inverseMassBody1 * linearImpulseBody1;
-	w1 += mI1 * angularImpulseBody1;
+	w1 += m_i1 * angularImpulseBody1;
 
 	// Compute the impulse P=J^T * lambda for the 3 translation constraints for body 2
-	Vector3 angularImpulseBody2 = -mImpulseTranslation.cross(mR2World);
+	Vector3 angularImpulseBody2 = -m_impulseTranslation.cross(m_r2World);
 
 	// Compute the impulse P=J^T * lambda for the 3 rotation constraints for body 2
-	angularImpulseBody2 += mImpulseRotation;
+	angularImpulseBody2 += m_impulseRotation;
 
 	// Apply the impulse to the body 2
-	v2 += inverseMassBody2 * mImpulseTranslation;
-	w2 += mI2 * angularImpulseBody2;
+	v2 += inverseMassBody2 * m_impulseTranslation;
+	w2 += m_i2 * angularImpulseBody2;
 }
 
 // Solve the velocity constraint
@@ -157,27 +157,27 @@ void FixedJoint::solveVelocityConstraint(const ConstraintSolverData& constraintS
 	// --------------- Translation Constraints --------------- //
 
 	// Compute J*v for the 3 translation constraints
-	const Vector3 JvTranslation = v2 + w2.cross(mR2World) - v1 - w1.cross(mR1World);
+	const Vector3 JvTranslation = v2 + w2.cross(m_r2World) - v1 - w1.cross(m_r1World);
 
 	// Compute the Lagrange multiplier lambda
-	const Vector3 deltaLambda = mInverseMassMatrixTranslation *
+	const Vector3 deltaLambda = m_inverseMassMatrixTranslation *
 							   (-JvTranslation - mBiasTranslation);
-	mImpulseTranslation += deltaLambda;
+	m_impulseTranslation += deltaLambda;
 
 	// Compute the impulse P=J^T * lambda for body 1
 	const Vector3 linearImpulseBody1 = -deltaLambda;
-	Vector3 angularImpulseBody1 = deltaLambda.cross(mR1World);
+	Vector3 angularImpulseBody1 = deltaLambda.cross(m_r1World);
 
 	// Apply the impulse to the body 1
 	v1 += inverseMassBody1 * linearImpulseBody1;
-	w1 += mI1 * angularImpulseBody1;
+	w1 += m_i1 * angularImpulseBody1;
 
 	// Compute the impulse P=J^T * lambda  for body 2
-	const Vector3 angularImpulseBody2 = -deltaLambda.cross(mR2World);
+	const Vector3 angularImpulseBody2 = -deltaLambda.cross(m_r2World);
 
 	// Apply the impulse to the body 2
 	v2 += inverseMassBody2 * deltaLambda;
-	w2 += mI2 * angularImpulseBody2;
+	w2 += m_i2 * angularImpulseBody2;
 
 	// --------------- Rotation Constraints --------------- //
 
@@ -185,17 +185,17 @@ void FixedJoint::solveVelocityConstraint(const ConstraintSolverData& constraintS
 	const Vector3 JvRotation = w2 - w1;
 
 	// Compute the Lagrange multiplier lambda for the 3 rotation constraints
-	Vector3 deltaLambda2 = mInverseMassMatrixRotation * (-JvRotation - mBiasRotation);
-	mImpulseRotation += deltaLambda2;
+	Vector3 deltaLambda2 = m_inverseMassMatrixRotation * (-JvRotation - mBiasRotation);
+	m_impulseRotation += deltaLambda2;
 
 	// Compute the impulse P=J^T * lambda for the 3 rotation constraints for body 1
 	angularImpulseBody1 = -deltaLambda2;
 
 	// Apply the impulse to the body 1
-	w1 += mI1 * angularImpulseBody1;
+	w1 += m_i1 * angularImpulseBody1;
 
 	// Apply the impulse to the body 2
-	w2 += mI2 * deltaLambda2;
+	w2 += m_i2 * deltaLambda2;
 }
 
 // Solve the position constraint (for position error correction)
@@ -216,16 +216,16 @@ void FixedJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 	float inverseMassBody2 = mBody2->mMassInverse;
 
 	// Recompute the inverse inertia tensors
-	mI1 = mBody1->getInertiaTensorInverseWorld();
-	mI2 = mBody2->getInertiaTensorInverseWorld();
+	m_i1 = mBody1->getInertiaTensorInverseWorld();
+	m_i2 = mBody2->getInertiaTensorInverseWorld();
 
 	// Compute the vector from body center to the anchor point in world-space
-	mR1World = q1 * mLocalAnchorPointBody1;
-	mR2World = q2 * mLocalAnchorPointBody2;
+	m_r1World = q1 * m_localAnchorPointBody1;
+	m_r2World = q2 * m_localAnchorPointBody2;
 
 	// Compute the corresponding skew-symmetric matrices
-	Matrix3x3 skewSymmetricMatrixU1= Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(mR1World);
-	Matrix3x3 skewSymmetricMatrixU2= Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(mR2World);
+	Matrix3x3 skewSymmetricMatrixU1= Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r1World);
+	Matrix3x3 skewSymmetricMatrixU2= Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r2World);
 
 	// --------------- Translation Constraints --------------- //
 
@@ -234,26 +234,26 @@ void FixedJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 	Matrix3x3 massMatrix = Matrix3x3(inverseMassBodies, 0, 0,
 									0, inverseMassBodies, 0,
 									0, 0, inverseMassBodies) +
-						   skewSymmetricMatrixU1 * mI1 * skewSymmetricMatrixU1.getTranspose() +
-						   skewSymmetricMatrixU2 * mI2 * skewSymmetricMatrixU2.getTranspose();
-	mInverseMassMatrixTranslation.setToZero();
+						   skewSymmetricMatrixU1 * m_i1 * skewSymmetricMatrixU1.getTranspose() +
+						   skewSymmetricMatrixU2 * m_i2 * skewSymmetricMatrixU2.getTranspose();
+	m_inverseMassMatrixTranslation.setToZero();
 	if (mBody1->getType() == DYNAMIC || mBody2->getType() == DYNAMIC) {
-		mInverseMassMatrixTranslation = massMatrix.getInverse();
+		m_inverseMassMatrixTranslation = massMatrix.getInverse();
 	}
 
 	// Compute position error for the 3 translation constraints
-	const Vector3 errorTranslation = x2 + mR2World - x1 - mR1World;
+	const Vector3 errorTranslation = x2 + m_r2World - x1 - m_r1World;
 
 	// Compute the Lagrange multiplier lambda
-	const Vector3 lambdaTranslation = mInverseMassMatrixTranslation * (-errorTranslation);
+	const Vector3 lambdaTranslation = m_inverseMassMatrixTranslation * (-errorTranslation);
 
 	// Compute the impulse of body 1
 	Vector3 linearImpulseBody1 = -lambdaTranslation;
-	Vector3 angularImpulseBody1 = lambdaTranslation.cross(mR1World);
+	Vector3 angularImpulseBody1 = lambdaTranslation.cross(m_r1World);
 
 	// Compute the pseudo velocity of body 1
 	const Vector3 v1 = inverseMassBody1 * linearImpulseBody1;
-	Vector3 w1 = mI1 * angularImpulseBody1;
+	Vector3 w1 = m_i1 * angularImpulseBody1;
 
 	// Update the body position/orientation of body 1
 	x1 += v1;
@@ -261,11 +261,11 @@ void FixedJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 	q1.normalize();
 
 	// Compute the impulse of body 2
-	Vector3 angularImpulseBody2 = -lambdaTranslation.cross(mR2World);
+	Vector3 angularImpulseBody2 = -lambdaTranslation.cross(m_r2World);
 
 	// Compute the pseudo velocity of body 2
 	const Vector3 v2 = inverseMassBody2 * lambdaTranslation;
-	Vector3 w2 = mI2 * angularImpulseBody2;
+	Vector3 w2 = m_i2 * angularImpulseBody2;
 
 	// Update the body position/orientation of body 2
 	x2 += v2;
@@ -276,9 +276,9 @@ void FixedJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 
 	// Compute the inverse of the mass matrix K=JM^-1J^t for the 3 rotation
 	// contraints (3x3 matrix)
-	mInverseMassMatrixRotation = mI1 + mI2;
+	m_inverseMassMatrixRotation = m_i1 + m_i2;
 	if (mBody1->getType() == DYNAMIC || mBody2->getType() == DYNAMIC) {
-		mInverseMassMatrixRotation = mInverseMassMatrixRotation.getInverse();
+		m_inverseMassMatrixRotation = m_inverseMassMatrixRotation.getInverse();
 	}
 
 	// Compute the position error for the 3 rotation constraints
@@ -288,20 +288,20 @@ void FixedJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 	const Vector3 errorRotation = float(2.0) * qError.getVectorV();
 
 	// Compute the Lagrange multiplier lambda for the 3 rotation constraints
-	Vector3 lambdaRotation = mInverseMassMatrixRotation * (-errorRotation);
+	Vector3 lambdaRotation = m_inverseMassMatrixRotation * (-errorRotation);
 
 	// Compute the impulse P=J^T * lambda for the 3 rotation constraints of body 1
 	angularImpulseBody1 = -lambdaRotation;
 
 	// Compute the pseudo velocity of body 1
-	w1 = mI1 * angularImpulseBody1;
+	w1 = m_i1 * angularImpulseBody1;
 
 	// Update the body position/orientation of body 1
 	q1 += Quaternion(0, w1) * q1 * float(0.5);
 	q1.normalize();
 
 	// Compute the pseudo velocity of body 2
-	w2 = mI2 * lambdaRotation;
+	w2 = m_i2 * lambdaRotation;
 
 	// Update the body position/orientation of body 2
 	q2 += Quaternion(0, w2) * q2 * float(0.5);

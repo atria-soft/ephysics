@@ -215,7 +215,7 @@ ProxyShape* RigidBody::addCollisionShape(CollisionShape* collisionShape,
 	collisionShape->computeAABB(aabb, mTransform * transform);
 
 	// Notify the collision detection about this new collision shape
-	mWorld.mCollisionDetection.addProxyCollisionShape(proxyShape, aabb);
+	mWorld.m_collisionDetection.addProxyCollisionShape(proxyShape, aabb);
 
 	mNbCollisionShapes++;
 
@@ -389,7 +389,7 @@ void RigidBody::updateBroadPhaseState() const {
 		shape->getCollisionShape()->computeAABB(aabb, mTransform *shape->getLocalToBodyTransform());
 
 		// Update the broad-phase state for the proxy collision shape
-		mWorld.mCollisionDetection.updateProxyCollisionShape(shape, aabb, displacement);
+		mWorld.m_collisionDetection.updateProxyCollisionShape(shape, aabb, displacement);
 	}
 }
 

@@ -49,7 +49,7 @@ class ProxyShape {
 		void* mCachedCollisionData;
 
 		/// Pointer to user data
-		void* mUserData;
+		void* m_userData;
 
 		/// Bits used to define the collision category of this shape.
 		/// You can set a single bit to one to define a category value for this
@@ -190,7 +190,7 @@ inline float ProxyShape::getMass() const {
  * @return A pointer to the user data stored int32_to the proxy shape
  */
 inline void* ProxyShape::getUserData() const {
-	return mUserData;
+	return m_userData;
 }
 
 // Attach user data to this body
@@ -198,7 +198,7 @@ inline void* ProxyShape::getUserData() const {
  * @param userData Pointer to the user data you want to store within the proxy shape
  */
 inline void ProxyShape::setUserData(void* userData) {
-	mUserData = userData;
+	m_userData = userData;
 }
 
 // Return the local to parent body transform

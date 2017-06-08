@@ -25,7 +25,7 @@ DynamicsWorld::DynamicsWorld(const Vector3 &gravity)
 				mConstraintSolver(mMapBodyToConstrainedVelocityIndex),
 				mNbVelocitySolverIterations(DEFAULT_VELOCITY_SOLVER_NB_ITERATIONS),
 				mNbPositionSolverIterations(DEFAULT_POSITION_SOLVER_NB_ITERATIONS),
-				mIsSleepingEnabled(SPLEEPING_ENABLED), mGravity(gravity),
+				m_isSleepingEnabled(SPLEEPING_ENABLED), mGravity(gravity),
 				mIsGravityEnabled(true), mConstrainedLinearVelocities(NULL),
 				mConstrainedAngularVelocities(NULL), mSplitLinearVelocities(NULL),
 				mSplitAngularVelocities(NULL), mConstrainedPositions(NULL),
@@ -122,7 +122,7 @@ void DynamicsWorld::update(float timeStep) {
 	}
 	
 	// Compute the collision detection
-	mCollisionDetection.computeCollisionDetection();
+	m_collisionDetection.computeCollisionDetection();
 	
 	// Compute the islands (separate groups of bodies with constraints between each others)
 	computeIslands();
@@ -142,7 +142,7 @@ void DynamicsWorld::update(float timeStep) {
 	// Update the state (positions and velocities) of the bodies
 	updateBodiesState();
 	
-	if (mIsSleepingEnabled) updateSleepingBodies();
+	if (m_isSleepingEnabled) updateSleepingBodies();
 	
 	// Notify the event listener about the end of an int32_ternal tick
 	if (mEventListener != NULL) mEventListener->endInternalTick();
@@ -538,7 +538,7 @@ Joint* DynamicsWorld::createJoint(const JointInfo& jointInfo) {
 	if (!jointInfo.isCollisionEnabled) {
 
 		// Add the pair of bodies in the set of body pairs that cannot collide with each other
-		mCollisionDetection.addNoCollisionPair(jointInfo.body1, jointInfo.body2);
+		m_collisionDetection.addNoCollisionPair(jointInfo.body1, jointInfo.body2);
 	}
 
 	// Add the joint int32_to the world
@@ -563,7 +563,7 @@ void DynamicsWorld::destroyJoint(Joint* joint) {
 	if (!joint->isCollisionEnabled()) {
 
 		// Remove the pair of bodies from the set of body pairs that cannot collide with each other
-		mCollisionDetection.removeNoCollisionPair(joint->getBody1(), joint->getBody2());
+		m_collisionDetection.removeNoCollisionPair(joint->getBody1(), joint->getBody2());
 	}
 
 	// Wake up the two bodies of the joint
@@ -645,7 +645,7 @@ void DynamicsWorld::computeIslands() {
 		nbContactManifolds += nbBodyManifolds;
 	}
 	for (std::set<Joint*>::iterator it = mJoints.begin(); it != mJoints.end(); ++it) {
-		(*it)->mIsAlreadyInIsland = false;
+		(*it)->m_isAlreadyInIsland = false;
 	}
 
 	// Create a stack (using an array) for the rigid bodies to visit during the Depth First Search
@@ -658,7 +658,7 @@ void DynamicsWorld::computeIslands() {
 		RigidBody* body = *it;
 
 		// If the body has already been added to an island, we go to the next body
-		if (body->mIsAlreadyInIsland) continue;
+		if (body->m_isAlreadyInIsland) continue;
 
 		// If the body is static, we go to the next body
 		if (body->getType() == STATIC) continue;
@@ -670,7 +670,7 @@ void DynamicsWorld::computeIslands() {
 		uint32_t stackIndex = 0;
 		stackBodiesToVisit[stackIndex] = body;
 		stackIndex++;
-		body->mIsAlreadyInIsland = true;
+		body->m_isAlreadyInIsland = true;
 
 		// Create the new island
 		void* allocatedMemoryIsland = mMemoryAllocator.allocate(sizeof(Island));
@@ -710,7 +710,7 @@ void DynamicsWorld::computeIslands() {
 
 				// Add the contact manifold int32_to the island
 				mIslands[mNbIslands]->addContactManifold(contactManifold);
-				contactManifold->mIsAlreadyInIsland = true;
+				contactManifold->m_isAlreadyInIsland = true;
 
 				// Get the other body of the contact manifold
 				RigidBody* body1 = static_cast<RigidBody*>(contactManifold->getBody1());
@@ -718,12 +718,12 @@ void DynamicsWorld::computeIslands() {
 				RigidBody* otherBody = (body1->getID() == bodyToVisit->getID()) ? body2 : body1;
 
 				// Check if the other body has already been added to the island
-				if (otherBody->mIsAlreadyInIsland) continue;
+				if (otherBody->m_isAlreadyInIsland) continue;
 
 				// Insert the other body int32_to the stack of bodies to visit
 				stackBodiesToVisit[stackIndex] = otherBody;
 				stackIndex++;
-				otherBody->mIsAlreadyInIsland = true;
+				otherBody->m_isAlreadyInIsland = true;
 			}
 
 			// For each joint in which the current body is involved
@@ -738,7 +738,7 @@ void DynamicsWorld::computeIslands() {
 
 				// Add the joint int32_to the island
 				mIslands[mNbIslands]->addJoint(joint);
-				joint->mIsAlreadyInIsland = true;
+				joint->m_isAlreadyInIsland = true;
 
 				// Get the other body of the contact manifold
 				RigidBody* body1 = static_cast<RigidBody*>(joint->getBody1());
@@ -746,12 +746,12 @@ void DynamicsWorld::computeIslands() {
 				RigidBody* otherBody = (body1->getID() == bodyToVisit->getID()) ? body2 : body1;
 
 				// Check if the other body has already been added to the island
-				if (otherBody->mIsAlreadyInIsland) continue;
+				if (otherBody->m_isAlreadyInIsland) continue;
 
 				// Insert the other body int32_to the stack of bodies to visit
 				stackBodiesToVisit[stackIndex] = otherBody;
 				stackIndex++;
-				otherBody->mIsAlreadyInIsland = true;
+				otherBody->m_isAlreadyInIsland = true;
 			}
 		}
 
@@ -760,7 +760,7 @@ void DynamicsWorld::computeIslands() {
 		for (uint32_t i=0; i < mIslands[mNbIslands]->mNbBodies; i++) {
 
 			if (mIslands[mNbIslands]->mBodies[i]->getType() == STATIC) {
-				mIslands[mNbIslands]->mBodies[i]->mIsAlreadyInIsland = false;
+				mIslands[mNbIslands]->mBodies[i]->m_isAlreadyInIsland = false;
 			}
 		}
 
@@ -799,15 +799,15 @@ void DynamicsWorld::updateSleepingBodies() {
 				!bodies[b]->isAllowedToSleep()) {
 
 				// Reset the sleep time of the body
-				bodies[b]->mSleepTime = float(0.0);
+				bodies[b]->m_sleepTime = float(0.0);
 				minSleepTime = float(0.0);
 			}
 			else {  // If the body velocity is bellow the sleeping velocity threshold
 
 				// Increase the sleep time
-				bodies[b]->mSleepTime += mTimeStep;
-				if (bodies[b]->mSleepTime < minSleepTime) {
-					minSleepTime = bodies[b]->mSleepTime;
+				bodies[b]->m_sleepTime += mTimeStep;
+				if (bodies[b]->m_sleepTime < minSleepTime) {
+					minSleepTime = bodies[b]->m_sleepTime;
 				}
 			}
 		}
@@ -833,9 +833,9 @@ void DynamicsWorld::updateSleepingBodies() {
  *						  and false otherwise
  */
 void DynamicsWorld::enableSleeping(bool isSleepingEnabled) {
-	mIsSleepingEnabled = isSleepingEnabled;
+	m_isSleepingEnabled = isSleepingEnabled;
 
-	if (!mIsSleepingEnabled) {
+	if (!m_isSleepingEnabled) {
 
 		// For each body of the world
 		std::set<RigidBody*>::iterator it;
@@ -864,7 +864,7 @@ void DynamicsWorld::testCollision(const ProxyShape* shape,
 	std::set<uint32_t> emptySet;
 
 	// Perform the collision detection and report contacts
-	mCollisionDetection.reportCollisionBetweenShapes(callback, shapes, emptySet);
+	m_collisionDetection.reportCollisionBetweenShapes(callback, shapes, emptySet);
 }
 
 // Test and report collisions between two given shapes.
@@ -886,7 +886,7 @@ void DynamicsWorld::testCollision(const ProxyShape* shape1,
 	shapes2.insert(shape2->mBroadPhaseID);
 
 	// Perform the collision detection and report contacts
-	mCollisionDetection.reportCollisionBetweenShapes(callback, shapes1, shapes2);
+	m_collisionDetection.reportCollisionBetweenShapes(callback, shapes1, shapes2);
 }
 
 // Test and report collisions between a body and all the others bodies of the
@@ -912,7 +912,7 @@ void DynamicsWorld::testCollision(const CollisionBody* body,
 	std::set<uint32_t> emptySet;
 
 	// Perform the collision detection and report contacts
-	mCollisionDetection.reportCollisionBetweenShapes(callback, shapes1, emptySet);
+	m_collisionDetection.reportCollisionBetweenShapes(callback, shapes1, emptySet);
 }
 
 // Test and report collisions between two bodies.
@@ -941,7 +941,7 @@ void DynamicsWorld::testCollision(const CollisionBody* body1,
 	}
 
 	// Perform the collision detection and report contacts
-	mCollisionDetection.reportCollisionBetweenShapes(callback, shapes1, shapes2);
+	m_collisionDetection.reportCollisionBetweenShapes(callback, shapes1, shapes2);
 }
 
 // Test and report collisions between all shapes of the world.
@@ -955,7 +955,7 @@ void DynamicsWorld::testCollision(CollisionCallback* callback) {
 	std::set<uint32_t> emptySet;
 
 	// Perform the collision detection and report contacts
-	mCollisionDetection.reportCollisionBetweenShapes(callback, emptySet, emptySet);
+	m_collisionDetection.reportCollisionBetweenShapes(callback, emptySet, emptySet);
 }
 
 /// Return the list of all contacts of the world
@@ -965,8 +965,8 @@ std::vector<const ContactManifold*> DynamicsWorld::getContactsList() const {
 
 	// For each currently overlapping pair of bodies
 	std::map<overlappingpairid, OverlappingPair*>::const_iterator it;
-	for (it = mCollisionDetection.mOverlappingPairs.begin();
-		 it != mCollisionDetection.mOverlappingPairs.end(); ++it) {
+	for (it = m_collisionDetection.mOverlappingPairs.begin();
+		 it != m_collisionDetection.mOverlappingPairs.end(); ++it) {
 
 		OverlappingPair* pair = it->second;
 

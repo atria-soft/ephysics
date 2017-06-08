@@ -32,14 +32,14 @@ using namespace openglframework;
 // Constructor
 Light::Light()
 	  : mDiffuseColor(Color::white()),
-		mSpecularColor(Color::white()), mIsActive(false) {
+		mSpecularColor(Color::white()), m_isActive(false) {
 
 }
 
 // Constructor
 Light::Light(Color diffuseColor, Color specularColor)
 	  : mDiffuseColor(diffuseColor),
-		mSpecularColor(specularColor), mIsActive(false) {
+		mSpecularColor(specularColor), m_isActive(false) {
 
 }
 

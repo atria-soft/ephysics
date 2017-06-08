@@ -102,7 +102,7 @@ class ContactManifold {
 		Vector3 mRollingResistanceImpulse;
 
 		/// True if the contact manifold has already been added int32_to an island
-		bool mIsAlreadyInIsland;
+		bool m_isAlreadyInIsland;
 
 		/// Reference to the memory allocator
 		MemoryAllocator& mMemoryAllocator;
@@ -310,7 +310,7 @@ inline ContactPoint* ContactManifold::getContactPoint(uint32_t index) const {
 
 // Return true if the contact manifold has already been added int32_to an island
 inline bool ContactManifold::isAlreadyInIsland() const {
-	return mIsAlreadyInIsland;
+	return m_isAlreadyInIsland;
 }
 
 // Return the normalized averaged normal vector
