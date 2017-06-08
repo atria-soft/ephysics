@@ -61,13 +61,13 @@ class ConcaveShape : public CollisionShape {
         // -------------------- Attributes -------------------- //
 
         /// True if the smooth mesh collision algorithm is enabled
-        bool mIsSmoothMeshCollisionEnabled;
+        bool m_isSmoothMeshCollisionEnabled;
 
         // Margin use for collision detection for each triangle
-        decimal mTriangleMargin;
+        decimal m_triangleMargin;
 
         /// Raycast test type for the triangle (front, back, front-back)
-        TriangleRaycastSide mRaycastTestType;
+        TriangleRaycastSide m_raycastTestType;
 
         // -------------------- Methods -------------------- //
 
@@ -114,7 +114,7 @@ class ConcaveShape : public CollisionShape {
 
 // Return the triangle margin
 inline decimal ConcaveShape::getTriangleMargin() const {
-    return mTriangleMargin;
+    return m_triangleMargin;
 }
 
 /// Return true if the collision shape is convex, false if it is concave
@@ -129,7 +129,7 @@ inline bool ConcaveShape::testPointInside(const Vector3& localPoint, ProxyShape*
 
 // Return true if the smooth mesh collision is enabled
 inline bool ConcaveShape::getIsSmoothMeshCollisionEnabled() const {
-    return mIsSmoothMeshCollisionEnabled;
+    return m_isSmoothMeshCollisionEnabled;
 }
 
 // Enable/disable the smooth mesh collision algorithm
@@ -137,12 +137,12 @@ inline bool ConcaveShape::getIsSmoothMeshCollisionEnabled() const {
 /// of the triangle mesh. If it is enabled, collsions with the mesh will be smoother
 /// but collisions computation is a bit more expensive.
 inline void ConcaveShape::setIsSmoothMeshCollisionEnabled(bool isEnabled) {
-    mIsSmoothMeshCollisionEnabled = isEnabled;
+    m_isSmoothMeshCollisionEnabled = isEnabled;
 }
 
 // Return the raycast test type (front, back, front-back)
 inline TriangleRaycastSide ConcaveShape::getRaycastTestType() const {
-    return mRaycastTestType;
+    return m_raycastTestType;
 }
 
 // Set the raycast test type (front, back, front-back)
@@ -150,7 +150,7 @@ inline TriangleRaycastSide ConcaveShape::getRaycastTestType() const {
  * @param testType Raycast test type for the triangle (front, back, front-back)
  */
 inline void ConcaveShape::setRaycastTestType(TriangleRaycastSide testType) {
-    mRaycastTestType = testType;
+    m_raycastTestType = testType;
 }
 
 }

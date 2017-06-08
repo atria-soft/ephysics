@@ -246,20 +246,20 @@ void TriangleOverlapCallback::testTriangle(const Vector3* trianglePoints) {
 
     // Ray casting test against the collision shape
     RaycastInfo raycastInfo;
-    bool isTriangleHit = triangleShape.raycast(mRay, raycastInfo, mProxyShape);
+    bool isTriangleHit = triangleShape.raycast(m_ray, raycastInfo, m_proxyShape);
 
     // If the ray hit the collision shape
     if (isTriangleHit && raycastInfo.hitFraction <= mSmallestHitFraction) {
 
         assert(raycastInfo.hitFraction >= decimal(0.0));
 
-        mRaycastInfo.body = raycastInfo.body;
-        mRaycastInfo.proxyShape = raycastInfo.proxyShape;
-        mRaycastInfo.hitFraction = raycastInfo.hitFraction;
-        mRaycastInfo.worldPoint = raycastInfo.worldPoint;
-        mRaycastInfo.worldNormal = raycastInfo.worldNormal;
-        mRaycastInfo.meshSubpart = -1;
-        mRaycastInfo.triangleIndex = -1;
+        m_raycastInfo.body = raycastInfo.body;
+        m_raycastInfo.proxyShape = raycastInfo.proxyShape;
+        m_raycastInfo.hitFraction = raycastInfo.hitFraction;
+        m_raycastInfo.worldPoint = raycastInfo.worldPoint;
+        m_raycastInfo.worldNormal = raycastInfo.worldNormal;
+        m_raycastInfo.meshSubpart = -1;
+        m_raycastInfo.triangleIndex = -1;
 
         mSmallestHitFraction = raycastInfo.hitFraction;
         mIsHit = true;

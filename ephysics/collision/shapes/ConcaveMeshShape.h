@@ -42,20 +42,20 @@ class ConvexTriangleAABBOverlapCallback : public DynamicAABBTreeOverlapCallback 
 
     private:
 
-        TriangleCallback& mTriangleTestCallback;
+        TriangleCallback& m_triangleTestCallback;
 
         // Reference to the concave mesh shape
-        const ConcaveMeshShape& mConcaveMeshShape;
+        const ConcaveMeshShape& m_concaveMeshShape;
 
         // Reference to the Dynamic AABB tree
-        const DynamicAABBTree& mDynamicAABBTree;
+        const DynamicAABBTree& m_dynamicAABBTree;
 
     public:
 
         // Constructor
         ConvexTriangleAABBOverlapCallback(TriangleCallback& triangleCallback, const ConcaveMeshShape& concaveShape,
                                           const DynamicAABBTree& dynamicAABBTree)
-          : mTriangleTestCallback(triangleCallback), mConcaveMeshShape(concaveShape), mDynamicAABBTree(dynamicAABBTree) {
+          : m_triangleTestCallback(triangleCallback), m_concaveMeshShape(concaveShape), m_dynamicAABBTree(dynamicAABBTree) {
 
         }
 
@@ -70,12 +70,12 @@ class ConcaveMeshRaycastCallback : public DynamicAABBTreeRaycastCallback {
 
     private :
 
-        std::vector<int32> mHitAABBNodes;
-        const DynamicAABBTree& mDynamicAABBTree;
-        const ConcaveMeshShape& mConcaveMeshShape;
-        ProxyShape* mProxyShape;
-        RaycastInfo& mRaycastInfo;
-        const Ray& mRay;
+        std::vector<int32> m_hitAABBNodes;
+        const DynamicAABBTree& m_dynamicAABBTree;
+        const ConcaveMeshShape& m_concaveMeshShape;
+        ProxyShape* m_proxyShape;
+        RaycastInfo& m_raycastInfo;
+        const Ray& m_ray;
         bool mIsHit;
 
     public:
@@ -83,8 +83,8 @@ class ConcaveMeshRaycastCallback : public DynamicAABBTreeRaycastCallback {
         // Constructor
         ConcaveMeshRaycastCallback(const DynamicAABBTree& dynamicAABBTree, const ConcaveMeshShape& concaveMeshShape,
                                    ProxyShape* proxyShape, RaycastInfo& raycastInfo, const Ray& ray)
-            : mDynamicAABBTree(dynamicAABBTree), mConcaveMeshShape(concaveMeshShape), mProxyShape(proxyShape),
-              mRaycastInfo(raycastInfo), mRay(ray), mIsHit(false) {
+            : m_dynamicAABBTree(dynamicAABBTree), m_concaveMeshShape(concaveMeshShape), m_proxyShape(proxyShape),
+              m_raycastInfo(raycastInfo), m_ray(ray), mIsHit(false) {
 
         }
 
@@ -113,10 +113,10 @@ class ConcaveMeshShape : public ConcaveShape {
         // -------------------- Attributes -------------------- //
 
         /// Triangle mesh
-        TriangleMesh* mTriangleMesh;
+        TriangleMesh* m_triangleMesh;
 
         /// Dynamic AABB tree to accelerate collision with the triangles
-        DynamicAABBTree mDynamicAABBTree;
+        DynamicAABBTree m_dynamicAABBTree;
 
         // -------------------- Methods -------------------- //
 
@@ -180,7 +180,7 @@ inline size_t ConcaveMeshShape::getSizeInBytes() const {
 inline void ConcaveMeshShape::getLocalBounds(Vector3& min, Vector3& max) const {
 
     // Get the AABB of the whole tree
-    AABB treeAABB = mDynamicAABBTree.getRootAABB();
+    AABB treeAABB = m_dynamicAABBTree.getRootAABB();
 
     min = treeAABB.getMin();
     max = treeAABB.getMax();
@@ -192,7 +192,7 @@ inline void ConcaveMeshShape::setLocalScaling(const Vector3& scaling) {
     CollisionShape::setLocalScaling(scaling);
 
     // Reset the Dynamic AABB Tree
-    mDynamicAABBTree.reset();
+    m_dynamicAABBTree.reset();
 
     // Rebuild Dynamic AABB Tree here
     initBVHTree();
@@ -220,14 +220,14 @@ inline void ConcaveMeshShape::computeLocalInertiaTensor(Matrix3x3& tensor, decim
 inline void ConvexTriangleAABBOverlapCallback::notifyOverlappingNode(int nodeId) {
 
     // Get the node data (triangle index and mesh subpart index)
-    int32* data = mDynamicAABBTree.getNodeDataInt(nodeId);
+    int32* data = m_dynamicAABBTree.getNodeDataInt(nodeId);
 
     // Get the triangle vertices for this node from the concave mesh shape
     Vector3 trianglePoints[3];
-    mConcaveMeshShape.getTriangleVerticesWithIndexPointer(data[0], data[1], trianglePoints);
+    m_concaveMeshShape.getTriangleVerticesWithIndexPointer(data[0], data[1], trianglePoints);
 
     // Call the callback to test narrow-phase collision with this triangle
-    mTriangleTestCallback.testTriangle(trianglePoints);
+    m_triangleTestCallback.testTriangle(trianglePoints);
 }
 
 }

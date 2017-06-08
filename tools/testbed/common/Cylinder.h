@@ -52,7 +52,7 @@ class Cylinder : public openglframework::Mesh, public PhysicsObject {
 
         /// Collision shape
         rp3d::CylinderShape* mCylinderShape;
-        rp3d::ProxyShape* mProxyShape;
+        rp3d::ProxyShape* m_proxyShape;
 
         /// Vertex Buffer Object for the vertices data
         static openglframework::VertexBufferObject mVBOVertices;

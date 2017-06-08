@@ -46,7 +46,7 @@ class Cone : public openglframework::Mesh, public PhysicsObject {
 
         /// Collision shape
         rp3d::ConeShape* mConeShape;
-        rp3d::ProxyShape* mProxyShape;
+        rp3d::ProxyShape* m_proxyShape;
 
         /// Scaling matrix (applied to a sphere to obtain the correct cone dimensions)
         openglframework::Matrix4 mScalingMatrix;

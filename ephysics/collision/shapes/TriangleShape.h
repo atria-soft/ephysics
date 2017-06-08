@@ -61,7 +61,7 @@ class TriangleShape : public ConvexShape {
         Vector3 mPoints[3];
 
         /// Raycast test type for the triangle (front, back, front-back)
-        TriangleRaycastSide mRaycastTestType;
+        TriangleRaycastSide m_raycastTestType;
 
         // -------------------- Methods -------------------- //
 
@@ -198,7 +198,7 @@ inline bool TriangleShape::testPointInside(const Vector3& localPoint, ProxyShape
 
 // Return the raycast test type (front, back, front-back)
 inline TriangleRaycastSide TriangleShape::getRaycastTestType() const {
-    return mRaycastTestType;
+    return m_raycastTestType;
 }
 
 // Set the raycast test type (front, back, front-back)
@@ -206,7 +206,7 @@ inline TriangleRaycastSide TriangleShape::getRaycastTestType() const {
  * @param testType Raycast test type for the triangle (front, back, front-back)
  */
 inline void TriangleShape::setRaycastTestType(TriangleRaycastSide testType) {
-    mRaycastTestType = testType;
+    m_raycastTestType = testType;
 }
 
 // Return the coordinates of a given vertex of the triangle

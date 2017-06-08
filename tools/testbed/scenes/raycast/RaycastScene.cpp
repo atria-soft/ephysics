@@ -33,7 +33,7 @@ using namespace raycastscene;
 // Constructor
 RaycastScene::RaycastScene(const std::string& name)
        : SceneDemo(name, SCENE_RADIUS, false), mMeshFolderPath("meshes/"),
-         mRaycastManager(mPhongShader, mMeshFolderPath), mCurrentBodyIndex(-1),
+         m_raycastManager(mPhongShader, mMeshFolderPath), mCurrentBodyIndex(-1),
          mAreNormalsDisplayed(false), mVBOVertices(GL_ARRAY_BUFFER) {
 
     mIsContactPointsDisplayed = true;
@@ -278,7 +278,7 @@ RaycastScene::~RaycastScene() {
     // Destroy the convex mesh
     delete mHeightField;
 
-    mRaycastManager.resetPoints();
+    m_raycastManager.resetPoints();
 
     // Destroy the static data for the visual contact points
     VisualContactPoint::destroyStaticData();
@@ -306,7 +306,7 @@ void RaycastScene::updatePhysics() {
 // Take a step for the simulation
 void RaycastScene::update() {
 
-    mRaycastManager.resetPoints();
+    m_raycastManager.resetPoints();
 
     // For each line of the scene
     for (std::vector<Line*>::iterator it = mLines.begin(); it != mLines.end();
@@ -324,7 +324,7 @@ void RaycastScene::update() {
 
         // Perform a raycast query on the physics world by passing a raycast
         // callback class in argument.
-        mCollisionWorld->raycast(ray, &mRaycastManager);
+        mCollisionWorld->raycast(ray, &m_raycastManager);
     }
 
     SceneDemo::update();

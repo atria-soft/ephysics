@@ -43,9 +43,9 @@ class TriangleOverlapCallback : public TriangleCallback {
 
     protected:
 
-        const Ray& mRay;
-        ProxyShape* mProxyShape;
-        RaycastInfo& mRaycastInfo;
+        const Ray& m_ray;
+        ProxyShape* m_proxyShape;
+        RaycastInfo& m_raycastInfo;
         bool mIsHit;
         decimal mSmallestHitFraction;
         const HeightFieldShape& mHeightFieldShape;
@@ -55,10 +55,10 @@ class TriangleOverlapCallback : public TriangleCallback {
         // Constructor
         TriangleOverlapCallback(const Ray& ray, ProxyShape* proxyShape, RaycastInfo& raycastInfo,
                                 const HeightFieldShape& heightFieldShape)
-                               : mRay(ray), mProxyShape(proxyShape), mRaycastInfo(raycastInfo),
+                               : m_ray(ray), m_proxyShape(proxyShape), m_raycastInfo(raycastInfo),
                                  mHeightFieldShape (heightFieldShape) {
             mIsHit = false;
-            mSmallestHitFraction = mRay.maxFraction;
+            mSmallestHitFraction = m_ray.maxFraction;
         }
 
         bool getIsHit() const {return mIsHit;}

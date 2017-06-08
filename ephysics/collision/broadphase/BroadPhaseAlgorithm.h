@@ -93,19 +93,19 @@ class BroadPhaseRaycastCallback : public DynamicAABBTreeRaycastCallback {
 
     private :
 
-        const DynamicAABBTree& mDynamicAABBTree;
+        const DynamicAABBTree& m_dynamicAABBTree;
 
-        unsigned short mRaycastWithCategoryMaskBits;
+        unsigned short m_raycastWithCategoryMaskBits;
 
-        RaycastTest& mRaycastTest;
+        RaycastTest& m_raycastTest;
 
     public:
 
         // Constructor
         BroadPhaseRaycastCallback(const DynamicAABBTree& dynamicAABBTree, unsigned short raycastWithCategoryMaskBits,
                                   RaycastTest& raycastTest)
-            : mDynamicAABBTree(dynamicAABBTree), mRaycastWithCategoryMaskBits(raycastWithCategoryMaskBits),
-              mRaycastTest(raycastTest) {
+            : m_dynamicAABBTree(dynamicAABBTree), m_raycastWithCategoryMaskBits(raycastWithCategoryMaskBits),
+              m_raycastTest(raycastTest) {
 
         }
 
@@ -129,7 +129,7 @@ class BroadPhaseAlgorithm {
         // -------------------- Attributes -------------------- //
 
         /// Dynamic AABB tree
-        DynamicAABBTree mDynamicAABBTree;
+        DynamicAABBTree m_dynamicAABBTree;
 
         /// Array with the broad-phase IDs of all collision shapes that have moved (or have been
         /// created) during the last simulation step. Those are the shapes that need to be tested
@@ -224,8 +224,8 @@ inline bool BroadPhasePair::smallerThan(const BroadPhasePair& pair1, const Broad
 inline bool BroadPhaseAlgorithm::testOverlappingShapes(const ProxyShape* shape1,
                                                        const ProxyShape* shape2) const {
     // Get the two AABBs of the collision shapes
-    const AABB& aabb1 = mDynamicAABBTree.getFatAABB(shape1->mBroadPhaseID);
-    const AABB& aabb2 = mDynamicAABBTree.getFatAABB(shape2->mBroadPhaseID);
+    const AABB& aabb1 = m_dynamicAABBTree.getFatAABB(shape1->mBroadPhaseID);
+    const AABB& aabb2 = m_dynamicAABBTree.getFatAABB(shape2->mBroadPhaseID);
 
     // Check if the two AABBs are overlapping
     return aabb1.testCollision(aabb2);
@@ -237,9 +237,9 @@ inline void BroadPhaseAlgorithm::raycast(const Ray& ray, RaycastTest& raycastTes
 
     PROFILE("BroadPhaseAlgorithm::raycast()");
 
-    BroadPhaseRaycastCallback broadPhaseRaycastCallback(mDynamicAABBTree, raycastWithCategoryMaskBits, raycastTest);
+    BroadPhaseRaycastCallback broadPhaseRaycastCallback(m_dynamicAABBTree, raycastWithCategoryMaskBits, raycastTest);
 
-    mDynamicAABBTree.raycast(ray, broadPhaseRaycastCallback);
+    m_dynamicAABBTree.raycast(ray, broadPhaseRaycastCallback);
 }
 
 }

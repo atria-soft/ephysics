@@ -44,7 +44,7 @@ TriangleShape::TriangleShape(const Vector3& point1, const Vector3& point2, const
     mPoints[0] = point1;
     mPoints[1] = point2;
     mPoints[2] = point3;
-    mRaycastTestType = FRONT;
+    m_raycastTestType = FRONT;
 }
 
 // Destructor
@@ -68,32 +68,32 @@ bool TriangleShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape
     // product for this test.
     const Vector3 m = pq.cross(pc);
     decimal u = pb.dot(m);
-    if (mRaycastTestType == FRONT) {
+    if (m_raycastTestType == FRONT) {
         if (u < decimal(0.0)) return false;
     }
-    else if (mRaycastTestType == BACK) {
+    else if (m_raycastTestType == BACK) {
         if (u > decimal(0.0)) return false;
     }
 
     decimal v = -pa.dot(m);
-    if (mRaycastTestType == FRONT) {
+    if (m_raycastTestType == FRONT) {
         if (v < decimal(0.0)) return false;
     }
-    else if (mRaycastTestType == BACK) {
+    else if (m_raycastTestType == BACK) {
         if (v > decimal(0.0)) return false;
     }
-    else if (mRaycastTestType == FRONT_AND_BACK) {
+    else if (m_raycastTestType == FRONT_AND_BACK) {
         if (!sameSign(u, v)) return false;
     }
 
     decimal w = pa.dot(pq.cross(pb));
-    if (mRaycastTestType == FRONT) {
+    if (m_raycastTestType == FRONT) {
         if (w < decimal(0.0)) return false;
     }
-    else if (mRaycastTestType == BACK) {
+    else if (m_raycastTestType == BACK) {
         if (w > decimal(0.0)) return false;
     }
-    else if (mRaycastTestType == FRONT_AND_BACK) {
+    else if (m_raycastTestType == FRONT_AND_BACK) {
         if (!sameSign(u, w)) return false;
     }
 

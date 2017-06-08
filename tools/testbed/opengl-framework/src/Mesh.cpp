@@ -43,7 +43,7 @@ Mesh::~Mesh() {
 // Destroy the mesh
 void Mesh::destroy() {
 
-    mVertices.clear();
+    m_vertices.clear();
     mNormals.clear();
     mTangents.clear();
     mIndices.clear();
@@ -139,15 +139,15 @@ void Mesh::calculateTangents() {
 void Mesh::calculateBoundingBox(Vector3& min, Vector3& max) const {
 
     // If the mesh contains vertices
-    if (!mVertices.empty())  {
+    if (!m_vertices.empty())  {
 
-        min = mVertices[0];
-        max = mVertices[0];
+        min = m_vertices[0];
+        max = m_vertices[0];
 
-        std::vector<Vector3>::const_iterator  it(mVertices.begin());
+        std::vector<Vector3>::const_iterator  it(m_vertices.begin());
 
         // For each vertex of the mesh
-        for (; it != mVertices.end(); ++it) {
+        for (; it != m_vertices.end(); ++it) {
 
             if( (*it).x < min.x ) min.x = (*it).x;
             else if ( (*it).x > max.x ) max.x = (*it).x;
@@ -171,6 +171,6 @@ void Mesh::scaleVertices(float factor) {
 
     // For each vertex
     for (uint i=0; i<getNbVertices(); i++) {
-        mVertices.at(i) *= factor;
+        m_vertices.at(i) *= factor;
     }
 }

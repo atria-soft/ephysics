@@ -49,7 +49,7 @@ ConvexMesh::ConvexMesh(const openglframework::Vector3 &position,
 
     // Vertex and Indices array for the triangle mesh (data in shared and not copied)
     mPhysicsTriangleVertexArray =
-            new rp3d::TriangleVertexArray(getNbVertices(), &(mVertices[0]), sizeof(openglframework::Vector3),
+            new rp3d::TriangleVertexArray(getNbVertices(), &(m_vertices[0]), sizeof(openglframework::Vector3),
                                           getNbFaces(0), &(mIndices[0][0]), sizeof(int),
                                           rp3d::TriangleVertexArray::VERTEX_FLOAT_TYPE,
                                           rp3d::TriangleVertexArray::INDEX_INTEGER_TYPE);
@@ -69,7 +69,7 @@ ConvexMesh::ConvexMesh(const openglframework::Vector3 &position,
     mBody = world->createCollisionBody(transform);
 
     // Add a collision shape to the body and specify the mass of the collision shape
-    mProxyShape = mBody->addCollisionShape(mConvexShape, rp3d::Transform::identity());
+    m_proxyShape = mBody->addCollisionShape(mConvexShape, rp3d::Transform::identity());
 
     // Create the VBOs and VAO
     createVBOAndVAO();
@@ -99,7 +99,7 @@ ConvexMesh::ConvexMesh(const openglframework::Vector3 &position, float mass,
 
     // Vertex and Indices array for the triangle mesh (data in shared and not copied)
     mPhysicsTriangleVertexArray =
-            new rp3d::TriangleVertexArray(getNbVertices(), &(mVertices[0]), sizeof(openglframework::Vector3),
+            new rp3d::TriangleVertexArray(getNbVertices(), &(m_vertices[0]), sizeof(openglframework::Vector3),
                                           getNbFaces(0), &(mIndices[0][0]), sizeof(int),
                                           rp3d::TriangleVertexArray::VERTEX_FLOAT_TYPE,
                                           rp3d::TriangleVertexArray::INDEX_INTEGER_TYPE);
@@ -117,7 +117,7 @@ ConvexMesh::ConvexMesh(const openglframework::Vector3 &position, float mass,
     rp3d::RigidBody* body = dynamicsWorld->createRigidBody(transform);
 
     // Add a collision shape to the body and specify the mass of the collision shape
-    mProxyShape = body->addCollisionShape(mConvexShape, rp3d::Transform::identity(), mass);
+    m_proxyShape = body->addCollisionShape(mConvexShape, rp3d::Transform::identity(), mass);
 
     mBody = body;
 
@@ -209,7 +209,7 @@ void ConvexMesh::createVBOAndVAO() {
     // Create the VBO for the vertices data
     mVBOVertices.create();
     mVBOVertices.bind();
-    size_t sizeVertices = mVertices.size() * sizeof(openglframework::Vector3);
+    size_t sizeVertices = m_vertices.size() * sizeof(openglframework::Vector3);
     mVBOVertices.copyDataIntoVBO(sizeVertices, getVerticesPointer(), GL_STATIC_DRAW);
     mVBOVertices.unbind();
 
@@ -280,7 +280,7 @@ void ConvexMesh::resetTransform(const rp3d::Transform& transform) {
 void ConvexMesh::setScaling(const openglframework::Vector3& scaling) {
 
     // Scale the collision shape
-    mProxyShape->setLocalScaling(rp3d::Vector3(scaling.x, scaling.y, scaling.z));
+    m_proxyShape->setLocalScaling(rp3d::Vector3(scaling.x, scaling.y, scaling.z));
 
     // Scale the graphics object
     mScalingMatrix = openglframework::Matrix4(scaling.x, 0, 0, 0,

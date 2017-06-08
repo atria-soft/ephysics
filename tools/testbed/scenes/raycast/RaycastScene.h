@@ -125,7 +125,7 @@ class RaycastScene : public SceneDemo {
         std::string mMeshFolderPath;
 
         /// Raycast manager
-        RaycastManager mRaycastManager;
+        RaycastManager m_raycastManager;
 
         /// All the raycast lines
         std::vector<Line*> mLines;
@@ -228,7 +228,7 @@ inline void RaycastScene::setIsContactPointsDisplayed(bool display) {
 
 // Return all the contact points of the scene
 inline std::vector<ContactPoint> RaycastScene::getContactPoints() const {
-    return mRaycastManager.getHitPoints();
+    return m_raycastManager.getHitPoints();
 }
 
 }

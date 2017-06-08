@@ -49,7 +49,7 @@ class Capsule : public openglframework::Mesh, public PhysicsObject {
 
         /// Collision shape
         rp3d::CapsuleShape* mCapsuleShape;
-        rp3d::ProxyShape* mProxyShape;
+        rp3d::ProxyShape* m_proxyShape;
 
 		/// Previous transform (for interpolation)
 		rp3d::Transform mPreviousTransform;

@@ -65,23 +65,23 @@ class ConvexMeshShape : public ConvexShape {
         // -------------------- Attributes -------------------- //
 
         /// Array with the vertices of the mesh
-        std::vector<Vector3> mVertices;
+        std::vector<Vector3> m_vertices;
 
         /// Number of vertices in the mesh
-        uint mNbVertices;
+        uint m_numberVertices;
 
         /// Mesh minimum bounds in the three local x, y and z directions
-        Vector3 mMinBounds;
+        Vector3 m_minBounds;
 
         /// Mesh maximum bounds in the three local x, y and z directions
-        Vector3 mMaxBounds;
+        Vector3 m_maxBounds;
 
         /// True if the shape contains the edges of the convex mesh in order to
         /// make the collision detection faster
-        bool mIsEdgesInformationUsed;
+        bool m_isEdgesInformationUsed;
 
         /// Adjacency list representing the edges of the mesh
-        std::map<uint, std::set<uint> > mEdgesAdjacencyList;
+        std::map<uint, std::set<uint> > m_edgesAdjacencyList;
 
         // -------------------- Methods -------------------- //
 
@@ -165,8 +165,8 @@ inline size_t ConvexMeshShape::getSizeInBytes() const {
  * @param max The maximum bounds of the shape in local-space coordinates
  */
 inline void ConvexMeshShape::getLocalBounds(Vector3& min, Vector3& max) const {
-    min = mMinBounds;
-    max = mMaxBounds;
+    min = m_minBounds;
+    max = m_maxBounds;
 }
 
 // Return the local inertia tensor of the collision shape.
@@ -179,7 +179,7 @@ inline void ConvexMeshShape::getLocalBounds(Vector3& min, Vector3& max) const {
 */
 inline void ConvexMeshShape::computeLocalInertiaTensor(Matrix3x3& tensor, decimal mass) const {
     decimal factor = (decimal(1.0) / decimal(3.0)) * mass;
-    Vector3 realExtent = decimal(0.5) * (mMaxBounds - mMinBounds);
+    Vector3 realExtent = decimal(0.5) * (m_maxBounds - m_minBounds);
     assert(realExtent.x > 0 && realExtent.y > 0 && realExtent.z > 0);
     decimal xSquare = realExtent.x * realExtent.x;
     decimal ySquare = realExtent.y * realExtent.y;
@@ -196,16 +196,16 @@ inline void ConvexMeshShape::computeLocalInertiaTensor(Matrix3x3& tensor, decima
 inline void ConvexMeshShape::addVertex(const Vector3& vertex) {
 
     // Add the vertex in to vertices array
-    mVertices.push_back(vertex);
-    mNbVertices++;
+    m_vertices.push_back(vertex);
+    m_numberVertices++;
 
     // Update the bounds of the mesh
-    if (vertex.x * mScaling.x > mMaxBounds.x) mMaxBounds.x = vertex.x * mScaling.x;
-    if (vertex.x * mScaling.x < mMinBounds.x) mMinBounds.x = vertex.x * mScaling.x;
-    if (vertex.y * mScaling.y > mMaxBounds.y) mMaxBounds.y = vertex.y * mScaling.y;
-    if (vertex.y * mScaling.y < mMinBounds.y) mMinBounds.y = vertex.y * mScaling.y;
-    if (vertex.z * mScaling.z > mMaxBounds.z) mMaxBounds.z = vertex.z * mScaling.z;
-    if (vertex.z * mScaling.z < mMinBounds.z) mMinBounds.z = vertex.z * mScaling.z;
+    if (vertex.x * mScaling.x > m_maxBounds.x) m_maxBounds.x = vertex.x * mScaling.x;
+    if (vertex.x * mScaling.x < m_minBounds.x) m_minBounds.x = vertex.x * mScaling.x;
+    if (vertex.y * mScaling.y > m_maxBounds.y) m_maxBounds.y = vertex.y * mScaling.y;
+    if (vertex.y * mScaling.y < m_minBounds.y) m_minBounds.y = vertex.y * mScaling.y;
+    if (vertex.z * mScaling.z > m_maxBounds.z) m_maxBounds.z = vertex.z * mScaling.z;
+    if (vertex.z * mScaling.z < m_minBounds.z) m_minBounds.z = vertex.z * mScaling.z;
 }
 
 // Add an edge into the convex mesh by specifying the two vertex indices of the edge.
@@ -219,18 +219,18 @@ inline void ConvexMeshShape::addVertex(const Vector3& vertex) {
 inline void ConvexMeshShape::addEdge(uint v1, uint v2) {
 
     // If the entry for vertex v1 does not exist in the adjacency list
-    if (mEdgesAdjacencyList.count(v1) == 0) {
-        mEdgesAdjacencyList.insert(std::make_pair(v1, std::set<uint>()));
+    if (m_edgesAdjacencyList.count(v1) == 0) {
+        m_edgesAdjacencyList.insert(std::make_pair(v1, std::set<uint>()));
     }
 
     // If the entry for vertex v2 does not exist in the adjacency list
-    if (mEdgesAdjacencyList.count(v2) == 0) {
-        mEdgesAdjacencyList.insert(std::make_pair(v2, std::set<uint>()));
+    if (m_edgesAdjacencyList.count(v2) == 0) {
+        m_edgesAdjacencyList.insert(std::make_pair(v2, std::set<uint>()));
     }
 
     // Add the edge in the adjacency list
-    mEdgesAdjacencyList[v1].insert(v2);
-    mEdgesAdjacencyList[v2].insert(v1);
+    m_edgesAdjacencyList[v1].insert(v2);
+    m_edgesAdjacencyList[v2].insert(v1);
 }
 
 // Return true if the edges information is used to speed up the collision detection
@@ -238,7 +238,7 @@ inline void ConvexMeshShape::addEdge(uint v1, uint v2) {
  * @return True if the edges information is used and false otherwise
  */
 inline bool ConvexMeshShape::isEdgesInformationUsed() const {
-    return mIsEdgesInformationUsed;
+    return m_isEdgesInformationUsed;
 }
 
 // Set the variable to know if the edges information is used to speed up the
@@ -248,7 +248,7 @@ inline bool ConvexMeshShape::isEdgesInformationUsed() const {
  *                    the collision detection with the convex mesh shape
  */
 inline void ConvexMeshShape::setIsEdgesInformationUsed(bool isEdgesUsed) {
-    mIsEdgesInformationUsed = isEdgesUsed;
+    m_isEdgesInformationUsed = isEdgesUsed;
 }
 
 // Return true if a point is inside the collision shape

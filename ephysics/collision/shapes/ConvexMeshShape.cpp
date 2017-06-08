@@ -39,17 +39,17 @@ using namespace reactphysics3d;
  * @param margin Collision margin (in meters) around the collision shape
  */
 ConvexMeshShape::ConvexMeshShape(const decimal* arrayVertices, uint nbVertices, int stride, decimal margin)
-                : ConvexShape(CONVEX_MESH, margin), mNbVertices(nbVertices), mMinBounds(0, 0, 0),
-                  mMaxBounds(0, 0, 0), mIsEdgesInformationUsed(false) {
+                : ConvexShape(CONVEX_MESH, margin), m_numberVertices(nbVertices), m_minBounds(0, 0, 0),
+                  m_maxBounds(0, 0, 0), m_isEdgesInformationUsed(false) {
     assert(nbVertices > 0);
     assert(stride > 0);
 
     const unsigned char* vertexPointer = (const unsigned char*) arrayVertices;
 
     // Copy all the vertices into the internal array
-    for (uint i=0; i<mNbVertices; i++) {
+    for (uint i=0; i<m_numberVertices; i++) {
         const decimal* newPoint = (const decimal*) vertexPointer;
-        mVertices.push_back(Vector3(newPoint[0], newPoint[1], newPoint[2]));
+        m_vertices.push_back(Vector3(newPoint[0], newPoint[1], newPoint[2]));
         vertexPointer += stride;
     }
 
@@ -65,8 +65,8 @@ ConvexMeshShape::ConvexMeshShape(const decimal* arrayVertices, uint nbVertices, 
  * @param margin Collision margin (in meters) around the collision shape
  */
 ConvexMeshShape::ConvexMeshShape(TriangleVertexArray* triangleVertexArray, bool isEdgesInformationUsed, decimal margin)
-                : ConvexShape(CONVEX_MESH, margin), mMinBounds(0, 0, 0),
-                  mMaxBounds(0, 0, 0), mIsEdgesInformationUsed(isEdgesInformationUsed) {
+                : ConvexShape(CONVEX_MESH, margin), m_minBounds(0, 0, 0),
+                  m_maxBounds(0, 0, 0), m_isEdgesInformationUsed(isEdgesInformationUsed) {
 
     TriangleVertexArray::VertexDataType vertexType = triangleVertexArray->getVertexDataType();
     TriangleVertexArray::IndexDataType indexType = triangleVertexArray->getIndexDataType();
@@ -84,19 +84,19 @@ ConvexMeshShape::ConvexMeshShape(TriangleVertexArray* triangleVertexArray, bool 
 
             Vector3 vertex(vertices[0], vertices[1], vertices[2] );
             vertex = vertex * mScaling;
-            mVertices.push_back(vertex);
+            m_vertices.push_back(vertex);
         }
         else if (vertexType == TriangleVertexArray::VERTEX_DOUBLE_TYPE) {
             const double* vertices = (double*)(verticesStart + v * vertexStride);
 
             Vector3 vertex(vertices[0], vertices[1], vertices[2] );
             vertex = vertex * mScaling;
-            mVertices.push_back(vertex);
+            m_vertices.push_back(vertex);
         }
     }
 
     // If we need to use the edges information of the mesh
-    if (mIsEdgesInformationUsed) {
+    if (m_isEdgesInformationUsed) {
 
         // For each triangle of the mesh
         for (uint triangleIndex=0; triangleIndex<triangleVertexArray->getNbTriangles(); triangleIndex++) {
@@ -127,7 +127,7 @@ ConvexMeshShape::ConvexMeshShape(TriangleVertexArray* triangleVertexArray, bool 
         }
     }
 
-    mNbVertices = mVertices.size();
+    m_numberVertices = m_vertices.size();
     recalculateBounds();
 }
 
@@ -135,8 +135,8 @@ ConvexMeshShape::ConvexMeshShape(TriangleVertexArray* triangleVertexArray, bool 
 /// If you use this constructor, you will need to set the vertices manually one by one using
 /// the addVertex() method.
 ConvexMeshShape::ConvexMeshShape(decimal margin)
-                : ConvexShape(CONVEX_MESH, margin), mNbVertices(0), mMinBounds(0, 0, 0),
-                  mMaxBounds(0, 0, 0), mIsEdgesInformationUsed(false) {
+                : ConvexShape(CONVEX_MESH, margin), m_numberVertices(0), m_minBounds(0, 0, 0),
+                  m_maxBounds(0, 0, 0), m_isEdgesInformationUsed(false) {
 
 }
 
@@ -156,7 +156,7 @@ ConvexMeshShape::~ConvexMeshShape() {
 Vector3 ConvexMeshShape::getLocalSupportPointWithoutMargin(const Vector3& direction,
                                                            void** cachedCollisionData) const {
 
-    assert(mNbVertices == mVertices.size());
+    assert(m_numberVertices == m_vertices.size());
     assert(cachedCollisionData != NULL);
 
     // Allocate memory for the cached collision data if not allocated yet
@@ -166,28 +166,28 @@ Vector3 ConvexMeshShape::getLocalSupportPointWithoutMargin(const Vector3& direct
     }
 
     // If the edges information is used to speed up the collision detection
-    if (mIsEdgesInformationUsed) {
+    if (m_isEdgesInformationUsed) {
 
-        assert(mEdgesAdjacencyList.size() == mNbVertices);
+        assert(m_edgesAdjacencyList.size() == m_numberVertices);
 
         uint maxVertex = *((int*)(*cachedCollisionData));
-        decimal maxDotProduct = direction.dot(mVertices[maxVertex]);
+        decimal maxDotProduct = direction.dot(m_vertices[maxVertex]);
         bool isOptimal;
 
         // Perform hill-climbing (local search)
         do {
             isOptimal = true;
 
-            assert(mEdgesAdjacencyList.at(maxVertex).size() > 0);
+            assert(m_edgesAdjacencyList.at(maxVertex).size() > 0);
 
             // For all neighbors of the current vertex
             std::set<uint>::const_iterator it;
-            std::set<uint>::const_iterator itBegin = mEdgesAdjacencyList.at(maxVertex).begin();
-            std::set<uint>::const_iterator itEnd = mEdgesAdjacencyList.at(maxVertex).end();
+            std::set<uint>::const_iterator itBegin = m_edgesAdjacencyList.at(maxVertex).begin();
+            std::set<uint>::const_iterator itEnd = m_edgesAdjacencyList.at(maxVertex).end();
             for (it = itBegin; it != itEnd; ++it) {
 
                 // Compute the dot product
-                decimal dotProduct = direction.dot(mVertices[*it]);
+                decimal dotProduct = direction.dot(m_vertices[*it]);
 
                 // If the current vertex is a better vertex (larger dot product)
                 if (dotProduct > maxDotProduct) {
@@ -203,7 +203,7 @@ Vector3 ConvexMeshShape::getLocalSupportPointWithoutMargin(const Vector3& direct
         *((int*)(*cachedCollisionData)) = maxVertex;
 
         // Return the support vertex
-        return mVertices[maxVertex] * mScaling;
+        return m_vertices[maxVertex] * mScaling;
     }
     else {  // If the edges information is not used
 
@@ -211,10 +211,10 @@ Vector3 ConvexMeshShape::getLocalSupportPointWithoutMargin(const Vector3& direct
         uint indexMaxDotProduct = 0;
 
         // For each vertex of the mesh
-        for (uint i=0; i<mNbVertices; i++) {
+        for (uint i=0; i<m_numberVertices; i++) {
 
             // Compute the dot product of the current vertex
-            double dotProduct = direction.dot(mVertices[i]);
+            double dotProduct = direction.dot(m_vertices[i]);
 
             // If the current dot product is larger than the maximum one
             if (dotProduct > maxDotProduct) {
@@ -226,7 +226,7 @@ Vector3 ConvexMeshShape::getLocalSupportPointWithoutMargin(const Vector3& direct
         assert(maxDotProduct >= decimal(0.0));
 
         // Return the vertex with the largest dot product in the support direction
-        return mVertices[indexMaxDotProduct] * mScaling;
+        return m_vertices[indexMaxDotProduct] * mScaling;
     }
 }
 
@@ -236,29 +236,29 @@ void ConvexMeshShape::recalculateBounds() {
     // TODO : Only works if the local origin is inside the mesh
     //        => Make it more robust (init with first vertex of mesh instead)
 
-    mMinBounds.setToZero();
-    mMaxBounds.setToZero();
+    m_minBounds.setToZero();
+    m_maxBounds.setToZero();
 
     // For each vertex of the mesh
-    for (uint i=0; i<mNbVertices; i++) {
+    for (uint i=0; i<m_numberVertices; i++) {
 
-        if (mVertices[i].x > mMaxBounds.x) mMaxBounds.x = mVertices[i].x;
-        if (mVertices[i].x < mMinBounds.x) mMinBounds.x = mVertices[i].x;
+        if (m_vertices[i].x > m_maxBounds.x) m_maxBounds.x = m_vertices[i].x;
+        if (m_vertices[i].x < m_minBounds.x) m_minBounds.x = m_vertices[i].x;
 
-        if (mVertices[i].y > mMaxBounds.y) mMaxBounds.y = mVertices[i].y;
-        if (mVertices[i].y < mMinBounds.y) mMinBounds.y = mVertices[i].y;
+        if (m_vertices[i].y > m_maxBounds.y) m_maxBounds.y = m_vertices[i].y;
+        if (m_vertices[i].y < m_minBounds.y) m_minBounds.y = m_vertices[i].y;
 
-        if (mVertices[i].z > mMaxBounds.z) mMaxBounds.z = mVertices[i].z;
-        if (mVertices[i].z < mMinBounds.z) mMinBounds.z = mVertices[i].z;
+        if (m_vertices[i].z > m_maxBounds.z) m_maxBounds.z = m_vertices[i].z;
+        if (m_vertices[i].z < m_minBounds.z) m_minBounds.z = m_vertices[i].z;
     }
 
     // Apply the local scaling factor
-    mMaxBounds = mMaxBounds * mScaling;
-    mMinBounds = mMinBounds * mScaling;
+    m_maxBounds = m_maxBounds * mScaling;
+    m_minBounds = m_minBounds * mScaling;
 
     // Add the object margin to the bounds
-    mMaxBounds += Vector3(mMargin, mMargin, mMargin);
-    mMinBounds -= Vector3(mMargin, mMargin, mMargin);
+    m_maxBounds += Vector3(mMargin, mMargin, mMargin);
+    m_minBounds -= Vector3(mMargin, mMargin, mMargin);
 }
 
 // Raycast method with feedback information

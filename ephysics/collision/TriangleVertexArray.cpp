@@ -45,9 +45,9 @@ using namespace reactphysics3d;
 TriangleVertexArray::TriangleVertexArray(uint nbVertices, void* verticesStart, int verticesStride,
                                          uint nbTriangles, void* indexesStart, int indexesStride,
                                          VertexDataType vertexDataType, IndexDataType indexDataType) {
-    mNbVertices = nbVertices;
-    mVerticesStart = reinterpret_cast<unsigned char*>(verticesStart);
-    mVerticesStride = verticesStride;
+    m_numberVertices = nbVertices;
+    m_verticesStart = reinterpret_cast<unsigned char*>(verticesStart);
+    m_verticesStride = verticesStride;
     mNbTriangles = nbTriangles;
     mIndicesStart = reinterpret_cast<unsigned char*>(indexesStart);
     mIndicesStride = indexesStride;

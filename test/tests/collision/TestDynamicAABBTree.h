@@ -87,7 +87,7 @@ class TestDynamicAABBTree : public Test {
         // ---------- Atributes ---------- //
 
         OverlapCallback mOverlapCallback;
-        DynamicTreeRaycastCallback mRaycastCallback;
+        DynamicTreeRaycastCallback m_raycastCallback;
 
 
 
@@ -377,40 +377,40 @@ class TestDynamicAABBTree : public Test {
             // ---------- Tests ---------- //
 
             // Ray with no hits
-            mRaycastCallback.reset();
+            m_raycastCallback.reset();
             Ray ray1(Vector3(4.5, -10, -5), Vector3(4.5, 10, -5));
-            tree.raycast(ray1, mRaycastCallback);
-            test(!mRaycastCallback.isHit(object1Id));
-            test(!mRaycastCallback.isHit(object2Id));
-            test(!mRaycastCallback.isHit(object3Id));
-            test(!mRaycastCallback.isHit(object4Id));
+            tree.raycast(ray1, m_raycastCallback);
+            test(!m_raycastCallback.isHit(object1Id));
+            test(!m_raycastCallback.isHit(object2Id));
+            test(!m_raycastCallback.isHit(object3Id));
+            test(!m_raycastCallback.isHit(object4Id));
 
             // Ray that hits object 1
-            mRaycastCallback.reset();
+            m_raycastCallback.reset();
             Ray ray2(Vector3(-1, -20, -2), Vector3(-1, 20, -2));
-            tree.raycast(ray2, mRaycastCallback);
-            test(mRaycastCallback.isHit(object1Id));
-            test(!mRaycastCallback.isHit(object2Id));
-            test(!mRaycastCallback.isHit(object3Id));
-            test(!mRaycastCallback.isHit(object4Id));
+            tree.raycast(ray2, m_raycastCallback);
+            test(m_raycastCallback.isHit(object1Id));
+            test(!m_raycastCallback.isHit(object2Id));
+            test(!m_raycastCallback.isHit(object3Id));
+            test(!m_raycastCallback.isHit(object4Id));
 
             // Ray that hits object 1 and 2
-            mRaycastCallback.reset();
+            m_raycastCallback.reset();
             Ray ray3(Vector3(-7, 6, -2), Vector3(8, 6, -2));
-            tree.raycast(ray3, mRaycastCallback);
-            test(mRaycastCallback.isHit(object1Id));
-            test(mRaycastCallback.isHit(object2Id));
-            test(!mRaycastCallback.isHit(object3Id));
-            test(!mRaycastCallback.isHit(object4Id));
+            tree.raycast(ray3, m_raycastCallback);
+            test(m_raycastCallback.isHit(object1Id));
+            test(m_raycastCallback.isHit(object2Id));
+            test(!m_raycastCallback.isHit(object3Id));
+            test(!m_raycastCallback.isHit(object4Id));
 
             // Ray that hits object 3
-            mRaycastCallback.reset();
+            m_raycastCallback.reset();
             Ray ray4(Vector3(-7, 2, 0), Vector3(-1, 2, 0));
-            tree.raycast(ray4, mRaycastCallback);
-            test(!mRaycastCallback.isHit(object1Id));
-            test(!mRaycastCallback.isHit(object2Id));
-            test(mRaycastCallback.isHit(object3Id));
-            test(!mRaycastCallback.isHit(object4Id));
+            tree.raycast(ray4, m_raycastCallback);
+            test(!m_raycastCallback.isHit(object1Id));
+            test(!m_raycastCallback.isHit(object2Id));
+            test(m_raycastCallback.isHit(object3Id));
+            test(!m_raycastCallback.isHit(object4Id));
 
             // ---- Update the object AABBs with the initial AABBs (no reinsertion) ----- //
 
@@ -420,36 +420,36 @@ class TestDynamicAABBTree : public Test {
             tree.updateObject(object4Id, aabb4, Vector3::zero(), false);
 
             // Ray with no hits
-            mRaycastCallback.reset();
-            tree.raycast(ray1, mRaycastCallback);
-            test(!mRaycastCallback.isHit(object1Id));
-            test(!mRaycastCallback.isHit(object2Id));
-            test(!mRaycastCallback.isHit(object3Id));
-            test(!mRaycastCallback.isHit(object4Id));
+            m_raycastCallback.reset();
+            tree.raycast(ray1, m_raycastCallback);
+            test(!m_raycastCallback.isHit(object1Id));
+            test(!m_raycastCallback.isHit(object2Id));
+            test(!m_raycastCallback.isHit(object3Id));
+            test(!m_raycastCallback.isHit(object4Id));
 
             // Ray that hits object 1
-            mRaycastCallback.reset();
-            tree.raycast(ray2, mRaycastCallback);
-            test(mRaycastCallback.isHit(object1Id));
-            test(!mRaycastCallback.isHit(object2Id));
-            test(!mRaycastCallback.isHit(object3Id));
-            test(!mRaycastCallback.isHit(object4Id));
+            m_raycastCallback.reset();
+            tree.raycast(ray2, m_raycastCallback);
+            test(m_raycastCallback.isHit(object1Id));
+            test(!m_raycastCallback.isHit(object2Id));
+            test(!m_raycastCallback.isHit(object3Id));
+            test(!m_raycastCallback.isHit(object4Id));
 
             // Ray that hits object 1 and 2
-            mRaycastCallback.reset();
-            tree.raycast(ray3, mRaycastCallback);
-            test(mRaycastCallback.isHit(object1Id));
-            test(mRaycastCallback.isHit(object2Id));
-            test(!mRaycastCallback.isHit(object3Id));
-            test(!mRaycastCallback.isHit(object4Id));
+            m_raycastCallback.reset();
+            tree.raycast(ray3, m_raycastCallback);
+            test(m_raycastCallback.isHit(object1Id));
+            test(m_raycastCallback.isHit(object2Id));
+            test(!m_raycastCallback.isHit(object3Id));
+            test(!m_raycastCallback.isHit(object4Id));
 
             // Ray that hits object 3
-            mRaycastCallback.reset();
-            tree.raycast(ray4, mRaycastCallback);
-            test(!mRaycastCallback.isHit(object1Id));
-            test(!mRaycastCallback.isHit(object2Id));
-            test(mRaycastCallback.isHit(object3Id));
-            test(!mRaycastCallback.isHit(object4Id));
+            m_raycastCallback.reset();
+            tree.raycast(ray4, m_raycastCallback);
+            test(!m_raycastCallback.isHit(object1Id));
+            test(!m_raycastCallback.isHit(object2Id));
+            test(m_raycastCallback.isHit(object3Id));
+            test(!m_raycastCallback.isHit(object4Id));
 
             // ---- Update the object AABBs with the initial AABBs (with reinsertion) ----- //
 
@@ -459,36 +459,36 @@ class TestDynamicAABBTree : public Test {
             tree.updateObject(object4Id, aabb4, Vector3::zero(), true);
 
             // Ray with no hits
-            mRaycastCallback.reset();
-            tree.raycast(ray1, mRaycastCallback);
-            test(!mRaycastCallback.isHit(object1Id));
-            test(!mRaycastCallback.isHit(object2Id));
-            test(!mRaycastCallback.isHit(object3Id));
-            test(!mRaycastCallback.isHit(object4Id));
+            m_raycastCallback.reset();
+            tree.raycast(ray1, m_raycastCallback);
+            test(!m_raycastCallback.isHit(object1Id));
+            test(!m_raycastCallback.isHit(object2Id));
+            test(!m_raycastCallback.isHit(object3Id));
+            test(!m_raycastCallback.isHit(object4Id));
 
             // Ray that hits object 1
-            mRaycastCallback.reset();
-            tree.raycast(ray2, mRaycastCallback);
-            test(mRaycastCallback.isHit(object1Id));
-            test(!mRaycastCallback.isHit(object2Id));
-            test(!mRaycastCallback.isHit(object3Id));
-            test(!mRaycastCallback.isHit(object4Id));
+            m_raycastCallback.reset();
+            tree.raycast(ray2, m_raycastCallback);
+            test(m_raycastCallback.isHit(object1Id));
+            test(!m_raycastCallback.isHit(object2Id));
+            test(!m_raycastCallback.isHit(object3Id));
+            test(!m_raycastCallback.isHit(object4Id));
 
             // Ray that hits object 1 and 2
-            mRaycastCallback.reset();
-            tree.raycast(ray3, mRaycastCallback);
-            test(mRaycastCallback.isHit(object1Id));
-            test(mRaycastCallback.isHit(object2Id));
-            test(!mRaycastCallback.isHit(object3Id));
-            test(!mRaycastCallback.isHit(object4Id));
+            m_raycastCallback.reset();
+            tree.raycast(ray3, m_raycastCallback);
+            test(m_raycastCallback.isHit(object1Id));
+            test(m_raycastCallback.isHit(object2Id));
+            test(!m_raycastCallback.isHit(object3Id));
+            test(!m_raycastCallback.isHit(object4Id));
 
             // Ray that hits object 3
-            mRaycastCallback.reset();
-            tree.raycast(ray4, mRaycastCallback);
-            test(!mRaycastCallback.isHit(object1Id));
-            test(!mRaycastCallback.isHit(object2Id));
-            test(mRaycastCallback.isHit(object3Id));
-            test(!mRaycastCallback.isHit(object4Id));
+            m_raycastCallback.reset();
+            tree.raycast(ray4, m_raycastCallback);
+            test(!m_raycastCallback.isHit(object1Id));
+            test(!m_raycastCallback.isHit(object2Id));
+            test(m_raycastCallback.isHit(object3Id));
+            test(!m_raycastCallback.isHit(object4Id));
 
             // ---- Move objects 2 and 3 ----- //
 
@@ -500,21 +500,21 @@ class TestDynamicAABBTree : public Test {
 
             // Ray that hits object 1, 2
             Ray ray5(Vector3(-4, -5, 0), Vector3(-4, 12, 0));
-            mRaycastCallback.reset();
-            tree.raycast(ray5, mRaycastCallback);
-            test(mRaycastCallback.isHit(object1Id));
-            test(mRaycastCallback.isHit(object2Id));
-            test(!mRaycastCallback.isHit(object3Id));
-            test(!mRaycastCallback.isHit(object4Id));
+            m_raycastCallback.reset();
+            tree.raycast(ray5, m_raycastCallback);
+            test(m_raycastCallback.isHit(object1Id));
+            test(m_raycastCallback.isHit(object2Id));
+            test(!m_raycastCallback.isHit(object3Id));
+            test(!m_raycastCallback.isHit(object4Id));
 
             // Ray that hits object 3 and 4
             Ray ray6(Vector3(11, -3, 1), Vector3(-2, -3, 1));
-            mRaycastCallback.reset();
-            tree.raycast(ray6, mRaycastCallback);
-            test(!mRaycastCallback.isHit(object1Id));
-            test(!mRaycastCallback.isHit(object2Id));
-            test(mRaycastCallback.isHit(object3Id));
-            test(mRaycastCallback.isHit(object4Id));
+            m_raycastCallback.reset();
+            tree.raycast(ray6, m_raycastCallback);
+            test(!m_raycastCallback.isHit(object1Id));
+            test(!m_raycastCallback.isHit(object2Id));
+            test(m_raycastCallback.isHit(object3Id));
+            test(m_raycastCallback.isHit(object4Id));
         }
  };
 

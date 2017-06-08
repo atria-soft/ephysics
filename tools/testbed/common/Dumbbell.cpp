@@ -88,9 +88,9 @@ Dumbbell::Dumbbell(const openglframework::Vector3 &position,
     rp3d::RigidBody* body = dynamicsWorld->createRigidBody(transformBody);
 
     // Add the three collision shapes to the body and specify the mass and transform of the shapes
-    mProxyShapeSphere1 = body->addCollisionShape(mSphereShape, transformSphereShape1, massSphere);
-    mProxyShapeSphere2 = body->addCollisionShape(mSphereShape, transformSphereShape2, massSphere);
-    mProxyShapeCylinder = body->addCollisionShape(mCylinderShape, transformCylinderShape, massCylinder);
+    m_proxyShapeSphere1 = body->addCollisionShape(mSphereShape, transformSphereShape1, massSphere);
+    m_proxyShapeSphere2 = body->addCollisionShape(mSphereShape, transformSphereShape2, massSphere);
+    m_proxyShapeCylinder = body->addCollisionShape(mCylinderShape, transformCylinderShape, massCylinder);
 
     mBody = body;
 
@@ -155,9 +155,9 @@ Dumbbell::Dumbbell(const openglframework::Vector3 &position,
     mBody = world->createCollisionBody(transformBody);
 
     // Add the three collision shapes to the body and specify the mass and transform of the shapes
-    mProxyShapeSphere1 = mBody->addCollisionShape(mSphereShape, transformSphereShape1);
-    mProxyShapeSphere2 = mBody->addCollisionShape(mSphereShape, transformSphereShape2);
-    mProxyShapeCylinder = mBody->addCollisionShape(mCylinderShape, transformCylinderShape);
+    m_proxyShapeSphere1 = mBody->addCollisionShape(mSphereShape, transformSphereShape1);
+    m_proxyShapeSphere2 = mBody->addCollisionShape(mSphereShape, transformSphereShape2);
+    m_proxyShapeCylinder = mBody->addCollisionShape(mCylinderShape, transformCylinderShape);
 
     mTransformMatrix = mTransformMatrix * mScalingMatrix;
 
@@ -254,7 +254,7 @@ void Dumbbell::createVBOAndVAO() {
     // Create the VBO for the vertices data
     mVBOVertices.create();
     mVBOVertices.bind();
-    size_t sizeVertices = mVertices.size() * sizeof(openglframework::Vector3);
+    size_t sizeVertices = m_vertices.size() * sizeof(openglframework::Vector3);
     mVBOVertices.copyDataIntoVBO(sizeVertices, getVerticesPointer(), GL_STATIC_DRAW);
     mVBOVertices.unbind();
 
@@ -326,9 +326,9 @@ void Dumbbell::setScaling(const openglframework::Vector3& scaling) {
 
     // Scale the collision shape
     rp3d::Vector3 newScaling(scaling.x, scaling.y, scaling.z);
-    mProxyShapeCylinder->setLocalScaling(newScaling);
-    mProxyShapeSphere1->setLocalScaling(newScaling);
-    mProxyShapeSphere2->setLocalScaling(newScaling);
+    m_proxyShapeCylinder->setLocalScaling(newScaling);
+    m_proxyShapeSphere1->setLocalScaling(newScaling);
+    m_proxyShapeSphere2->setLocalScaling(newScaling);
 
     mDistanceBetweenSphere = (mDistanceBetweenSphere / mScalingMatrix.getValue(1, 1)) * scaling.y;
 
@@ -338,8 +338,8 @@ void Dumbbell::setScaling(const openglframework::Vector3& scaling) {
     // Initial transform of the second sphere collision shape of the dumbell (in local-space)
     rp3d::Transform transformSphereShape2(rp3d::Vector3(0, -mDistanceBetweenSphere / 2.0f, 0), rp3d::Quaternion::identity());
 
-    mProxyShapeSphere1->setLocalToBodyTransform(transformSphereShape1);
-    mProxyShapeSphere2->setLocalToBodyTransform(transformSphereShape2);
+    m_proxyShapeSphere1->setLocalToBodyTransform(transformSphereShape1);
+    m_proxyShapeSphere2->setLocalToBodyTransform(transformSphereShape2);
 
     // Scale the graphics object
     mScalingMatrix = openglframework::Matrix4(scaling.x, 0, 0, 0,

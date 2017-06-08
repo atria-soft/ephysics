@@ -43,7 +43,7 @@ class ConcaveMesh : public openglframework::Mesh, public PhysicsObject {
 
         /// Collision shape
         rp3d::ConcaveMeshShape* mConcaveShape;
-        rp3d::ProxyShape* mProxyShape;
+        rp3d::ProxyShape* m_proxyShape;
 
         /// Scaling matrix
         openglframework::Matrix4 mScalingMatrix;

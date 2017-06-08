@@ -52,7 +52,7 @@ class Mesh : public Object3D {
         std::vector<std::vector<unsigned int> > mIndices;
 
         // Vertices coordinates (local space)
-        std::vector<Vector3> mVertices;
+        std::vector<Vector3> m_vertices;
 
         // Normals coordinates
         std::vector<Vector3> mNormals;
@@ -209,7 +209,7 @@ inline uint Mesh::getNbFaces(uint part) const {
 
 // Return the number of vertices
 inline uint Mesh::getNbVertices() const {
-    return mVertices.size();
+    return m_vertices.size();
 }
 
 // Return the number of parts in the mesh
@@ -219,12 +219,12 @@ inline uint Mesh::getNbParts() const {
 
 // Return a reference to the vertices
 inline const std::vector<Vector3>& Mesh::getVertices() const {
-    return mVertices;
+    return m_vertices;
 }
 
 // Set the vertices of the mesh
 inline void Mesh::setVertices(std::vector<Vector3>& vertices) {
-    mVertices = vertices;
+    m_vertices = vertices;
 }
 
 // Return a reference to the normals
@@ -260,13 +260,13 @@ inline void Mesh::setIndices(std::vector<std::vector<uint> >& indices) {
 // Return the coordinates of a given vertex
 inline const Vector3& Mesh::getVertex(uint i) const {
     assert(i < getNbVertices());
-    return mVertices[i];
+    return m_vertices[i];
 }
 
 // Set the coordinates of a given vertex
 inline void Mesh::setVertex(uint i, const Vector3& vertex) {
     assert(i < getNbVertices());
-    mVertices[i] = vertex;
+    m_vertices[i] = vertex;
 }
 
 // Return the coordinates of a given normal
@@ -292,10 +292,10 @@ inline void Mesh::setVertexColor(uint i, const Color& color) {
 
     // If the color array does not have the same size as
     // the vertices array
-    if (mColors.size() != mVertices.size()) {
+    if (mColors.size() != m_vertices.size()) {
 
         // Create the color array with the same size
-        mColors = std::vector<Color>(mVertices.size());
+        mColors = std::vector<Color>(m_vertices.size());
     }
 
     mColors[i] = color;
@@ -306,13 +306,13 @@ inline void Mesh::setColorToAllVertices(const Color& color) {
 
     // If the color array does not have the same size as
     // the vertices array
-    if (mColors.size() != mVertices.size()) {
+    if (mColors.size() != m_vertices.size()) {
 
         // Create the color array with the same size
-        mColors = std::vector<Color>(mVertices.size());
+        mColors = std::vector<Color>(m_vertices.size());
     }
 
-    for (size_t v=0; v<mVertices.size(); v++) {
+    for (size_t v=0; v<m_vertices.size(); v++) {
         mColors[v] = color;
     }
 }
@@ -336,22 +336,22 @@ inline uint Mesh::getVertexIndexInFace(uint faceIndex, uint i, uint part) const 
 
 // Return true if the mesh has normals
 inline bool Mesh::hasNormals() const {
-    return mNormals.size() == mVertices.size();
+    return mNormals.size() == m_vertices.size();
 }
 
 // Return true if the mesh has tangents
 inline bool Mesh::hasTangents() const {
-    return mTangents.size() == mVertices.size();
+    return mTangents.size() == m_vertices.size();
 }
 
 // Return true if the mesh has vertex colors
 inline bool Mesh::hasColors() const {
-    return mColors.size() == mVertices.size();
+    return mColors.size() == m_vertices.size();
 }
 
 // Return true if the mesh has UV texture coordinates
 inline bool Mesh::hasUVTextureCoordinates() const {
-    return mUVs.size() == mVertices.size();
+    return mUVs.size() == m_vertices.size();
 }
 
 // Return true if the mesh has a texture for a given part of the mesh and if it
@@ -368,7 +368,7 @@ inline bool Mesh::hasTexture() const {
 
 // Return a pointer to the vertices data
 inline void* Mesh::getVerticesPointer() {
-    return &(mVertices[0]);
+    return &(m_vertices[0]);
 }
 
 // Return a pointer to the normals data

@@ -70,7 +70,7 @@ Capsule::Capsule(float radius, float height, const openglframework::Vector3& pos
     mBody = world->createCollisionBody(transform);
 
     // Add a collision shape to the body and specify the mass of the shape
-    mProxyShape = mBody->addCollisionShape(mCapsuleShape, rp3d::Transform::identity());
+    m_proxyShape = mBody->addCollisionShape(mCapsuleShape, rp3d::Transform::identity());
 
     mTransformMatrix = mTransformMatrix * mScalingMatrix;
 
@@ -117,7 +117,7 @@ Capsule::Capsule(float radius, float height, const openglframework::Vector3& pos
     rp3d::RigidBody* body = dynamicsWorld->createRigidBody(transform);
 
     // Add a collision shape to the body and specify the mass of the shape
-    mProxyShape = body->addCollisionShape(mCapsuleShape, rp3d::Transform::identity(), mass);
+    m_proxyShape = body->addCollisionShape(mCapsuleShape, rp3d::Transform::identity(), mass);
 
     mBody = body;
 
@@ -215,7 +215,7 @@ void Capsule::createVBOAndVAO() {
     // Create the VBO for the vertices data
     mVBOVertices.create();
     mVBOVertices.bind();
-    size_t sizeVertices = mVertices.size() * sizeof(openglframework::Vector3);
+    size_t sizeVertices = m_vertices.size() * sizeof(openglframework::Vector3);
     mVBOVertices.copyDataIntoVBO(sizeVertices, getVerticesPointer(), GL_STATIC_DRAW);
     mVBOVertices.unbind();
 
@@ -286,7 +286,7 @@ void Capsule::resetTransform(const rp3d::Transform& transform) {
 void Capsule::setScaling(const openglframework::Vector3& scaling) {
 
     // Scale the collision shape
-    mProxyShape->setLocalScaling(rp3d::Vector3(scaling.x, scaling.y, scaling.z));
+    m_proxyShape->setLocalScaling(rp3d::Vector3(scaling.x, scaling.y, scaling.z));
 
     // Scale the graphics object
     mScalingMatrix = openglframework::Matrix4(mRadius * scaling.x, 0, 0, 0,

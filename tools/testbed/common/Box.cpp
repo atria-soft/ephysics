@@ -145,7 +145,7 @@ Box::Box(const openglframework::Vector3& size, const openglframework::Vector3 &p
     mBody = world->createCollisionBody(transform);
 
     // Add the collision shape to the body
-    mProxyShape = mBody->addCollisionShape(mBoxShape, rp3d::Transform::identity());
+    m_proxyShape = mBody->addCollisionShape(mBoxShape, rp3d::Transform::identity());
 
     // If the Vertex Buffer object has not been created yet
     if (totalNbBoxes == 0) {
@@ -194,7 +194,7 @@ Box::Box(const openglframework::Vector3& size, const openglframework::Vector3& p
     rp3d::RigidBody* body = world->createRigidBody(transform);
 
     // Add the collision shape to the body
-    mProxyShape = body->addCollisionShape(mBoxShape, rp3d::Transform::identity(), mass);
+    m_proxyShape = body->addCollisionShape(mBoxShape, rp3d::Transform::identity(), mass);
 
     mBody = body;
 
@@ -333,7 +333,7 @@ void Box::resetTransform(const rp3d::Transform& transform) {
 void Box::setScaling(const openglframework::Vector3& scaling) {
 
     // Scale the collision shape
-    mProxyShape->setLocalScaling(rp3d::Vector3(scaling.x, scaling.y, scaling.z));
+    m_proxyShape->setLocalScaling(rp3d::Vector3(scaling.x, scaling.y, scaling.z));
 
     // Scale the graphics object
     mScalingMatrix = openglframework::Matrix4(mSize[0] * scaling.x, 0, 0, 0,

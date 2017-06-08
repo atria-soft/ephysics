@@ -135,7 +135,7 @@ class TestRaycast : public Test {
         ConvexMeshShape* mConvexMeshShapeEdgesInfo;
         CylinderShape* mCylinderShape;
         TriangleShape* mTriangleShape;
-        ConcaveShape* mConcaveMeshShape;
+        ConcaveShape* m_concaveMeshShape;
         HeightFieldShape* mHeightFieldShape;
 
         // Proxy Shapes
@@ -299,8 +299,8 @@ class TestRaycast : public Test {
 
             // Add the triangle vertex array of the subpart to the triangle mesh
             mConcaveTriangleMesh.addSubpart(mConcaveMeshVertexArray);
-            mConcaveMeshShape = new ConcaveMeshShape(&mConcaveTriangleMesh);
-            mConcaveMeshProxyShape = mConcaveMeshBody->addCollisionShape(mConcaveMeshShape, mShapeTransform);
+            m_concaveMeshShape = new ConcaveMeshShape(&mConcaveTriangleMesh);
+            mConcaveMeshProxyShape = mConcaveMeshBody->addCollisionShape(m_concaveMeshShape, mShapeTransform);
 
 
             // Heightfield shape (plane height field at height=4)
@@ -333,7 +333,7 @@ class TestRaycast : public Test {
             delete mConvexMeshShapeEdgesInfo;
             delete mCylinderShape;
             delete mTriangleShape;
-            delete mConcaveMeshShape;
+            delete m_concaveMeshShape;
             delete mHeightFieldShape;
 
             delete mConcaveMeshVertexArray;

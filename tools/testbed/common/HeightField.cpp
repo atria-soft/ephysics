@@ -62,7 +62,7 @@ HeightField::HeightField(const openglframework::Vector3 &position,
     mBody = world->createCollisionBody(transform);
 
     // Add a collision shape to the body and specify the mass of the collision shape
-    mProxyShape = mBody->addCollisionShape(mHeightFieldShape, rp3d::Transform::identity());
+    m_proxyShape = mBody->addCollisionShape(mHeightFieldShape, rp3d::Transform::identity());
 
     // Create the VBOs and VAO
     createVBOAndVAO();
@@ -103,7 +103,7 @@ HeightField::HeightField(const openglframework::Vector3 &position, float mass,
     rp3d::RigidBody* body = dynamicsWorld->createRigidBody(transform);
 
     // Add a collision shape to the body and specify the mass of the collision shape
-    mProxyShape = body->addCollisionShape(mHeightFieldShape, rp3d::Transform::identity(), mass);
+    m_proxyShape = body->addCollisionShape(mHeightFieldShape, rp3d::Transform::identity(), mass);
 
     mBody = body;
 
@@ -234,7 +234,7 @@ void HeightField::generateGraphicsMesh() {
             float height = originHeight + mHeightData[j * NB_POINTS_WIDTH + i];
             openglframework::Vector3 vertex(-(NB_POINTS_WIDTH - 1) * 0.5f + i, height, -(NB_POINTS_LENGTH - 1) * 0.5f + j);
 
-            mVertices.push_back(vertex);
+            m_vertices.push_back(vertex);
 
             // Triangle indices
             if ((i < NB_POINTS_WIDTH - 1) && (j < NB_POINTS_LENGTH - 1)) {
@@ -271,7 +271,7 @@ void HeightField::createVBOAndVAO() {
     // Create the VBO for the vertices data
     mVBOVertices.create();
     mVBOVertices.bind();
-    size_t sizeVertices = mVertices.size() * sizeof(openglframework::Vector3);
+    size_t sizeVertices = m_vertices.size() * sizeof(openglframework::Vector3);
     mVBOVertices.copyDataIntoVBO(sizeVertices, getVerticesPointer(), GL_STATIC_DRAW);
     mVBOVertices.unbind();
 
@@ -342,7 +342,7 @@ void HeightField::resetTransform(const rp3d::Transform& transform) {
 void HeightField::setScaling(const openglframework::Vector3& scaling) {
 
     // Scale the collision shape
-    mProxyShape->setLocalScaling(rp3d::Vector3(scaling.x, scaling.y, scaling.z));
+    m_proxyShape->setLocalScaling(rp3d::Vector3(scaling.x, scaling.y, scaling.z));
 
     // Scale the graphics object
     mScalingMatrix = openglframework::Matrix4(scaling.x, 0, 0, 0,

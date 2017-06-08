@@ -42,7 +42,7 @@ class Box : public openglframework::Object3D, public PhysicsObject {
 		float mSize[3];
 
         rp3d::BoxShape* mBoxShape;
-        rp3d::ProxyShape* mProxyShape;
+        rp3d::ProxyShape* m_proxyShape;
 
         /// Scaling matrix (applied to a cube to obtain the correct box dimensions)
         openglframework::Matrix4 mScalingMatrix;
