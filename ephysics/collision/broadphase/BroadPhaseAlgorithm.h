@@ -1,30 +1,9 @@
-/********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
-*********************************************************************************
-*                                                                               *
-* This software is provided 'as-is', without any express or implied warranty.   *
-* In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
-* 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
-********************************************************************************/
-
-#ifndef REACTPHYSICS3D_BROAD_PHASE_ALGORITHM_H
-#define REACTPHYSICS3D_BROAD_PHASE_ALGORITHM_H
+/** @file
+ * @author Daniel Chappuis
+ * @copyright 2010-2016 Daniel Chappuis
+ * @license BSD 3 clauses (see license file)
+ */
+#pragma once
 
 // Libraries
 #include <vector>
@@ -47,40 +26,40 @@ class BroadPhaseAlgorithm;
  */
 struct BroadPhasePair {
 
-    // -------------------- Attributes -------------------- //
+	// -------------------- Attributes -------------------- //
 
-    /// Broad-phase ID of the first collision shape
-    int collisionShape1ID;
+	/// Broad-phase ID of the first collision shape
+	int32_t collisionShape1ID;
 
-    /// Broad-phase ID of the second collision shape
-    int collisionShape2ID;
+	/// Broad-phase ID of the second collision shape
+	int32_t collisionShape2ID;
 
-    // -------------------- Methods -------------------- //
+	// -------------------- Methods -------------------- //
 
-    /// Method used to compare two pairs for sorting algorithm
-    static bool smallerThan(const BroadPhasePair& pair1, const BroadPhasePair& pair2);
+	/// Method used to compare two pairs for sorting algorithm
+	static bool smallerThan(const BroadPhasePair& pair1, const BroadPhasePair& pair2);
 };
 
 // class AABBOverlapCallback
 class AABBOverlapCallback : public DynamicAABBTreeOverlapCallback {
 
-    private:
+	private:
 
-        BroadPhaseAlgorithm& mBroadPhaseAlgorithm;
+		BroadPhaseAlgorithm& mBroadPhaseAlgorithm;
 
-        int mReferenceNodeId;
+		int32_t mReferenceNodeId;
 
-    public:
+	public:
 
-        // Constructor
-        AABBOverlapCallback(BroadPhaseAlgorithm& broadPhaseAlgo, int referenceNodeId)
-             : mBroadPhaseAlgorithm(broadPhaseAlgo), mReferenceNodeId(referenceNodeId) {
+		// Constructor
+		AABBOverlapCallback(BroadPhaseAlgorithm& broadPhaseAlgo, int32_t referenceNodeId)
+			 : mBroadPhaseAlgorithm(broadPhaseAlgo), mReferenceNodeId(referenceNodeId) {
 
-        }
+		}
 
-        // Called when a overlapping node has been found during the call to
-        // DynamicAABBTree:reportAllShapesOverlappingWithAABB()
-        virtual void notifyOverlappingNode(int nodeId);
+		// Called when a overlapping node has been found during the call to
+		// DynamicAABBTree:reportAllShapesOverlappingWithAABB()
+		virtual void notifyOverlappingNode(int32_t nodeId);
 
 };
 
@@ -91,26 +70,26 @@ class AABBOverlapCallback : public DynamicAABBTreeOverlapCallback {
  */
 class BroadPhaseRaycastCallback : public DynamicAABBTreeRaycastCallback {
 
-    private :
+	private :
 
-        const DynamicAABBTree& m_dynamicAABBTree;
+		const DynamicAABBTree& m_dynamicAABBTree;
 
-        unsigned short m_raycastWithCategoryMaskBits;
+		unsigned short m_raycastWithCategoryMaskBits;
 
-        RaycastTest& m_raycastTest;
+		RaycastTest& m_raycastTest;
 
-    public:
+	public:
 
-        // Constructor
-        BroadPhaseRaycastCallback(const DynamicAABBTree& dynamicAABBTree, unsigned short raycastWithCategoryMaskBits,
-                                  RaycastTest& raycastTest)
-            : m_dynamicAABBTree(dynamicAABBTree), m_raycastWithCategoryMaskBits(raycastWithCategoryMaskBits),
-              m_raycastTest(raycastTest) {
+		// Constructor
+		BroadPhaseRaycastCallback(const DynamicAABBTree& dynamicAABBTree, unsigned short raycastWithCategoryMaskBits,
+								  RaycastTest& raycastTest)
+			: m_dynamicAABBTree(dynamicAABBTree), m_raycastWithCategoryMaskBits(raycastWithCategoryMaskBits),
+			  m_raycastTest(raycastTest) {
 
-        }
+		}
 
-        // Called for a broad-phase shape that has to be tested for raycast
-        virtual decimal raycastBroadPhaseShape(int32 nodeId, const Ray& ray);
+		// Called for a broad-phase shape that has to be tested for raycast
+		virtual float raycastBroadPhaseShape(int32_t nodeId, const Ray& ray);
 
 };
 
@@ -124,125 +103,125 @@ class BroadPhaseRaycastCallback : public DynamicAABBTreeRaycastCallback {
  */
 class BroadPhaseAlgorithm {
 
-    protected :
+	protected :
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Dynamic AABB tree
-        DynamicAABBTree m_dynamicAABBTree;
+		/// Dynamic AABB tree
+		DynamicAABBTree m_dynamicAABBTree;
 
-        /// Array with the broad-phase IDs of all collision shapes that have moved (or have been
-        /// created) during the last simulation step. Those are the shapes that need to be tested
-        /// for overlapping in the next simulation step.
-        int* mMovedShapes;
+		/// Array with the broad-phase IDs of all collision shapes that have moved (or have been
+		/// created) during the last simulation step. Those are the shapes that need to be tested
+		/// for overlapping in the next simulation step.
+		int32_t* mMovedShapes;
 
-        /// Number of collision shapes in the array of shapes that have moved during the last
-        /// simulation step.
-        uint mNbMovedShapes;
+		/// Number of collision shapes in the array of shapes that have moved during the last
+		/// simulation step.
+		uint32_t mNbMovedShapes;
 
-        /// Number of allocated elements for the array of shapes that have moved during the last
-        /// simulation step.
-        uint mNbAllocatedMovedShapes;
+		/// Number of allocated elements for the array of shapes that have moved during the last
+		/// simulation step.
+		uint32_t mNbAllocatedMovedShapes;
 
-        /// Number of non-used elements in the array of shapes that have moved during the last
-        /// simulation step.
-        uint mNbNonUsedMovedShapes;
+		/// Number of non-used elements in the array of shapes that have moved during the last
+		/// simulation step.
+		uint32_t mNbNonUsedMovedShapes;
 
-        /// Temporary array of potential overlapping pairs (with potential duplicates)
-        BroadPhasePair* mPotentialPairs;
+		/// Temporary array of potential overlapping pairs (with potential duplicates)
+		BroadPhasePair* mPotentialPairs;
 
-        /// Number of potential overlapping pairs
-        uint mNbPotentialPairs;
+		/// Number of potential overlapping pairs
+		uint32_t mNbPotentialPairs;
 
-        /// Number of allocated elements for the array of potential overlapping pairs
-        uint mNbAllocatedPotentialPairs;
+		/// Number of allocated elements for the array of potential overlapping pairs
+		uint32_t mNbAllocatedPotentialPairs;
 
-        /// Reference to the collision detection object
-        CollisionDetection& mCollisionDetection;
-        
-        // -------------------- Methods -------------------- //
+		/// Reference to the collision detection object
+		CollisionDetection& mCollisionDetection;
+		
+		// -------------------- Methods -------------------- //
 
-        /// Private copy-constructor
-        BroadPhaseAlgorithm(const BroadPhaseAlgorithm& algorithm);
+		/// Private copy-constructor
+		BroadPhaseAlgorithm(const BroadPhaseAlgorithm& algorithm);
 
-        /// Private assignment operator
-        BroadPhaseAlgorithm& operator=(const BroadPhaseAlgorithm& algorithm);
+		/// Private assignment operator
+		BroadPhaseAlgorithm& operator=(const BroadPhaseAlgorithm& algorithm);
 
-    public :
+	public :
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        BroadPhaseAlgorithm(CollisionDetection& collisionDetection);
+		/// Constructor
+		BroadPhaseAlgorithm(CollisionDetection& collisionDetection);
 
-        /// Destructor
-        virtual ~BroadPhaseAlgorithm();
-        
-        /// Add a proxy collision shape into the broad-phase collision detection
-        void addProxyCollisionShape(ProxyShape* proxyShape, const AABB& aabb);
+		/// Destructor
+		virtual ~BroadPhaseAlgorithm();
+		
+		/// Add a proxy collision shape int32_to the broad-phase collision detection
+		void addProxyCollisionShape(ProxyShape* proxyShape, const AABB& aabb);
 
-        /// Remove a proxy collision shape from the broad-phase collision detection
-        void removeProxyCollisionShape(ProxyShape* proxyShape);
+		/// Remove a proxy collision shape from the broad-phase collision detection
+		void removeProxyCollisionShape(ProxyShape* proxyShape);
 
-        /// Notify the broad-phase that a collision shape has moved and need to be updated
-        void updateProxyCollisionShape(ProxyShape* proxyShape, const AABB& aabb,
-                                       const Vector3& displacement, bool forceReinsert = false);
+		/// Notify the broad-phase that a collision shape has moved and need to be updated
+		void updateProxyCollisionShape(ProxyShape* proxyShape, const AABB& aabb,
+									   const Vector3& displacement, bool forceReinsert = false);
 
-        /// Add a collision shape in the array of shapes that have moved in the last simulation step
-        /// and that need to be tested again for broad-phase overlapping.
-        void addMovedCollisionShape(int broadPhaseID);
+		/// Add a collision shape in the array of shapes that have moved in the last simulation step
+		/// and that need to be tested again for broad-phase overlapping.
+		void addMovedCollisionShape(int32_t broadPhaseID);
 
-        /// Remove a collision shape from the array of shapes that have moved in the last simulation
-        /// step and that need to be tested again for broad-phase overlapping.
-        void removeMovedCollisionShape(int broadPhaseID);
+		/// Remove a collision shape from the array of shapes that have moved in the last simulation
+		/// step and that need to be tested again for broad-phase overlapping.
+		void removeMovedCollisionShape(int32_t broadPhaseID);
 
-        /// Notify the broad-phase about a potential overlapping pair in the dynamic AABB tree
-        void notifyOverlappingNodes(int broadPhaseId1, int broadPhaseId2);
+		/// Notify the broad-phase about a potential overlapping pair in the dynamic AABB tree
+		void notifyOverlappingNodes(int32_t broadPhaseId1, int32_t broadPhaseId2);
 
-        /// Compute all the overlapping pairs of collision shapes
-        void computeOverlappingPairs();
+		/// Compute all the overlapping pairs of collision shapes
+		void computeOverlappingPairs();
 
-        /// Return true if the two broad-phase collision shapes are overlapping
-        bool testOverlappingShapes(const ProxyShape* shape1, const ProxyShape* shape2) const;
+		/// Return true if the two broad-phase collision shapes are overlapping
+		bool testOverlappingShapes(const ProxyShape* shape1, const ProxyShape* shape2) const;
 
-        /// Ray casting method
-        void raycast(const Ray& ray, RaycastTest& raycastTest,
-                     unsigned short raycastWithCategoryMaskBits) const;
+		/// Ray casting method
+		void raycast(const Ray& ray, RaycastTest& raycastTest,
+					 unsigned short raycastWithCategoryMaskBits) const;
 };
 
 // Method used to compare two pairs for sorting algorithm
 inline bool BroadPhasePair::smallerThan(const BroadPhasePair& pair1, const BroadPhasePair& pair2) {
 
-    if (pair1.collisionShape1ID < pair2.collisionShape1ID) return true;
-    if (pair1.collisionShape1ID == pair2.collisionShape1ID) {
-        return pair1.collisionShape2ID < pair2.collisionShape2ID;
-    }
-    return false;
+	if (pair1.collisionShape1ID < pair2.collisionShape1ID) return true;
+	if (pair1.collisionShape1ID == pair2.collisionShape1ID) {
+		return pair1.collisionShape2ID < pair2.collisionShape2ID;
+	}
+	return false;
 }
 
 // Return true if the two broad-phase collision shapes are overlapping
 inline bool BroadPhaseAlgorithm::testOverlappingShapes(const ProxyShape* shape1,
-                                                       const ProxyShape* shape2) const {
-    // Get the two AABBs of the collision shapes
-    const AABB& aabb1 = m_dynamicAABBTree.getFatAABB(shape1->mBroadPhaseID);
-    const AABB& aabb2 = m_dynamicAABBTree.getFatAABB(shape2->mBroadPhaseID);
+													   const ProxyShape* shape2) const {
+	// Get the two AABBs of the collision shapes
+	const AABB& aabb1 = m_dynamicAABBTree.getFatAABB(shape1->mBroadPhaseID);
+	const AABB& aabb2 = m_dynamicAABBTree.getFatAABB(shape2->mBroadPhaseID);
 
-    // Check if the two AABBs are overlapping
-    return aabb1.testCollision(aabb2);
+	// Check if the two AABBs are overlapping
+	return aabb1.testCollision(aabb2);
 }
 
 // Ray casting method
 inline void BroadPhaseAlgorithm::raycast(const Ray& ray, RaycastTest& raycastTest,
-                                         unsigned short raycastWithCategoryMaskBits) const {
+										 unsigned short raycastWithCategoryMaskBits) const {
 
-    PROFILE("BroadPhaseAlgorithm::raycast()");
+	PROFILE("BroadPhaseAlgorithm::raycast()");
 
-    BroadPhaseRaycastCallback broadPhaseRaycastCallback(m_dynamicAABBTree, raycastWithCategoryMaskBits, raycastTest);
+	BroadPhaseRaycastCallback broadPhaseRaycastCallback(m_dynamicAABBTree, raycastWithCategoryMaskBits, raycastTest);
 
-    m_dynamicAABBTree.raycast(ray, broadPhaseRaycastCallback);
+	m_dynamicAABBTree.raycast(ray, broadPhaseRaycastCallback);
 }
 
 }
 
-#endif
+
 

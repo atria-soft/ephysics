@@ -1,30 +1,9 @@
-/********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
-*********************************************************************************
-*                                                                               *
-* This software is provided 'as-is', without any express or implied warranty.   *
-* In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
-* 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
-********************************************************************************/
-
-#ifndef REACTPHYSICS3D_ISLAND_H
-#define REACTPHYSICS3D_ISLAND_H
+/** @file
+ * @author Daniel Chappuis
+ * @copyright 2010-2016 Daniel Chappuis
+ * @license BSD 3 clauses (see license file)
+ */
+#pragma once
 
 // Libraries
 #include <ephysics/memory/MemoryAllocator.h>
@@ -41,140 +20,138 @@ namespace reactphysics3d {
  */
 class Island {
 
-    private:
+	private:
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Array with all the bodies of the island
-        RigidBody** mBodies;
+		/// Array with all the bodies of the island
+		RigidBody** mBodies;
 
-        /// Array with all the contact manifolds between bodies of the island
-        ContactManifold** mContactManifolds;
+		/// Array with all the contact manifolds between bodies of the island
+		ContactManifold** mContactManifolds;
 
-        /// Array with all the joints between bodies of the island
-        Joint** mJoints;
+		/// Array with all the joints between bodies of the island
+		Joint** mJoints;
 
-        /// Current number of bodies in the island
-        uint mNbBodies;
+		/// Current number of bodies in the island
+		uint32_t mNbBodies;
 
-        /// Current number of contact manifold in the island
-        uint mNbContactManifolds;
+		/// Current number of contact manifold in the island
+		uint32_t mNbContactManifolds;
 
-        /// Current number of joints in the island
-        uint mNbJoints;
+		/// Current number of joints in the island
+		uint32_t mNbJoints;
 
-        /// Reference to the memory allocator
-        MemoryAllocator& mMemoryAllocator;
+		/// Reference to the memory allocator
+		MemoryAllocator& mMemoryAllocator;
 
-        /// Number of bytes allocated for the bodies array
-        size_t mNbAllocatedBytesBodies;
+		/// Number of bytes allocated for the bodies array
+		size_t mNbAllocatedBytesBodies;
 
-        /// Number of bytes allocated for the contact manifolds array
-        size_t mNbAllocatedBytesContactManifolds;
+		/// Number of bytes allocated for the contact manifolds array
+		size_t mNbAllocatedBytesContactManifolds;
 
-        /// Number of bytes allocated for the joints array
-        size_t mNbAllocatedBytesJoints;
+		/// Number of bytes allocated for the joints array
+		size_t mNbAllocatedBytesJoints;
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Private assignment operator
-        Island& operator=(const Island& island);
+		/// Private assignment operator
+		Island& operator=(const Island& island);
 
-        /// Private copy-constructor
-        Island(const Island& island);
+		/// Private copy-constructor
+		Island(const Island& island);
 
-    public:
+	public:
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        Island(uint nbMaxBodies, uint nbMaxContactManifolds, uint nbMaxJoints,
-               MemoryAllocator& memoryAllocator);
+		/// Constructor
+		Island(uint32_t nbMaxBodies, uint32_t nbMaxContactManifolds, uint32_t nbMaxJoints,
+			   MemoryAllocator& memoryAllocator);
 
-        /// Destructor
-        ~Island();
+		/// Destructor
+		~Island();
 
-        /// Add a body into the island
-        void addBody(RigidBody* body);
+		/// Add a body int32_to the island
+		void addBody(RigidBody* body);
 
-        /// Add a contact manifold into the island
-        void addContactManifold(ContactManifold* contactManifold);
+		/// Add a contact manifold int32_to the island
+		void addContactManifold(ContactManifold* contactManifold);
 
-        /// Add a joint into the island
-        void addJoint(Joint* joint);
+		/// Add a joint int32_to the island
+		void addJoint(Joint* joint);
 
-        /// Return the number of bodies in the island
-        uint getNbBodies() const;
+		/// Return the number of bodies in the island
+		uint32_t getNbBodies() const;
 
-        /// Return the number of contact manifolds in the island
-        uint getNbContactManifolds() const;
+		/// Return the number of contact manifolds in the island
+		uint32_t getNbContactManifolds() const;
 
-        /// Return the number of joints in the island
-        uint getNbJoints() const;
+		/// Return the number of joints in the island
+		uint32_t getNbJoints() const;
 
-        /// Return a pointer to the array of bodies
-        RigidBody** getBodies();
+		/// Return a pointer to the array of bodies
+		RigidBody** getBodies();
 
-        /// Return a pointer to the array of contact manifolds
-        ContactManifold** getContactManifold();
+		/// Return a pointer to the array of contact manifolds
+		ContactManifold** getContactManifold();
 
-        /// Return a pointer to the array of joints
-        Joint** getJoints();
+		/// Return a pointer to the array of joints
+		Joint** getJoints();
 
-        // -------------------- Friendship -------------------- //
+		// -------------------- Friendship -------------------- //
 
-        friend class DynamicsWorld;
+		friend class DynamicsWorld;
 };
 
-// Add a body into the island
+// Add a body int32_to the island
 inline void Island::addBody(RigidBody* body) {
-    assert(!body->isSleeping());
-    mBodies[mNbBodies] = body;
-    mNbBodies++;
+	assert(!body->isSleeping());
+	mBodies[mNbBodies] = body;
+	mNbBodies++;
 }
 
-// Add a contact manifold into the island
+// Add a contact manifold int32_to the island
 inline void Island::addContactManifold(ContactManifold* contactManifold) {
-    mContactManifolds[mNbContactManifolds] = contactManifold;
-    mNbContactManifolds++;
+	mContactManifolds[mNbContactManifolds] = contactManifold;
+	mNbContactManifolds++;
 }
 
-// Add a joint into the island
+// Add a joint int32_to the island
 inline void Island::addJoint(Joint* joint) {
-    mJoints[mNbJoints] = joint;
-    mNbJoints++;
+	mJoints[mNbJoints] = joint;
+	mNbJoints++;
 }
 
 // Return the number of bodies in the island
-inline uint Island::getNbBodies() const {
-    return mNbBodies;
+inline uint32_t Island::getNbBodies() const {
+	return mNbBodies;
 }
 
 // Return the number of contact manifolds in the island
-inline uint Island::getNbContactManifolds() const {
-    return mNbContactManifolds;
+inline uint32_t Island::getNbContactManifolds() const {
+	return mNbContactManifolds;
 }
 
 // Return the number of joints in the island
-inline uint Island::getNbJoints() const {
-    return mNbJoints;
+inline uint32_t Island::getNbJoints() const {
+	return mNbJoints;
 }
 
 // Return a pointer to the array of bodies
 inline RigidBody** Island::getBodies() {
-    return mBodies;
+	return mBodies;
 }
 
 // Return a pointer to the array of contact manifolds
 inline ContactManifold** Island::getContactManifold() {
-    return mContactManifolds;
+	return mContactManifolds;
 }
 
 // Return a pointer to the array of joints
 inline Joint** Island::getJoints() {
-    return mJoints;
+	return mJoints;
 }
 
 }
-
-#endif

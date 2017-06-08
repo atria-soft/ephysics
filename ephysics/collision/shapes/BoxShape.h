@@ -1,30 +1,9 @@
-/********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
-*********************************************************************************
-*                                                                               *
-* This software is provided 'as-is', without any express or implied warranty.   *
-* In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
-* 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
-********************************************************************************/
-
-#ifndef REACTPHYSICS3D_BOX_SHAPE_H
-#define REACTPHYSICS3D_BOX_SHAPE_H
+/** @file
+ * @author Daniel Chappuis
+ * @copyright 2010-2016 Daniel Chappuis
+ * @license BSD 3 clauses (see license file)
+ */
+#pragma once
 
 // Libraries
 #include <cfloat>
@@ -52,55 +31,55 @@ namespace reactphysics3d {
  */
 class BoxShape : public ConvexShape {
 
-    protected :
+	protected :
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Extent sizes of the box in the x, y and z direction
-        Vector3 mExtent;
+		/// Extent sizes of the box in the x, y and z direction
+		Vector3 mExtent;
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Private copy-constructor
-        BoxShape(const BoxShape& shape);
+		/// Private copy-constructor
+		BoxShape(const BoxShape& shape);
 
-        /// Private assignment operator
-        BoxShape& operator=(const BoxShape& shape);
+		/// Private assignment operator
+		BoxShape& operator=(const BoxShape& shape);
 
-        /// Return a local support point in a given direction without the object margin
-        virtual Vector3 getLocalSupportPointWithoutMargin(const Vector3& direction,
-                                                          void** cachedCollisionData) const;
+		/// Return a local support point in a given direction without the object margin
+		virtual Vector3 getLocalSupportPointWithoutMargin(const Vector3& direction,
+														  void** cachedCollisionData) const;
 
-        /// Return true if a point is inside the collision shape
-        virtual bool testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const;
+		/// Return true if a point is inside the collision shape
+		virtual bool testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const;
 
-        /// Raycast method with feedback information
-        virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
+		/// Raycast method with feedback information
+		virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
 
-        /// Return the number of bytes used by the collision shape
-        virtual size_t getSizeInBytes() const;
+		/// Return the number of bytes used by the collision shape
+		virtual size_t getSizeInBytes() const;
 
-    public :
+	public :
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        BoxShape(const Vector3& extent, decimal margin = OBJECT_MARGIN);
+		/// Constructor
+		BoxShape(const Vector3& extent, float margin = OBJECT_MARGIN);
 
-        /// Destructor
-        virtual ~BoxShape();
+		/// Destructor
+		virtual ~BoxShape();
 
-        /// Return the extents of the box
-        Vector3 getExtent() const;
+		/// Return the extents of the box
+		Vector3 getExtent() const;
 
-        /// Set the scaling vector of the collision shape
-        virtual void setLocalScaling(const Vector3& scaling);
+		/// Set the scaling vector of the collision shape
+		virtual void setLocalScaling(const Vector3& scaling);
 
-        /// Return the local bounds of the shape in x, y and z directions
-        virtual void getLocalBounds(Vector3& min, Vector3& max) const;
+		/// Return the local bounds of the shape in x, y and z directions
+		virtual void getLocalBounds(Vector3& min, Vector3& max) const;
 
-        /// Return the local inertia tensor of the collision shape
-        virtual void computeLocalInertiaTensor(Matrix3x3& tensor, decimal mass) const;
+		/// Return the local inertia tensor of the collision shape
+		virtual void computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const;
 };
 
 // Return the extents of the box
@@ -108,15 +87,15 @@ class BoxShape : public ConvexShape {
  * @return The vector with the three extents of the box shape (in meters)
  */
 inline Vector3 BoxShape::getExtent() const {
-    return mExtent + Vector3(mMargin, mMargin, mMargin);
+	return mExtent + Vector3(mMargin, mMargin, mMargin);
 }
 
 // Set the scaling vector of the collision shape
 inline void BoxShape::setLocalScaling(const Vector3& scaling) {
 
-    mExtent = (mExtent / mScaling) * scaling;
+	mExtent = (mExtent / mScaling) * scaling;
 
-    CollisionShape::setLocalScaling(scaling);
+	CollisionShape::setLocalScaling(scaling);
 }
 
 // Return the local bounds of the shape in x, y and z directions
@@ -127,34 +106,32 @@ inline void BoxShape::setLocalScaling(const Vector3& scaling) {
  */
 inline void BoxShape::getLocalBounds(Vector3& min, Vector3& max) const {
 
-    // Maximum bounds
-    max = mExtent + Vector3(mMargin, mMargin, mMargin);
+	// Maximum bounds
+	max = mExtent + Vector3(mMargin, mMargin, mMargin);
 
-    // Minimum bounds
-    min = -max;
+	// Minimum bounds
+	min = -max;
 }
 
 // Return the number of bytes used by the collision shape
 inline size_t BoxShape::getSizeInBytes() const {
-    return sizeof(BoxShape);
+	return sizeof(BoxShape);
 }
 
 // Return a local support point in a given direction without the objec margin
 inline Vector3 BoxShape::getLocalSupportPointWithoutMargin(const Vector3& direction,
-                                                           void** cachedCollisionData) const {
+														   void** cachedCollisionData) const {
 
-    return Vector3(direction.x < 0.0 ? -mExtent.x : mExtent.x,
-                   direction.y < 0.0 ? -mExtent.y : mExtent.y,
-                   direction.z < 0.0 ? -mExtent.z : mExtent.z);
+	return Vector3(direction.x < 0.0 ? -mExtent.x : mExtent.x,
+				   direction.y < 0.0 ? -mExtent.y : mExtent.y,
+				   direction.z < 0.0 ? -mExtent.z : mExtent.z);
 }
 
 // Return true if a point is inside the collision shape
 inline bool BoxShape::testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const {
-    return (localPoint.x < mExtent[0] && localPoint.x > -mExtent[0] &&
-            localPoint.y < mExtent[1] && localPoint.y > -mExtent[1] &&
-            localPoint.z < mExtent[2] && localPoint.z > -mExtent[2]);
+	return (localPoint.x < mExtent[0] && localPoint.x > -mExtent[0] &&
+			localPoint.y < mExtent[1] && localPoint.y > -mExtent[1] &&
+			localPoint.z < mExtent[2] && localPoint.z > -mExtent[2]);
 }
 
 }
-
-#endif

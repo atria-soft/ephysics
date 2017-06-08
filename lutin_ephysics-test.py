@@ -26,15 +26,15 @@ def get_maintainer():
 
 def configure(target, my_module):
 	my_module.add_src_file([
-	    'test/Test.cpp',
-	    'test/TestSuite.cpp',
-	    'test/main.cpp'
-	    ])
+		'test/Test.cpp',
+		'test/TestSuite.cpp',
+		'test/main.cpp'
+		])
 	my_module.add_depend([
-	    'ephysics',
-	    'gtest',
-	    'test-debug'
-	    ])
+		'ephysics',
+		'gtest',
+		'test-debug'
+		])
 	my_module.add_path(".")
 	return True
 

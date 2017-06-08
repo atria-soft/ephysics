@@ -1,30 +1,9 @@
-/********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
-*********************************************************************************
-*                                                                               *
-* This software is provided 'as-is', without any express or implied warranty.   *
-* In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
-* 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
-********************************************************************************/
-
-#ifndef REACTPHYSICS3D_PROXY_SHAPE_H
-#define REACTPHYSICS3D_PROXY_SHAPE_H
+/** @file
+ * @author Daniel Chappuis
+ * @copyright 2010-2016 Daniel Chappuis
+ * @license BSD 3 clauses (see license file)
+ */
+#pragma once
 
 // Libraries
 #include <ephysics/body/CollisionBody.h>
@@ -44,150 +23,150 @@ namespace  reactphysics3d {
  */
 class ProxyShape {
 
-    protected:
+	protected:
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Pointer to the parent body
-        CollisionBody* mBody;
+		/// Pointer to the parent body
+		CollisionBody* mBody;
 
-        /// Internal collision shape
-        CollisionShape* mCollisionShape;
+		/// Internal collision shape
+		CollisionShape* mCollisionShape;
 
-        /// Local-space to parent body-space transform (does not change over time)
-        Transform mLocalToBodyTransform;
+		/// Local-space to parent body-space transform (does not change over time)
+		Transform mLocalToBodyTransform;
 
-        /// Mass (in kilogramms) of the corresponding collision shape
-        decimal mMass;
+		/// Mass (in kilogramms) of the corresponding collision shape
+		float mMass;
 
-        /// Pointer to the next proxy shape of the body (linked list)
-        ProxyShape* mNext;
+		/// Pointer to the next proxy shape of the body (linked list)
+		ProxyShape* mNext;
 
-        /// Broad-phase ID (node ID in the dynamic AABB tree)
-        int mBroadPhaseID;
+		/// Broad-phase ID (node ID in the dynamic AABB tree)
+		int32_t mBroadPhaseID;
 
-        /// Cached collision data
-        void* mCachedCollisionData;
+		/// Cached collision data
+		void* mCachedCollisionData;
 
-        /// Pointer to user data
-        void* mUserData;
+		/// Pointer to user data
+		void* mUserData;
 
-        /// Bits used to define the collision category of this shape.
-        /// You can set a single bit to one to define a category value for this
-        /// shape. This value is one (0x0001) by default. This variable can be used
-        /// together with the mCollideWithMaskBits variable so that given
-        /// categories of shapes collide with each other and do not collide with
-        /// other categories.
-        unsigned short mCollisionCategoryBits;
+		/// Bits used to define the collision category of this shape.
+		/// You can set a single bit to one to define a category value for this
+		/// shape. This value is one (0x0001) by default. This variable can be used
+		/// together with the mCollideWithMaskBits variable so that given
+		/// categories of shapes collide with each other and do not collide with
+		/// other categories.
+		unsigned short mCollisionCategoryBits;
 
-        /// Bits mask used to state which collision categories this shape can
-        /// collide with. This value is 0xFFFF by default. It means that this
-        /// proxy shape will collide with every collision categories by default.
-        unsigned short mCollideWithMaskBits;
+		/// Bits mask used to state which collision categories this shape can
+		/// collide with. This value is 0xFFFF by default. It means that this
+		/// proxy shape will collide with every collision categories by default.
+		unsigned short mCollideWithMaskBits;
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Private copy-constructor
-        ProxyShape(const ProxyShape& proxyShape);
+		/// Private copy-constructor
+		ProxyShape(const ProxyShape& proxyShape);
 
-        /// Private assignment operator
-        ProxyShape& operator=(const ProxyShape& proxyShape);
+		/// Private assignment operator
+		ProxyShape& operator=(const ProxyShape& proxyShape);
 
-    public:
+	public:
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        ProxyShape(CollisionBody* body, CollisionShape* shape,
-                   const Transform& transform, decimal mass);
+		/// Constructor
+		ProxyShape(CollisionBody* body, CollisionShape* shape,
+				   const Transform& transform, float mass);
 
-        /// Destructor
-        virtual ~ProxyShape();
+		/// Destructor
+		virtual ~ProxyShape();
 
-        /// Return the collision shape
-        const CollisionShape* getCollisionShape() const;
+		/// Return the collision shape
+		const CollisionShape* getCollisionShape() const;
 
-        /// Return the parent body
-        CollisionBody* getBody() const;
+		/// Return the parent body
+		CollisionBody* getBody() const;
 
-        /// Return the mass of the collision shape
-        decimal getMass() const;
+		/// Return the mass of the collision shape
+		float getMass() const;
 
-        /// Return a pointer to the user data attached to this body
-        void* getUserData() const;
+		/// Return a pointer to the user data attached to this body
+		void* getUserData() const;
 
-        /// Attach user data to this body
-        void setUserData(void* userData);
+		/// Attach user data to this body
+		void setUserData(void* userData);
 
-        /// Return the local to parent body transform
-        const Transform& getLocalToBodyTransform() const;
+		/// Return the local to parent body transform
+		const Transform& getLocalToBodyTransform() const;
 
-        /// Set the local to parent body transform
-        void setLocalToBodyTransform(const Transform& transform);
+		/// Set the local to parent body transform
+		void setLocalToBodyTransform(const Transform& transform);
 
-        /// Return the local to world transform
-        const Transform getLocalToWorldTransform() const;
+		/// Return the local to world transform
+		const Transform getLocalToWorldTransform() const;
 
-        /// Return true if a point is inside the collision shape
-        bool testPointInside(const Vector3& worldPoint);
+		/// Return true if a point is inside the collision shape
+		bool testPointInside(const Vector3& worldPoint);
 
-        /// Raycast method with feedback information
-        bool raycast(const Ray& ray, RaycastInfo& raycastInfo);
+		/// Raycast method with feedback information
+		bool raycast(const Ray& ray, RaycastInfo& raycastInfo);
 
-        /// Return the collision bits mask
-        unsigned short getCollideWithMaskBits() const;
+		/// Return the collision bits mask
+		unsigned short getCollideWithMaskBits() const;
 
-        /// Set the collision bits mask
-        void setCollideWithMaskBits(unsigned short collideWithMaskBits);
+		/// Set the collision bits mask
+		void setCollideWithMaskBits(unsigned short collideWithMaskBits);
 
-        /// Return the collision category bits
-        unsigned short getCollisionCategoryBits() const;
+		/// Return the collision category bits
+		unsigned short getCollisionCategoryBits() const;
 
-        /// Set the collision category bits
-        void setCollisionCategoryBits(unsigned short collisionCategoryBits);
+		/// Set the collision category bits
+		void setCollisionCategoryBits(unsigned short collisionCategoryBits);
 
-        /// Return the next proxy shape in the linked list of proxy shapes
-        ProxyShape* getNext();
+		/// Return the next proxy shape in the linked list of proxy shapes
+		ProxyShape* getNext();
 
-        /// Return the next proxy shape in the linked list of proxy shapes
-        const ProxyShape* getNext() const;
+		/// Return the next proxy shape in the linked list of proxy shapes
+		const ProxyShape* getNext() const;
 
-        /// Return the pointer to the cached collision data
-        void** getCachedCollisionData();
+		/// Return the pointer to the cached collision data
+		void** getCachedCollisionData();
 
-        /// Return the local scaling vector of the collision shape
-        Vector3 getLocalScaling() const;
+		/// Return the local scaling vector of the collision shape
+		Vector3 getLocalScaling() const;
 
-        /// Set the local scaling vector of the collision shape
-        virtual void setLocalScaling(const Vector3& scaling);
+		/// Set the local scaling vector of the collision shape
+		virtual void setLocalScaling(const Vector3& scaling);
 
-        // -------------------- Friendship -------------------- //
+		// -------------------- Friendship -------------------- //
 
-        friend class OverlappingPair;
-        friend class CollisionBody;
-        friend class RigidBody;
-        friend class BroadPhaseAlgorithm;
-        friend class DynamicAABBTree;
-        friend class CollisionDetection;
-        friend class CollisionWorld;
-        friend class DynamicsWorld;
-        friend class EPAAlgorithm;
-        friend class GJKAlgorithm;
-        friend class ConvexMeshShape;
+		friend class OverlappingPair;
+		friend class CollisionBody;
+		friend class RigidBody;
+		friend class BroadPhaseAlgorithm;
+		friend class DynamicAABBTree;
+		friend class CollisionDetection;
+		friend class CollisionWorld;
+		friend class DynamicsWorld;
+		friend class EPAAlgorithm;
+		friend class GJKAlgorithm;
+		friend class ConvexMeshShape;
 
 };
 
 // Return the pointer to the cached collision data
 inline void** ProxyShape::getCachedCollisionData()  {
-    return &mCachedCollisionData;
+	return &mCachedCollisionData;
 }
 
 // Return the collision shape
 /**
- * @return Pointer to the internal collision shape
+ * @return Pointer to the int32_ternal collision shape
  */
 inline const CollisionShape* ProxyShape::getCollisionShape() const {
-    return mCollisionShape;
+	return mCollisionShape;
 }
 
 // Return the parent body
@@ -195,23 +174,23 @@ inline const CollisionShape* ProxyShape::getCollisionShape() const {
  * @return Pointer to the parent body
  */
 inline CollisionBody* ProxyShape::getBody() const {
-    return mBody;
+	return mBody;
 }
 
 // Return the mass of the collision shape
 /**
  * @return Mass of the collision shape (in kilograms)
  */
-inline decimal ProxyShape::getMass() const {
-    return mMass;
+inline float ProxyShape::getMass() const {
+	return mMass;
 }
 
 // Return a pointer to the user data attached to this body
 /**
- * @return A pointer to the user data stored into the proxy shape
+ * @return A pointer to the user data stored int32_to the proxy shape
  */
 inline void* ProxyShape::getUserData() const {
-    return mUserData;
+	return mUserData;
 }
 
 // Attach user data to this body
@@ -219,36 +198,36 @@ inline void* ProxyShape::getUserData() const {
  * @param userData Pointer to the user data you want to store within the proxy shape
  */
 inline void ProxyShape::setUserData(void* userData) {
-    mUserData = userData;
+	mUserData = userData;
 }
 
 // Return the local to parent body transform
 /**
  * @return The transformation that transforms the local-space of the collision shape
- *         to the local-space of the parent body
+ *		 to the local-space of the parent body
  */
 inline const Transform& ProxyShape::getLocalToBodyTransform() const {
-    return mLocalToBodyTransform;
+	return mLocalToBodyTransform;
 }
 
 // Set the local to parent body transform
 inline void ProxyShape::setLocalToBodyTransform(const Transform& transform) {
 
-    mLocalToBodyTransform = transform;
+	mLocalToBodyTransform = transform;
 
-    mBody->setIsSleeping(false);
+	mBody->setIsSleeping(false);
 
-    // Notify the body that the proxy shape has to be updated in the broad-phase
-    mBody->updateProxyShapeInBroadPhase(this, true);
+	// Notify the body that the proxy shape has to be updated in the broad-phase
+	mBody->updateProxyShapeInBroadPhase(this, true);
 }
 
 // Return the local to world transform
 /**
  * @return The transformation that transforms the local-space of the collision
- *         shape to the world-space
+ *		 shape to the world-space
  */
 inline const Transform ProxyShape::getLocalToWorldTransform() const {
-    return mBody->mTransform * mLocalToBodyTransform;
+	return mBody->mTransform * mLocalToBodyTransform;
 }
 
 // Return the next proxy shape in the linked list of proxy shapes
@@ -256,7 +235,7 @@ inline const Transform ProxyShape::getLocalToWorldTransform() const {
  * @return Pointer to the next proxy shape in the linked list of proxy shapes
  */
 inline ProxyShape* ProxyShape::getNext() {
-    return mNext;
+	return mNext;
 }
 
 // Return the next proxy shape in the linked list of proxy shapes
@@ -264,7 +243,7 @@ inline ProxyShape* ProxyShape::getNext() {
  * @return Pointer to the next proxy shape in the linked list of proxy shapes
  */
 inline const ProxyShape* ProxyShape::getNext() const {
-    return mNext;
+	return mNext;
 }
 
 // Return the collision category bits
@@ -272,7 +251,7 @@ inline const ProxyShape* ProxyShape::getNext() const {
  * @return The collision category bits mask of the proxy shape
  */
 inline unsigned short ProxyShape::getCollisionCategoryBits() const {
-    return mCollisionCategoryBits;
+	return mCollisionCategoryBits;
 }
 
 // Set the collision category bits
@@ -280,7 +259,7 @@ inline unsigned short ProxyShape::getCollisionCategoryBits() const {
  * @param collisionCategoryBits The collision category bits mask of the proxy shape
  */
 inline void ProxyShape::setCollisionCategoryBits(unsigned short collisionCategoryBits) {
-    mCollisionCategoryBits = collisionCategoryBits;
+	mCollisionCategoryBits = collisionCategoryBits;
 }
 
 // Return the collision bits mask
@@ -288,7 +267,7 @@ inline void ProxyShape::setCollisionCategoryBits(unsigned short collisionCategor
  * @return The bits mask that specifies with which collision category this shape will collide
  */
 inline unsigned short ProxyShape::getCollideWithMaskBits() const {
-    return mCollideWithMaskBits;
+	return mCollideWithMaskBits;
 }
 
 // Set the collision bits mask
@@ -296,7 +275,7 @@ inline unsigned short ProxyShape::getCollideWithMaskBits() const {
  * @param collideWithMaskBits The bits mask that specifies with which collision category this shape will collide
  */
 inline void ProxyShape::setCollideWithMaskBits(unsigned short collideWithMaskBits) {
-    mCollideWithMaskBits = collideWithMaskBits;
+	mCollideWithMaskBits = collideWithMaskBits;
 }
 
 // Return the local scaling vector of the collision shape
@@ -304,7 +283,7 @@ inline void ProxyShape::setCollideWithMaskBits(unsigned short collideWithMaskBit
  * @return The local scaling vector
  */
 inline Vector3 ProxyShape::getLocalScaling() const {
-    return mCollisionShape->getScaling();
+	return mCollisionShape->getScaling();
 }
 
 // Set the local scaling vector of the collision shape
@@ -313,15 +292,14 @@ inline Vector3 ProxyShape::getLocalScaling() const {
  */
 inline void ProxyShape::setLocalScaling(const Vector3& scaling) {
 
-    // Set the local scaling of the collision shape
-    mCollisionShape->setLocalScaling(scaling);
+	// Set the local scaling of the collision shape
+	mCollisionShape->setLocalScaling(scaling);
 
-    mBody->setIsSleeping(false);
+	mBody->setIsSleeping(false);
 
-    // Notify the body that the proxy shape has to be updated in the broad-phase
-    mBody->updateProxyShapeInBroadPhase(this, true);
+	// Notify the body that the proxy shape has to be updated in the broad-phase
+	mBody->updateProxyShapeInBroadPhase(this, true);
 }
 
 }
 
-#endif

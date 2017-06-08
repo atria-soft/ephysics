@@ -1,30 +1,9 @@
-/********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
-*********************************************************************************
-*                                                                               *
-* This software is provided 'as-is', without any express or implied warranty.   *
-* In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
-* 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
-********************************************************************************/
-
-#ifndef REACTPHYSICS3D_CONSTRAINT_H
-#define REACTPHYSICS3D_CONSTRAINT_H
+/** @file
+ * @author Daniel Chappuis
+ * @copyright 2010-2016 Daniel Chappuis
+ * @license BSD 3 clauses (see license file)
+ */
+#pragma once
 
 // Libraries
 #include <ephysics/configuration.h>
@@ -47,23 +26,23 @@ class Joint;
  */
 struct JointListElement {
 
-    public:
+	public:
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Pointer to the actual joint
-        Joint* joint;
+		/// Pointer to the actual joint
+		Joint* joint;
 
-        /// Next element of the list
-        JointListElement* next;
+		/// Next element of the list
+		JointListElement* next;
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        JointListElement(Joint* initJoint, JointListElement* initNext)
-                        :joint(initJoint), next(initNext){
+		/// Constructor
+		JointListElement(Joint* initJoint, JointListElement* initNext)
+						:joint(initJoint), next(initNext){
 
-        }
+		}
 };
 
 // Structure JointInfo
@@ -72,41 +51,41 @@ struct JointListElement {
  */
 struct JointInfo {
 
-    public :
+	public :
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// First rigid body of the joint
-        RigidBody* body1;
+		/// First rigid body of the joint
+		RigidBody* body1;
 
-        /// Second rigid body of the joint
-        RigidBody* body2;
+		/// Second rigid body of the joint
+		RigidBody* body2;
 
-        /// Type of the joint
-        JointType type;
+		/// Type of the joint
+		JointType type;
 
-        /// Position correction technique used for the constraint (used for joints).
-        /// By default, the BAUMGARTE technique is used
-        JointsPositionCorrectionTechnique positionCorrectionTechnique;
+		/// Position correction technique used for the constraint (used for joints).
+		/// By default, the BAUMGARTE technique is used
+		JointsPositionCorrectionTechnique positionCorrectionTechnique;
 
-        /// True if the two bodies of the joint are allowed to collide with each other
-        bool isCollisionEnabled;
+		/// True if the two bodies of the joint are allowed to collide with each other
+		bool isCollisionEnabled;
 
-        /// Constructor
-        JointInfo(JointType constraintType)
-                      : body1(NULL), body2(NULL), type(constraintType),
-                        positionCorrectionTechnique(NON_LINEAR_GAUSS_SEIDEL),
-                        isCollisionEnabled(true) {}
+		/// Constructor
+		JointInfo(JointType constraintType)
+					  : body1(NULL), body2(NULL), type(constraintType),
+						positionCorrectionTechnique(NON_LINEAR_GAUSS_SEIDEL),
+						isCollisionEnabled(true) {}
 
-        /// Constructor
-        JointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2, JointType constraintType)
-                      : body1(rigidBody1), body2(rigidBody2), type(constraintType),
-                        positionCorrectionTechnique(NON_LINEAR_GAUSS_SEIDEL),
-                        isCollisionEnabled(true) {
-        }
+		/// Constructor
+		JointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2, JointType constraintType)
+					  : body1(rigidBody1), body2(rigidBody2), type(constraintType),
+						positionCorrectionTechnique(NON_LINEAR_GAUSS_SEIDEL),
+						isCollisionEnabled(true) {
+		}
 
-        /// Destructor
-        virtual ~JointInfo() {}
+		/// Destructor
+		virtual ~JointInfo() {}
 
 };
 
@@ -116,90 +95,90 @@ struct JointInfo {
  */
 class Joint {
 
-    protected :
+	protected :
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Pointer to the first body of the joint
-        RigidBody* const mBody1;
+		/// Pointer to the first body of the joint
+		RigidBody* const mBody1;
 
-        /// Pointer to the second body of the joint
-        RigidBody* const mBody2;
+		/// Pointer to the second body of the joint
+		RigidBody* const mBody2;
 
-        /// Type of the joint
-        const JointType mType;
+		/// Type of the joint
+		const JointType mType;
 
-        /// Body 1 index in the velocity array to solve the constraint
-        uint mIndexBody1;
+		/// Body 1 index in the velocity array to solve the constraint
+		uint32_t mIndexBody1;
 
-        /// Body 2 index in the velocity array to solve the constraint
-        uint mIndexBody2;
+		/// Body 2 index in the velocity array to solve the constraint
+		uint32_t mIndexBody2;
 
-        /// Position correction technique used for the constraint (used for joints)
-        JointsPositionCorrectionTechnique mPositionCorrectionTechnique;
+		/// Position correction technique used for the constraint (used for joints)
+		JointsPositionCorrectionTechnique mPositionCorrectionTechnique;
 
-        /// True if the two bodies of the constraint are allowed to collide with each other
-        bool mIsCollisionEnabled;
+		/// True if the two bodies of the constraint are allowed to collide with each other
+		bool mIsCollisionEnabled;
 
-        /// True if the joint has already been added into an island
-        bool mIsAlreadyInIsland;
+		/// True if the joint has already been added int32_to an island
+		bool mIsAlreadyInIsland;
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Private copy-constructor
-        Joint(const Joint& constraint);
+		/// Private copy-constructor
+		Joint(const Joint& constraint);
 
-        /// Private assignment operator
-        Joint& operator=(const Joint& constraint);
+		/// Private assignment operator
+		Joint& operator=(const Joint& constraint);
 
-        /// Return true if the joint has already been added into an island
-        bool isAlreadyInIsland() const;
+		/// Return true if the joint has already been added int32_to an island
+		bool isAlreadyInIsland() const;
 
-        /// Return the number of bytes used by the joint
-        virtual size_t getSizeInBytes() const = 0;
+		/// Return the number of bytes used by the joint
+		virtual size_t getSizeInBytes() const = 0;
 
-        /// Initialize before solving the joint
-        virtual void initBeforeSolve(const ConstraintSolverData& constraintSolverData) = 0;
+		/// Initialize before solving the joint
+		virtual void initBeforeSolve(const ConstraintSolverData& constraintSolverData) = 0;
 
-        /// Warm start the joint (apply the previous impulse at the beginning of the step)
-        virtual void warmstart(const ConstraintSolverData& constraintSolverData) = 0;
+		/// Warm start the joint (apply the previous impulse at the beginning of the step)
+		virtual void warmstart(const ConstraintSolverData& constraintSolverData) = 0;
 
-        /// Solve the velocity constraint
-        virtual void solveVelocityConstraint(const ConstraintSolverData& constraintSolverData) = 0;
+		/// Solve the velocity constraint
+		virtual void solveVelocityConstraint(const ConstraintSolverData& constraintSolverData) = 0;
 
-        /// Solve the position constraint
-        virtual void solvePositionConstraint(const ConstraintSolverData& constraintSolverData) = 0;
+		/// Solve the position constraint
+		virtual void solvePositionConstraint(const ConstraintSolverData& constraintSolverData) = 0;
 
-    public :
+	public :
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        Joint(const JointInfo& jointInfo);
+		/// Constructor
+		Joint(const JointInfo& jointInfo);
 
-        /// Destructor
-        virtual ~Joint();
+		/// Destructor
+		virtual ~Joint();
 
-        /// Return the reference to the body 1
-        RigidBody* getBody1() const;
+		/// Return the reference to the body 1
+		RigidBody* getBody1() const;
 
-        /// Return the reference to the body 2
-        RigidBody* getBody2() const;
+		/// Return the reference to the body 2
+		RigidBody* getBody2() const;
 
-        /// Return true if the constraint is active
-        bool isActive() const;
+		/// Return true if the constraint is active
+		bool isActive() const;
 
-        /// Return the type of the constraint
-        JointType getType() const;
+		/// Return the type of the constraint
+		JointType getType() const;
 
-        /// Return true if the collision between the two bodies of the joint is enabled
-        bool isCollisionEnabled() const;
+		/// Return true if the collision between the two bodies of the joint is enabled
+		bool isCollisionEnabled() const;
 
-        // -------------------- Friendship -------------------- //
+		// -------------------- Friendship -------------------- //
 
-        friend class DynamicsWorld;
-        friend class Island;
-        friend class ConstraintSolver;
+		friend class DynamicsWorld;
+		friend class Island;
+		friend class ConstraintSolver;
 };
 
 // Return the reference to the body 1
@@ -207,7 +186,7 @@ class Joint {
  * @return The first body involved in the joint
  */
 inline RigidBody* Joint::getBody1() const {
-    return mBody1;
+	return mBody1;
 }
 
 // Return the reference to the body 2
@@ -215,7 +194,7 @@ inline RigidBody* Joint::getBody1() const {
  * @return The second body involved in the joint
  */
 inline RigidBody* Joint::getBody2() const {
-    return mBody2;
+	return mBody2;
 }
 
 // Return true if the joint is active
@@ -223,7 +202,7 @@ inline RigidBody* Joint::getBody2() const {
  * @return True if the joint is active
  */
 inline bool Joint::isActive() const {
-    return (mBody1->isActive() && mBody2->isActive());
+	return (mBody1->isActive() && mBody2->isActive());
 }
 
 // Return the type of the joint
@@ -231,23 +210,21 @@ inline bool Joint::isActive() const {
  * @return The type of the joint
  */
 inline JointType Joint::getType() const {
-    return mType;
+	return mType;
 }
 
 // Return true if the collision between the two bodies of the joint is enabled
 /**
  * @return True if the collision is enabled between the two bodies of the joint
- *              is enabled and false otherwise
+ *			  is enabled and false otherwise
  */
 inline bool Joint::isCollisionEnabled() const {
-    return mIsCollisionEnabled;
+	return mIsCollisionEnabled;
 }
 
-// Return true if the joint has already been added into an island
+// Return true if the joint has already been added int32_to an island
 inline bool Joint::isAlreadyInIsland() const {
-    return mIsAlreadyInIsland;
+	return mIsAlreadyInIsland;
 }
 
 }
-
-#endif

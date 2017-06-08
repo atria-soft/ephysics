@@ -1,30 +1,9 @@
-/********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
-*********************************************************************************
-*                                                                               *
-* This software is provided 'as-is', without any express or implied warranty.   *
-* In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
-* 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
-********************************************************************************/
-
-#ifndef REACTPHYSICS3D_HEIGHTFIELD_SHAPE_H
-#define REACTPHYSICS3D_HEIGHTFIELD_SHAPE_H
+/** @file
+ * @author Daniel Chappuis
+ * @copyright 2010-2016 Daniel Chappuis
+ * @license BSD 3 clauses (see license file)
+ */
+#pragma once
 
 // Libraries
 #include <ephysics/collision/shapes/ConcaveShape.h>
@@ -41,30 +20,30 @@ class HeightFieldShape;
  */
 class TriangleOverlapCallback : public TriangleCallback {
 
-    protected:
+	protected:
 
-        const Ray& m_ray;
-        ProxyShape* m_proxyShape;
-        RaycastInfo& m_raycastInfo;
-        bool mIsHit;
-        decimal mSmallestHitFraction;
-        const HeightFieldShape& mHeightFieldShape;
+		const Ray& m_ray;
+		ProxyShape* m_proxyShape;
+		RaycastInfo& m_raycastInfo;
+		bool mIsHit;
+		float mSmallestHitFraction;
+		const HeightFieldShape& mHeightFieldShape;
 
-    public:
+	public:
 
-        // Constructor
-        TriangleOverlapCallback(const Ray& ray, ProxyShape* proxyShape, RaycastInfo& raycastInfo,
-                                const HeightFieldShape& heightFieldShape)
-                               : m_ray(ray), m_proxyShape(proxyShape), m_raycastInfo(raycastInfo),
-                                 mHeightFieldShape (heightFieldShape) {
-            mIsHit = false;
-            mSmallestHitFraction = m_ray.maxFraction;
-        }
+		// Constructor
+		TriangleOverlapCallback(const Ray& ray, ProxyShape* proxyShape, RaycastInfo& raycastInfo,
+								const HeightFieldShape& heightFieldShape)
+							   : m_ray(ray), m_proxyShape(proxyShape), m_raycastInfo(raycastInfo),
+								 mHeightFieldShape (heightFieldShape) {
+			mIsHit = false;
+			mSmallestHitFraction = m_ray.maxFraction;
+		}
 
-        bool getIsHit() const {return mIsHit;}
+		bool getIsHit() const {return mIsHit;}
 
-        /// Raycast test between a ray and a triangle of the heightfield
-        virtual void testTriangle(const Vector3* trianglePoints);
+		/// Raycast test between a ray and a triangle of the heightfield
+		virtual void testTriangle(const Vector3* trianglePoints);
 };
 
 
@@ -72,8 +51,8 @@ class TriangleOverlapCallback : public TriangleCallback {
 /**
  * This class represents a static height field that can be used to represent
  * a terrain. The height field is made of a grid with rows and columns with a
- * height value at each grid point. Note that the height values are not copied into the shape
- * but are shared instead. The height values can be of type integer, float or double.
+ * height value at each grid point. Note that the height values are not copied int32_to the shape
+ * but are shared instead. The height values can be of type int32_teger, float or double.
  * When creating a HeightFieldShape, you need to specify the minimum and maximum height value of
  * your height field. Note that the HeightFieldShape will be re-centered based on its AABB. It means
  * that for instance, if the minimum height value is -200 and the maximum value is 400, the final
@@ -81,177 +60,176 @@ class TriangleOverlapCallback : public TriangleCallback {
  */
 class HeightFieldShape : public ConcaveShape {
 
-    public:
+	public:
 
-        /// Data type for the height data of the height field
-        enum HeightDataType {HEIGHT_FLOAT_TYPE, HEIGHT_DOUBLE_TYPE, HEIGHT_INT_TYPE};
+		/// Data type for the height data of the height field
+		enum HeightDataType {HEIGHT_FLOAT_TYPE, HEIGHT_DOUBLE_TYPE, HEIGHT_INT_TYPE};
 
-    protected:
+	protected:
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Number of columns in the grid of the height field
-        int mNbColumns;
+		/// Number of columns in the grid of the height field
+		int32_t mNbColumns;
 
-        /// Number of rows in the grid of the height field
-        int mNbRows;
+		/// Number of rows in the grid of the height field
+		int32_t mNbRows;
 
-        /// Height field width
-        decimal mWidth;
+		/// Height field width
+		float mWidth;
 
-        /// Height field length
-        decimal mLength;
+		/// Height field length
+		float mLength;
 
-        /// Minimum height of the height field
-        decimal mMinHeight;
+		/// Minimum height of the height field
+		float mMinHeight;
 
-        /// Maximum height of the height field
-        decimal mMaxHeight;
+		/// Maximum height of the height field
+		float mMaxHeight;
 
-        /// Up axis direction (0 => x, 1 => y, 2 => z)
-        int mUpAxis;
+		/// Up axis direction (0 => x, 1 => y, 2 => z)
+		int32_t mUpAxis;
 
-        /// Height values scale for height field with integer height values
-        decimal mIntegerHeightScale;
+		/// Height values scale for height field with int32_teger height values
+		float mIntegerHeightScale;
 
-        /// Data type of the height values
-        HeightDataType mHeightDataType;
+		/// Data type of the height values
+		HeightDataType mHeightDataType;
 
-        /// Array of data with all the height values of the height field
-        const void*	mHeightFieldData;
+		/// Array of data with all the height values of the height field
+		const void*	mHeightFieldData;
 
-        /// Local AABB of the height field (without scaling)
-        AABB mAABB;
+		/// Local AABB of the height field (without scaling)
+		AABB mAABB;
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Private copy-constructor
-        HeightFieldShape(const HeightFieldShape& shape);
+		/// Private copy-constructor
+		HeightFieldShape(const HeightFieldShape& shape);
 
-        /// Private assignment operator
-        HeightFieldShape& operator=(const HeightFieldShape& shape);
+		/// Private assignment operator
+		HeightFieldShape& operator=(const HeightFieldShape& shape);
 
-        /// Raycast method with feedback information
-        virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
+		/// Raycast method with feedback information
+		virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
 
-        /// Return the number of bytes used by the collision shape
-        virtual size_t getSizeInBytes() const;
+		/// Return the number of bytes used by the collision shape
+		virtual size_t getSizeInBytes() const;
 
-        /// Insert all the triangles into the dynamic AABB tree
-        void initBVHTree();
+		/// Insert all the triangles int32_to the dynamic AABB tree
+		void initBVHTree();
 
-        /// Return the three vertices coordinates (in the array outTriangleVertices) of a triangle
-        /// given the start vertex index pointer of the triangle.
-        void getTriangleVerticesWithIndexPointer(int32 subPart, int32 triangleIndex,
-                                                 Vector3* outTriangleVertices) const;
+		/// Return the three vertices coordinates (in the array outTriangleVertices) of a triangle
+		/// given the start vertex index pointer of the triangle.
+		void getTriangleVerticesWithIndexPointer(int32_t subPart, int32_t triangleIndex,
+												 Vector3* outTriangleVertices) const;
 
-        /// Return the vertex (local-coordinates) of the height field at a given (x,y) position
-        Vector3 getVertexAt(int x, int y) const;
+		/// Return the vertex (local-coordinates) of the height field at a given (x,y) position
+		Vector3 getVertexAt(int32_t x, int32_t y) const;
 
-        /// Return the height of a given (x,y) point in the height field
-        decimal getHeightAt(int x, int y) const;
+		/// Return the height of a given (x,y) point in the height field
+		float getHeightAt(int32_t x, int32_t y) const;
 
-        /// Return the closest inside integer grid value of a given floating grid value
-        int computeIntegerGridValue(decimal value) const;
+		/// Return the closest inside int32_teger grid value of a given floating grid value
+		int32_t computeIntegerGridValue(float value) const;
 
-        /// Compute the min/max grid coords corresponding to the intersection of the AABB of the height field and the AABB to collide
-        void computeMinMaxGridCoordinates(int* minCoords, int* maxCoords, const AABB& aabbToCollide) const;
+		/// Compute the min/max grid coords corresponding to the int32_tersection of the AABB of the height field and the AABB to collide
+		void computeMinMaxGridCoordinates(int32_t* minCoords, int32_t* maxCoords, const AABB& aabbToCollide) const;
 
-    public:
+	public:
 
-        /// Constructor
-        HeightFieldShape(int nbGridColumns, int nbGridRows, decimal minHeight, decimal maxHeight,
-                         const void* heightFieldData, HeightDataType dataType,
-                         int upAxis = 1, decimal integerHeightScale = 1.0f);
+		/// Constructor
+		HeightFieldShape(int32_t nbGridColumns, int32_t nbGridRows, float minHeight, float maxHeight,
+						 const void* heightFieldData, HeightDataType dataType,
+						 int32_t upAxis = 1, float int32_tegerHeightScale = 1.0f);
 
-        /// Destructor
-        ~HeightFieldShape();
+		/// Destructor
+		~HeightFieldShape();
 
-        /// Return the number of rows in the height field
-        int getNbRows() const;
+		/// Return the number of rows in the height field
+		int32_t getNbRows() const;
 
-        /// Return the number of columns in the height field
-        int getNbColumns() const;
+		/// Return the number of columns in the height field
+		int32_t getNbColumns() const;
 
-        /// Return the type of height value in the height field
-        HeightDataType getHeightDataType() const;
+		/// Return the type of height value in the height field
+		HeightDataType getHeightDataType() const;
 
-        /// Return the local bounds of the shape in x, y and z directions.
-        virtual void getLocalBounds(Vector3& min, Vector3& max) const;
+		/// Return the local bounds of the shape in x, y and z directions.
+		virtual void getLocalBounds(Vector3& min, Vector3& max) const;
 
-        /// Set the local scaling vector of the collision shape
-        virtual void setLocalScaling(const Vector3& scaling);
+		/// Set the local scaling vector of the collision shape
+		virtual void setLocalScaling(const Vector3& scaling);
 
-        /// Return the local inertia tensor of the collision shape
-        virtual void computeLocalInertiaTensor(Matrix3x3& tensor, decimal mass) const;
+		/// Return the local inertia tensor of the collision shape
+		virtual void computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const;
 
-        /// Use a callback method on all triangles of the concave shape inside a given AABB
-        virtual void testAllTriangles(TriangleCallback& callback, const AABB& localAABB) const;
+		/// Use a callback method on all triangles of the concave shape inside a given AABB
+		virtual void testAllTriangles(TriangleCallback& callback, const AABB& localAABB) const;
 
-        // ---------- Friendship ----------- //
+		// ---------- Friendship ----------- //
 
-        friend class ConvexTriangleAABBOverlapCallback;
-        friend class ConcaveMeshRaycastCallback;
+		friend class ConvexTriangleAABBOverlapCallback;
+		friend class ConcaveMeshRaycastCallback;
 };
 
 // Return the number of rows in the height field
-inline int HeightFieldShape::getNbRows() const {
-    return mNbRows;
+inline int32_t HeightFieldShape::getNbRows() const {
+	return mNbRows;
 }
 
 // Return the number of columns in the height field
-inline int HeightFieldShape::getNbColumns() const {
-    return mNbColumns;
+inline int32_t HeightFieldShape::getNbColumns() const {
+	return mNbColumns;
 }
 
 // Return the type of height value in the height field
 inline HeightFieldShape::HeightDataType HeightFieldShape::getHeightDataType() const {
-    return mHeightDataType;
+	return mHeightDataType;
 }
 
 // Return the number of bytes used by the collision shape
 inline size_t HeightFieldShape::getSizeInBytes() const {
-    return sizeof(HeightFieldShape);
+	return sizeof(HeightFieldShape);
 }
 
 // Set the local scaling vector of the collision shape
 inline void HeightFieldShape::setLocalScaling(const Vector3& scaling) {
-    CollisionShape::setLocalScaling(scaling);
+	CollisionShape::setLocalScaling(scaling);
 }
 
 // Return the height of a given (x,y) point in the height field
-inline decimal HeightFieldShape::getHeightAt(int x, int y) const {
+inline float HeightFieldShape::getHeightAt(int32_t x, int32_t y) const {
 
-    switch(mHeightDataType) {
-        case HEIGHT_FLOAT_TYPE : return ((float*)mHeightFieldData)[y * mNbColumns + x];
-        case HEIGHT_DOUBLE_TYPE : return ((double*)mHeightFieldData)[y * mNbColumns + x];
-        case HEIGHT_INT_TYPE : return ((int*)mHeightFieldData)[y * mNbColumns + x] * mIntegerHeightScale;
-        default: assert(false); return 0;
-    }
+	switch(mHeightDataType) {
+		case HEIGHT_FLOAT_TYPE : return ((float*)mHeightFieldData)[y * mNbColumns + x];
+		case HEIGHT_DOUBLE_TYPE : return ((double*)mHeightFieldData)[y * mNbColumns + x];
+		case HEIGHT_INT_TYPE : return ((int32_t*)mHeightFieldData)[y * mNbColumns + x] * mIntegerHeightScale;
+		default: assert(false); return 0;
+	}
 }
 
-// Return the closest inside integer grid value of a given floating grid value
-inline int HeightFieldShape::computeIntegerGridValue(decimal value) const {
-    return (value < decimal(0.0)) ? value - decimal(0.5) : value + decimal(0.5);
+// Return the closest inside int32_teger grid value of a given floating grid value
+inline int32_t HeightFieldShape::computeIntegerGridValue(float value) const {
+	return (value < float(0.0)) ? value - float(0.5) : value + float(0.5);
 }
 
 // Return the local inertia tensor
 /**
  * @param[out] tensor The 3x3 inertia tensor matrix of the shape in local-space
- *                    coordinates
+ *					coordinates
  * @param mass Mass to use to compute the inertia tensor of the collision shape
  */
-inline void HeightFieldShape::computeLocalInertiaTensor(Matrix3x3& tensor, decimal mass) const {
+inline void HeightFieldShape::computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const {
 
-    // Default inertia tensor
-    // Note that this is not very realistic for a concave triangle mesh.
-    // However, in most cases, it will only be used static bodies and therefore,
-    // the inertia tensor is not used.
-    tensor.setAllValues(mass, 0, 0,
-                        0, mass, 0,
-                        0, 0, mass);
+	// Default inertia tensor
+	// Note that this is not very realistic for a concave triangle mesh.
+	// However, in most cases, it will only be used static bodies and therefore,
+	// the inertia tensor is not used.
+	tensor.setAllValues(mass, 0, 0,
+						0, mass, 0,
+						0, 0, mass);
 }
 
 }
-#endif
 

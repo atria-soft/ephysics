@@ -1,30 +1,9 @@
-/********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
-*********************************************************************************
-*                                                                               *
-* This software is provided 'as-is', without any express or implied warranty.   *
-* In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
-* 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
-********************************************************************************/
-
-#ifndef REACTPHYSICS3D_CONTACT_MANIFOLD_H
-#define	REACTPHYSICS3D_CONTACT_MANIFOLD_H
+/** @file
+ * @author Daniel Chappuis
+ * @copyright 2010-2016 Daniel Chappuis
+ * @license BSD 3 clauses (see license file)
+ */
+#pragma once
 
 // Libraries
 #include <vector>
@@ -37,7 +16,7 @@
 namespace reactphysics3d {
 
 // Constants
-const uint MAX_CONTACT_POINTS_IN_MANIFOLD = 4;   // Maximum number of contacts in the manifold
+const uint32_t MAX_CONTACT_POINTS_IN_MANIFOLD = 4;   // Maximum number of contacts in the manifold
 
 // Class declarations
 class ContactManifold;
@@ -48,24 +27,24 @@ class ContactManifold;
  */
 struct ContactManifoldListElement {
 
-    public:
+	public:
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Pointer to the actual contact manifold
-        ContactManifold* contactManifold;
+		/// Pointer to the actual contact manifold
+		ContactManifold* contactManifold;
 
-        /// Next element of the list
-        ContactManifoldListElement* next;
+		/// Next element of the list
+		ContactManifoldListElement* next;
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        ContactManifoldListElement(ContactManifold* initContactManifold,
-                                   ContactManifoldListElement* initNext)
-                                  :contactManifold(initContactManifold), next(initNext) {
+		/// Constructor
+		ContactManifoldListElement(ContactManifold* initContactManifold,
+								   ContactManifoldListElement* initNext)
+								  :contactManifold(initContactManifold), next(initNext) {
 
-        }
+		}
 };
 
 // Class ContactManifold
@@ -85,280 +64,280 @@ struct ContactManifoldListElement {
  */
 class ContactManifold {
 
-    private:
+	private:
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Pointer to the first proxy shape of the contact
-        ProxyShape* mShape1;
+		/// Pointer to the first proxy shape of the contact
+		ProxyShape* mShape1;
 
-        /// Pointer to the second proxy shape of the contact
-        ProxyShape* mShape2;
+		/// Pointer to the second proxy shape of the contact
+		ProxyShape* mShape2;
 
-        /// Contact points in the manifold
-        ContactPoint* mContactPoints[MAX_CONTACT_POINTS_IN_MANIFOLD];
+		/// Contact points in the manifold
+		ContactPoint* mContactPoints[MAX_CONTACT_POINTS_IN_MANIFOLD];
 
-        /// Normal direction Id (Unique Id representing the normal direction)
-        short int mNormalDirectionId;
+		/// Normal direction Id (Unique Id representing the normal direction)
+		int16_t mNormalDirectionId;
 
-        /// Number of contacts in the cache
-        uint mNbContactPoints;
+		/// Number of contacts in the cache
+		uint32_t mNbContactPoints;
 
-        /// First friction vector of the contact manifold
-        Vector3 mFrictionVector1;
+		/// First friction vector of the contact manifold
+		Vector3 mFrictionVector1;
 
-        /// Second friction vector of the contact manifold
-        Vector3 mFrictionVector2;
+		/// Second friction vector of the contact manifold
+		Vector3 mFrictionVector2;
 
-        /// First friction constraint accumulated impulse
-        decimal mFrictionImpulse1;
+		/// First friction constraint accumulated impulse
+		float mFrictionImpulse1;
 
-        /// Second friction constraint accumulated impulse
-        decimal mFrictionImpulse2;
+		/// Second friction constraint accumulated impulse
+		float mFrictionImpulse2;
 
-        /// Twist friction constraint accumulated impulse
-        decimal mFrictionTwistImpulse;
+		/// Twist friction constraint accumulated impulse
+		float mFrictionTwistImpulse;
 
-        /// Accumulated rolling resistance impulse
-        Vector3 mRollingResistanceImpulse;
+		/// Accumulated rolling resistance impulse
+		Vector3 mRollingResistanceImpulse;
 
-        /// True if the contact manifold has already been added into an island
-        bool mIsAlreadyInIsland;
+		/// True if the contact manifold has already been added int32_to an island
+		bool mIsAlreadyInIsland;
 
-        /// Reference to the memory allocator
-        MemoryAllocator& mMemoryAllocator;
+		/// Reference to the memory allocator
+		MemoryAllocator& mMemoryAllocator;
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Private copy-constructor
-        ContactManifold(const ContactManifold& contactManifold);
+		/// Private copy-constructor
+		ContactManifold(const ContactManifold& contactManifold);
 
-        /// Private assignment operator
-        ContactManifold& operator=(const ContactManifold& contactManifold);
+		/// Private assignment operator
+		ContactManifold& operator=(const ContactManifold& contactManifold);
 
-        /// Return the index of maximum area
-        int getMaxArea(decimal area0, decimal area1, decimal area2, decimal area3) const;
+		/// Return the index of maximum area
+		int32_t getMaxArea(float area0, float area1, float area2, float area3) const;
 
-        /// Return the index of the contact with the larger penetration depth.
-        int getIndexOfDeepestPenetration(ContactPoint* newContact) const;
+		/// Return the index of the contact with the larger penetration depth.
+		int32_t getIndexOfDeepestPenetration(ContactPoint* newContact) const;
 
-        /// Return the index that will be removed.
-        int getIndexToRemove(int indexMaxPenetration, const Vector3& newPoint) const;
+		/// Return the index that will be removed.
+		int32_t getIndexToRemove(int32_t indexMaxPenetration, const Vector3& newPoint) const;
 
-        /// Remove a contact point from the manifold
-        void removeContactPoint(uint index);
+		/// Remove a contact point from the manifold
+		void removeContactPoint(uint32_t index);
 
-        /// Return true if the contact manifold has already been added into an island
-        bool isAlreadyInIsland() const;
-        
-    public:
+		/// Return true if the contact manifold has already been added int32_to an island
+		bool isAlreadyInIsland() const;
+		
+	public:
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        ContactManifold(ProxyShape* shape1, ProxyShape* shape2,
-                        MemoryAllocator& memoryAllocator, short int normalDirectionId);
+		/// Constructor
+		ContactManifold(ProxyShape* shape1, ProxyShape* shape2,
+						MemoryAllocator& memoryAllocator, int16_t normalDirectionId);
 
-        /// Destructor
-        ~ContactManifold();
+		/// Destructor
+		~ContactManifold();
 
-        /// Return a pointer to the first proxy shape of the contact
-        ProxyShape* getShape1() const;
+		/// Return a pointer to the first proxy shape of the contact
+		ProxyShape* getShape1() const;
 
-        /// Return a pointer to the second proxy shape of the contact
-        ProxyShape* getShape2() const;
+		/// Return a pointer to the second proxy shape of the contact
+		ProxyShape* getShape2() const;
 
-        /// Return a pointer to the first body of the contact manifold
-        CollisionBody* getBody1() const;
+		/// Return a pointer to the first body of the contact manifold
+		CollisionBody* getBody1() const;
 
-        /// Return a pointer to the second body of the contact manifold
-        CollisionBody* getBody2() const;
+		/// Return a pointer to the second body of the contact manifold
+		CollisionBody* getBody2() const;
 
-        /// Return the normal direction Id
-        short int getNormalDirectionId() const;
+		/// Return the normal direction Id
+		int16_t getNormalDirectionId() const;
 
-        /// Add a contact point to the manifold
-        void addContactPoint(ContactPoint* contact);
+		/// Add a contact point to the manifold
+		void addContactPoint(ContactPoint* contact);
 
-        /// Update the contact manifold.
-        void update(const Transform& transform1, const Transform& transform2);
+		/// Update the contact manifold.
+		void update(const Transform& transform1, const Transform& transform2);
 
-        /// Clear the contact manifold
-        void clear();
+		/// Clear the contact manifold
+		void clear();
 
-        /// Return the number of contact points in the manifold
-        uint getNbContactPoints() const;
+		/// Return the number of contact points in the manifold
+		uint32_t getNbContactPoints() const;
 
-        /// Return the first friction vector at the center of the contact manifold
-        const Vector3& getFrictionVector1() const;
+		/// Return the first friction vector at the center of the contact manifold
+		const Vector3& getFrictionVector1() const;
 
-        /// set the first friction vector at the center of the contact manifold
-        void setFrictionVector1(const Vector3& mFrictionVector1);
+		/// set the first friction vector at the center of the contact manifold
+		void setFrictionVector1(const Vector3& mFrictionVector1);
 
-        /// Return the second friction vector at the center of the contact manifold
-        const Vector3& getFrictionVector2() const;
+		/// Return the second friction vector at the center of the contact manifold
+		const Vector3& getFrictionVector2() const;
 
-        /// set the second friction vector at the center of the contact manifold
-        void setFrictionVector2(const Vector3& mFrictionVector2);
+		/// set the second friction vector at the center of the contact manifold
+		void setFrictionVector2(const Vector3& mFrictionVector2);
 
-        /// Return the first friction accumulated impulse
-        decimal getFrictionImpulse1() const;
+		/// Return the first friction accumulated impulse
+		float getFrictionImpulse1() const;
 
-        /// Set the first friction accumulated impulse
-        void setFrictionImpulse1(decimal frictionImpulse1);
+		/// Set the first friction accumulated impulse
+		void setFrictionImpulse1(float frictionImpulse1);
 
-        /// Return the second friction accumulated impulse
-        decimal getFrictionImpulse2() const;
+		/// Return the second friction accumulated impulse
+		float getFrictionImpulse2() const;
 
-        /// Set the second friction accumulated impulse
-        void setFrictionImpulse2(decimal frictionImpulse2);
+		/// Set the second friction accumulated impulse
+		void setFrictionImpulse2(float frictionImpulse2);
 
-        /// Return the friction twist accumulated impulse
-        decimal getFrictionTwistImpulse() const;
+		/// Return the friction twist accumulated impulse
+		float getFrictionTwistImpulse() const;
 
-        /// Set the friction twist accumulated impulse
-        void setFrictionTwistImpulse(decimal frictionTwistImpulse);
+		/// Set the friction twist accumulated impulse
+		void setFrictionTwistImpulse(float frictionTwistImpulse);
 
-        /// Set the accumulated rolling resistance impulse
-        void setRollingResistanceImpulse(const Vector3& rollingResistanceImpulse);
+		/// Set the accumulated rolling resistance impulse
+		void setRollingResistanceImpulse(const Vector3& rollingResistanceImpulse);
 
-        /// Return a contact point of the manifold
-        ContactPoint* getContactPoint(uint index) const;
+		/// Return a contact point of the manifold
+		ContactPoint* getContactPoint(uint32_t index) const;
 
-        /// Return the normalized averaged normal vector
-        Vector3 getAverageContactNormal() const;
+		/// Return the normalized averaged normal vector
+		Vector3 getAverageContactNormal() const;
 
-        /// Return the largest depth of all the contact points
-        decimal getLargestContactDepth() const;
+		/// Return the largest depth of all the contact points
+		float getLargestContactDepth() const;
 
-        // -------------------- Friendship -------------------- //
+		// -------------------- Friendship -------------------- //
 
-        friend class DynamicsWorld;
-        friend class Island;
-        friend class CollisionBody;
+		friend class DynamicsWorld;
+		friend class Island;
+		friend class CollisionBody;
 };
 
 // Return a pointer to the first proxy shape of the contact
 inline ProxyShape* ContactManifold::getShape1() const {
-    return mShape1;
+	return mShape1;
 }
 
 // Return a pointer to the second proxy shape of the contact
 inline ProxyShape* ContactManifold::getShape2() const {
-    return mShape2;
+	return mShape2;
 }
 
 // Return a pointer to the first body of the contact manifold
 inline CollisionBody* ContactManifold::getBody1() const {
-    return mShape1->getBody();
+	return mShape1->getBody();
 }
 
 // Return a pointer to the second body of the contact manifold
 inline CollisionBody* ContactManifold::getBody2() const {
-    return mShape2->getBody();
+	return mShape2->getBody();
 }
 
 // Return the normal direction Id
-inline short int ContactManifold::getNormalDirectionId() const {
-    return mNormalDirectionId;
+inline int16_t ContactManifold::getNormalDirectionId() const {
+	return mNormalDirectionId;
 }
 
 // Return the number of contact points in the manifold
-inline uint ContactManifold::getNbContactPoints() const {
-    return mNbContactPoints;
+inline uint32_t ContactManifold::getNbContactPoints() const {
+	return mNbContactPoints;
 }
 
 // Return the first friction vector at the center of the contact manifold
 inline const Vector3& ContactManifold::getFrictionVector1() const {
-    return mFrictionVector1;
+	return mFrictionVector1;
 }
 
 // set the first friction vector at the center of the contact manifold
 inline void ContactManifold::setFrictionVector1(const Vector3& frictionVector1) {
-    mFrictionVector1 = frictionVector1;
+	mFrictionVector1 = frictionVector1;
 }
 
 // Return the second friction vector at the center of the contact manifold
 inline const Vector3& ContactManifold::getFrictionVector2() const {
-    return mFrictionVector2;
+	return mFrictionVector2;
 }
 
 // set the second friction vector at the center of the contact manifold
 inline void ContactManifold::setFrictionVector2(const Vector3& frictionVector2) {
-    mFrictionVector2 = frictionVector2;
+	mFrictionVector2 = frictionVector2;
 }
 
 // Return the first friction accumulated impulse
-inline decimal ContactManifold::getFrictionImpulse1() const {
-    return mFrictionImpulse1;
+inline float ContactManifold::getFrictionImpulse1() const {
+	return mFrictionImpulse1;
 }
 
 // Set the first friction accumulated impulse
-inline void ContactManifold::setFrictionImpulse1(decimal frictionImpulse1) {
-    mFrictionImpulse1 = frictionImpulse1;
+inline void ContactManifold::setFrictionImpulse1(float frictionImpulse1) {
+	mFrictionImpulse1 = frictionImpulse1;
 }
 
 // Return the second friction accumulated impulse
-inline decimal ContactManifold::getFrictionImpulse2() const {
-    return mFrictionImpulse2;
+inline float ContactManifold::getFrictionImpulse2() const {
+	return mFrictionImpulse2;
 }
 
 // Set the second friction accumulated impulse
-inline void ContactManifold::setFrictionImpulse2(decimal frictionImpulse2) {
-    mFrictionImpulse2 = frictionImpulse2;
+inline void ContactManifold::setFrictionImpulse2(float frictionImpulse2) {
+	mFrictionImpulse2 = frictionImpulse2;
 }
 
 // Return the friction twist accumulated impulse
-inline decimal ContactManifold::getFrictionTwistImpulse() const {
-    return mFrictionTwistImpulse;
+inline float ContactManifold::getFrictionTwistImpulse() const {
+	return mFrictionTwistImpulse;
 }
 
 // Set the friction twist accumulated impulse
-inline void ContactManifold::setFrictionTwistImpulse(decimal frictionTwistImpulse) {
-    mFrictionTwistImpulse = frictionTwistImpulse;
+inline void ContactManifold::setFrictionTwistImpulse(float frictionTwistImpulse) {
+	mFrictionTwistImpulse = frictionTwistImpulse;
 }
 
 // Set the accumulated rolling resistance impulse
 inline void ContactManifold::setRollingResistanceImpulse(const Vector3& rollingResistanceImpulse) {
-    mRollingResistanceImpulse = rollingResistanceImpulse;
+	mRollingResistanceImpulse = rollingResistanceImpulse;
 }
 
 // Return a contact point of the manifold
-inline ContactPoint* ContactManifold::getContactPoint(uint index) const {
-    assert(index < mNbContactPoints);
-    return mContactPoints[index];
+inline ContactPoint* ContactManifold::getContactPoint(uint32_t index) const {
+	assert(index < mNbContactPoints);
+	return mContactPoints[index];
 }
 
-// Return true if the contact manifold has already been added into an island
+// Return true if the contact manifold has already been added int32_to an island
 inline bool ContactManifold::isAlreadyInIsland() const {
-    return mIsAlreadyInIsland;
+	return mIsAlreadyInIsland;
 }
 
 // Return the normalized averaged normal vector
 inline Vector3 ContactManifold::getAverageContactNormal() const {
-    Vector3 averageNormal;
+	Vector3 averageNormal;
 
-    for (uint i=0; i<mNbContactPoints; i++) {
-        averageNormal += mContactPoints[i]->getNormal();
-    }
+	for (uint32_t i=0; i<mNbContactPoints; i++) {
+		averageNormal += mContactPoints[i]->getNormal();
+	}
 
-    return averageNormal.getUnit();
+	return averageNormal.getUnit();
 }
 
 // Return the largest depth of all the contact points
-inline decimal ContactManifold::getLargestContactDepth() const {
-    decimal largestDepth = 0.0f;
+inline float ContactManifold::getLargestContactDepth() const {
+	float largestDepth = 0.0f;
 
-    for (uint i=0; i<mNbContactPoints; i++) {
-        decimal depth = mContactPoints[i]->getPenetrationDepth();
-        if (depth > largestDepth) {
-            largestDepth = depth;
-        }
-    }
+	for (uint32_t i=0; i<mNbContactPoints; i++) {
+		float depth = mContactPoints[i]->getPenetrationDepth();
+		if (depth > largestDepth) {
+			largestDepth = depth;
+		}
+	}
 
-    return largestDepth;
+	return largestDepth;
 }
 
 }
-#endif
+
 

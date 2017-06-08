@@ -1,30 +1,9 @@
-/********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
-*********************************************************************************
-*                                                                               *
-* This software is provided 'as-is', without any express or implied warranty.   *
-* In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
-* 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
-********************************************************************************/
-
-#ifndef REACTPHYSICS3D_FIXED_JOINT_H
-#define REACTPHYSICS3D_FIXED_JOINT_H
+/** @file
+ * @author Daniel Chappuis
+ * @copyright 2010-2016 Daniel Chappuis
+ * @license BSD 3 clauses (see license file)
+ */
+#pragma once
 
 // Libraries
 #include <ephysics/constraint/Joint.h>
@@ -39,24 +18,24 @@ namespace reactphysics3d {
  */
 struct FixedJointInfo : public JointInfo {
 
-    public :
+	public :
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Anchor point (in world-space coordinates)
-        Vector3 anchorPointWorldSpace;
+		/// Anchor point (in world-space coordinates)
+		Vector3 anchorPointWorldSpace;
 
-        /// Constructor
-        /**
-         * @param rigidBody1 The first body of the joint
-         * @param rigidBody2 The second body of the joint
-         * @param initAnchorPointWorldSpace The initial anchor point of the joint in
-         *                                  world-space coordinates
-         */
-        FixedJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
-                       const Vector3& initAnchorPointWorldSpace)
-                       : JointInfo(rigidBody1, rigidBody2, FIXEDJOINT),
-                         anchorPointWorldSpace(initAnchorPointWorldSpace){}
+		/// Constructor
+		/**
+		 * @param rigidBody1 The first body of the joint
+		 * @param rigidBody2 The second body of the joint
+		 * @param initAnchorPointWorldSpace The initial anchor point of the joint in
+		 *								  world-space coordinates
+		 */
+		FixedJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
+					   const Vector3& initAnchorPointWorldSpace)
+					   : JointInfo(rigidBody1, rigidBody2, FIXEDJOINT),
+						 anchorPointWorldSpace(initAnchorPointWorldSpace){}
 };
 
 // Class FixedJoint
@@ -66,93 +45,91 @@ struct FixedJointInfo : public JointInfo {
  */
 class FixedJoint : public Joint {
 
-    private :
+	private :
 
-        // -------------------- Constants -------------------- //
+		// -------------------- Constants -------------------- //
 
-        // Beta value for the bias factor of position correction
-        static const decimal BETA;
+		// Beta value for the bias factor of position correction
+		static const float BETA;
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Anchor point of body 1 (in local-space coordinates of body 1)
-        Vector3 mLocalAnchorPointBody1;
+		/// Anchor point of body 1 (in local-space coordinates of body 1)
+		Vector3 mLocalAnchorPointBody1;
 
-        /// Anchor point of body 2 (in local-space coordinates of body 2)
-        Vector3 mLocalAnchorPointBody2;
+		/// Anchor point of body 2 (in local-space coordinates of body 2)
+		Vector3 mLocalAnchorPointBody2;
 
-        /// Vector from center of body 2 to anchor point in world-space
-        Vector3 mR1World;
+		/// Vector from center of body 2 to anchor point in world-space
+		Vector3 mR1World;
 
-        /// Vector from center of body 2 to anchor point in world-space
-        Vector3 mR2World;
+		/// Vector from center of body 2 to anchor point in world-space
+		Vector3 mR2World;
 
-        /// Inertia tensor of body 1 (in world-space coordinates)
-        Matrix3x3 mI1;
+		/// Inertia tensor of body 1 (in world-space coordinates)
+		Matrix3x3 mI1;
 
-        /// Inertia tensor of body 2 (in world-space coordinates)
-        Matrix3x3 mI2;
+		/// Inertia tensor of body 2 (in world-space coordinates)
+		Matrix3x3 mI2;
 
-        /// Accumulated impulse for the 3 translation constraints
-        Vector3 mImpulseTranslation;
+		/// Accumulated impulse for the 3 translation constraints
+		Vector3 mImpulseTranslation;
 
-        /// Accumulate impulse for the 3 rotation constraints
-        Vector3 mImpulseRotation;
+		/// Accumulate impulse for the 3 rotation constraints
+		Vector3 mImpulseRotation;
 
-        /// Inverse mass matrix K=JM^-1J^-t of the 3 translation constraints (3x3 matrix)
-        Matrix3x3 mInverseMassMatrixTranslation;
+		/// Inverse mass matrix K=JM^-1J^-t of the 3 translation constraints (3x3 matrix)
+		Matrix3x3 mInverseMassMatrixTranslation;
 
-        /// Inverse mass matrix K=JM^-1J^-t of the 3 rotation constraints (3x3 matrix)
-        Matrix3x3 mInverseMassMatrixRotation;
+		/// Inverse mass matrix K=JM^-1J^-t of the 3 rotation constraints (3x3 matrix)
+		Matrix3x3 mInverseMassMatrixRotation;
 
-        /// Bias vector for the 3 translation constraints
-        Vector3 mBiasTranslation;
+		/// Bias vector for the 3 translation constraints
+		Vector3 mBiasTranslation;
 
-        /// Bias vector for the 3 rotation constraints
-        Vector3 mBiasRotation;
+		/// Bias vector for the 3 rotation constraints
+		Vector3 mBiasRotation;
 
-        /// Inverse of the initial orientation difference between the two bodies
-        Quaternion mInitOrientationDifferenceInv;
+		/// Inverse of the initial orientation difference between the two bodies
+		Quaternion mInitOrientationDifferenceInv;
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Private copy-constructor
-        FixedJoint(const FixedJoint& constraint);
+		/// Private copy-constructor
+		FixedJoint(const FixedJoint& constraint);
 
-        /// Private assignment operator
-        FixedJoint& operator=(const FixedJoint& constraint);
+		/// Private assignment operator
+		FixedJoint& operator=(const FixedJoint& constraint);
 
-        /// Return the number of bytes used by the joint
-        virtual size_t getSizeInBytes() const;
+		/// Return the number of bytes used by the joint
+		virtual size_t getSizeInBytes() const;
 
-        /// Initialize before solving the constraint
-        virtual void initBeforeSolve(const ConstraintSolverData& constraintSolverData);
+		/// Initialize before solving the constraint
+		virtual void initBeforeSolve(const ConstraintSolverData& constraintSolverData);
 
-        /// Warm start the constraint (apply the previous impulse at the beginning of the step)
-        virtual void warmstart(const ConstraintSolverData& constraintSolverData);
+		/// Warm start the constraint (apply the previous impulse at the beginning of the step)
+		virtual void warmstart(const ConstraintSolverData& constraintSolverData);
 
-        /// Solve the velocity constraint
-        virtual void solveVelocityConstraint(const ConstraintSolverData& constraintSolverData);
+		/// Solve the velocity constraint
+		virtual void solveVelocityConstraint(const ConstraintSolverData& constraintSolverData);
 
-        /// Solve the position constraint (for position error correction)
-        virtual void solvePositionConstraint(const ConstraintSolverData& constraintSolverData);
+		/// Solve the position constraint (for position error correction)
+		virtual void solvePositionConstraint(const ConstraintSolverData& constraintSolverData);
 
-    public :
+	public :
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        FixedJoint(const FixedJointInfo& jointInfo);
+		/// Constructor
+		FixedJoint(const FixedJointInfo& jointInfo);
 
-        /// Destructor
-        virtual ~FixedJoint();
+		/// Destructor
+		virtual ~FixedJoint();
 };
 
 // Return the number of bytes used by the joint
 inline size_t FixedJoint::getSizeInBytes() const {
-    return sizeof(FixedJoint);
+	return sizeof(FixedJoint);
 }
 
 }
-
-#endif

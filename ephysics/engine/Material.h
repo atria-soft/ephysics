@@ -1,30 +1,9 @@
-/********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
-*********************************************************************************
-*                                                                               *
-* This software is provided 'as-is', without any express or implied warranty.   *
-* In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
-* 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
-********************************************************************************/
-
-#ifndef REACTPHYSICS3D_MATERIAL_H
-#define REACTPHYSICS3D_MATERIAL_H
+/** @file
+ * @author Daniel Chappuis
+ * @copyright 2010-2016 Daniel Chappuis
+ * @license BSD 3 clauses (see license file)
+ */
+#pragma once
 
 // Libraries
 #include <cassert>
@@ -40,60 +19,60 @@ namespace reactphysics3d {
  */
 class Material {
 
-    private :
+	private :
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Friction coefficient (positive value)
-        decimal mFrictionCoefficient;
+		/// Friction coefficient (positive value)
+		float mFrictionCoefficient;
 
-        /// Rolling resistance factor (positive value)
-        decimal mRollingResistance;
+		/// Rolling resistance factor (positive value)
+		float mRollingResistance;
 
-        /// Bounciness during collisions (between 0 and 1) where 1 is for a very bouncy body
-        decimal mBounciness;
+		/// Bounciness during collisions (between 0 and 1) where 1 is for a very bouncy body
+		float mBounciness;
 
-    public :
+	public :
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        Material();
+		/// Constructor
+		Material();
 
-        /// Copy-constructor
-        Material(const Material& material);
+		/// Copy-constructor
+		Material(const Material& material);
 
-        /// Destructor
-        ~Material();
+		/// Destructor
+		~Material();
 
-        /// Return the bounciness
-        decimal getBounciness() const;
+		/// Return the bounciness
+		float getBounciness() const;
 
-        /// Set the bounciness.
-        void setBounciness(decimal bounciness);
+		/// Set the bounciness.
+		void setBounciness(float bounciness);
 
-        /// Return the friction coefficient
-        decimal getFrictionCoefficient() const;
+		/// Return the friction coefficient
+		float getFrictionCoefficient() const;
 
-        /// Set the friction coefficient.
-        void setFrictionCoefficient(decimal frictionCoefficient);
+		/// Set the friction coefficient.
+		void setFrictionCoefficient(float frictionCoefficient);
 
-        /// Return the rolling resistance factor
-        decimal getRollingResistance() const;
+		/// Return the rolling resistance factor
+		float getRollingResistance() const;
 
-        /// Set the rolling resistance factor
-        void setRollingResistance(decimal rollingResistance);
+		/// Set the rolling resistance factor
+		void setRollingResistance(float rollingResistance);
 
-        /// Overloaded assignment operator
-        Material& operator=(const Material& material);
+		/// Overloaded assignment operator
+		Material& operator=(const Material& material);
 };
 
 // Return the bounciness
 /**
  * @return Bounciness factor (between 0 and 1) where 1 is very bouncy
  */
-inline decimal Material::getBounciness() const {
-    return mBounciness;
+inline float Material::getBounciness() const {
+	return mBounciness;
 }
 
 // Set the bounciness.
@@ -102,17 +81,17 @@ inline decimal Material::getBounciness() const {
 /**
  * @param bounciness Bounciness factor (between 0 and 1) where 1 is very bouncy
  */
-inline void Material::setBounciness(decimal bounciness) {
-    assert(bounciness >= decimal(0.0) && bounciness <= decimal(1.0));
-    mBounciness = bounciness;
+inline void Material::setBounciness(float bounciness) {
+	assert(bounciness >= float(0.0) && bounciness <= float(1.0));
+	mBounciness = bounciness;
 }
 
 // Return the friction coefficient
 /**
  * @return Friction coefficient (positive value)
  */
-inline decimal Material::getFrictionCoefficient() const {
-    return mFrictionCoefficient;
+inline float Material::getFrictionCoefficient() const {
+	return mFrictionCoefficient;
 }
 
 // Set the friction coefficient.
@@ -121,9 +100,9 @@ inline decimal Material::getFrictionCoefficient() const {
 /**
  * @param frictionCoefficient Friction coefficient (positive value)
  */
-inline void Material::setFrictionCoefficient(decimal frictionCoefficient) {
-    assert(frictionCoefficient >= decimal(0.0));
-    mFrictionCoefficient = frictionCoefficient;
+inline void Material::setFrictionCoefficient(float frictionCoefficient) {
+	assert(frictionCoefficient >= float(0.0));
+	mFrictionCoefficient = frictionCoefficient;
 }
 
 // Return the rolling resistance factor. If this value is larger than zero,
@@ -132,8 +111,8 @@ inline void Material::setFrictionCoefficient(decimal frictionCoefficient) {
 /**
  * @return The rolling resistance factor (positive value)
  */
-inline decimal Material::getRollingResistance() const {
-    return mRollingResistance;
+inline float Material::getRollingResistance() const {
+	return mRollingResistance;
 }
 
 // Set the rolling resistance factor. If this value is larger than zero,
@@ -142,25 +121,23 @@ inline decimal Material::getRollingResistance() const {
 /**
  * @param rollingResistance The rolling resistance factor
  */
-inline void Material::setRollingResistance(decimal rollingResistance) {
-    assert(rollingResistance >= 0);
-    mRollingResistance = rollingResistance;
+inline void Material::setRollingResistance(float rollingResistance) {
+	assert(rollingResistance >= 0);
+	mRollingResistance = rollingResistance;
 }
 
 // Overloaded assignment operator
 inline Material& Material::operator=(const Material& material) {
 
-    // Check for self-assignment
-    if (this != &material) {
-        mFrictionCoefficient = material.mFrictionCoefficient;
-        mBounciness = material.mBounciness;
-        mRollingResistance = material.mRollingResistance;
-    }
+	// Check for self-assignment
+	if (this != &material) {
+		mFrictionCoefficient = material.mFrictionCoefficient;
+		mBounciness = material.mBounciness;
+		mRollingResistance = material.mRollingResistance;
+	}
 
-    // Return this material
-    return *this;
+	// Return this material
+	return *this;
 }
 
 }
-
-#endif

@@ -1,26 +1,26 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
+* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
-*                                                                               *
+*																			   *
 * This software is provided 'as-is', without any express or implied warranty.   *
 * In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
+* use of this software.														 *
+*																			   *
+* Permission is granted to anyone to use this software for any purpose,		 *
+* including commercial applications, and to alter it and redistribute it		*
+* freely, subject to the following restrictions:								*
+*																			   *
 * 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
+*	that you wrote the original software. If you use this software in a		*
+*	product, an acknowledgment in the product documentation would be		   *
+*	appreciated but is not required.										   *
+*																			   *
+* 2. Altered source versions must be plainly marked as such, and must not be	*
+*	misrepresented as being the original software.							 *
+*																			   *
+* 3. This notice may not be removed or altered from any source distribution.	*
+*																			   *
 ********************************************************************************/
 
 #ifndef TIMER_H
@@ -34,9 +34,9 @@
 #include <ephysics/configuration.h>
 
 #if defined(WINDOWS_OS)   // For Windows platform
-   #define NOMINMAX       // This is used to avoid definition of max() and min() macros
+   #define NOMINMAX	   // This is used to avoid definition of max() and min() macros
    #include <windows.h>
-#else                                   // For Mac OS or Linux platform
+#else								   // For Mac OS or Linux platform
    #include <sys/time.h>
 #endif
 
@@ -48,127 +48,127 @@
  */
 class Timer {
 
-    private :
+	private :
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Last time the timer has been updated
-        long double mLastUpdateTime;
+		/// Last time the timer has been updated
+		long double mLastUpdateTime;
 
-        /// Time difference between the two last timer update() calls
-        long double mDeltaTime;
+		/// Time difference between the two last timer update() calls
+		long double mDeltaTime;
 
-        /// Used to fix the time step and avoid strange time effects
-        double mAccumulator;
+		/// Used to fix the time step and avoid strange time effects
+		double mAccumulator;
 
-        /// True if the timer is running
-        bool mIsRunning;
+		/// True if the timer is running
+		bool mIsRunning;
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Private copy-constructor
-        Timer(const Timer& timer);
+		/// Private copy-constructor
+		Timer(const Timer& timer);
 
-        /// Private assignment operator
-        Timer& operator=(const Timer& timer);
+		/// Private assignment operator
+		Timer& operator=(const Timer& timer);
 
-    public :
+	public :
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        Timer();
+		/// Constructor
+		Timer();
 
-        /// Destructor
-        virtual ~Timer();
+		/// Destructor
+		virtual ~Timer();
 
-        /// Return the current time of the physics engine
-        long double getPhysicsTime() const;
+		/// Return the current time of the physics engine
+		long double getPhysicsTime() const;
 
-        /// Start the timer
-        void start();
+		/// Start the timer
+		void start();
 
-        /// Stop the timer
-        void stop();
+		/// Stop the timer
+		void stop();
 
-        /// Return true if the timer is running
-        bool isRunning() const;
+		/// Return true if the timer is running
+		bool isRunning() const;
 
-        /// True if it's possible to take a new step
-        bool isPossibleToTakeStep(float timeStep) const;
+		/// True if it's possible to take a new step
+		bool isPossibleToTakeStep(float timeStep) const;
 
-        /// Compute the time since the last update() call and add it to the accumulator
-        void update();
+		/// Compute the time since the last update() call and add it to the accumulator
+		void update();
 
-        /// Take a new step => update the timer by adding the timeStep value to the current time
-        void nextStep(float timeStep);
+		/// Take a new step => update the timer by adding the timeStep value to the current time
+		void nextStep(float timeStep);
 
-        /// Compute the interpolation factor
-        float computeInterpolationFactor(float timeStep);
+		/// Compute the int32_terpolation factor
+		float computeInterpolationFactor(float timeStep);
 
-        /// Return the current time of the system in seconds
-        static long double getCurrentSystemTime();
+		/// Return the current time of the system in seconds
+		static long double getCurrentSystemTime();
 };
 
 // Return the current time
 inline long double Timer::getPhysicsTime() const {
-    return mLastUpdateTime;
+	return mLastUpdateTime;
 }
 
 // Return if the timer is running
 inline bool Timer::isRunning() const {
-    return mIsRunning;
+	return mIsRunning;
 }
 
 // Start the timer
 inline void Timer::start() {
-    if (!mIsRunning) {
+	if (!mIsRunning) {
 
-        // Get the current system time
-        mLastUpdateTime = getCurrentSystemTime();
-        
-        mAccumulator = 0.0;
-        mIsRunning = true;
-    }
+		// Get the current system time
+		mLastUpdateTime = getCurrentSystemTime();
+		
+		mAccumulator = 0.0;
+		mIsRunning = true;
+	}
 }
 
 // Stop the timer
 inline void Timer::stop() {
-    mIsRunning = false;
+	mIsRunning = false;
 }
 
 // True if it's possible to take a new step
 inline bool Timer::isPossibleToTakeStep(float timeStep) const {
-    return (mAccumulator >= timeStep);
+	return (mAccumulator >= timeStep);
 }
 
 // Take a new step => update the timer by adding the timeStep value to the current time
 inline void Timer::nextStep(float timeStep) {
-    assert(mIsRunning);
+	assert(mIsRunning);
 
-    // Update the accumulator value
-    mAccumulator -= timeStep;
+	// Update the accumulator value
+	mAccumulator -= timeStep;
 }
 
-// Compute the interpolation factor
+// Compute the int32_terpolation factor
 inline float Timer::computeInterpolationFactor(float timeStep) {
-    return (float(mAccumulator) / timeStep);
+	return (float(mAccumulator) / timeStep);
 }
 
 // Compute the time since the last update() call and add it to the accumulator
 inline void Timer::update() {
 
-    // Get the current system time
-    long double currentTime = getCurrentSystemTime();
-    
-    // Compute the delta display time between two display frames
-    mDeltaTime = currentTime - mLastUpdateTime;
+	// Get the current system time
+	long double currentTime = getCurrentSystemTime();
+	
+	// Compute the delta display time between two display frames
+	mDeltaTime = currentTime - mLastUpdateTime;
 
-    // Update the current display time
-    mLastUpdateTime = currentTime;
+	// Update the current display time
+	mLastUpdateTime = currentTime;
 
-    // Update the accumulator value
-    mAccumulator += mDeltaTime;
+	// Update the accumulator value
+	mAccumulator += mDeltaTime;
 }
 
  #endif

@@ -1,30 +1,9 @@
-/********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
-*********************************************************************************
-*                                                                               *
-* This software is provided 'as-is', without any express or implied warranty.   *
-* In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
-* 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
-********************************************************************************/
-
-#ifndef REACTPHYSICS3D_HINGE_JOINT_H
-#define REACTPHYSICS3D_HINGE_JOINT_H
+/** @file
+ * @author Daniel Chappuis
+ * @copyright 2010-2016 Daniel Chappuis
+ * @license BSD 3 clauses (see license file)
+ */
+#pragma once
 
 // Libraries
 #include <ephysics/constraint/Joint.h>
@@ -39,97 +18,97 @@ namespace reactphysics3d {
  */
 struct HingeJointInfo : public JointInfo {
 
-    public :
+	public :
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Anchor point (in world-space coordinates)
-        Vector3 anchorPointWorldSpace;
+		/// Anchor point (in world-space coordinates)
+		Vector3 anchorPointWorldSpace;
 
-        /// Hinge rotation axis (in world-space coordinates)
-        Vector3 rotationAxisWorld;
+		/// Hinge rotation axis (in world-space coordinates)
+		Vector3 rotationAxisWorld;
 
-        /// True if the hinge joint limits are enabled
-        bool isLimitEnabled;
+		/// True if the hinge joint limits are enabled
+		bool isLimitEnabled;
 
-        /// True if the hinge joint motor is enabled
-        bool isMotorEnabled;
+		/// True if the hinge joint motor is enabled
+		bool isMotorEnabled;
 
-        /// Minimum allowed rotation angle (in radian) if limits are enabled.
-        /// The angle must be in the range [-2*pi, 0]
-        decimal minAngleLimit;
+		/// Minimum allowed rotation angle (in radian) if limits are enabled.
+		/// The angle must be in the range [-2*pi, 0]
+		float minAngleLimit;
 
-        /// Maximum allowed rotation angle (in radian) if limits are enabled.
-        /// The angle must be in the range [0, 2*pi]
-        decimal maxAngleLimit;
+		/// Maximum allowed rotation angle (in radian) if limits are enabled.
+		/// The angle must be in the range [0, 2*pi]
+		float maxAngleLimit;
 
-        /// Motor speed (in radian/second)
-        decimal motorSpeed;
+		/// Motor speed (in radian/second)
+		float motorSpeed;
 
-        /// Maximum motor torque (in Newtons * meters) that can be applied to reach
-        /// to desired motor speed
-        decimal maxMotorTorque;
+		/// Maximum motor torque (in Newtons * meters) that can be applied to reach
+		/// to desired motor speed
+		float maxMotorTorque;
 
-        /// Constructor without limits and without motor
-        /**
-         * @param rigidBody1 The first body of the joint
-         * @param rigidBody2 The second body of the joint
-         * @param initAnchorPointWorldSpace The initial anchor point in world-space
-         *                                  coordinates
-         * @param initRotationAxisWorld The initial rotation axis in world-space
-         *                              coordinates
-         */
-        HingeJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
-                               const Vector3& initAnchorPointWorldSpace,
-                               const Vector3& initRotationAxisWorld)
-                              : JointInfo(rigidBody1, rigidBody2, HINGEJOINT),
-                                anchorPointWorldSpace(initAnchorPointWorldSpace),
-                                rotationAxisWorld(initRotationAxisWorld), isLimitEnabled(false),
-                                isMotorEnabled(false), minAngleLimit(-1), maxAngleLimit(1),
-                                motorSpeed(0), maxMotorTorque(0) {}
+		/// Constructor without limits and without motor
+		/**
+		 * @param rigidBody1 The first body of the joint
+		 * @param rigidBody2 The second body of the joint
+		 * @param initAnchorPointWorldSpace The initial anchor point in world-space
+		 *								  coordinates
+		 * @param initRotationAxisWorld The initial rotation axis in world-space
+		 *							  coordinates
+		 */
+		HingeJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
+							   const Vector3& initAnchorPointWorldSpace,
+							   const Vector3& initRotationAxisWorld)
+							  : JointInfo(rigidBody1, rigidBody2, HINGEJOINT),
+								anchorPointWorldSpace(initAnchorPointWorldSpace),
+								rotationAxisWorld(initRotationAxisWorld), isLimitEnabled(false),
+								isMotorEnabled(false), minAngleLimit(-1), maxAngleLimit(1),
+								motorSpeed(0), maxMotorTorque(0) {}
 
-        /// Constructor with limits but without motor
-        /**
-         * @param rigidBody1 The first body of the joint
-         * @param rigidBody2 The second body of the joint
-         * @param initAnchorPointWorldSpace The initial anchor point in world-space coordinates
-         * @param initRotationAxisWorld The intial rotation axis in world-space coordinates
-         * @param initMinAngleLimit The initial minimum limit angle (in radian)
-         * @param initMaxAngleLimit The initial maximum limit angle (in radian)
-         */
-        HingeJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
-                               const Vector3& initAnchorPointWorldSpace,
-                               const Vector3& initRotationAxisWorld,
-                               decimal initMinAngleLimit, decimal initMaxAngleLimit)
-                              : JointInfo(rigidBody1, rigidBody2, HINGEJOINT),
-                                anchorPointWorldSpace(initAnchorPointWorldSpace),
-                                rotationAxisWorld(initRotationAxisWorld), isLimitEnabled(true),
-                                isMotorEnabled(false), minAngleLimit(initMinAngleLimit),
-                                maxAngleLimit(initMaxAngleLimit), motorSpeed(0),
-                                maxMotorTorque(0) {}
+		/// Constructor with limits but without motor
+		/**
+		 * @param rigidBody1 The first body of the joint
+		 * @param rigidBody2 The second body of the joint
+		 * @param initAnchorPointWorldSpace The initial anchor point in world-space coordinates
+		 * @param initRotationAxisWorld The int32_tial rotation axis in world-space coordinates
+		 * @param initMinAngleLimit The initial minimum limit angle (in radian)
+		 * @param initMaxAngleLimit The initial maximum limit angle (in radian)
+		 */
+		HingeJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
+							   const Vector3& initAnchorPointWorldSpace,
+							   const Vector3& initRotationAxisWorld,
+							   float initMinAngleLimit, float initMaxAngleLimit)
+							  : JointInfo(rigidBody1, rigidBody2, HINGEJOINT),
+								anchorPointWorldSpace(initAnchorPointWorldSpace),
+								rotationAxisWorld(initRotationAxisWorld), isLimitEnabled(true),
+								isMotorEnabled(false), minAngleLimit(initMinAngleLimit),
+								maxAngleLimit(initMaxAngleLimit), motorSpeed(0),
+								maxMotorTorque(0) {}
 
-        /// Constructor with limits and motor
-        /**
-         * @param rigidBody1 The first body of the joint
-         * @param rigidBody2 The second body of the joint
-         * @param initAnchorPointWorldSpace The initial anchor point in world-space
-         * @param initRotationAxisWorld The initial rotation axis in world-space
-         * @param initMinAngleLimit The initial minimum limit angle (in radian)
-         * @param initMaxAngleLimit The initial maximum limit angle (in radian)
-         * @param initMotorSpeed The initial motor speed of the joint (in radian per second)
-         * @param initMaxMotorTorque The initial maximum motor torque (in Newtons)
-         */
-        HingeJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
-                               const Vector3& initAnchorPointWorldSpace,
-                               const Vector3& initRotationAxisWorld,
-                               decimal initMinAngleLimit, decimal initMaxAngleLimit,
-                               decimal initMotorSpeed, decimal initMaxMotorTorque)
-                              : JointInfo(rigidBody1, rigidBody2, HINGEJOINT),
-                                anchorPointWorldSpace(initAnchorPointWorldSpace),
-                                rotationAxisWorld(initRotationAxisWorld), isLimitEnabled(true),
-                                isMotorEnabled(false), minAngleLimit(initMinAngleLimit),
-                                maxAngleLimit(initMaxAngleLimit), motorSpeed(initMotorSpeed),
-                                maxMotorTorque(initMaxMotorTorque) {}
+		/// Constructor with limits and motor
+		/**
+		 * @param rigidBody1 The first body of the joint
+		 * @param rigidBody2 The second body of the joint
+		 * @param initAnchorPointWorldSpace The initial anchor point in world-space
+		 * @param initRotationAxisWorld The initial rotation axis in world-space
+		 * @param initMinAngleLimit The initial minimum limit angle (in radian)
+		 * @param initMaxAngleLimit The initial maximum limit angle (in radian)
+		 * @param initMotorSpeed The initial motor speed of the joint (in radian per second)
+		 * @param initMaxMotorTorque The initial maximum motor torque (in Newtons)
+		 */
+		HingeJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
+							   const Vector3& initAnchorPointWorldSpace,
+							   const Vector3& initRotationAxisWorld,
+							   float initMinAngleLimit, float initMaxAngleLimit,
+							   float initMotorSpeed, float initMaxMotorTorque)
+							  : JointInfo(rigidBody1, rigidBody2, HINGEJOINT),
+								anchorPointWorldSpace(initAnchorPointWorldSpace),
+								rotationAxisWorld(initRotationAxisWorld), isLimitEnabled(true),
+								isMotorEnabled(false), minAngleLimit(initMinAngleLimit),
+								maxAngleLimit(initMaxAngleLimit), motorSpeed(initMotorSpeed),
+								maxMotorTorque(initMaxMotorTorque) {}
 };
 
 // Class HingeJoint
@@ -140,202 +119,202 @@ struct HingeJointInfo : public JointInfo {
  */
 class HingeJoint : public Joint {
 
-    private :
+	private :
 
-        // -------------------- Constants -------------------- //
+		// -------------------- Constants -------------------- //
 
-        // Beta value for the bias factor of position correction
-        static const decimal BETA;
+		// Beta value for the bias factor of position correction
+		static const float BETA;
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Anchor point of body 1 (in local-space coordinates of body 1)
-        Vector3 mLocalAnchorPointBody1;
+		/// Anchor point of body 1 (in local-space coordinates of body 1)
+		Vector3 mLocalAnchorPointBody1;
 
-        /// Anchor point of body 2 (in local-space coordinates of body 2)
-        Vector3 mLocalAnchorPointBody2;
+		/// Anchor point of body 2 (in local-space coordinates of body 2)
+		Vector3 mLocalAnchorPointBody2;
 
-        /// Hinge rotation axis (in local-space coordinates of body 1)
-        Vector3 mHingeLocalAxisBody1;
+		/// Hinge rotation axis (in local-space coordinates of body 1)
+		Vector3 mHingeLocalAxisBody1;
 
-        /// Hinge rotation axis (in local-space coordiantes of body 2)
-        Vector3 mHingeLocalAxisBody2;
+		/// Hinge rotation axis (in local-space coordiantes of body 2)
+		Vector3 mHingeLocalAxisBody2;
 
-        /// Inertia tensor of body 1 (in world-space coordinates)
-        Matrix3x3 mI1;
+		/// Inertia tensor of body 1 (in world-space coordinates)
+		Matrix3x3 mI1;
 
-        /// Inertia tensor of body 2 (in world-space coordinates)
-        Matrix3x3 mI2;
+		/// Inertia tensor of body 2 (in world-space coordinates)
+		Matrix3x3 mI2;
 
-        /// Hinge rotation axis (in world-space coordinates) computed from body 1
-        Vector3 mA1;
+		/// Hinge rotation axis (in world-space coordinates) computed from body 1
+		Vector3 mA1;
 
-        /// Vector from center of body 2 to anchor point in world-space
-        Vector3 mR1World;
+		/// Vector from center of body 2 to anchor point in world-space
+		Vector3 mR1World;
 
-        /// Vector from center of body 2 to anchor point in world-space
-        Vector3 mR2World;
+		/// Vector from center of body 2 to anchor point in world-space
+		Vector3 mR2World;
 
-        /// Cross product of vector b2 and a1
-        Vector3 mB2CrossA1;
+		/// Cross product of vector b2 and a1
+		Vector3 mB2CrossA1;
 
-        /// Cross product of vector c2 and a1;
-        Vector3 mC2CrossA1;
+		/// Cross product of vector c2 and a1;
+		Vector3 mC2CrossA1;
 
-        /// Impulse for the 3 translation constraints
-        Vector3 mImpulseTranslation;
+		/// Impulse for the 3 translation constraints
+		Vector3 mImpulseTranslation;
 
-        /// Impulse for the 2 rotation constraints
-        Vector2 mImpulseRotation;
+		/// Impulse for the 2 rotation constraints
+		Vector2 mImpulseRotation;
 
-        /// Accumulated impulse for the lower limit constraint
-        decimal mImpulseLowerLimit;
+		/// Accumulated impulse for the lower limit constraint
+		float mImpulseLowerLimit;
 
-        /// Accumulated impulse for the upper limit constraint
-        decimal mImpulseUpperLimit;
+		/// Accumulated impulse for the upper limit constraint
+		float mImpulseUpperLimit;
 
-        /// Accumulated impulse for the motor constraint;
-        decimal mImpulseMotor;
+		/// Accumulated impulse for the motor constraint;
+		float mImpulseMotor;
 
-        /// Inverse mass matrix K=JM^-1J^t for the 3 translation constraints
-        Matrix3x3 mInverseMassMatrixTranslation;
+		/// Inverse mass matrix K=JM^-1J^t for the 3 translation constraints
+		Matrix3x3 mInverseMassMatrixTranslation;
 
-        /// Inverse mass matrix K=JM^-1J^t for the 2 rotation constraints
-        Matrix2x2 mInverseMassMatrixRotation;
+		/// Inverse mass matrix K=JM^-1J^t for the 2 rotation constraints
+		Matrix2x2 mInverseMassMatrixRotation;
 
-        /// Inverse of mass matrix K=JM^-1J^t for the limits and motor constraints (1x1 matrix)
-        decimal mInverseMassMatrixLimitMotor;
+		/// Inverse of mass matrix K=JM^-1J^t for the limits and motor constraints (1x1 matrix)
+		float mInverseMassMatrixLimitMotor;
 
-        /// Inverse of mass matrix K=JM^-1J^t for the motor
-        decimal mInverseMassMatrixMotor;
+		/// Inverse of mass matrix K=JM^-1J^t for the motor
+		float mInverseMassMatrixMotor;
 
-        /// Bias vector for the error correction for the translation constraints
-        Vector3 mBTranslation;
+		/// Bias vector for the error correction for the translation constraints
+		Vector3 mBTranslation;
 
-        /// Bias vector for the error correction for the rotation constraints
-        Vector2 mBRotation;
+		/// Bias vector for the error correction for the rotation constraints
+		Vector2 mBRotation;
 
-        /// Bias of the lower limit constraint
-        decimal mBLowerLimit;
+		/// Bias of the lower limit constraint
+		float mBLowerLimit;
 
-        /// Bias of the upper limit constraint
-        decimal mBUpperLimit;
+		/// Bias of the upper limit constraint
+		float mBUpperLimit;
 
-        /// Inverse of the initial orientation difference between the bodies
-        Quaternion mInitOrientationDifferenceInv;
+		/// Inverse of the initial orientation difference between the bodies
+		Quaternion mInitOrientationDifferenceInv;
 
-        /// True if the joint limits are enabled
-        bool mIsLimitEnabled;
+		/// True if the joint limits are enabled
+		bool mIsLimitEnabled;
 
-        /// True if the motor of the joint in enabled
-        bool mIsMotorEnabled;
+		/// True if the motor of the joint in enabled
+		bool mIsMotorEnabled;
 
-        /// Lower limit (minimum allowed rotation angle in radian)
-        decimal mLowerLimit;
+		/// Lower limit (minimum allowed rotation angle in radian)
+		float mLowerLimit;
 
-        /// Upper limit (maximum translation distance)
-        decimal mUpperLimit;
+		/// Upper limit (maximum translation distance)
+		float mUpperLimit;
 
-        /// True if the lower limit is violated
-        bool mIsLowerLimitViolated;
+		/// True if the lower limit is violated
+		bool mIsLowerLimitViolated;
 
-        /// True if the upper limit is violated
-        bool mIsUpperLimitViolated;
+		/// True if the upper limit is violated
+		bool mIsUpperLimitViolated;
 
-        /// Motor speed (in rad/s)
-        decimal mMotorSpeed;
+		/// Motor speed (in rad/s)
+		float mMotorSpeed;
 
-        /// Maximum motor torque (in Newtons) that can be applied to reach to desired motor speed
-        decimal mMaxMotorTorque;
+		/// Maximum motor torque (in Newtons) that can be applied to reach to desired motor speed
+		float mMaxMotorTorque;
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Private copy-constructor
-        HingeJoint(const HingeJoint& constraint);
+		/// Private copy-constructor
+		HingeJoint(const HingeJoint& constraint);
 
-        /// Private assignment operator
-        HingeJoint& operator=(const HingeJoint& constraint);
+		/// Private assignment operator
+		HingeJoint& operator=(const HingeJoint& constraint);
 
-        /// Reset the limits
-        void resetLimits();
+		/// Reset the limits
+		void resetLimits();
 
-        /// Given an angle in radian, this method returns the corresponding
-        /// angle in the range [-pi; pi]
-        decimal computeNormalizedAngle(decimal angle) const;
+		/// Given an angle in radian, this method returns the corresponding
+		/// angle in the range [-pi; pi]
+		float computeNormalizedAngle(float angle) const;
 
-        /// Given an "inputAngle" in the range [-pi, pi], this method returns an
-        /// angle (modulo 2*pi) in the range [-2*pi; 2*pi] that is closest to one of the
-        /// two angle limits in arguments.
-        decimal computeCorrespondingAngleNearLimits(decimal inputAngle, decimal lowerLimitAngle,
-                                                    decimal upperLimitAngle) const;
+		/// Given an "inputAngle" in the range [-pi, pi], this method returns an
+		/// angle (modulo 2*pi) in the range [-2*pi; 2*pi] that is closest to one of the
+		/// two angle limits in arguments.
+		float computeCorrespondingAngleNearLimits(float inputAngle, float lowerLimitAngle,
+													float upperLimitAngle) const;
 
-        /// Compute the current angle around the hinge axis
-        decimal computeCurrentHingeAngle(const Quaternion& orientationBody1,
-                                         const Quaternion& orientationBody2);
+		/// Compute the current angle around the hinge axis
+		float computeCurrentHingeAngle(const Quaternion& orientationBody1,
+										 const Quaternion& orientationBody2);
 
-        /// Return the number of bytes used by the joint
-        virtual size_t getSizeInBytes() const;
+		/// Return the number of bytes used by the joint
+		virtual size_t getSizeInBytes() const;
 
-        /// Initialize before solving the constraint
-        virtual void initBeforeSolve(const ConstraintSolverData& constraintSolverData);
+		/// Initialize before solving the constraint
+		virtual void initBeforeSolve(const ConstraintSolverData& constraintSolverData);
 
-        /// Warm start the constraint (apply the previous impulse at the beginning of the step)
-        virtual void warmstart(const ConstraintSolverData& constraintSolverData);
+		/// Warm start the constraint (apply the previous impulse at the beginning of the step)
+		virtual void warmstart(const ConstraintSolverData& constraintSolverData);
 
-        /// Solve the velocity constraint
-        virtual void solveVelocityConstraint(const ConstraintSolverData& constraintSolverData);
+		/// Solve the velocity constraint
+		virtual void solveVelocityConstraint(const ConstraintSolverData& constraintSolverData);
 
-        /// Solve the position constraint (for position error correction)
-        virtual void solvePositionConstraint(const ConstraintSolverData& constraintSolverData);
+		/// Solve the position constraint (for position error correction)
+		virtual void solvePositionConstraint(const ConstraintSolverData& constraintSolverData);
 
-    public :
+	public :
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        HingeJoint(const HingeJointInfo& jointInfo);
+		/// Constructor
+		HingeJoint(const HingeJointInfo& jointInfo);
 
-        /// Destructor
-        virtual ~HingeJoint();
+		/// Destructor
+		virtual ~HingeJoint();
 
-        /// Return true if the limits or the joint are enabled
-        bool isLimitEnabled() const;
+		/// Return true if the limits or the joint are enabled
+		bool isLimitEnabled() const;
 
-        /// Return true if the motor of the joint is enabled
-        bool isMotorEnabled() const;
+		/// Return true if the motor of the joint is enabled
+		bool isMotorEnabled() const;
 
-        /// Enable/Disable the limits of the joint
-        void enableLimit(bool isLimitEnabled);
+		/// Enable/Disable the limits of the joint
+		void enableLimit(bool isLimitEnabled);
 
-        /// Enable/Disable the motor of the joint
-        void enableMotor(bool isMotorEnabled);
+		/// Enable/Disable the motor of the joint
+		void enableMotor(bool isMotorEnabled);
 
-        /// Return the minimum angle limit
-        decimal getMinAngleLimit() const;
+		/// Return the minimum angle limit
+		float getMinAngleLimit() const;
 
-        /// Set the minimum angle limit
-        void setMinAngleLimit(decimal lowerLimit);
+		/// Set the minimum angle limit
+		void setMinAngleLimit(float lowerLimit);
 
-        /// Return the maximum angle limit
-        decimal getMaxAngleLimit() const;
+		/// Return the maximum angle limit
+		float getMaxAngleLimit() const;
 
-        /// Set the maximum angle limit
-        void setMaxAngleLimit(decimal upperLimit);
+		/// Set the maximum angle limit
+		void setMaxAngleLimit(float upperLimit);
 
-        /// Return the motor speed
-        decimal getMotorSpeed() const;
+		/// Return the motor speed
+		float getMotorSpeed() const;
 
-        /// Set the motor speed
-        void setMotorSpeed(decimal motorSpeed);
+		/// Set the motor speed
+		void setMotorSpeed(float motorSpeed);
 
-        /// Return the maximum motor torque
-        decimal getMaxMotorTorque() const;
+		/// Return the maximum motor torque
+		float getMaxMotorTorque() const;
 
-        /// Set the maximum motor torque
-        void setMaxMotorTorque(decimal maxMotorTorque);
+		/// Set the maximum motor torque
+		void setMaxMotorTorque(float maxMotorTorque);
 
-        /// Return the intensity of the current torque applied for the joint motor
-        decimal getMotorTorque(decimal timeStep) const;
+		/// Return the int32_tensity of the current torque applied for the joint motor
+		float getMotorTorque(float timeStep) const;
 };
 
 // Return true if the limits of the joint are enabled
@@ -343,7 +322,7 @@ class HingeJoint : public Joint {
  * @return True if the limits of the joint are enabled and false otherwise
  */
 inline bool HingeJoint::isLimitEnabled() const {
-    return mIsLimitEnabled;
+	return mIsLimitEnabled;
 }
 
 // Return true if the motor of the joint is enabled
@@ -351,56 +330,54 @@ inline bool HingeJoint::isLimitEnabled() const {
  * @return True if the motor of joint is enabled and false otherwise
  */
 inline bool HingeJoint::isMotorEnabled() const {
-    return mIsMotorEnabled;
+	return mIsMotorEnabled;
 }
 
 // Return the minimum angle limit
 /**
  * @return The minimum limit angle of the joint (in radian)
  */
-inline decimal HingeJoint::getMinAngleLimit() const {
-    return mLowerLimit;
+inline float HingeJoint::getMinAngleLimit() const {
+	return mLowerLimit;
 }
 
 // Return the maximum angle limit
 /**
  * @return The maximum limit angle of the joint (in radian)
  */
-inline decimal HingeJoint::getMaxAngleLimit() const {
-    return mUpperLimit;
+inline float HingeJoint::getMaxAngleLimit() const {
+	return mUpperLimit;
 }
 
 // Return the motor speed
 /**
  * @return The current speed of the joint motor (in radian per second)
  */
-inline decimal HingeJoint::getMotorSpeed() const {
-    return mMotorSpeed;
+inline float HingeJoint::getMotorSpeed() const {
+	return mMotorSpeed;
 }
 
 // Return the maximum motor torque
 /**
  * @return The maximum torque of the joint motor (in Newtons)
  */
-inline decimal HingeJoint::getMaxMotorTorque() const {
-    return mMaxMotorTorque;
+inline float HingeJoint::getMaxMotorTorque() const {
+	return mMaxMotorTorque;
 }
 
-// Return the intensity of the current torque applied for the joint motor
+// Return the int32_tensity of the current torque applied for the joint motor
 /**
  * @param timeStep The current time step (in seconds)
- * @return The intensity of the current torque (in Newtons) of the joint motor
+ * @return The int32_tensity of the current torque (in Newtons) of the joint motor
  */
-inline decimal HingeJoint::getMotorTorque(decimal timeStep) const {
-    return mImpulseMotor / timeStep;
+inline float HingeJoint::getMotorTorque(float timeStep) const {
+	return mImpulseMotor / timeStep;
 }
 
 // Return the number of bytes used by the joint
 inline size_t HingeJoint::getSizeInBytes() const {
-    return sizeof(HingeJoint);
+	return sizeof(HingeJoint);
 }
 
 }
 
-
-#endif

@@ -1,30 +1,9 @@
-/********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
-*********************************************************************************
-*                                                                               *
-* This software is provided 'as-is', without any express or implied warranty.   *
-* In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
-* 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
-********************************************************************************/
-
-#ifndef REACTPHYSICS3D_RAY_H
-#define REACTPHYSICS3D_RAY_H
+/** @file
+ * @author Daniel Chappuis
+ * @copyright 2010-2016 Daniel Chappuis
+ * @license BSD 3 clauses (see license file)
+ */
+#pragma once
 
 // Libraries
 #include <ephysics/mathematics/Vector3.h>
@@ -40,48 +19,46 @@ namespace reactphysics3d {
  */
 struct Ray {
 
-    public:
+	public:
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// First point of the ray (origin)
-        Vector3 point1;
+		/// First point of the ray (origin)
+		Vector3 point1;
 
-        /// Second point of the ray
-        Vector3 point2;
+		/// Second point of the ray
+		Vector3 point2;
 
-        /// Maximum fraction value
-        decimal maxFraction;
+		/// Maximum fraction value
+		float maxFraction;
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor with arguments
-        Ray(const Vector3& p1, const Vector3& p2, decimal maxFrac = decimal(1.0))
-           : point1(p1), point2(p2), maxFraction(maxFrac) {
+		/// Constructor with arguments
+		Ray(const Vector3& p1, const Vector3& p2, float maxFrac = float(1.0))
+		   : point1(p1), point2(p2), maxFraction(maxFrac) {
 
-        }
+		}
 
-        /// Copy-constructor
-        Ray(const Ray& ray) : point1(ray.point1), point2(ray.point2), maxFraction(ray.maxFraction) {
+		/// Copy-constructor
+		Ray(const Ray& ray) : point1(ray.point1), point2(ray.point2), maxFraction(ray.maxFraction) {
 
-        }
+		}
 
-        /// Destructor
-        ~Ray() {
+		/// Destructor
+		~Ray() {
 
-        }
+		}
 
-        /// Overloaded assignment operator
-        Ray& operator=(const Ray& ray) {
-            if (&ray != this) {
-                point1 = ray.point1;
-                point2 = ray.point2;
-                maxFraction = ray.maxFraction;
-            }
-            return *this;
-        }
+		/// Overloaded assignment operator
+		Ray& operator=(const Ray& ray) {
+			if (&ray != this) {
+				point1 = ray.point1;
+				point2 = ray.point2;
+				maxFraction = ray.maxFraction;
+			}
+			return *this;
+		}
 };
 
 }
-
-#endif

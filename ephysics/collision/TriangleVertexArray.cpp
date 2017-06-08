@@ -1,27 +1,8 @@
-/********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
-*********************************************************************************
-*                                                                               *
-* This software is provided 'as-is', without any express or implied warranty.   *
-* In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
-* 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
-********************************************************************************/
+/** @file
+ * @author Daniel Chappuis
+ * @copyright 2010-2016 Daniel Chappuis
+ * @license BSD 3 clauses (see license file)
+ */
 
 // Libraries
 #include <ephysics/collision/TriangleVertexArray.h>
@@ -29,7 +10,7 @@
 using namespace reactphysics3d;
 
 // Constructor
-/// Note that your data will not be copied into the TriangleVertexArray and
+/// Note that your data will not be copied int32_to the TriangleVertexArray and
 /// therefore, you need to make sure that those data are always valid during
 /// the lifetime of the TriangleVertexArray.
 /**
@@ -40,19 +21,19 @@ using namespace reactphysics3d;
  * @param indexesStart Pointer to the first triangle index
  * @param indexesStride Number of bytes between the beginning of two consecutive triangle indices
  * @param vertexDataType Type of data for the vertices (float, double)
- * @param indexDataType Type of data for the indices (short, int)
+ * @param indexDataType Type of data for the indices (short, int32_t)
  */
-TriangleVertexArray::TriangleVertexArray(uint nbVertices, void* verticesStart, int verticesStride,
-                                         uint nbTriangles, void* indexesStart, int indexesStride,
-                                         VertexDataType vertexDataType, IndexDataType indexDataType) {
-    m_numberVertices = nbVertices;
-    m_verticesStart = reinterpret_cast<unsigned char*>(verticesStart);
-    m_verticesStride = verticesStride;
-    mNbTriangles = nbTriangles;
-    mIndicesStart = reinterpret_cast<unsigned char*>(indexesStart);
-    mIndicesStride = indexesStride;
-    mVertexDataType = vertexDataType;
-    mIndexDataType = indexDataType;
+TriangleVertexArray::TriangleVertexArray(uint32_t nbVertices, void* verticesStart, int32_t verticesStride,
+										 uint32_t nbTriangles, void* indexesStart, int32_t indexesStride,
+										 VertexDataType vertexDataType, IndexDataType indexDataType) {
+	m_numberVertices = nbVertices;
+	m_verticesStart = reinterpret_cast<unsigned char*>(verticesStart);
+	m_verticesStride = verticesStride;
+	mNbTriangles = nbTriangles;
+	mIndicesStart = reinterpret_cast<unsigned char*>(indexesStart);
+	mIndicesStride = indexesStride;
+	mVertexDataType = vertexDataType;
+	mIndexDataType = indexDataType;
 }
 
 // Destructor

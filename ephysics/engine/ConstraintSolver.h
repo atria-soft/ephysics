@@ -1,30 +1,9 @@
-/********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
-*********************************************************************************
-*                                                                               *
-* This software is provided 'as-is', without any express or implied warranty.   *
-* In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
-* 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
-********************************************************************************/
-
-#ifndef REACTPHYSICS3D_CONSTRAINT_SOLVER_H
-#define REACTPHYSICS3D_CONSTRAINT_SOLVER_H
+/** @file
+ * @author Daniel Chappuis
+ * @copyright 2010-2016 Daniel Chappuis
+ * @license BSD 3 clauses (see license file)
+ */
+#pragma once
 
 // Libraries
 #include <ephysics/configuration.h>
@@ -43,37 +22,37 @@ namespace reactphysics3d {
  */
 struct ConstraintSolverData {
 
-    public :
+	public :
 
-        /// Current time step of the simulation
-        decimal timeStep;
+		/// Current time step of the simulation
+		float timeStep;
 
-        /// Array with the bodies linear velocities
-        Vector3* linearVelocities;
+		/// Array with the bodies linear velocities
+		Vector3* linearVelocities;
 
-        /// Array with the bodies angular velocities
-        Vector3* angularVelocities;
+		/// Array with the bodies angular velocities
+		Vector3* angularVelocities;
 
-        /// Reference to the bodies positions
-        Vector3* positions;
+		/// Reference to the bodies positions
+		Vector3* positions;
 
-        /// Reference to the bodies orientations
-        Quaternion* orientations;
+		/// Reference to the bodies orientations
+		Quaternion* orientations;
 
-        /// Reference to the map that associates rigid body to their index
-        /// in the constrained velocities array
-        const std::map<RigidBody*, uint>& mapBodyToConstrainedVelocityIndex;
+		/// Reference to the map that associates rigid body to their index
+		/// in the constrained velocities array
+		const std::map<RigidBody*, uint32_t>& mapBodyToConstrainedVelocityIndex;
 
-        /// True if warm starting of the solver is active
-        bool isWarmStartingActive;
+		/// True if warm starting of the solver is active
+		bool isWarmStartingActive;
 
-        /// Constructor
-        ConstraintSolverData(const std::map<RigidBody*, uint>& refMapBodyToConstrainedVelocityIndex)
-                           :linearVelocities(NULL), angularVelocities(NULL),
-                            positions(NULL), orientations(NULL),
-                            mapBodyToConstrainedVelocityIndex(refMapBodyToConstrainedVelocityIndex){
+		/// Constructor
+		ConstraintSolverData(const std::map<RigidBody*, uint32_t>& refMapBodyToConstrainedVelocityIndex)
+						   :linearVelocities(NULL), angularVelocities(NULL),
+							positions(NULL), orientations(NULL),
+							mapBodyToConstrainedVelocityIndex(refMapBodyToConstrainedVelocityIndex){
 
-        }
+		}
 
 };
 
@@ -99,7 +78,7 @@ struct ConstraintSolverData {
  *
  * --- Step 1 ---
  *
- * First, we integrate the applied force F_a acting of each rigid body (like gravity, ...) and
+ * First, we int32_tegrate the applied force F_a acting of each rigid body (like gravity, ...) and
  * we obtain some new velocities v2' that tends to violate the constraints.
  *
  * v2' = v1 + dt * M^-1 * F_a
@@ -120,7 +99,7 @@ struct ConstraintSolverData {
  *
  * --- Step 3 ---
  *
- * In the third step, we integrate the new position x2 of the bodies using the new velocities
+ * In the third step, we int32_tegrate the new position x2 of the bodies using the new velocities
  * v2 computed in the second step with : x2 = x1 + dt * v2.
  *
  * Note that in the following code (as it is also explained in the slides from Erin Catto),
@@ -148,75 +127,73 @@ struct ConstraintSolverData {
  */
 class ConstraintSolver {
 
-    private :
+	private :
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Reference to the map that associates rigid body to their index in
-        /// the constrained velocities array
-        const std::map<RigidBody*, uint>& mMapBodyToConstrainedVelocityIndex;
+		/// Reference to the map that associates rigid body to their index in
+		/// the constrained velocities array
+		const std::map<RigidBody*, uint32_t>& mMapBodyToConstrainedVelocityIndex;
 
-        /// Current time step
-        decimal mTimeStep;
+		/// Current time step
+		float mTimeStep;
 
-        /// True if the warm starting of the solver is active
-        bool mIsWarmStartingActive;
+		/// True if the warm starting of the solver is active
+		bool mIsWarmStartingActive;
 
-        /// Constraint solver data used to initialize and solve the constraints
-        ConstraintSolverData mConstraintSolverData;
+		/// Constraint solver data used to initialize and solve the constraints
+		ConstraintSolverData mConstraintSolverData;
 
-    public :
+	public :
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        ConstraintSolver(const std::map<RigidBody*, uint>& mapBodyToVelocityIndex);
+		/// Constructor
+		ConstraintSolver(const std::map<RigidBody*, uint32_t>& mapBodyToVelocityIndex);
 
-        /// Destructor
-        ~ConstraintSolver();
+		/// Destructor
+		~ConstraintSolver();
 
-        /// Initialize the constraint solver for a given island
-        void initializeForIsland(decimal dt, Island* island);
+		/// Initialize the constraint solver for a given island
+		void initializeForIsland(float dt, Island* island);
 
-        /// Solve the constraints
-        void solveVelocityConstraints(Island* island);
+		/// Solve the constraints
+		void solveVelocityConstraints(Island* island);
 
-        /// Solve the position constraints
-        void solvePositionConstraints(Island* island);
+		/// Solve the position constraints
+		void solvePositionConstraints(Island* island);
 
-        /// Return true if the Non-Linear-Gauss-Seidel position correction technique is active
-        bool getIsNonLinearGaussSeidelPositionCorrectionActive() const;
+		/// Return true if the Non-Linear-Gauss-Seidel position correction technique is active
+		bool getIsNonLinearGaussSeidelPositionCorrectionActive() const;
 
-        /// Enable/Disable the Non-Linear-Gauss-Seidel position correction technique.
-        void setIsNonLinearGaussSeidelPositionCorrectionActive(bool isActive);
+		/// Enable/Disable the Non-Linear-Gauss-Seidel position correction technique.
+		void setIsNonLinearGaussSeidelPositionCorrectionActive(bool isActive);
 
-        /// Set the constrained velocities arrays
-        void setConstrainedVelocitiesArrays(Vector3* constrainedLinearVelocities,
-                                            Vector3* constrainedAngularVelocities);
+		/// Set the constrained velocities arrays
+		void setConstrainedVelocitiesArrays(Vector3* constrainedLinearVelocities,
+											Vector3* constrainedAngularVelocities);
 
-        /// Set the constrained positions/orientations arrays
-        void setConstrainedPositionsArrays(Vector3* constrainedPositions,
-                                           Quaternion* constrainedOrientations);
+		/// Set the constrained positions/orientations arrays
+		void setConstrainedPositionsArrays(Vector3* constrainedPositions,
+										   Quaternion* constrainedOrientations);
 };
 
 // Set the constrained velocities arrays
 inline void ConstraintSolver::setConstrainedVelocitiesArrays(Vector3* constrainedLinearVelocities,
-                                                            Vector3* constrainedAngularVelocities) {
-    assert(constrainedLinearVelocities != NULL);
-    assert(constrainedAngularVelocities != NULL);
-    mConstraintSolverData.linearVelocities = constrainedLinearVelocities;
-    mConstraintSolverData.angularVelocities = constrainedAngularVelocities;
+															Vector3* constrainedAngularVelocities) {
+	assert(constrainedLinearVelocities != NULL);
+	assert(constrainedAngularVelocities != NULL);
+	mConstraintSolverData.linearVelocities = constrainedLinearVelocities;
+	mConstraintSolverData.angularVelocities = constrainedAngularVelocities;
 }
 
 // Set the constrained positions/orientations arrays
 inline void ConstraintSolver::setConstrainedPositionsArrays(Vector3* constrainedPositions,
-                                                           Quaternion* constrainedOrientations) {
-    assert(constrainedPositions != NULL);
-    assert(constrainedOrientations != NULL);
-    mConstraintSolverData.positions = constrainedPositions;
-    mConstraintSolverData.orientations = constrainedOrientations;
+														   Quaternion* constrainedOrientations) {
+	assert(constrainedPositions != NULL);
+	assert(constrainedOrientations != NULL);
+	mConstraintSolverData.positions = constrainedPositions;
+	mConstraintSolverData.orientations = constrainedOrientations;
 }
 
 }
-
-#endif

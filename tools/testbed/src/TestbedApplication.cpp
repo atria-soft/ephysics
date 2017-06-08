@@ -1,26 +1,26 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
+* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
-*                                                                               *
+*																			   *
 * This software is provided 'as-is', without any express or implied warranty.   *
 * In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
+* use of this software.														 *
+*																			   *
+* Permission is granted to anyone to use this software for any purpose,		 *
+* including commercial applications, and to alter it and redistribute it		*
+* freely, subject to the following restrictions:								*
+*																			   *
 * 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
+*	that you wrote the original software. If you use this software in a		*
+*	product, an acknowledgment in the product documentation would be		   *
+*	appreciated but is not required.										   *
+*																			   *
+* 2. Altered source versions must be plainly marked as such, and must not be	*
+*	misrepresented as being the original software.							 *
+*																			   *
+* 3. This notice may not be removed or altered from any source distribution.	*
+*																			   *
 ********************************************************************************/
 
 // Libraries
@@ -49,331 +49,331 @@ const float TestbedApplication::SCROLL_SENSITIVITY = 0.08f;
 
 // Constructor
 TestbedApplication::TestbedApplication(bool isFullscreen)
-                   : Screen(Vector2i(1280, 800), "Testbed ReactPhysics3D", true, isFullscreen),
-                     mIsInitialized(false), mGui(this), mFPS(0), mNbFrames(0), mPreviousTime(0),
-                     mLastTimeComputedFPS(0), mFrameTime(0), mPhysicsTime(0) {
+				   : Screen(Vector2i(1280, 800), "Testbed ReactPhysics3D", true, isFullscreen),
+					 mIsInitialized(false), mGui(this), mFPS(0), mNbFrames(0), mPreviousTime(0),
+					 mLastTimeComputedFPS(0), mFrameTime(0), mPhysicsTime(0) {
 
-    mCurrentScene = NULL;
-    mIsMultisamplingActive = true;
-    mWidth = 1280;
-    mHeight = 720;
-    mSinglePhysicsStepEnabled = false;
-    mSinglePhysicsStepDone = false;
-    mWindowToFramebufferRatio = Vector2(1, 1);
-    mIsShadowMappingEnabled = true;
-    mIsVSyncEnabled = false;
-    mIsContactPointsDisplayed = false;
+	mCurrentScene = NULL;
+	mIsMultisamplingActive = true;
+	mWidth = 1280;
+	mHeight = 720;
+	mSinglePhysicsStepEnabled = false;
+	mSinglePhysicsStepDone = false;
+	mWindowToFramebufferRatio = Vector2(1, 1);
+	mIsShadowMappingEnabled = true;
+	mIsVSyncEnabled = false;
+	mIsContactPointsDisplayed = false;
 
-    init();
+	init();
 
-    resizeEvent(Vector2i(0, 0));
+	resizeEvent(Vector2i(0, 0));
 }
 
 // Destructor
 TestbedApplication::~TestbedApplication() {
 
-    // Destroy all the scenes
-    destroyScenes();
+	// Destroy all the scenes
+	destroyScenes();
 }
 
 // Initialize the viewer
 void TestbedApplication::init() {
 
-    // Create all the scenes
-    createScenes();
+	// Create all the scenes
+	createScenes();
 
-    // Initialize the GUI
-    mGui.init();
+	// Initialize the GUI
+	mGui.init();
 
-    mTimer.start();
+	mTimer.start();
 
-    mIsInitialized = true;
+	mIsInitialized = true;
 }
 
 // Create all the scenes
 void TestbedApplication::createScenes() {
 
-    // Cubes scene
-    CubesScene* cubeScene = new CubesScene("Cubes");
-    mScenes.push_back(cubeScene);
+	// Cubes scene
+	CubesScene* cubeScene = new CubesScene("Cubes");
+	mScenes.push_back(cubeScene);
 
-    // Joints scene
-    JointsScene* jointsScene = new JointsScene("Joints");
-    mScenes.push_back(jointsScene);
+	// Joints scene
+	JointsScene* jointsScene = new JointsScene("Joints");
+	mScenes.push_back(jointsScene);
 
-    // Collision shapes scene
-    CollisionShapesScene* collisionShapesScene = new CollisionShapesScene("Collision Shapes");
-    mScenes.push_back(collisionShapesScene);
+	// Collision shapes scene
+	CollisionShapesScene* collisionShapesScene = new CollisionShapesScene("Collision Shapes");
+	mScenes.push_back(collisionShapesScene);
 
-    // Heightfield shape scene
-    HeightFieldScene* heightFieldScene = new HeightFieldScene("Heightfield");
-    mScenes.push_back(heightFieldScene);
+	// Heightfield shape scene
+	HeightFieldScene* heightFieldScene = new HeightFieldScene("Heightfield");
+	mScenes.push_back(heightFieldScene);
 
-    // Raycast scene
-    RaycastScene* raycastScene = new RaycastScene("Raycast");
-    mScenes.push_back(raycastScene);
+	// Raycast scene
+	RaycastScene* raycastScene = new RaycastScene("Raycast");
+	mScenes.push_back(raycastScene);
 
-    // Raycast scene
-    ConcaveMeshScene* concaveMeshScene = new ConcaveMeshScene("Concave Mesh");
-    mScenes.push_back(concaveMeshScene);
+	// Raycast scene
+	ConcaveMeshScene* concaveMeshScene = new ConcaveMeshScene("Concave Mesh");
+	mScenes.push_back(concaveMeshScene);
 
-    assert(mScenes.size() > 0);
-    mCurrentScene = mScenes[0];
+	assert(mScenes.size() > 0);
+	mCurrentScene = mScenes[0];
 
-    // Get the engine settings from the scene
-    mEngineSettings = mCurrentScene->getEngineSettings();
-    mEngineSettings.timeStep = DEFAULT_TIMESTEP;
+	// Get the engine settings from the scene
+	mEngineSettings = mCurrentScene->getEngineSettings();
+	mEngineSettings.timeStep = DEFAULT_TIMESTEP;
 }
 
 // Remove all the scenes
 void TestbedApplication::destroyScenes() {
 
-    for (uint i=0; i<mScenes.size(); i++) {
-        delete mScenes[i];
-    }
+	for (uint32_t i=0; i<mScenes.size(); i++) {
+		delete mScenes[i];
+	}
 
-    mCurrentScene = NULL;
+	mCurrentScene = NULL;
 }
 
 void TestbedApplication::updateSinglePhysicsStep() {
 
-    assert(!mTimer.isRunning());
+	assert(!mTimer.isRunning());
 
-    mCurrentScene->updatePhysics();
+	mCurrentScene->updatePhysics();
 }
 
 // Update the physics of the current scene
 void TestbedApplication::updatePhysics() {
 
-    // Set the engine settings
-    mEngineSettings.elapsedTime = mTimer.getPhysicsTime();
-    mCurrentScene->setEngineSettings(mEngineSettings);
+	// Set the engine settings
+	mEngineSettings.elapsedTime = mTimer.getPhysicsTime();
+	mCurrentScene->setEngineSettings(mEngineSettings);
 
-    if (mTimer.isRunning()) {
+	if (mTimer.isRunning()) {
 
-        // Compute the time since the last update() call and update the timer
-        mTimer.update();
+		// Compute the time since the last update() call and update the timer
+		mTimer.update();
 
-        // While the time accumulator is not empty
-        while(mTimer.isPossibleToTakeStep(mEngineSettings.timeStep)) {
+		// While the time accumulator is not empty
+		while(mTimer.isPossibleToTakeStep(mEngineSettings.timeStep)) {
 
-            // Take a physics simulation step
-            mCurrentScene->updatePhysics();
+			// Take a physics simulation step
+			mCurrentScene->updatePhysics();
 
-            // Update the timer
-            mTimer.nextStep(mEngineSettings.timeStep);
-        }
-    }
+			// Update the timer
+			mTimer.nextStep(mEngineSettings.timeStep);
+		}
+	}
 }
 
 void TestbedApplication::update() {
 
-    double currentTime = glfwGetTime();
+	double currentTime = glfwGetTime();
 
-    // Update the physics
-    if (mSinglePhysicsStepEnabled && !mSinglePhysicsStepDone) {
-        updateSinglePhysicsStep();
-        mSinglePhysicsStepDone = true;
-    }
-    else {
-        updatePhysics();
-    }
+	// Update the physics
+	if (mSinglePhysicsStepEnabled && !mSinglePhysicsStepDone) {
+		updateSinglePhysicsStep();
+		mSinglePhysicsStepDone = true;
+	}
+	else {
+		updatePhysics();
+	}
 
-    // Compute the physics update time
-    mPhysicsTime = glfwGetTime() - currentTime;
+	// Compute the physics update time
+	mPhysicsTime = glfwGetTime() - currentTime;
 
-    // Compute the interpolation factor
-    float factor = mTimer.computeInterpolationFactor(mEngineSettings.timeStep);
-    assert(factor >= 0.0f && factor <= 1.0f);
+	// Compute the int32_terpolation factor
+	float factor = mTimer.computeInterpolationFactor(mEngineSettings.timeStep);
+	assert(factor >= 0.0f && factor <= 1.0f);
 
-    // Notify the scene about the interpolation factor
-    mCurrentScene->setInterpolationFactor(factor);
+	// Notify the scene about the int32_terpolation factor
+	mCurrentScene->setInterpolationFactor(factor);
 
-    // Enable/Disable shadow mapping
-    mCurrentScene->setIsShadowMappingEnabled(mIsShadowMappingEnabled);
+	// Enable/Disable shadow mapping
+	mCurrentScene->setIsShadowMappingEnabled(mIsShadowMappingEnabled);
 
-    // Display/Hide contact points
-    mCurrentScene->setIsContactPointsDisplayed(mIsContactPointsDisplayed);
+	// Display/Hide contact points
+	mCurrentScene->setIsContactPointsDisplayed(mIsContactPointsDisplayed);
 
-    // Update the scene
-    mCurrentScene->update();
+	// Update the scene
+	mCurrentScene->update();
 }
 
 void TestbedApplication::drawContents() {
 
-    update();
+	update();
 
-    int bufferWidth, bufferHeight;
-    glfwMakeContextCurrent(mGLFWWindow);
-    glfwGetFramebufferSize(mGLFWWindow, &bufferWidth, &bufferHeight);
+	int32_t bufferWidth, bufferHeight;
+	glfwMakeContextCurrent(mGLFWWindow);
+	glfwGetFramebufferSize(mGLFWWindow, &bufferWidth, &bufferHeight);
 
-    // Set the viewport of the scene
-    mCurrentScene->setViewport(0, 0, bufferWidth, bufferHeight);
+	// Set the viewport of the scene
+	mCurrentScene->setViewport(0, 0, bufferWidth, bufferHeight);
 
-    // Render the scene
-    mCurrentScene->render();
+	// Render the scene
+	mCurrentScene->render();
 
-    // Check the OpenGL errors
-    checkOpenGLErrors();
+	// Check the OpenGL errors
+	checkOpenGLErrors();
 
-    mGui.update();
+	mGui.update();
 
-    // Compute the current framerate
-    computeFPS();
+	// Compute the current framerate
+	computeFPS();
 }
 
 /// Window resize event handler
 bool TestbedApplication::resizeEvent(const Vector2i& size) {
 
-    if (!mIsInitialized) return false;
+	if (!mIsInitialized) return false;
 
-    // Get the framebuffer dimension
-    int width, height;
-    glfwGetFramebufferSize(mGLFWWindow, &width, &height);
+	// Get the framebuffer dimension
+	int32_t width, height;
+	glfwGetFramebufferSize(mGLFWWindow, &width, &height);
 
-    // Resize the camera viewport
-    mCurrentScene->reshape(width, height);
+	// Resize the camera viewport
+	mCurrentScene->reshape(width, height);
 
-    // Update the window size of the scene
-    int windowWidth, windowHeight;
-    glfwGetWindowSize(mGLFWWindow, &windowWidth, &windowHeight);
-    mCurrentScene->setWindowDimension(windowWidth, windowHeight);
+	// Update the window size of the scene
+	int32_t windowWidth, windowHeight;
+	glfwGetWindowSize(mGLFWWindow, &windowWidth, &windowHeight);
+	mCurrentScene->setWindowDimension(windowWidth, windowHeight);
 
-    return true;
+	return true;
 }
 
 // Change the current scene
 void TestbedApplication::switchScene(Scene* newScene) {
 
-    if (newScene == mCurrentScene) return;
+	if (newScene == mCurrentScene) return;
 
-    mCurrentScene = newScene;
+	mCurrentScene = newScene;
 
-    // Get the engine settings of the scene
-    float currentTimeStep = mEngineSettings.timeStep;
-    mEngineSettings = mCurrentScene->getEngineSettings();
-    mEngineSettings.timeStep = currentTimeStep;
+	// Get the engine settings of the scene
+	float currentTimeStep = mEngineSettings.timeStep;
+	mEngineSettings = mCurrentScene->getEngineSettings();
+	mEngineSettings.timeStep = currentTimeStep;
 
-    // Reset the scene
-    mCurrentScene->reset();
+	// Reset the scene
+	mCurrentScene->reset();
 
-    resizeEvent(Vector2i(0, 0));
+	resizeEvent(Vector2i(0, 0));
 }
 
 // Check the OpenGL errors
-void TestbedApplication::checkOpenGLErrorsInternal(const char* file, int line) {
-    GLenum glError;
+void TestbedApplication::checkOpenGLErrorsInternal(const char* file, int32_t line) {
+	GLenum glError;
 
-    // Get the OpenGL errors
-    glError = glGetError();
+	// Get the OpenGL errors
+	glError = glGetError();
 
-    // While there are errors
-    while (glError != GL_NO_ERROR) {
+	// While there are errors
+	while (glError != GL_NO_ERROR) {
 
-        std::string error;
+		std::string error;
 
-        switch(glError) {
-                case GL_INVALID_OPERATION:      error="INVALID_OPERATION";      break;
-                case GL_INVALID_ENUM:           error="INVALID_ENUM";           break;
-                case GL_INVALID_VALUE:          error="INVALID_VALUE";          break;
-                case GL_OUT_OF_MEMORY:          error="OUT_OF_MEMORY";          break;
-                case GL_INVALID_FRAMEBUFFER_OPERATION:  error="INVALID_FRAMEBUFFER_OPERATION";  break;
-        }
+		switch(glError) {
+				case GL_INVALID_OPERATION:	  error="INVALID_OPERATION";	  break;
+				case GL_INVALID_ENUM:		   error="INVALID_ENUM";		   break;
+				case GL_INVALID_VALUE:		  error="INVALID_VALUE";		  break;
+				case GL_OUT_OF_MEMORY:		  error="OUT_OF_MEMORY";		  break;
+				case GL_INVALID_FRAMEBUFFER_OPERATION:  error="INVALID_FRAMEBUFFER_OPERATION";  break;
+		}
 
-        std::cerr << "OpenGL Error #" << error.c_str() << " - " << file << ": " << line << std::endl;
+		std::cerr << "OpenGL Error #" << error.c_str() << " - " << file << ": " << line << std::endl;
 
-        // Get the next error
-        glError = glGetError();
-    }
+		// Get the next error
+		glError = glGetError();
+	}
 }
 
 
 // Compute the FPS
 void TestbedApplication::computeFPS() {
 
-    // Note : By default the nanogui library is using glfwWaitEvents() to process
-    //        events and sleep to target a framerate of 50 ms (using a thread
-    //        sleeping). However, for games we prefer to use glfwPollEvents()
-    //        instead and remove the update. Therefore the file common.cpp of the
-    //        nanogui library has been modified to have a faster framerate
+	// Note : By default the nanogui library is using glfwWaitEvents() to process
+	//		events and sleep to target a framerate of 50 ms (using a thread
+	//		sleeping). However, for games we prefer to use glfwPollEvents()
+	//		instead and remove the update. Therefore the file common.cpp of the
+	//		nanogui library has been modified to have a faster framerate
 
-    mNbFrames++;
+	mNbFrames++;
 
-    //  Get the number of seconds since start
-    mCurrentTime = glfwGetTime();
+	//  Get the number of seconds since start
+	mCurrentTime = glfwGetTime();
 
-    //  Calculate time passed
-    mFrameTime = mCurrentTime - mPreviousTime;
-    double timeInterval = (mCurrentTime - mLastTimeComputedFPS) * 1000.0;
+	//  Calculate time passed
+	mFrameTime = mCurrentTime - mPreviousTime;
+	double timeInterval = (mCurrentTime - mLastTimeComputedFPS) * 1000.0;
 
-    // Update the FPS counter each second
-    if(timeInterval > 1000) {
+	// Update the FPS counter each second
+	if(timeInterval > 1000) {
 
-        //  calculate the number of frames per second
-        mFPS = static_cast<double>(mNbFrames) / timeInterval;
-        mFPS *= 1000.0;
+		//  calculate the number of frames per second
+		mFPS = static_cast<double>(mNbFrames) / timeInterval;
+		mFPS *= 1000.0;
 
-        //  Reset frame count
-        mNbFrames = 0;
+		//  Reset frame count
+		mNbFrames = 0;
 
-        mLastTimeComputedFPS = mCurrentTime;
-    }
+		mLastTimeComputedFPS = mCurrentTime;
+	}
 
-    //  Set time
-    mPreviousTime = mCurrentTime;
+	//  Set time
+	mPreviousTime = mCurrentTime;
 }
 
-bool TestbedApplication::keyboardEvent(int key, int scancode, int action, int modifiers) {
+bool TestbedApplication::keyboardEvent(int32_t key, int32_t scancode, int32_t action, int32_t modifiers) {
 
-    if (Screen::keyboardEvent(key, scancode, action, modifiers)) {
-        return true;
-    }
+	if (Screen::keyboardEvent(key, scancode, action, modifiers)) {
+		return true;
+	}
 
-    // Close application on escape key
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        glfwSetWindowShouldClose(mGLFWWindow, GL_TRUE);
-        return true;
-    }
+	// Close application on escape key
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+		glfwSetWindowShouldClose(mGLFWWindow, GL_TRUE);
+		return true;
+	}
 
-    return mCurrentScene->keyboardEvent(key, scancode, action, modifiers);
+	return mCurrentScene->keyboardEvent(key, scancode, action, modifiers);
 }
 
 // Handle a mouse button event (default implementation: propagate to children)
-bool TestbedApplication::mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers) {
+bool TestbedApplication::mouseButtonEvent(const Vector2i &p, int32_t button, bool down, int32_t modifiers) {
 
-    if (Screen::mouseButtonEvent(p, button, down, modifiers)) {
-        return true;
-    }
+	if (Screen::mouseButtonEvent(p, button, down, modifiers)) {
+		return true;
+	}
 
-    // Get the mouse cursor position
-    double x, y;
-    glfwGetCursorPos(mGLFWWindow, &x, &y);
+	// Get the mouse cursor position
+	double x, y;
+	glfwGetCursorPos(mGLFWWindow, &x, &y);
 
-    return mCurrentScene->mouseButtonEvent(button, down, modifiers, x, y);
+	return mCurrentScene->mouseButtonEvent(button, down, modifiers, x, y);
 }
 
 // Handle a mouse motion event (default implementation: propagate to children)
-bool TestbedApplication::mouseMotionEvent(const Vector2i &p, const Vector2i &rel, int button, int modifiers) {
+bool TestbedApplication::mouseMotionEvent(const Vector2i &p, const Vector2i &rel, int32_t button, int32_t modifiers) {
 
-    if (Screen::mouseMotionEvent(p, rel, button, modifiers)) {
-        return true;
-    }
+	if (Screen::mouseMotionEvent(p, rel, button, modifiers)) {
+		return true;
+	}
 
-    int leftButtonState = glfwGetMouseButton(mGLFWWindow, GLFW_MOUSE_BUTTON_LEFT);
-    int rightButtonState = glfwGetMouseButton(mGLFWWindow, GLFW_MOUSE_BUTTON_RIGHT);
-    int middleButtonState = glfwGetMouseButton(mGLFWWindow, GLFW_MOUSE_BUTTON_MIDDLE);
-    int altKeyState = glfwGetKey(mGLFWWindow, GLFW_KEY_LEFT_ALT);
+	int32_t leftButtonState = glfwGetMouseButton(mGLFWWindow, GLFW_MOUSE_BUTTON_LEFT);
+	int32_t rightButtonState = glfwGetMouseButton(mGLFWWindow, GLFW_MOUSE_BUTTON_RIGHT);
+	int32_t middleButtonState = glfwGetMouseButton(mGLFWWindow, GLFW_MOUSE_BUTTON_MIDDLE);
+	int32_t altKeyState = glfwGetKey(mGLFWWindow, GLFW_KEY_LEFT_ALT);
 
-    return mCurrentScene->mouseMotionEvent(p[0], p[1], leftButtonState, rightButtonState,
-                                                  middleButtonState, altKeyState);
+	return mCurrentScene->mouseMotionEvent(p[0], p[1], leftButtonState, rightButtonState,
+												  middleButtonState, altKeyState);
 }
 
 // Handle a mouse scroll event (default implementation: propagate to children)
 bool TestbedApplication::scrollEvent(const Vector2i &p, const Vector2f &rel) {
 
-    if (Screen::scrollEvent(p, rel)) {
-        return true;
-    }
+	if (Screen::scrollEvent(p, rel)) {
+		return true;
+	}
 
-    return mCurrentScene->scrollingEvent(rel[0], rel[1], SCROLL_SENSITIVITY);
+	return mCurrentScene->scrollingEvent(rel[0], rel[1], SCROLL_SENSITIVITY);
 }

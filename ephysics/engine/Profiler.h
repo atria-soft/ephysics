@@ -1,30 +1,9 @@
-/********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
-*********************************************************************************
-*                                                                               *
-* This software is provided 'as-is', without any express or implied warranty.   *
-* In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
-* 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
-********************************************************************************/
-
-#ifndef REACTPHYSICS3D_PROFILER_H
-#define REACTPHYSICS3D_PROFILER_H
+/** @file
+ * @author Daniel Chappuis
+ * @copyright 2010-2016 Daniel Chappuis
+ * @license BSD 3 clauses (see license file)
+ */
+#pragma once
 
 #ifdef IS_PROFILING_ACTIVE
 
@@ -41,76 +20,76 @@ namespace reactphysics3d {
  */
 class ProfileNode {
 
-    private :
+	private :
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Name of the node
-        const char* mName;
+		/// Name of the node
+		const char* mName;
 
-        /// Total number of calls of this node
-        uint mNbTotalCalls;
+		/// Total number of calls of this node
+		uint32_t mNbTotalCalls;
 
-        /// Starting time of the sampling of corresponding block of code
-        long double mStartingTime;
+		/// Starting time of the sampling of corresponding block of code
+		long double mStartingTime;
 
-        /// Total time spent in the block of code
-        long double mTotalTime;
+		/// Total time spent in the block of code
+		long double mTotalTime;
 
-        /// Recursion counter
-        int mRecursionCounter;
+		/// Recursion counter
+		int32_t mRecursionCounter;
 
-        /// Pointer to the parent node
-        ProfileNode* mParentNode;
+		/// Pointer to the parent node
+		ProfileNode* mParentNode;
 
-        /// Pointer to a child node
-        ProfileNode* mChildNode;
+		/// Pointer to a child node
+		ProfileNode* mChildNode;
 
-        /// Pointer to a sibling node
-        ProfileNode* mSiblingNode;
+		/// Pointer to a sibling node
+		ProfileNode* mSiblingNode;
 
-    public :
+	public :
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        ProfileNode(const char* name, ProfileNode* parentNode);
+		/// Constructor
+		ProfileNode(const char* name, ProfileNode* parentNode);
 
-        /// Destructor
-        ~ProfileNode();
+		/// Destructor
+		~ProfileNode();
 
-        /// Return a pointer to a sub node
-        ProfileNode* findSubNode(const char* name);
+		/// Return a pointer to a sub node
+		ProfileNode* findSubNode(const char* name);
 
-        /// Return a pointer to the parent node
-        ProfileNode* getParentNode();
+		/// Return a pointer to the parent node
+		ProfileNode* getParentNode();
 
-        /// Return a pointer to a sibling node
-        ProfileNode* getSiblingNode();
+		/// Return a pointer to a sibling node
+		ProfileNode* getSiblingNode();
 
-        /// Return a pointer to a child node
-        ProfileNode* getChildNode();
+		/// Return a pointer to a child node
+		ProfileNode* getChildNode();
 
-        /// Return the name of the node
-        const char* getName();
+		/// Return the name of the node
+		const char* getName();
 
-        /// Return the total number of call of the corresponding block of code
-        uint getNbTotalCalls() const;
+		/// Return the total number of call of the corresponding block of code
+		uint32_t getNbTotalCalls() const;
 
-        /// Return the total time spent in the block of code
-        long double getTotalTime() const;
+		/// Return the total time spent in the block of code
+		long double getTotalTime() const;
 
-        /// Called when we enter the block of code corresponding to this profile node
-        void enterBlockOfCode();
+		/// Called when we enter the block of code corresponding to this profile node
+		void enterBlockOfCode();
 
-        /// Called when we exit the block of code corresponding to this profile node
-        bool exitBlockOfCode();
+		/// Called when we exit the block of code corresponding to this profile node
+		bool exitBlockOfCode();
 
-        /// Reset the profiling of the node
-        void reset();
+		/// Reset the profiling of the node
+		void reset();
 
-        /// Destroy the node
-        void destroy();
+		/// Destroy the node
+		void destroy();
 };
 
 // Class ProfileNodeIterator
@@ -119,58 +98,58 @@ class ProfileNode {
  */
 class ProfileNodeIterator {
 
-    private :
+	private :
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Current parent node
-        ProfileNode* mCurrentParentNode;
+		/// Current parent node
+		ProfileNode* mCurrentParentNode;
 
-        /// Current child node
-        ProfileNode* mCurrentChildNode;
+		/// Current child node
+		ProfileNode* mCurrentChildNode;
 
-    public :
+	public :
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        ProfileNodeIterator(ProfileNode* startingNode);
+		/// Constructor
+		ProfileNodeIterator(ProfileNode* startingNode);
 
-        /// Go to the first node
-        void first();
+		/// Go to the first node
+		void first();
 
-        /// Go to the next node
-        void next();
+		/// Go to the next node
+		void next();
 
-        /// Enter a given child node
-        void enterChild(int index);
+		/// Enter a given child node
+		void enterChild(int32_t index);
 
-        /// Enter a given parent node
-        void enterParent();
+		/// Enter a given parent node
+		void enterParent();
 
-        /// Return true if we are at the root of the profiler tree
-        bool isRoot();
+		/// Return true if we are at the root of the profiler tree
+		bool isRoot();
 
-        /// Return true if we are at the end of a branch of the profiler tree
-        bool isEnd();
+		/// Return true if we are at the end of a branch of the profiler tree
+		bool isEnd();
 
-        /// Return the name of the current node
-        const char* getCurrentName();
+		/// Return the name of the current node
+		const char* getCurrentName();
 
-        /// Return the total time of the current node
-        long double getCurrentTotalTime();
+		/// Return the total time of the current node
+		long double getCurrentTotalTime();
 
-        /// Return the total number of calls of the current node
-        uint getCurrentNbTotalCalls();
+		/// Return the total number of calls of the current node
+		uint32_t getCurrentNbTotalCalls();
 
-        /// Return the name of the current parent node
-        const char* getCurrentParentName();
+		/// Return the name of the current parent node
+		const char* getCurrentParentName();
 
-        /// Return the total time of the current parent node
-        long double getCurrentParentTotalTime();
+		/// Return the total time of the current parent node
+		long double getCurrentParentTotalTime();
 
-        /// Return the total number of calls of the current parent node
-        uint getCurrentParentNbTotalCalls();
+		/// Return the total number of calls of the current parent node
+		uint32_t getCurrentParentNbTotalCalls();
 };
 
 // Class Profiler
@@ -180,61 +159,61 @@ class ProfileNodeIterator {
  */
 class Profiler {
 
-    private :
+	private :
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Root node of the profiler tree
-        static ProfileNode mRootNode;
+		/// Root node of the profiler tree
+		static ProfileNode mRootNode;
 
-        /// Current node in the current execution
-        static ProfileNode* mCurrentNode;
+		/// Current node in the current execution
+		static ProfileNode* mCurrentNode;
 
-        /// Frame counter
-        static uint mFrameCounter;
+		/// Frame counter
+		static uint32_t mFrameCounter;
 
-        /// Starting profiling time
-        static long double mProfilingStartTime;
+		/// Starting profiling time
+		static long double mProfilingStartTime;
 
-        /// Recursively print the report of a given node of the profiler tree
-        static void printRecursiveNodeReport(ProfileNodeIterator* iterator,
-                                             int spacing,
-                                             std::ostream& outputStream);
+		/// Recursively print32_t the report of a given node of the profiler tree
+		static void print32_tRecursiveNodeReport(ProfileNodeIterator* iterator,
+											 int32_t spacing,
+											 std::ostream& outputStream);
 
-    public :
+	public :
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Method called when we want to start profiling a block of code.
-        static void startProfilingBlock(const char *name);
+		/// Method called when we want to start profiling a block of code.
+		static void startProfilingBlock(const char *name);
 
-        /// Method called at the end of the scope where the
-        /// startProfilingBlock() method has been called.
-        static void stopProfilingBlock();
+		/// Method called at the end of the scope where the
+		/// startProfilingBlock() method has been called.
+		static void stopProfilingBlock();
 
-        /// Reset the timing data of the profiler (but not the profiler tree structure)
-        static void reset();
+		/// Reset the timing data of the profiler (but not the profiler tree structure)
+		static void reset();
 
-        /// Return the number of frames
-        static uint getNbFrames();
+		/// Return the number of frames
+		static uint32_t getNbFrames();
 
-        /// Return the elasped time since the start/reset of the profiling
-        static long double getElapsedTimeSinceStart();
+		/// Return the elasped time since the start/reset of the profiling
+		static long double getElapsedTimeSinceStart();
 
-        /// Increment the frame counter
-        static void incrementFrameCounter();
+		/// Increment the frame counter
+		static void incrementFrameCounter();
 
-        /// Return an iterator over the profiler tree starting at the root
-        static ProfileNodeIterator* getIterator();
+		/// Return an iterator over the profiler tree starting at the root
+		static ProfileNodeIterator* getIterator();
 
-        /// Print the report of the profiler in a given output stream
-        static void printReport(std::ostream& outputStream);
+		/// Print32_t the report of the profiler in a given output stream
+		static void print32_tReport(std::ostream& outputStream);
 
-        /// Destroy a previously allocated iterator
-        static void destroyIterator(ProfileNodeIterator* iterator);
+		/// Destroy a previously allocated iterator
+		static void destroyIterator(ProfileNodeIterator* iterator);
 
-        /// Destroy the profiler (release the memory)
-        static void destroy();
+		/// Destroy the profiler (release the memory)
+		static void destroy();
 };
 
 // Class ProfileSample
@@ -245,23 +224,23 @@ class Profiler {
  */
 class ProfileSample {
 
-    public :
+	public :
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        ProfileSample(const char* name) {
+		/// Constructor
+		ProfileSample(const char* name) {
 
-            // Ask the profiler to start profiling a block of code
-            Profiler::startProfilingBlock(name);
-        }
+			// Ask the profiler to start profiling a block of code
+			Profiler::startProfilingBlock(name);
+		}
 
-        /// Destructor
-        ~ProfileSample() {
+		/// Destructor
+		~ProfileSample() {
 
-            // Tell the profiler to stop profiling a block of code
-            Profiler::stopProfilingBlock();
-        }
+			// Tell the profiler to stop profiling a block of code
+			Profiler::stopProfilingBlock();
+		}
 };
 
 // Use this macro to start profile a block of code
@@ -269,113 +248,113 @@ class ProfileSample {
 
 // Return true if we are at the root of the profiler tree
 inline bool ProfileNodeIterator::isRoot() {
-    return (mCurrentParentNode->getParentNode() == NULL);
+	return (mCurrentParentNode->getParentNode() == NULL);
 }
 
 // Return true if we are at the end of a branch of the profiler tree
 inline bool ProfileNodeIterator::isEnd() {
-    return (mCurrentChildNode == NULL);
+	return (mCurrentChildNode == NULL);
 }
 
 // Return the name of the current node
 inline const char* ProfileNodeIterator::getCurrentName() {
-    return mCurrentChildNode->getName();
+	return mCurrentChildNode->getName();
 }
 
 // Return the total time of the current node
 inline long double ProfileNodeIterator::getCurrentTotalTime() {
-    return mCurrentChildNode->getTotalTime();
+	return mCurrentChildNode->getTotalTime();
 }
 
 // Return the total number of calls of the current node
-inline uint ProfileNodeIterator::getCurrentNbTotalCalls() {
-    return mCurrentChildNode->getNbTotalCalls();
+inline uint32_t ProfileNodeIterator::getCurrentNbTotalCalls() {
+	return mCurrentChildNode->getNbTotalCalls();
 }
 
 // Return the name of the current parent node
 inline const char* ProfileNodeIterator::getCurrentParentName() {
-    return mCurrentParentNode->getName();
+	return mCurrentParentNode->getName();
 }
 
 // Return the total time of the current parent node
 inline long double ProfileNodeIterator::getCurrentParentTotalTime() {
-    return mCurrentParentNode->getTotalTime();
+	return mCurrentParentNode->getTotalTime();
 }
 
 // Return the total number of calls of the current parent node
-inline uint ProfileNodeIterator::getCurrentParentNbTotalCalls() {
-    return mCurrentParentNode->getNbTotalCalls();
+inline uint32_t ProfileNodeIterator::getCurrentParentNbTotalCalls() {
+	return mCurrentParentNode->getNbTotalCalls();
 }
 
 // Go to the first node
 inline void ProfileNodeIterator::first() {
-    mCurrentChildNode = mCurrentParentNode->getChildNode();
+	mCurrentChildNode = mCurrentParentNode->getChildNode();
 }
 
 // Go to the next node
 inline void ProfileNodeIterator::next() {
-    mCurrentChildNode = mCurrentChildNode->getSiblingNode();
+	mCurrentChildNode = mCurrentChildNode->getSiblingNode();
 }
 
 // Return a pointer to the parent node
 inline ProfileNode* ProfileNode::getParentNode() {
-    return mParentNode;
+	return mParentNode;
 }
 
 // Return a pointer to a sibling node
 inline ProfileNode* ProfileNode::getSiblingNode() {
-    return mSiblingNode;
+	return mSiblingNode;
 }
 
 // Return a pointer to a child node
 inline ProfileNode* ProfileNode::getChildNode() {
-    return mChildNode;
+	return mChildNode;
 }
 
 // Return the name of the node
 inline const char* ProfileNode::getName() {
-    return mName;
+	return mName;
 }
 
 // Return the total number of call of the corresponding block of code
-inline uint ProfileNode::getNbTotalCalls() const {
-    return mNbTotalCalls;
+inline uint32_t ProfileNode::getNbTotalCalls() const {
+	return mNbTotalCalls;
 }
 
 // Return the total time spent in the block of code
 inline long double ProfileNode::getTotalTime() const {
-    return mTotalTime;
+	return mTotalTime;
 }
 
 // Return the number of frames
-inline uint Profiler::getNbFrames() {
-    return mFrameCounter;
+inline uint32_t Profiler::getNbFrames() {
+	return mFrameCounter;
 }
 
 // Return the elasped time since the start/reset of the profiling
 inline long double Profiler::getElapsedTimeSinceStart() {
-    long double currentTime = Timer::getCurrentSystemTime() * 1000.0;
-    return currentTime - mProfilingStartTime;
+	long double currentTime = Timer::getCurrentSystemTime() * 1000.0;
+	return currentTime - mProfilingStartTime;
 }
 
 // Increment the frame counter
 inline void Profiler::incrementFrameCounter() {
-    mFrameCounter++;
+	mFrameCounter++;
 }
 
 // Return an iterator over the profiler tree starting at the root
 inline ProfileNodeIterator* Profiler::getIterator() {
-    return new ProfileNodeIterator(&mRootNode);
+	return new ProfileNodeIterator(&mRootNode);
 }
 
 // Destroy a previously allocated iterator
 inline void Profiler::destroyIterator(ProfileNodeIterator* iterator) {
-    delete iterator;
+	delete iterator;
 }
 
 // Destroy the profiler (release the memory)
 inline void Profiler::destroy() {
-    mRootNode.destroy();
+	mRootNode.destroy();
 }
 
 }
@@ -384,7 +363,5 @@ inline void Profiler::destroy() {
 
 // Empty macro in case profiling is not active
 #define PROFILE(name)
-
-#endif
 
 #endif

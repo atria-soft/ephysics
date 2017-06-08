@@ -1,30 +1,9 @@
-/********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com                 *
-* Copyright (c) 2010-2016 Daniel Chappuis                                       *
-*********************************************************************************
-*                                                                               *
-* This software is provided 'as-is', without any express or implied warranty.   *
-* In no event will the authors be held liable for any damages arising from the  *
-* use of this software.                                                         *
-*                                                                               *
-* Permission is granted to anyone to use this software for any purpose,         *
-* including commercial applications, and to alter it and redistribute it        *
-* freely, subject to the following restrictions:                                *
-*                                                                               *
-* 1. The origin of this software must not be misrepresented; you must not claim *
-*    that you wrote the original software. If you use this software in a        *
-*    product, an acknowledgment in the product documentation would be           *
-*    appreciated but is not required.                                           *
-*                                                                               *
-* 2. Altered source versions must be plainly marked as such, and must not be    *
-*    misrepresented as being the original software.                             *
-*                                                                               *
-* 3. This notice may not be removed or altered from any source distribution.    *
-*                                                                               *
-********************************************************************************/
-
-#ifndef REACTPHYSICS3D_CYLINDER_SHAPE_H
-#define REACTPHYSICS3D_CYLINDER_SHAPE_H
+/** @file
+ * @author Daniel Chappuis
+ * @copyright 2010-2016 Daniel Chappuis
+ * @license BSD 3 clauses (see license file)
+ */
+#pragma once
 
 // Libraries
 #include <ephysics/collision/shapes/ConvexShape.h>
@@ -51,91 +30,91 @@ namespace reactphysics3d {
  */
 class CylinderShape : public ConvexShape {
 
-    protected :
+	protected :
 
-        // -------------------- Attributes -------------------- //
+		// -------------------- Attributes -------------------- //
 
-        /// Radius of the base
-        decimal mRadius;
+		/// Radius of the base
+		float mRadius;
 
-        /// Half height of the cylinder
-        decimal mHalfHeight;
+		/// Half height of the cylinder
+		float mHalfHeight;
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Private copy-constructor
-        CylinderShape(const CylinderShape& shape);
+		/// Private copy-constructor
+		CylinderShape(const CylinderShape& shape);
 
-        /// Private assignment operator
-        CylinderShape& operator=(const CylinderShape& shape);
+		/// Private assignment operator
+		CylinderShape& operator=(const CylinderShape& shape);
 
-        /// Return a local support point in a given direction without the object margin
-        virtual Vector3 getLocalSupportPointWithoutMargin(const Vector3& direction,
-                                                          void** cachedCollisionData) const;
+		/// Return a local support point in a given direction without the object margin
+		virtual Vector3 getLocalSupportPointWithoutMargin(const Vector3& direction,
+														  void** cachedCollisionData) const;
 
-        /// Return true if a point is inside the collision shape
-        virtual bool testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const;
+		/// Return true if a point is inside the collision shape
+		virtual bool testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const;
 
-        /// Raycast method with feedback information
-        virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
+		/// Raycast method with feedback information
+		virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
 
-        /// Return the number of bytes used by the collision shape
-        virtual size_t getSizeInBytes() const;
+		/// Return the number of bytes used by the collision shape
+		virtual size_t getSizeInBytes() const;
 
-    public :
+	public :
 
-        // -------------------- Methods -------------------- //
+		// -------------------- Methods -------------------- //
 
-        /// Constructor
-        CylinderShape(decimal radius, decimal height, decimal margin = OBJECT_MARGIN);
+		/// Constructor
+		CylinderShape(float radius, float height, float margin = OBJECT_MARGIN);
 
-        /// Destructor
-        virtual ~CylinderShape();
+		/// Destructor
+		virtual ~CylinderShape();
 
-        /// Return the radius
-        decimal getRadius() const;
+		/// Return the radius
+		float getRadius() const;
 
-        /// Return the height
-        decimal getHeight() const;
+		/// Return the height
+		float getHeight() const;
 
-        /// Set the scaling vector of the collision shape
-        virtual void setLocalScaling(const Vector3& scaling);
+		/// Set the scaling vector of the collision shape
+		virtual void setLocalScaling(const Vector3& scaling);
 
-        /// Return the local bounds of the shape in x, y and z directions
-        virtual void getLocalBounds(Vector3& min, Vector3& max) const;
+		/// Return the local bounds of the shape in x, y and z directions
+		virtual void getLocalBounds(Vector3& min, Vector3& max) const;
 
-        /// Return the local inertia tensor of the collision shape
-        virtual void computeLocalInertiaTensor(Matrix3x3& tensor, decimal mass) const;
+		/// Return the local inertia tensor of the collision shape
+		virtual void computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const;
 };
 
 // Return the radius
 /**
  * @return Radius of the cylinder (in meters)
  */
-inline decimal CylinderShape::getRadius() const {
-    return mRadius;
+inline float CylinderShape::getRadius() const {
+	return mRadius;
 }
 
 // Return the height
 /**
  * @return Height of the cylinder (in meters)
  */
-inline decimal CylinderShape::getHeight() const {
-    return mHalfHeight + mHalfHeight;
+inline float CylinderShape::getHeight() const {
+	return mHalfHeight + mHalfHeight;
 }
 
 // Set the scaling vector of the collision shape
 inline void CylinderShape::setLocalScaling(const Vector3& scaling) {
 
-    mHalfHeight = (mHalfHeight / mScaling.y) * scaling.y;
-    mRadius = (mRadius / mScaling.x) * scaling.x;
+	mHalfHeight = (mHalfHeight / mScaling.y) * scaling.y;
+	mRadius = (mRadius / mScaling.x) * scaling.x;
 
-    CollisionShape::setLocalScaling(scaling);
+	CollisionShape::setLocalScaling(scaling);
 }
 
 // Return the number of bytes used by the collision shape
 inline size_t CylinderShape::getSizeInBytes() const {
-    return sizeof(CylinderShape);
+	return sizeof(CylinderShape);
 }
 
 // Return the local bounds of the shape in x, y and z directions
@@ -145,38 +124,37 @@ inline size_t CylinderShape::getSizeInBytes() const {
  */
 inline void CylinderShape::getLocalBounds(Vector3& min, Vector3& max) const {
 
-    // Maximum bounds
-    max.x = mRadius + mMargin;
-    max.y = mHalfHeight + mMargin;
-    max.z = max.x;
+	// Maximum bounds
+	max.x = mRadius + mMargin;
+	max.y = mHalfHeight + mMargin;
+	max.z = max.x;
 
-    // Minimum bounds
-    min.x = -max.x;
-    min.y = -max.y;
-    min.z = min.x;
+	// Minimum bounds
+	min.x = -max.x;
+	min.y = -max.y;
+	min.z = min.x;
 }
 
 // Return the local inertia tensor of the cylinder
 /**
  * @param[out] tensor The 3x3 inertia tensor matrix of the shape in local-space
- *                    coordinates
+ *					coordinates
  * @param mass Mass to use to compute the inertia tensor of the collision shape
  */
-inline void CylinderShape::computeLocalInertiaTensor(Matrix3x3& tensor, decimal mass) const {
-    decimal height = decimal(2.0) * mHalfHeight;
-    decimal diag = (decimal(1.0) / decimal(12.0)) * mass * (3 * mRadius * mRadius + height * height);
-    tensor.setAllValues(diag, 0.0, 0.0, 0.0,
-                        decimal(0.5) * mass * mRadius * mRadius, 0.0,
-                        0.0, 0.0, diag);
+inline void CylinderShape::computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const {
+	float height = float(2.0) * mHalfHeight;
+	float diag = (float(1.0) / float(12.0)) * mass * (3 * mRadius * mRadius + height * height);
+	tensor.setAllValues(diag, 0.0, 0.0, 0.0,
+						float(0.5) * mass * mRadius * mRadius, 0.0,
+						0.0, 0.0, diag);
 }
 
 // Return true if a point is inside the collision shape
 inline bool CylinderShape::testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const{
-    return ((localPoint.x * localPoint.x + localPoint.z * localPoint.z) < mRadius * mRadius &&
-            localPoint.y < mHalfHeight && localPoint.y > -mHalfHeight);
+	return ((localPoint.x * localPoint.x + localPoint.z * localPoint.z) < mRadius * mRadius &&
+			localPoint.y < mHalfHeight && localPoint.y > -mHalfHeight);
 }
 
 }
 
-#endif
 
