@@ -32,7 +32,7 @@ using namespace reactphysics3d;
 
 /// Constructor
 Test::Test(const std::string& name, std::ostream* stream)
-	 : mName(name), mNbPassedTests(0), mNbFailedTests(0), mOutputStream(stream) {
+	 : m_name(name), mNbPassedTests(0), mNbFailedTests(0), mOutputStream(stream) {
 
 }
 
@@ -66,7 +66,7 @@ void Test::applyFail(const std::string& testText, const char* filename, long lin
 	if (mOutputStream) {
 
 		// Display the failure message
-		*mOutputStream << mName << " failure : (" << testText << "), " <<
+		*mOutputStream << m_name << " failure : (" << testText << "), " <<
 				  filename << "(line " << lineNumber << ")" << std::endl;
 	}
 
@@ -79,7 +79,7 @@ long Test::report() const {
 
 	if(mOutputStream) {
 		*mOutputStream << std::left << std::setw(30) << std::setfill(' ')
-					   << "Test " + mName + " :" << std::setw(10) << "Passed:  "
+					   << "Test " + m_name + " :" << std::setw(10) << "Passed:  "
 					   << std::setw(8) << mNbPassedTests
 					   << std::setw(13) << "Failed: "
 					   << std::setw(8) << mNbFailedTests  << std::endl;

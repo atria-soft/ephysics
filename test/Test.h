@@ -51,7 +51,7 @@ class Test {
 		// ---------- Attributes ---------- //
 
 		/// Name of the test
-		std::string mName;
+		std::string m_name;
 
 		/// Number of tests that passed
 		long mNbPassedTests;

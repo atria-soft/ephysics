@@ -133,16 +133,16 @@ class ConstraintSolver {
 
 		/// Reference to the map that associates rigid body to their index in
 		/// the constrained velocities array
-		const std::map<RigidBody*, uint32_t>& mMapBodyToConstrainedVelocityIndex;
+		const std::map<RigidBody*, uint32_t>& m_mapBodyToConstrainedVelocityIndex;
 
 		/// Current time step
-		float mTimeStep;
+		float m_timeStep;
 
 		/// True if the warm starting of the solver is active
 		bool mIsWarmStartingActive;
 
 		/// Constraint solver data used to initialize and solve the constraints
-		ConstraintSolverData mConstraintSolverData;
+		ConstraintSolverData m_constraintSolverData;
 
 	public :
 
@@ -183,8 +183,8 @@ inline void ConstraintSolver::setConstrainedVelocitiesArrays(Vector3* constraine
 															Vector3* constrainedAngularVelocities) {
 	assert(constrainedLinearVelocities != NULL);
 	assert(constrainedAngularVelocities != NULL);
-	mConstraintSolverData.linearVelocities = constrainedLinearVelocities;
-	mConstraintSolverData.angularVelocities = constrainedAngularVelocities;
+	m_constraintSolverData.linearVelocities = constrainedLinearVelocities;
+	m_constraintSolverData.angularVelocities = constrainedAngularVelocities;
 }
 
 // Set the constrained positions/orientations arrays
@@ -192,8 +192,8 @@ inline void ConstraintSolver::setConstrainedPositionsArrays(Vector3* constrained
 														   Quaternion* constrainedOrientations) {
 	assert(constrainedPositions != NULL);
 	assert(constrainedOrientations != NULL);
-	mConstraintSolverData.positions = constrainedPositions;
-	mConstraintSolverData.orientations = constrainedOrientations;
+	m_constraintSolverData.positions = constrainedPositions;
+	m_constraintSolverData.orientations = constrainedOrientations;
 }
 
 }

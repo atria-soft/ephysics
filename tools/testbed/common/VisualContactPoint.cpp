@@ -96,12 +96,12 @@ void VisualContactPoint::render(openglframework::Shader& shader,
 	mVBOVertices.bind();
 
 	// Set the model to camera matrix
-	shader.setMatrix4x4Uniform("localToWorldMatrix", mTransformMatrix);
+	shader.setMatrix4x4Uniform("localToWorldMatrix", m_transformMatrix);
 	shader.setMatrix4x4Uniform("worldToCameraMatrix", worldToCameraMatrix);
 
 	// Set the normal matrix (inverse transpose of the 3x3 upper-left sub matrix of the
 	// model-view matrix)
-	const openglframework::Matrix4 localToCameraMatrix = worldToCameraMatrix * mTransformMatrix;
+	const openglframework::Matrix4 localToCameraMatrix = worldToCameraMatrix * m_transformMatrix;
 	const openglframework::Matrix3 normalMatrix =
 					   localToCameraMatrix.getUpperLeft3x3Matrix().getInverse().getTranspose();
 	shader.setMatrix3x3Uniform("normalMatrix", normalMatrix, false);

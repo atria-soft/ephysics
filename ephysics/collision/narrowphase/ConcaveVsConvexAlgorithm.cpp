@@ -268,5 +268,5 @@ void SmoothCollisionNarrowPhaseCallback::notifyContact(OverlappingPair* overlapp
 
 	// Add the narrow-phase contact int32_to the list of contact to process for
 	// smooth mesh collision
-	mContactPoints.push_back(smoothContactInfo);
+	m_contactPoints.push_back(smoothContactInfo);
 }

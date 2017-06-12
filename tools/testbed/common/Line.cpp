@@ -29,7 +29,7 @@
 // Constructor
 Line::Line(const openglframework::Vector3& worldPoint1,
 		   const openglframework::Vector3& worldPoint2)
-	 : mWorldPoint1(worldPoint1), mWorldPoint2(worldPoint2) {
+	 : m_worldPoint1(worldPoint1), m_worldPoint2(worldPoint2) {
 
 }
 
@@ -56,8 +56,8 @@ void Line::render(openglframework::Shader& shader,
 
 	/*
 	glBegin(GL_LINES);
-		glVertex3f(mWorldPoint1.x, mWorldPoint1.y, mWorldPoint1.z);
-		glVertex3f(mWorldPoint2.x, mWorldPoint2.y, mWorldPoint2.z);
+		glVertex3f(m_worldPoint1.x, m_worldPoint1.y, m_worldPoint1.z);
+		glVertex3f(m_worldPoint2.x, m_worldPoint2.y, m_worldPoint2.z);
 	glEnd();
 	*/
 

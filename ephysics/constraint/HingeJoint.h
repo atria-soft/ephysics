@@ -23,7 +23,7 @@ struct HingeJointInfo : public JointInfo {
 		// -------------------- Attributes -------------------- //
 
 		/// Anchor point (in world-space coordinates)
-		Vector3 m_m_m_m_anchorPointWorldSpace;
+		Vector3 m_anchorPointWorldSpace;
 
 		/// Hinge rotation axis (in world-space coordinates)
 		Vector3 rotationAxisWorld;
@@ -62,7 +62,7 @@ struct HingeJointInfo : public JointInfo {
 							   const Vector3& initAnchorPointWorldSpace,
 							   const Vector3& initRotationAxisWorld)
 							  : JointInfo(rigidBody1, rigidBody2, HINGEJOINT),
-								m_m_m_m_anchorPointWorldSpace(initAnchorPointWorldSpace),
+								m_anchorPointWorldSpace(initAnchorPointWorldSpace),
 								rotationAxisWorld(initRotationAxisWorld), isLimitEnabled(false),
 								isMotorEnabled(false), minAngleLimit(-1), maxAngleLimit(1),
 								motorSpeed(0), maxMotorTorque(0) {}
@@ -81,7 +81,7 @@ struct HingeJointInfo : public JointInfo {
 							   const Vector3& initRotationAxisWorld,
 							   float initMinAngleLimit, float initMaxAngleLimit)
 							  : JointInfo(rigidBody1, rigidBody2, HINGEJOINT),
-								m_m_m_m_anchorPointWorldSpace(initAnchorPointWorldSpace),
+								m_anchorPointWorldSpace(initAnchorPointWorldSpace),
 								rotationAxisWorld(initRotationAxisWorld), isLimitEnabled(true),
 								isMotorEnabled(false), minAngleLimit(initMinAngleLimit),
 								maxAngleLimit(initMaxAngleLimit), motorSpeed(0),
@@ -104,7 +104,7 @@ struct HingeJointInfo : public JointInfo {
 							   float initMinAngleLimit, float initMaxAngleLimit,
 							   float initMotorSpeed, float initMaxMotorTorque)
 							  : JointInfo(rigidBody1, rigidBody2, HINGEJOINT),
-								m_m_m_m_anchorPointWorldSpace(initAnchorPointWorldSpace),
+								m_anchorPointWorldSpace(initAnchorPointWorldSpace),
 								rotationAxisWorld(initRotationAxisWorld), isLimitEnabled(true),
 								isMotorEnabled(false), minAngleLimit(initMinAngleLimit),
 								maxAngleLimit(initMaxAngleLimit), motorSpeed(initMotorSpeed),
@@ -201,7 +201,7 @@ class HingeJoint : public Joint {
 		float mBUpperLimit;
 
 		/// Inverse of the initial orientation difference between the bodies
-		Quaternion mInitOrientationDifferenceInv;
+		Quaternion m_initOrientationDifferenceInv;
 
 		/// True if the joint limits are enabled
 		bool mIsLimitEnabled;

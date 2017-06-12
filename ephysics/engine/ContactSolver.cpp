@@ -21,9 +21,9 @@ const float ContactSolver::SLOP= float(0.01);
 
 // Constructor
 ContactSolver::ContactSolver(const std::map<RigidBody*, uint32_t>& mapBodyToVelocityIndex)
-			  :mSplitLinearVelocities(NULL), mSplitAngularVelocities(NULL),
+			  :m_splitLinearVelocities(NULL), m_splitAngularVelocities(NULL),
 			   mContactConstraints(NULL), mLinearVelocities(NULL), mAngularVelocities(NULL),
-			   mMapBodyToConstrainedVelocityIndex(mapBodyToVelocityIndex),
+			   m_mapBodyToConstrainedVelocityIndex(mapBodyToVelocityIndex),
 			   mIsWarmStartingActive(true), mIsSplitImpulseActive(true),
 			   mIsSolveFrictionAtContactManifoldCenterActive(true) {
 
@@ -42,20 +42,20 @@ void ContactSolver::initializeForIsland(float dt, Island* island) {
 	assert(island != NULL);
 	assert(island->getNbBodies() > 0);
 	assert(island->getNbContactManifolds() > 0);
-	assert(mSplitLinearVelocities != NULL);
-	assert(mSplitAngularVelocities != NULL);
+	assert(m_splitLinearVelocities != NULL);
+	assert(m_splitAngularVelocities != NULL);
 
 	// Set the current time step
-	mTimeStep = dt;
+	m_timeStep = dt;
 
-	mNbContactManifolds = island->getNbContactManifolds();
+	m_numberContactManifolds = island->getNbContactManifolds();
 
-	mContactConstraints = new ContactManifoldSolver[mNbContactManifolds];
+	mContactConstraints = new ContactManifoldSolver[m_numberContactManifolds];
 	assert(mContactConstraints != NULL);
 
 	// For each contact manifold of the island
 	ContactManifold** contactManifolds = island->getContactManifold();
-	for (uint32_t i=0; i<mNbContactManifolds; i++) {
+	for (uint32_t i=0; i<m_numberContactManifolds; i++) {
 
 		ContactManifold* externalManifold = contactManifolds[i];
 
@@ -75,12 +75,12 @@ void ContactSolver::initializeForIsland(float dt, Island* island) {
 
 		// Initialize the int32_ternal contact manifold structure using the external
 		// contact manifold
-		int32_ternalManifold.indexBody1 = mMapBodyToConstrainedVelocityIndex.find(body1)->second;
-		int32_ternalManifold.indexBody2 = mMapBodyToConstrainedVelocityIndex.find(body2)->second;
+		int32_ternalManifold.indexBody1 = m_mapBodyToConstrainedVelocityIndex.find(body1)->second;
+		int32_ternalManifold.indexBody2 = m_mapBodyToConstrainedVelocityIndex.find(body2)->second;
 		int32_ternalManifold.inverseInertiaTensorBody1 = body1->getInertiaTensorInverseWorld();
 		int32_ternalManifold.inverseInertiaTensorBody2 = body2->getInertiaTensorInverseWorld();
-		int32_ternalManifold.massInverseBody1 = body1->mMassInverse;
-		int32_ternalManifold.massInverseBody2 = body2->mMassInverse;
+		int32_ternalManifold.massInverseBody1 = body1->m_massInverse;
+		int32_ternalManifold.massInverseBody2 = body2->m_massInverse;
 		int32_ternalManifold.nbContacts = externalManifold->getNbContactPoints();
 		int32_ternalManifold.restitutionFactor = computeMixedRestitutionFactor(body1, body2);
 		int32_ternalManifold.frictionCoefficient = computeMixedFrictionCoefficient(body1, body2);
@@ -165,7 +165,7 @@ void ContactSolver::initializeForIsland(float dt, Island* island) {
 void ContactSolver::initializeContactConstraints() {
 	
 	// For each contact constraint
-	for (uint32_t c=0; c<mNbContactManifolds; c++) {
+	for (uint32_t c=0; c<m_numberContactManifolds; c++) {
 
 		ContactManifoldSolver& manifold = mContactConstraints[c];
 
@@ -323,7 +323,7 @@ void ContactSolver::warmStart() {
 	if (!mIsWarmStartingActive) return;
 
 	// For each constraint
-	for (uint32_t c=0; c<mNbContactManifolds; c++) {
+	for (uint32_t c=0; c<m_numberContactManifolds; c++) {
 
 		ContactManifoldSolver& contactManifold = mContactConstraints[c];
 
@@ -495,7 +495,7 @@ void ContactSolver::solve() {
 	float lambdaTemp;
 
 	// For each contact manifold
-	for (uint32_t c=0; c<mNbContactManifolds; c++) {
+	for (uint32_t c=0; c<m_numberContactManifolds; c++) {
 
 		ContactManifoldSolver& contactManifold = mContactConstraints[c];
 
@@ -521,7 +521,7 @@ void ContactSolver::solve() {
 			// Compute the bias "b" of the constraint
 			float beta = mIsSplitImpulseActive ? BETA_SPLIT_IMPULSE : BETA;
 			float biasPenetrationDepth = 0.0;
-			if (contactPoint.penetrationDepth > SLOP) biasPenetrationDepth = -(beta/mTimeStep) *
+			if (contactPoint.penetrationDepth > SLOP) biasPenetrationDepth = -(beta/m_timeStep) *
 					max(0.0f, float(contactPoint.penetrationDepth - SLOP));
 			float b = biasPenetrationDepth + contactPoint.restitutionBias;
 
@@ -551,10 +551,10 @@ void ContactSolver::solve() {
 			if (mIsSplitImpulseActive) {
 
 				// Split impulse (position correction)
-				const Vector3& v1Split = mSplitLinearVelocities[contactManifold.indexBody1];
-				const Vector3& w1Split = mSplitAngularVelocities[contactManifold.indexBody1];
-				const Vector3& v2Split = mSplitLinearVelocities[contactManifold.indexBody2];
-				const Vector3& w2Split = mSplitAngularVelocities[contactManifold.indexBody2];
+				const Vector3& v1Split = m_splitLinearVelocities[contactManifold.indexBody1];
+				const Vector3& w1Split = m_splitAngularVelocities[contactManifold.indexBody1];
+				const Vector3& v2Split = m_splitLinearVelocities[contactManifold.indexBody2];
+				const Vector3& w2Split = m_splitAngularVelocities[contactManifold.indexBody2];
 				Vector3 deltaVSplit = v2Split + w2Split.cross(contactPoint.r2) -
 						v1Split - w1Split.cross(contactPoint.r1);
 				float JvSplit = deltaVSplit.dot(contactPoint.normal);
@@ -764,7 +764,7 @@ void ContactSolver::solve() {
 void ContactSolver::storeImpulses() {
 
 	// For each contact manifold
-	for (uint32_t c=0; c<mNbContactManifolds; c++) {
+	for (uint32_t c=0; c<m_numberContactManifolds; c++) {
 
 		ContactManifoldSolver& manifold = mContactConstraints[c];
 
@@ -812,15 +812,15 @@ void ContactSolver::applySplitImpulse(const Impulse& impulse,
 									  const ContactManifoldSolver& manifold) {
 
 	// Update the velocities of the body 1 by applying the impulse P
-	mSplitLinearVelocities[manifold.indexBody1] += manifold.massInverseBody1 *
+	m_splitLinearVelocities[manifold.indexBody1] += manifold.massInverseBody1 *
 												   impulse.linearImpulseBody1;
-	mSplitAngularVelocities[manifold.indexBody1] += manifold.inverseInertiaTensorBody1 *
+	m_splitAngularVelocities[manifold.indexBody1] += manifold.inverseInertiaTensorBody1 *
 													impulse.angularImpulseBody1;
 
 	// Update the velocities of the body 1 by applying the impulse P
-	mSplitLinearVelocities[manifold.indexBody2] += manifold.massInverseBody2 *
+	m_splitLinearVelocities[manifold.indexBody2] += manifold.massInverseBody2 *
 												   impulse.linearImpulseBody2;
-	mSplitAngularVelocities[manifold.indexBody2] += manifold.inverseInertiaTensorBody2 *
+	m_splitAngularVelocities[manifold.indexBody2] += manifold.inverseInertiaTensorBody2 *
 													impulse.angularImpulseBody2;
 }
 

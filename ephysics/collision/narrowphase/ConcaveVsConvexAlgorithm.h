@@ -134,14 +134,14 @@ class SmoothCollisionNarrowPhaseCallback : public NarrowPhaseCallback {
 
 	private:
 
-		std::vector<SmoothMeshContactInfo>& mContactPoints;
+		std::vector<SmoothMeshContactInfo>& m_contactPoints;
 
 
 	public:
 
 		// Constructor
 		SmoothCollisionNarrowPhaseCallback(std::vector<SmoothMeshContactInfo>& contactPoints)
-		  : mContactPoints(contactPoints) {
+		  : m_contactPoints(contactPoints) {
 
 		}
 

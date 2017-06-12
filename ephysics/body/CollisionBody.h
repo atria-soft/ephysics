@@ -47,22 +47,22 @@ class CollisionBody : public Body {
 		// -------------------- Attributes -------------------- //
 
 		/// Type of body (static, kinematic or dynamic)
-		BodyType mType;
+		BodyType m_type;
 
 		/// Position and orientation of the body
-		Transform mTransform;
+		Transform m_transform;
 
 		/// First element of the linked list of proxy collision shapes of this body
-		ProxyShape* mProxyCollisionShapes;
+		ProxyShape* m_proxyCollisionShapes;
 
 		/// Number of collision shapes
-		uint32_t mNbCollisionShapes;
+		uint32_t m_numberCollisionShapes;
 
 		/// First element of the linked list of contact manifolds involving this body
-		ContactManifoldListElement* mContactManifoldsList;
+		ContactManifoldListElement* m_contactManifoldsList;
 
 		/// Reference to the world the body belongs to
-		CollisionWorld& mWorld;
+		CollisionWorld& m_world;
 
 		// -------------------- Methods -------------------- //
 
@@ -168,7 +168,7 @@ class CollisionBody : public Body {
  * @return the type of the body (STATIC, KINEMATIC, DYNAMIC)
  */
 inline BodyType CollisionBody::getType() const {
-	return mType;
+	return m_type;
 }
 
 // Set the type of the body
@@ -185,9 +185,9 @@ inline BodyType CollisionBody::getType() const {
  * @param type The type of the body (STATIC, KINEMATIC, DYNAMIC)
  */
 inline void CollisionBody::setType(BodyType type) {
-	mType = type;
+	m_type = type;
 
-	if (mType == STATIC) {
+	if (m_type == STATIC) {
 
 		// Update the broad-phase state of the body
 		updateBroadPhaseState();
@@ -200,7 +200,7 @@ inline void CollisionBody::setType(BodyType type) {
  *		 of the body int32_to world-space
  */
 inline const Transform& CollisionBody::getTransform() const {
-	return mTransform;
+	return m_transform;
 }
 
 // Set the current position and orientation
@@ -211,7 +211,7 @@ inline const Transform& CollisionBody::getTransform() const {
 inline void CollisionBody::setTransform(const Transform& transform) {
 
 	// Update the transform of the body
-	mTransform = transform;
+	m_transform = transform;
 
 	// Update the broad-phase state of the body
 	updateBroadPhaseState();
@@ -223,7 +223,7 @@ inline void CollisionBody::setTransform(const Transform& transform) {
  *		 manifolds of this body
  */
 inline const ContactManifoldListElement* CollisionBody::getContactManifoldsList() const {
-	return mContactManifoldsList;
+	return m_contactManifoldsList;
 }
 
 // Return the linked list of proxy shapes of that body
@@ -232,7 +232,7 @@ inline const ContactManifoldListElement* CollisionBody::getContactManifoldsList(
 *		 proxy shapes of the body
 */
 inline ProxyShape* CollisionBody::getProxyShapesList() {
-	return mProxyCollisionShapes;
+	return m_proxyCollisionShapes;
 }
 
 // Return the linked list of proxy shapes of that body
@@ -241,7 +241,7 @@ inline ProxyShape* CollisionBody::getProxyShapesList() {
 *		 proxy shapes of the body
 */
 inline const ProxyShape* CollisionBody::getProxyShapesList() const {
-	return mProxyCollisionShapes;
+	return m_proxyCollisionShapes;
 }
 
 // Return the world-space coordinates of a point given the local-space coordinates of the body
@@ -250,7 +250,7 @@ inline const ProxyShape* CollisionBody::getProxyShapesList() const {
 * @return The point in world-space coordinates
 */
 inline Vector3 CollisionBody::getWorldPoint(const Vector3& localPoint) const {
-	return mTransform * localPoint;
+	return m_transform * localPoint;
 }
 
 // Return the world-space vector of a vector given in local-space coordinates of the body
@@ -259,7 +259,7 @@ inline Vector3 CollisionBody::getWorldPoint(const Vector3& localPoint) const {
 * @return The vector in world-space coordinates
 */
 inline Vector3 CollisionBody::getWorldVector(const Vector3& localVector) const {
-	return mTransform.getOrientation() * localVector;
+	return m_transform.getOrientation() * localVector;
 }
 
 // Return the body local-space coordinates of a point given in the world-space coordinates
@@ -268,7 +268,7 @@ inline Vector3 CollisionBody::getWorldVector(const Vector3& localVector) const {
 * @return The point in the local-space coordinates of the body
 */
 inline Vector3 CollisionBody::getLocalPoint(const Vector3& worldPoint) const {
-	return mTransform.getInverse() * worldPoint;
+	return m_transform.getInverse() * worldPoint;
 }
 
 // Return the body local-space coordinates of a vector given in the world-space coordinates
@@ -277,7 +277,7 @@ inline Vector3 CollisionBody::getLocalPoint(const Vector3& worldPoint) const {
 * @return The vector in the local-space coordinates of the body
 */
 inline Vector3 CollisionBody::getLocalVector(const Vector3& worldVector) const {
-	return mTransform.getOrientation().getInverse() * worldVector;
+	return m_transform.getOrientation().getInverse() * worldVector;
 }
 
 }

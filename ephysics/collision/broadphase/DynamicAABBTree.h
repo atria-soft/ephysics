@@ -116,7 +116,7 @@ class DynamicAABBTree {
 		TreeNode* mNodes;
 
 		/// ID of the root node of the tree
-		int32_t mRootNodeID;
+		int32_t m_rootNodeID;
 
 		/// ID of the first node of the list of free (allocated) nodes in the tree that we can use
 		int32_t mFreeNodeID;
@@ -242,7 +242,7 @@ inline void* DynamicAABBTree::getNodeDataPointer(int32_t nodeID) const {
 
 // Return the root AABB of the tree
 inline AABB DynamicAABBTree::getRootAABB() const {
-	return getFatAABB(mRootNodeID);
+	return getFatAABB(m_rootNodeID);
 }
 
 // Add an object int32_to the tree. This method creates a new leaf node in the tree and

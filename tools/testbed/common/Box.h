@@ -100,7 +100,7 @@ class Box : public openglframework::Object3D, public PhysicsObject {
 
 // Update the transform matrix of the object
 inline void Box::updateTransform(float int32_terpolationFactor) {
-	mTransformMatrix = computeTransform(int32_terpolationFactor, mScalingMatrix);
+	m_transformMatrix = computeTransform(int32_terpolationFactor, mScalingMatrix);
 }
 
 

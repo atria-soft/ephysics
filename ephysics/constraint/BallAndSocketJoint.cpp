@@ -18,8 +18,8 @@ BallAndSocketJoint::BallAndSocketJoint(const BallAndSocketJointInfo& jointInfo)
 				   : Joint(jointInfo), m_impulse(Vector3(0, 0, 0)) {
 
 	// Compute the local-space anchor point for each body
-	m_localAnchorPointBody1 = mBody1->getTransform().getInverse() * jointInfo.m_m_m_m_anchorPointWorldSpace;
-	m_localAnchorPointBody2 = mBody2->getTransform().getInverse() * jointInfo.m_m_m_m_anchorPointWorldSpace;
+	m_localAnchorPointBody1 = m_body1->getTransform().getInverse() * jointInfo.m_anchorPointWorldSpace;
+	m_localAnchorPointBody2 = m_body2->getTransform().getInverse() * jointInfo.m_anchorPointWorldSpace;
 }
 
 // Destructor
@@ -31,18 +31,18 @@ BallAndSocketJoint::~BallAndSocketJoint() {
 void BallAndSocketJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverData) {
 
 	// Initialize the bodies index in the velocity array
-	mIndexBody1 = constraintSolverData.mapBodyToConstrainedVelocityIndex.find(mBody1)->second;
-	mIndexBody2 = constraintSolverData.mapBodyToConstrainedVelocityIndex.find(mBody2)->second;
+	m_indexBody1 = constraintSolverData.mapBodyToConstrainedVelocityIndex.find(m_body1)->second;
+	m_indexBody2 = constraintSolverData.mapBodyToConstrainedVelocityIndex.find(m_body2)->second;
 
 	// Get the bodies center of mass and orientations
-	const Vector3& x1 = mBody1->mCenterOfMassWorld;
-	const Vector3& x2 = mBody2->mCenterOfMassWorld;
-	const Quaternion& orientationBody1 = mBody1->getTransform().getOrientation();
-	const Quaternion& orientationBody2 = mBody2->getTransform().getOrientation();
+	const Vector3& x1 = m_body1->mCenterOfMassWorld;
+	const Vector3& x2 = m_body2->mCenterOfMassWorld;
+	const Quaternion& orientationBody1 = m_body1->getTransform().getOrientation();
+	const Quaternion& orientationBody2 = m_body2->getTransform().getOrientation();
 
 	// Get the inertia tensor of bodies
-	m_i1 = mBody1->getInertiaTensorInverseWorld();
-	m_i2 = mBody2->getInertiaTensorInverseWorld();
+	m_i1 = m_body1->getInertiaTensorInverseWorld();
+	m_i2 = m_body2->getInertiaTensorInverseWorld();
 
 	// Compute the vector from body center to the anchor point in world-space
 	m_r1World = orientationBody1 * m_localAnchorPointBody1;
@@ -53,7 +53,7 @@ void BallAndSocketJoint::initBeforeSolve(const ConstraintSolverData& constraintS
 	Matrix3x3 skewSymmetricMatrixU2= Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r2World);
 
 	// Compute the matrix K=JM^-1J^t (3x3 matrix)
-	float inverseMassBodies = mBody1->mMassInverse + mBody2->mMassInverse;
+	float inverseMassBodies = m_body1->m_massInverse + m_body2->m_massInverse;
 	Matrix3x3 massMatrix = Matrix3x3(inverseMassBodies, 0, 0,
 									0, inverseMassBodies, 0,
 									0, 0, inverseMassBodies) +
@@ -62,13 +62,13 @@ void BallAndSocketJoint::initBeforeSolve(const ConstraintSolverData& constraintS
 
 	// Compute the inverse mass matrix K^-1
 	m_inverseMassMatrix.setToZero();
-	if (mBody1->getType() == DYNAMIC || mBody2->getType() == DYNAMIC) {
+	if (m_body1->getType() == DYNAMIC || m_body2->getType() == DYNAMIC) {
 		m_inverseMassMatrix = massMatrix.getInverse();
 	}
 
 	// Compute the bias "b" of the constraint
 	m_biasVector.setToZero();
-	if (mPositionCorrectionTechnique == BAUMGARTE_JOINTS) {
+	if (m_positionCorrectionTechnique == BAUMGARTE_JOINTS) {
 		float biasFactor = (BETA / constraintSolverData.timeStep);
 		m_biasVector = biasFactor * (x2 + m_r2World - x1 - m_r1World);
 	}
@@ -85,24 +85,24 @@ void BallAndSocketJoint::initBeforeSolve(const ConstraintSolverData& constraintS
 void BallAndSocketJoint::warmstart(const ConstraintSolverData& constraintSolverData) {
 
 	// Get the velocities
-	Vector3& v1 = constraintSolverData.linearVelocities[mIndexBody1];
-	Vector3& v2 = constraintSolverData.linearVelocities[mIndexBody2];
-	Vector3& w1 = constraintSolverData.angularVelocities[mIndexBody1];
-	Vector3& w2 = constraintSolverData.angularVelocities[mIndexBody2];
+	Vector3& v1 = constraintSolverData.linearVelocities[m_indexBody1];
+	Vector3& v2 = constraintSolverData.linearVelocities[m_indexBody2];
+	Vector3& w1 = constraintSolverData.angularVelocities[m_indexBody1];
+	Vector3& w2 = constraintSolverData.angularVelocities[m_indexBody2];
 
 	// Compute the impulse P=J^T * lambda for the body 1
 	const Vector3 linearImpulseBody1 = -m_impulse;
 	const Vector3 angularImpulseBody1 = m_impulse.cross(m_r1World);
 
 	// Apply the impulse to the body 1
-	v1 += mBody1->mMassInverse * linearImpulseBody1;
+	v1 += m_body1->m_massInverse * linearImpulseBody1;
 	w1 += m_i1 * angularImpulseBody1;
 
 	// Compute the impulse P=J^T * lambda for the body 2
 	const Vector3 angularImpulseBody2 = -m_impulse.cross(m_r2World);
 
 	// Apply the impulse to the body to the body 2
-	v2 += mBody2->mMassInverse * m_impulse;
+	v2 += m_body2->m_massInverse * m_impulse;
 	w2 += m_i2 * angularImpulseBody2;
 }
 
@@ -110,10 +110,10 @@ void BallAndSocketJoint::warmstart(const ConstraintSolverData& constraintSolverD
 void BallAndSocketJoint::solveVelocityConstraint(const ConstraintSolverData& constraintSolverData) {
 
 	// Get the velocities
-	Vector3& v1 = constraintSolverData.linearVelocities[mIndexBody1];
-	Vector3& v2 = constraintSolverData.linearVelocities[mIndexBody2];
-	Vector3& w1 = constraintSolverData.angularVelocities[mIndexBody1];
-	Vector3& w2 = constraintSolverData.angularVelocities[mIndexBody2];
+	Vector3& v1 = constraintSolverData.linearVelocities[m_indexBody1];
+	Vector3& v2 = constraintSolverData.linearVelocities[m_indexBody2];
+	Vector3& w1 = constraintSolverData.angularVelocities[m_indexBody1];
+	Vector3& w2 = constraintSolverData.angularVelocities[m_indexBody2];
 
 	// Compute J*v
 	const Vector3 Jv = v2 + w2.cross(m_r2World) - v1 - w1.cross(m_r1World);
@@ -127,14 +127,14 @@ void BallAndSocketJoint::solveVelocityConstraint(const ConstraintSolverData& con
 	const Vector3 angularImpulseBody1 = deltaLambda.cross(m_r1World);
 
 	// Apply the impulse to the body 1
-	v1 += mBody1->mMassInverse * linearImpulseBody1;
+	v1 += m_body1->m_massInverse * linearImpulseBody1;
 	w1 += m_i1 * angularImpulseBody1;
 
 	// Compute the impulse P=J^T * lambda for the body 2
 	const Vector3 angularImpulseBody2 = -deltaLambda.cross(m_r2World);
 
 	// Apply the impulse to the body 2
-	v2 += mBody2->mMassInverse * deltaLambda;
+	v2 += m_body2->m_massInverse * deltaLambda;
 	w2 += m_i2 * angularImpulseBody2;
 }
 
@@ -143,21 +143,21 @@ void BallAndSocketJoint::solvePositionConstraint(const ConstraintSolverData& con
 
 	// If the error position correction technique is not the non-linear-gauss-seidel, we do
 	// do not execute this method
-	if (mPositionCorrectionTechnique != NON_LINEAR_GAUSS_SEIDEL) return;
+	if (m_positionCorrectionTechnique != NON_LINEAR_GAUSS_SEIDEL) return;
 
 	// Get the bodies center of mass and orientations
-	Vector3& x1 = constraintSolverData.positions[mIndexBody1];
-	Vector3& x2 = constraintSolverData.positions[mIndexBody2];
-	Quaternion& q1 = constraintSolverData.orientations[mIndexBody1];
-	Quaternion& q2 = constraintSolverData.orientations[mIndexBody2];
+	Vector3& x1 = constraintSolverData.positions[m_indexBody1];
+	Vector3& x2 = constraintSolverData.positions[m_indexBody2];
+	Quaternion& q1 = constraintSolverData.orientations[m_indexBody1];
+	Quaternion& q2 = constraintSolverData.orientations[m_indexBody2];
 
 	// Get the inverse mass and inverse inertia tensors of the bodies
-	float inverseMassBody1 = mBody1->mMassInverse;
-	float inverseMassBody2 = mBody2->mMassInverse;
+	float inverseMassBody1 = m_body1->m_massInverse;
+	float inverseMassBody2 = m_body2->m_massInverse;
 
 	// Recompute the inverse inertia tensors
-	m_i1 = mBody1->getInertiaTensorInverseWorld();
-	m_i2 = mBody2->getInertiaTensorInverseWorld();
+	m_i1 = m_body1->getInertiaTensorInverseWorld();
+	m_i2 = m_body2->getInertiaTensorInverseWorld();
 
 	// Compute the vector from body center to the anchor point in world-space
 	m_r1World = q1 * m_localAnchorPointBody1;
@@ -175,7 +175,7 @@ void BallAndSocketJoint::solvePositionConstraint(const ConstraintSolverData& con
 						   skewSymmetricMatrixU1 * m_i1 * skewSymmetricMatrixU1.getTranspose() +
 						   skewSymmetricMatrixU2 * m_i2 * skewSymmetricMatrixU2.getTranspose();
 	m_inverseMassMatrix.setToZero();
-	if (mBody1->getType() == DYNAMIC || mBody2->getType() == DYNAMIC) {
+	if (m_body1->getType() == DYNAMIC || m_body2->getType() == DYNAMIC) {
 		m_inverseMassMatrix = massMatrix.getInverse();
 	}
 

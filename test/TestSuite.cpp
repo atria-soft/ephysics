@@ -30,7 +30,7 @@ using namespace reactphysics3d;
 
 // Constructor
 TestSuite::TestSuite(const std::string& name, std::ostream* outputStream)
-		  : mName(name), mOutputStream(outputStream) {
+		  : m_name(name), mOutputStream(outputStream) {
 
 }
 
@@ -111,7 +111,7 @@ long TestSuite::report() const {
 	if (mOutputStream != NULL) {
 		long nbFailedTests = 0;
 
-		*mOutputStream << "Test Suite \"" << mName << "\"\n";
+		*mOutputStream << "Test Suite \"" << m_name << "\"\n";
 		size_t i;
 		for (i=0; i < 70; i++) {
 			*mOutputStream << "=";

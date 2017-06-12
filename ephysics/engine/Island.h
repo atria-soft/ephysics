@@ -25,34 +25,34 @@ class Island {
 		// -------------------- Attributes -------------------- //
 
 		/// Array with all the bodies of the island
-		RigidBody** mBodies;
+		RigidBody** m_bodies;
 
 		/// Array with all the contact manifolds between bodies of the island
-		ContactManifold** mContactManifolds;
+		ContactManifold** m_contactManifolds;
 
 		/// Array with all the joints between bodies of the island
-		Joint** mJoints;
+		Joint** m_joints;
 
 		/// Current number of bodies in the island
-		uint32_t mNbBodies;
+		uint32_t m_numberBodies;
 
 		/// Current number of contact manifold in the island
-		uint32_t mNbContactManifolds;
+		uint32_t m_numberContactManifolds;
 
 		/// Current number of joints in the island
-		uint32_t mNbJoints;
+		uint32_t m_numberJoints;
 
 		/// Reference to the memory allocator
-		MemoryAllocator& mMemoryAllocator;
+		MemoryAllocator& m_memoryAllocator;
 
 		/// Number of bytes allocated for the bodies array
-		size_t mNbAllocatedBytesBodies;
+		size_t m_numberAllocatedBytesBodies;
 
 		/// Number of bytes allocated for the contact manifolds array
-		size_t mNbAllocatedBytesContactManifolds;
+		size_t m_numberAllocatedBytesContactManifolds;
 
 		/// Number of bytes allocated for the joints array
-		size_t mNbAllocatedBytesJoints;
+		size_t m_numberAllocatedBytesJoints;
 
 		// -------------------- Methods -------------------- //
 
@@ -108,50 +108,50 @@ class Island {
 // Add a body int32_to the island
 inline void Island::addBody(RigidBody* body) {
 	assert(!body->isSleeping());
-	mBodies[mNbBodies] = body;
-	mNbBodies++;
+	m_bodies[m_numberBodies] = body;
+	m_numberBodies++;
 }
 
 // Add a contact manifold int32_to the island
 inline void Island::addContactManifold(ContactManifold* contactManifold) {
-	mContactManifolds[mNbContactManifolds] = contactManifold;
-	mNbContactManifolds++;
+	m_contactManifolds[m_numberContactManifolds] = contactManifold;
+	m_numberContactManifolds++;
 }
 
 // Add a joint int32_to the island
 inline void Island::addJoint(Joint* joint) {
-	mJoints[mNbJoints] = joint;
-	mNbJoints++;
+	m_joints[m_numberJoints] = joint;
+	m_numberJoints++;
 }
 
 // Return the number of bodies in the island
 inline uint32_t Island::getNbBodies() const {
-	return mNbBodies;
+	return m_numberBodies;
 }
 
 // Return the number of contact manifolds in the island
 inline uint32_t Island::getNbContactManifolds() const {
-	return mNbContactManifolds;
+	return m_numberContactManifolds;
 }
 
 // Return the number of joints in the island
 inline uint32_t Island::getNbJoints() const {
-	return mNbJoints;
+	return m_numberJoints;
 }
 
 // Return a pointer to the array of bodies
 inline RigidBody** Island::getBodies() {
-	return mBodies;
+	return m_bodies;
 }
 
 // Return a pointer to the array of contact manifolds
 inline ContactManifold** Island::getContactManifold() {
-	return mContactManifolds;
+	return m_contactManifolds;
 }
 
 // Return a pointer to the array of joints
 inline Joint** Island::getJoints() {
-	return mJoints;
+	return m_joints;
 }
 
 }

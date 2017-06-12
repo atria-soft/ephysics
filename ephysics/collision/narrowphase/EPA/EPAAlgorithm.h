@@ -67,7 +67,7 @@ class EPAAlgorithm {
 		// -------------------- Attributes -------------------- //
 
 		/// Reference to the memory allocator
-		MemoryAllocator* mMemoryAllocator;
+		MemoryAllocator* m_memoryAllocator;
 
 		/// Triangle comparison operator
 		TriangleComparison mTriangleComparison;
@@ -131,7 +131,7 @@ inline void EPAAlgorithm::addFaceCandidate(TriangleEPA* triangle, TriangleEPA** 
 
 // Initalize the algorithm
 inline void EPAAlgorithm::init(MemoryAllocator* memoryAllocator) {
-	mMemoryAllocator = memoryAllocator;
+	m_memoryAllocator = memoryAllocator;
 }
 
 }

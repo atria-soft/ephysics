@@ -47,10 +47,10 @@ class TestTransform : public Test {
 		Transform mIdentityTransform;
 
 		/// First example transform
-		Transform mTransform1;
+		Transform m_transform1;
 
 		/// Second example transform
-		Transform mTransform2;
+		Transform m_transform2;
 
 	public :
 
@@ -63,11 +63,11 @@ class TestTransform : public Test {
 
 			float sinA = sin(PI/8.0f);
 			float cosA = cos(PI/8.0f);
-			mTransform1 = Transform(Vector3(4, 5, 6), Quaternion(sinA, sinA, sinA, cosA));
+			m_transform1 = Transform(Vector3(4, 5, 6), Quaternion(sinA, sinA, sinA, cosA));
 
 			float sinB = sin(PI/3.0f);
 			float cosB = cos(PI/3.0f);
-			mTransform2 = Transform(Vector3(8, 45, -6), Quaternion(sinB, sinB, sinB, cosB));
+			m_transform2 = Transform(Vector3(8, 45, -6), Quaternion(sinB, sinB, sinB, cosB));
 		}
 
 		/// Run the tests
@@ -109,9 +109,9 @@ class TestTransform : public Test {
 
 		/// Test the inverse
 		void testInverse() {
-			Transform inverseTransform = mTransform1.getInverse();
+			Transform inverseTransform = m_transform1.getInverse();
 			Vector3 vector(2, 3, 4);
-			Vector3 tempVector = mTransform1 * vector;
+			Vector3 tempVector = m_transform1 * vector;
 			Vector3 tempVector2 = inverseTransform * tempVector;
 			test(approxEqual(tempVector2.x, vector.x, float(10e-6)));
 			test(approxEqual(tempVector2.y, vector.y, float(10e-6)));
@@ -121,8 +121,8 @@ class TestTransform : public Test {
 		/// Test methods to set and get transform matrix from and to OpenGL
 		void testGetSetOpenGLMatrix() {
 			Transform transform;
-			Vector3 position = mTransform1.getPosition();
-			Matrix3x3 orientation = mTransform1.getOrientation().getMatrix();
+			Vector3 position = m_transform1.getPosition();
+			Matrix3x3 orientation = m_transform1.getOrientation().getMatrix();
 			float openglMatrix[16] = {orientation[0][0], orientation[1][0],
 										orientation[2][0], 0,
 										orientation[0][1], orientation[1][1],
@@ -153,10 +153,10 @@ class TestTransform : public Test {
 
 		/// Test the method to int32_terpolate transforms
 		void testInterpolateTransform() {
-			Transform transformStart = Transform::int32_terpolateTransforms(mTransform1, mTransform2,0);
-			Transform transformEnd = Transform::int32_terpolateTransforms(mTransform1, mTransform2,1);
-			test(transformStart == mTransform1);
-			test(transformEnd == mTransform2);
+			Transform transformStart = Transform::int32_terpolateTransforms(m_transform1, m_transform2,0);
+			Transform transformEnd = Transform::int32_terpolateTransforms(m_transform1, m_transform2,1);
+			test(transformStart == m_transform1);
+			test(transformEnd == m_transform2);
 
 			float sinA = sin(PI/3.0f);
 			float cosA = cos(PI/3.0f);
@@ -192,18 +192,18 @@ class TestTransform : public Test {
 		void testOperators() {
 
 			// Equality, inequality operator
-			test(mTransform1 == mTransform1);
-			test(mTransform1 != mTransform2);
+			test(m_transform1 == m_transform1);
+			test(m_transform1 != m_transform2);
 
 			// Assignment operator
 			Transform transform;
-			transform = mTransform1;
-			test(transform == mTransform1);
+			transform = m_transform1;
+			test(transform == m_transform1);
 
 			// Multiplication
 			Vector3 vector(7, 53, 5);
-			Vector3 vector2 = mTransform2 * (mTransform1 * vector);
-			Vector3 vector3 = (mTransform2 * mTransform1) * vector;
+			Vector3 vector2 = m_transform2 * (m_transform1 * vector);
+			Vector3 vector3 = (m_transform2 * m_transform1) * vector;
 			test(approxEqual(vector2.x, vector3.x, float(10e-6)));
 			test(approxEqual(vector2.y, vector3.y, float(10e-6)));
 			test(approxEqual(vector2.z, vector3.z, float(10e-6)));

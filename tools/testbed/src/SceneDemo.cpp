@@ -290,7 +290,7 @@ void SceneDemo::updateContactPoints() {
 
 			// Create a visual contact point for rendering
 			VisualContactPoint* point = new VisualContactPoint(it->point, mMeshFolderPath);
-			mContactPoints.push_back(point);
+			m_contactPoints.push_back(point);
 		}
 	}
 }
@@ -300,8 +300,8 @@ void SceneDemo::renderContactPoints(openglframework::Shader& shader,
 									const openglframework::Matrix4& worldToCameraMatrix) {
 
 	// Render all the raycast hit points
-	for (std::vector<VisualContactPoint*>::iterator it = mContactPoints.begin();
-		 it != mContactPoints.end(); ++it) {
+	for (std::vector<VisualContactPoint*>::iterator it = m_contactPoints.begin();
+		 it != m_contactPoints.end(); ++it) {
 		(*it)->render(shader, worldToCameraMatrix);
 	}
 }
@@ -309,11 +309,11 @@ void SceneDemo::renderContactPoints(openglframework::Shader& shader,
 void SceneDemo::removeAllContactPoints() {
 
 	// Destroy all the visual contact points
-	for (std::vector<VisualContactPoint*>::iterator it = mContactPoints.begin();
-		 it != mContactPoints.end(); ++it) {
+	for (std::vector<VisualContactPoint*>::iterator it = m_contactPoints.begin();
+		 it != m_contactPoints.end(); ++it) {
 		delete (*it);
 	}
-	mContactPoints.clear();
+	m_contactPoints.clear();
 }
 
 // Return all the contact points of the scene

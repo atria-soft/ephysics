@@ -49,7 +49,7 @@ class NarrowPhaseAlgorithm {
 		CollisionDetection* m_collisionDetection;
 
 		/// Pointer to the memory allocator
-		MemoryAllocator* mMemoryAllocator;
+		MemoryAllocator* m_memoryAllocator;
 
 		/// Overlapping pair of the bodies currently tested for collision
 		OverlappingPair* mCurrentOverlappingPair;

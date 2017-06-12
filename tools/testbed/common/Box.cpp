@@ -142,10 +142,10 @@ Box::Box(const openglframework::Vector3& size, const openglframework::Vector3 &p
 	mPreviousTransform = transform;
 
 	// Create a rigid body in the dynamics world
-	mBody = world->createCollisionBody(transform);
+	m_body = world->createCollisionBody(transform);
 
 	// Add the collision shape to the body
-	m_proxyShape = mBody->addCollisionShape(mBoxShape, rp3d::Transform::identity());
+	m_proxyShape = m_body->addCollisionShape(mBoxShape, rp3d::Transform::identity());
 
 	// If the Vertex Buffer object has not been created yet
 	if (totalNbBoxes == 0) {
@@ -156,7 +156,7 @@ Box::Box(const openglframework::Vector3& size, const openglframework::Vector3 &p
 
 	totalNbBoxes++;
 
-	mTransformMatrix = mTransformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * mScalingMatrix;
 }
 
 // Constructor
@@ -196,7 +196,7 @@ Box::Box(const openglframework::Vector3& size, const openglframework::Vector3& p
 	// Add the collision shape to the body
 	m_proxyShape = body->addCollisionShape(mBoxShape, rp3d::Transform::identity(), mass);
 
-	mBody = body;
+	m_body = body;
 
 	// If the Vertex Buffer object has not been created yet
 	if (totalNbBoxes == 0) {
@@ -207,7 +207,7 @@ Box::Box(const openglframework::Vector3& size, const openglframework::Vector3& p
 
 	totalNbBoxes++;
 
-	mTransformMatrix = mTransformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * mScalingMatrix;
 }
 
 // Destructor
@@ -237,18 +237,18 @@ void Box::render(openglframework::Shader& shader,
 	mVBOVertices.bind();
 
 	// Set the model to camera matrix
-	shader.setMatrix4x4Uniform("localToWorldMatrix", mTransformMatrix);
+	shader.setMatrix4x4Uniform("localToWorldMatrix", m_transformMatrix);
 	shader.setMatrix4x4Uniform("worldToCameraMatrix", worldToCameraMatrix);
 
 	// Set the normal matrix (inverse transpose of the 3x3 upper-left sub matrix of the
 	// model-view matrix)
-	const openglframework::Matrix4 localToCameraMatrix = worldToCameraMatrix * mTransformMatrix;
+	const openglframework::Matrix4 localToCameraMatrix = worldToCameraMatrix * m_transformMatrix;
 	const openglframework::Matrix3 normalMatrix =
 					   localToCameraMatrix.getUpperLeft3x3Matrix().getInverse().getTranspose();
 	shader.setMatrix3x3Uniform("normalMatrix", normalMatrix, false);
 
 	// Set the vertex color
-	openglframework::Color currentColor = mBody->isSleeping() ? mSleepingColor : mColor;
+	openglframework::Color currentColor = m_body->isSleeping() ? mSleepingColor : mColor;
 	openglframework::Vector4 color(currentColor.r, currentColor.g, currentColor.b, currentColor.a);
 	shader.setVector4Uniform("vertexColor", color, false);
 
@@ -315,12 +315,12 @@ void Box::createVBOAndVAO() {
 void Box::resetTransform(const rp3d::Transform& transform) {
 
 	// Reset the transform
-	mBody->setTransform(transform);
+	m_body->setTransform(transform);
 
-	mBody->setIsSleeping(false);
+	m_body->setIsSleeping(false);
 
 	// Reset the velocity of the rigid body
-	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(mBody);
+	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(m_body);
 	if (rigidBody != NULL) {
 		rigidBody->setLinearVelocity(rp3d::Vector3(0, 0, 0));
 		rigidBody->setAngularVelocity(rp3d::Vector3(0, 0, 0));

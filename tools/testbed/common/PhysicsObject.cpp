@@ -38,7 +38,7 @@ openglframework::Matrix4 PhysicsObject::computeTransform(float int32_terpolation
 														const openglframework::Matrix4& scalingMatrix) {
 
 	// Get the transform of the rigid body
-	rp3d::Transform transform = mBody->getTransform();
+	rp3d::Transform transform = m_body->getTransform();
 
 	// Interpolate the transform between the previous one and the new one
 	rp3d::Transform int32_terpolatedTransform = rp3d::Transform::int32_terpolateTransforms(mPreviousTransform,

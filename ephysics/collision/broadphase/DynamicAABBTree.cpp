@@ -31,7 +31,7 @@ DynamicAABBTree::~DynamicAABBTree() {
 // Initialize the tree
 void DynamicAABBTree::init() {
 
-	mRootNodeID = TreeNode::NULL_TREE_NODE;
+	m_rootNodeID = TreeNode::NULL_TREE_NODE;
 	mNbNodes = 0;
 	mNbAllocatedNodes = 8;
 
@@ -206,17 +206,17 @@ bool DynamicAABBTree::updateObject(int32_t nodeID, const AABB& newAABB, const Ve
 void DynamicAABBTree::insertLeafNode(int32_t nodeID) {
 
 	// If the tree is empty
-	if (mRootNodeID == TreeNode::NULL_TREE_NODE) {
-		mRootNodeID = nodeID;
-		mNodes[mRootNodeID].parentID = TreeNode::NULL_TREE_NODE;
+	if (m_rootNodeID == TreeNode::NULL_TREE_NODE) {
+		m_rootNodeID = nodeID;
+		mNodes[m_rootNodeID].parentID = TreeNode::NULL_TREE_NODE;
 		return;
 	}
 
-	assert(mRootNodeID != TreeNode::NULL_TREE_NODE);
+	assert(m_rootNodeID != TreeNode::NULL_TREE_NODE);
 
 	// Find the best sibling node for the new node
 	AABB newNodeAABB = mNodes[nodeID].aabb;
-	int32_t currentNodeID = mRootNodeID;
+	int32_t currentNodeID = m_rootNodeID;
 	while (!mNodes[currentNodeID].isLeaf()) {
 
 		int32_t leftChild = mNodes[currentNodeID].children[0];
@@ -300,7 +300,7 @@ void DynamicAABBTree::insertLeafNode(int32_t nodeID) {
 		mNodes[newParentNode].children[1] = nodeID;
 		mNodes[siblingNode].parentID = newParentNode;
 		mNodes[nodeID].parentID = newParentNode;
-		mRootNodeID = newParentNode;
+		m_rootNodeID = newParentNode;
 	}
 
 	// Move up in the tree to change the AABBs that have changed
@@ -339,8 +339,8 @@ void DynamicAABBTree::removeLeafNode(int32_t nodeID) {
 	assert(mNodes[nodeID].isLeaf());
 
 	// If we are removing the root node (root node is a leaf in this case)
-	if (mRootNodeID == nodeID) {
-		mRootNodeID = TreeNode::NULL_TREE_NODE;
+	if (m_rootNodeID == nodeID) {
+		m_rootNodeID = TreeNode::NULL_TREE_NODE;
 		return;
 	}
 
@@ -395,7 +395,7 @@ void DynamicAABBTree::removeLeafNode(int32_t nodeID) {
 	else { // If the parent of the node to remove is the root node
 
 		// The sibling node becomes the new root node
-		mRootNodeID = siblingNodeID;
+		m_rootNodeID = siblingNodeID;
 		mNodes[siblingNodeID].parentID = TreeNode::NULL_TREE_NODE;
 		releaseNode(parentNodeID);
 	}
@@ -455,7 +455,7 @@ int32_t DynamicAABBTree::balanceSubTreeAtNode(int32_t nodeID) {
 			}
 		}
 		else {
-			mRootNodeID = nodeCID;
+			m_rootNodeID = nodeCID;
 		}
 
 		assert(!nodeC->isLeaf());
@@ -525,7 +525,7 @@ int32_t DynamicAABBTree::balanceSubTreeAtNode(int32_t nodeID) {
 			}
 		}
 		else {
-			mRootNodeID = nodeBID;
+			m_rootNodeID = nodeBID;
 		}
 
 		assert(!nodeB->isLeaf());
@@ -578,7 +578,7 @@ void DynamicAABBTree::reportAllShapesOverlappingWithAABB(const AABB& aabb,
 
 	// Create a stack with the nodes to visit
 	Stack<int32_t, 64> stack;
-	stack.push(mRootNodeID);
+	stack.push(m_rootNodeID);
 
 	// While there are still nodes to visit
 	while(stack.getNbElements() > 0) {
@@ -619,7 +619,7 @@ void DynamicAABBTree::raycast(const Ray& ray, DynamicAABBTreeRaycastCallback &ca
 	float maxFraction = ray.maxFraction;
 
 	Stack<int32_t, 128> stack;
-	stack.push(mRootNodeID);
+	stack.push(m_rootNodeID);
 
 	// Walk through the tree from the root looking for proxy shapes
 	// that overlap with the ray AABB
@@ -679,7 +679,7 @@ void DynamicAABBTree::raycast(const Ray& ray, DynamicAABBTreeRaycastCallback &ca
 void DynamicAABBTree::check() const {
 
 	// Recursively check each node
-	checkNode(mRootNodeID);
+	checkNode(m_rootNodeID);
 
 	int32_t nbFreeNodes = 0;
 	int32_t freeNodeID = mFreeNodeID;
@@ -700,7 +700,7 @@ void DynamicAABBTree::checkNode(int32_t nodeID) const {
 	if (nodeID == TreeNode::NULL_TREE_NODE) return;
 
 	// If it is the root
-	if (nodeID == mRootNodeID) {
+	if (nodeID == m_rootNodeID) {
 		assert(mNodes[nodeID].parentID == TreeNode::NULL_TREE_NODE);
 	}
 
@@ -749,7 +749,7 @@ void DynamicAABBTree::checkNode(int32_t nodeID) const {
 
 // Compute the height of the tree
 int32_t DynamicAABBTree::computeHeight() {
-   return computeHeight(mRootNodeID);
+   return computeHeight(m_rootNodeID);
 }
 
 // Compute the height of a given node in the tree

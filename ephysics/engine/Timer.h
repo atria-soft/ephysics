@@ -36,7 +36,7 @@ class Timer {
 		// -------------------- Attributes -------------------- //
 
 		/// Timestep dt of the physics engine (timestep > 0.0)
-		double mTimeStep;
+		double m_timeStep;
 
 		/// Last time the timer has been updated
 		long double mLastUpdateTime;
@@ -104,13 +104,13 @@ class Timer {
 
 // Return the timestep of the physics engine
 inline double Timer::getTimeStep() const {
-	return mTimeStep;
+	return m_timeStep;
 }
 
 // Set the timestep of the physics engine
 inline void Timer::setTimeStep(double timeStep) {
 	assert(timeStep > 0.0f);
-	mTimeStep = timeStep;
+	m_timeStep = timeStep;
 }
 
 // Return the current time
@@ -142,7 +142,7 @@ inline void Timer::stop() {
 
 // True if it's possible to take a new step
 inline bool Timer::isPossibleToTakeStep() const {
-	return (mAccumulator >= mTimeStep);
+	return (mAccumulator >= m_timeStep);
 }
 
 // Take a new step => update the timer by adding the timeStep value to the current time
@@ -150,12 +150,12 @@ inline void Timer::nextStep() {
 	assert(mIsRunning);
 
 	// Update the accumulator value
-	mAccumulator -= mTimeStep;
+	mAccumulator -= m_timeStep;
 }
 
 // Compute the int32_terpolation factor
 inline float Timer::computeInterpolationFactor() {
-	return (float(mAccumulator / mTimeStep));
+	return (float(mAccumulator / m_timeStep));
 }
 
 // Compute the time since the last update() call and add it to the accumulator

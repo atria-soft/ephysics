@@ -48,7 +48,7 @@ class TestSuite {
 		// ---------- Attributes ---------- //
 
 		/// Name of the test suite
-		std::string mName;
+		std::string m_name;
 
 		/// Output stream
 		std::ostream* mOutputStream;
@@ -108,7 +108,7 @@ class TestSuite {
 
 // Return the name of the test suite
 inline std::string TestSuite::getName() const {
-	return mName;
+	return m_name;
 }
 
 // Return the output stream

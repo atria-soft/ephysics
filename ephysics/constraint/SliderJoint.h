@@ -23,7 +23,7 @@ struct SliderJointInfo : public JointInfo {
 		// -------------------- Attributes -------------------- //
 
 		/// Anchor point (in world-space coordinates)
-		Vector3 m_m_m_m_anchorPointWorldSpace;
+		Vector3 m_anchorPointWorldSpace;
 
 		/// Slider axis (in world-space coordinates)
 		Vector3 sliderAxisWorldSpace;
@@ -57,7 +57,7 @@ struct SliderJointInfo : public JointInfo {
 						const Vector3& initAnchorPointWorldSpace,
 						const Vector3& initSliderAxisWorldSpace)
 					   : JointInfo(rigidBody1, rigidBody2, SLIDERJOINT),
-						 m_m_m_m_anchorPointWorldSpace(initAnchorPointWorldSpace),
+						 m_anchorPointWorldSpace(initAnchorPointWorldSpace),
 						 sliderAxisWorldSpace(initSliderAxisWorldSpace),
 						 isLimitEnabled(false), isMotorEnabled(false), minTranslationLimit(-1.0),
 						 maxTranslationLimit(1.0), motorSpeed(0), maxMotorForce(0) {}
@@ -76,7 +76,7 @@ struct SliderJointInfo : public JointInfo {
 						const Vector3& initSliderAxisWorldSpace,
 						float initMinTranslationLimit, float initMaxTranslationLimit)
 					   : JointInfo(rigidBody1, rigidBody2, SLIDERJOINT),
-						 m_m_m_m_anchorPointWorldSpace(initAnchorPointWorldSpace),
+						 m_anchorPointWorldSpace(initAnchorPointWorldSpace),
 						 sliderAxisWorldSpace(initSliderAxisWorldSpace),
 						 isLimitEnabled(true), isMotorEnabled(false),
 						 minTranslationLimit(initMinTranslationLimit),
@@ -100,7 +100,7 @@ struct SliderJointInfo : public JointInfo {
 						float initMinTranslationLimit, float initMaxTranslationLimit,
 						float initMotorSpeed, float initMaxMotorForce)
 					   : JointInfo(rigidBody1, rigidBody2, SLIDERJOINT),
-						 m_m_m_m_anchorPointWorldSpace(initAnchorPointWorldSpace),
+						 m_anchorPointWorldSpace(initAnchorPointWorldSpace),
 						 sliderAxisWorldSpace(initSliderAxisWorldSpace),
 						 isLimitEnabled(true), isMotorEnabled(true),
 						 minTranslationLimit(initMinTranslationLimit),
@@ -141,7 +141,7 @@ class SliderJoint : public Joint {
 		Matrix3x3 m_i2;
 
 		/// Inverse of the initial orientation difference between the two bodies
-		Quaternion mInitOrientationDifferenceInv;
+		Quaternion m_initOrientationDifferenceInv;
 
 		/// First vector orthogonal to the slider axis local-space of body 1
 		Vector3 mN1;

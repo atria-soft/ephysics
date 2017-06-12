@@ -42,7 +42,7 @@ class Object3D {
 
 		// Transformation matrix that convert local-space
 		// coordinates to world-space coordinates
-		Matrix4 mTransformMatrix;
+		Matrix4 m_transformMatrix;
 
 	public:
 
@@ -87,49 +87,49 @@ class Object3D {
 
 // Return the transform matrix
 inline const Matrix4& Object3D::getTransformMatrix() const {
-	return mTransformMatrix;
+	return m_transformMatrix;
 }
 
 // Set the transform matrix
 inline void Object3D::setTransformMatrix(const Matrix4& matrix) {
-	mTransformMatrix = matrix;
+	m_transformMatrix = matrix;
 }
 
 // Set to the identity transform
 inline void Object3D::setToIdentity() {
-	mTransformMatrix.setToIdentity();
+	m_transformMatrix.setToIdentity();
 }
 
  // Return the origin of object in world-space
 inline Vector3 Object3D::getOrigin() const {
-	return mTransformMatrix * Vector3(0.0, 0.0, 0.0);
+	return m_transformMatrix * Vector3(0.0, 0.0, 0.0);
 }
 
 // Translate the object in world-space
 inline void Object3D::translateWorld(const Vector3& v) {
-	mTransformMatrix = Matrix4::translationMatrix(v) * mTransformMatrix;
+	m_transformMatrix = Matrix4::translationMatrix(v) * m_transformMatrix;
 }
 
 // Translate the object in local-space
 inline void Object3D::translateLocal(const Vector3& v) {
-	mTransformMatrix = mTransformMatrix * Matrix4::translationMatrix(v);
+	m_transformMatrix = m_transformMatrix * Matrix4::translationMatrix(v);
 }
 
 // Rotate the object in world-space
 inline void Object3D::rotateWorld(const Vector3& axis, float angle) {
-	mTransformMatrix = Matrix4::rotationMatrix(axis, angle) * mTransformMatrix;
+	m_transformMatrix = Matrix4::rotationMatrix(axis, angle) * m_transformMatrix;
 }
 
 // Rotate the object in local-space
 inline void Object3D::rotateLocal(const Vector3& axis, float angle) {
-	mTransformMatrix = mTransformMatrix * Matrix4::rotationMatrix(axis, angle);
+	m_transformMatrix = m_transformMatrix * Matrix4::rotationMatrix(axis, angle);
 }
 
 // Rotate the object around a world-space point
 inline void Object3D::rotateAroundWorldPoint(const Vector3& axis, float angle,
 											 const Vector3& worldPoint) {
-	mTransformMatrix = Matrix4::translationMatrix(worldPoint) * Matrix4::rotationMatrix(axis, angle)
-					   * Matrix4::translationMatrix(-worldPoint) * mTransformMatrix;
+	m_transformMatrix = Matrix4::translationMatrix(worldPoint) * Matrix4::rotationMatrix(axis, angle)
+					   * Matrix4::translationMatrix(-worldPoint) * m_transformMatrix;
 }
 
 // Rotate the object around a local-space point
@@ -137,9 +137,9 @@ inline void Object3D::rotateAroundLocalPoint(const Vector3& axis, float angle,
 											 const Vector3& worldPoint) {
 
 	// Convert the world point int32_to the local coordinate system
-	Vector3 localPoint = mTransformMatrix.getInverse() * worldPoint;
+	Vector3 localPoint = m_transformMatrix.getInverse() * worldPoint;
 
-	mTransformMatrix = mTransformMatrix * Matrix4::translationMatrix(localPoint)
+	m_transformMatrix = m_transformMatrix * Matrix4::translationMatrix(localPoint)
 					   * Matrix4::rotationMatrix(axis, angle)
 					   * Matrix4::translationMatrix(-localPoint);
 }

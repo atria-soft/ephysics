@@ -11,7 +11,7 @@
 using namespace reactphysics3d;
 
 // Constructor
-Timer::Timer(double timeStep) : mTimeStep(timeStep), mIsRunning(false) {
+Timer::Timer(double timeStep) : m_timeStep(timeStep), mIsRunning(false) {
 	assert(timeStep > 0.0);
 }
 

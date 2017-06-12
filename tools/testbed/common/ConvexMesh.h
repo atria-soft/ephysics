@@ -101,7 +101,7 @@ class ConvexMesh : public openglframework::Mesh, public PhysicsObject {
 
 // Update the transform matrix of the object
 inline void ConvexMesh::updateTransform(float int32_terpolationFactor) {
-	mTransformMatrix = computeTransform(int32_terpolationFactor, mScalingMatrix);
+	m_transformMatrix = computeTransform(int32_terpolationFactor, mScalingMatrix);
 }
 
 #endif

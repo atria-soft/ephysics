@@ -12,8 +12,8 @@ using namespace reactphysics3d;
 
 // Constructor
 ConstraintSolver::ConstraintSolver(const std::map<RigidBody*, uint32_t>& mapBodyToVelocityIndex)
-				 : mMapBodyToConstrainedVelocityIndex(mapBodyToVelocityIndex),
-				   mIsWarmStartingActive(true), mConstraintSolverData(mapBodyToVelocityIndex) {
+				 : m_mapBodyToConstrainedVelocityIndex(mapBodyToVelocityIndex),
+				   mIsWarmStartingActive(true), m_constraintSolverData(mapBodyToVelocityIndex) {
 
 }
 
@@ -32,22 +32,22 @@ void ConstraintSolver::initializeForIsland(float dt, Island* island) {
 	assert(island->getNbJoints() > 0);
 
 	// Set the current time step
-	mTimeStep = dt;
+	m_timeStep = dt;
 
 	// Initialize the constraint solver data used to initialize and solve the constraints
-	mConstraintSolverData.timeStep = mTimeStep;
-	mConstraintSolverData.isWarmStartingActive = mIsWarmStartingActive;
+	m_constraintSolverData.timeStep = m_timeStep;
+	m_constraintSolverData.isWarmStartingActive = mIsWarmStartingActive;
 
 	// For each joint of the island
 	Joint** joints = island->getJoints();
 	for (uint32_t i=0; i<island->getNbJoints(); i++) {
 
 		// Initialize the constraint before solving it
-		joints[i]->initBeforeSolve(mConstraintSolverData);
+		joints[i]->initBeforeSolve(m_constraintSolverData);
 
 		// Warm-start the constraint if warm-starting is enabled
 		if (mIsWarmStartingActive) {
-			joints[i]->warmstart(mConstraintSolverData);
+			joints[i]->warmstart(m_constraintSolverData);
 		}
 	}
 }
@@ -65,7 +65,7 @@ void ConstraintSolver::solveVelocityConstraints(Island* island) {
 	for (uint32_t i=0; i<island->getNbJoints(); i++) {
 
 		// Solve the constraint
-		joints[i]->solveVelocityConstraint(mConstraintSolverData);
+		joints[i]->solveVelocityConstraint(m_constraintSolverData);
 	}
 }
 
@@ -82,6 +82,6 @@ void ConstraintSolver::solvePositionConstraints(Island* island) {
 	for (uint32_t i=0; i < island->getNbJoints(); i++) {
 
 		// Solve the constraint
-		joints[i]->solvePositionConstraint(mConstraintSolverData);
+		joints[i]->solvePositionConstraint(m_constraintSolverData);
 	}
 }

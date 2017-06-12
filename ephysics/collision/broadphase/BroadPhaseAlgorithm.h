@@ -45,7 +45,7 @@ class AABBOverlapCallback : public DynamicAABBTreeOverlapCallback {
 
 	private:
 
-		BroadPhaseAlgorithm& mBroadPhaseAlgorithm;
+		BroadPhaseAlgorithm& m_broadPhaseAlgorithm;
 
 		int32_t m_referenceNodeId;
 
@@ -53,7 +53,7 @@ class AABBOverlapCallback : public DynamicAABBTreeOverlapCallback {
 
 		// Constructor
 		AABBOverlapCallback(BroadPhaseAlgorithm& broadPhaseAlgo, int32_t referenceNodeId)
-			 : mBroadPhaseAlgorithm(broadPhaseAlgo), m_referenceNodeId(referenceNodeId) {
+			 : m_broadPhaseAlgorithm(broadPhaseAlgo), m_referenceNodeId(referenceNodeId) {
 
 		}
 
@@ -203,8 +203,8 @@ inline bool BroadPhasePair::smallerThan(const BroadPhasePair& pair1, const Broad
 inline bool BroadPhaseAlgorithm::testOverlappingShapes(const ProxyShape* shape1,
 													   const ProxyShape* shape2) const {
 	// Get the two AABBs of the collision shapes
-	const AABB& aabb1 = m_dynamicAABBTree.getFatAABB(shape1->mBroadPhaseID);
-	const AABB& aabb2 = m_dynamicAABBTree.getFatAABB(shape2->mBroadPhaseID);
+	const AABB& aabb1 = m_dynamicAABBTree.getFatAABB(shape1->m_broadPhaseID);
+	const AABB& aabb2 = m_dynamicAABBTree.getFatAABB(shape2->m_broadPhaseID);
 
 	// Check if the two AABBs are overlapping
 	return aabb1.testCollision(aabb2);

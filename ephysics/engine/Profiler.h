@@ -25,28 +25,28 @@ class ProfileNode {
 		// -------------------- Attributes -------------------- //
 
 		/// Name of the node
-		const char* mName;
+		const char* m_name;
 
 		/// Total number of calls of this node
-		uint32_t mNbTotalCalls;
+		uint32_t m_numberTotalCalls;
 
 		/// Starting time of the sampling of corresponding block of code
-		long double mStartingTime;
+		long double m_startTime;
 
 		/// Total time spent in the block of code
-		long double mTotalTime;
+		long double m_totalTime;
 
 		/// Recursion counter
-		int32_t mRecursionCounter;
+		int32_t m_recursionCounter;
 
 		/// Pointer to the parent node
-		ProfileNode* mParentNode;
+		ProfileNode* m_parentNode;
 
 		/// Pointer to a child node
-		ProfileNode* mChildNode;
+		ProfileNode* m_childNode;
 
 		/// Pointer to a sibling node
-		ProfileNode* mSiblingNode;
+		ProfileNode* m_siblingNode;
 
 	public :
 
@@ -103,10 +103,10 @@ class ProfileNodeIterator {
 		// -------------------- Attributes -------------------- //
 
 		/// Current parent node
-		ProfileNode* mCurrentParentNode;
+		ProfileNode* m_currentParentNode;
 
 		/// Current child node
-		ProfileNode* mCurrentChildNode;
+		ProfileNode* m_currentChildNode;
 
 	public :
 
@@ -164,16 +164,16 @@ class Profiler {
 		// -------------------- Attributes -------------------- //
 
 		/// Root node of the profiler tree
-		static ProfileNode mRootNode;
+		static ProfileNode m_rootNode;
 
 		/// Current node in the current execution
-		static ProfileNode* mCurrentNode;
+		static ProfileNode* m_currentNode;
 
 		/// Frame counter
-		static uint32_t mFrameCounter;
+		static uint32_t m_frameCounter;
 
 		/// Starting profiling time
-		static long double mProfilingStartTime;
+		static long double m_profilingStartTime;
 
 		/// Recursively print32_t the report of a given node of the profiler tree
 		static void print32_tRecursiveNodeReport(ProfileNodeIterator* iterator,
@@ -248,103 +248,103 @@ class ProfileSample {
 
 // Return true if we are at the root of the profiler tree
 inline bool ProfileNodeIterator::isRoot() {
-	return (mCurrentParentNode->getParentNode() == NULL);
+	return (m_currentParentNode->getParentNode() == NULL);
 }
 
 // Return true if we are at the end of a branch of the profiler tree
 inline bool ProfileNodeIterator::isEnd() {
-	return (mCurrentChildNode == NULL);
+	return (m_currentChildNode == NULL);
 }
 
 // Return the name of the current node
 inline const char* ProfileNodeIterator::getCurrentName() {
-	return mCurrentChildNode->getName();
+	return m_currentChildNode->getName();
 }
 
 // Return the total time of the current node
 inline long double ProfileNodeIterator::getCurrentTotalTime() {
-	return mCurrentChildNode->getTotalTime();
+	return m_currentChildNode->getTotalTime();
 }
 
 // Return the total number of calls of the current node
 inline uint32_t ProfileNodeIterator::getCurrentNbTotalCalls() {
-	return mCurrentChildNode->getNbTotalCalls();
+	return m_currentChildNode->getNbTotalCalls();
 }
 
 // Return the name of the current parent node
 inline const char* ProfileNodeIterator::getCurrentParentName() {
-	return mCurrentParentNode->getName();
+	return m_currentParentNode->getName();
 }
 
 // Return the total time of the current parent node
 inline long double ProfileNodeIterator::getCurrentParentTotalTime() {
-	return mCurrentParentNode->getTotalTime();
+	return m_currentParentNode->getTotalTime();
 }
 
 // Return the total number of calls of the current parent node
 inline uint32_t ProfileNodeIterator::getCurrentParentNbTotalCalls() {
-	return mCurrentParentNode->getNbTotalCalls();
+	return m_currentParentNode->getNbTotalCalls();
 }
 
 // Go to the first node
 inline void ProfileNodeIterator::first() {
-	mCurrentChildNode = mCurrentParentNode->getChildNode();
+	m_currentChildNode = m_currentParentNode->getChildNode();
 }
 
 // Go to the next node
 inline void ProfileNodeIterator::next() {
-	mCurrentChildNode = mCurrentChildNode->getSiblingNode();
+	m_currentChildNode = m_currentChildNode->getSiblingNode();
 }
 
 // Return a pointer to the parent node
 inline ProfileNode* ProfileNode::getParentNode() {
-	return mParentNode;
+	return m_parentNode;
 }
 
 // Return a pointer to a sibling node
 inline ProfileNode* ProfileNode::getSiblingNode() {
-	return mSiblingNode;
+	return m_siblingNode;
 }
 
 // Return a pointer to a child node
 inline ProfileNode* ProfileNode::getChildNode() {
-	return mChildNode;
+	return m_childNode;
 }
 
 // Return the name of the node
 inline const char* ProfileNode::getName() {
-	return mName;
+	return m_name;
 }
 
 // Return the total number of call of the corresponding block of code
 inline uint32_t ProfileNode::getNbTotalCalls() const {
-	return mNbTotalCalls;
+	return m_numberTotalCalls;
 }
 
 // Return the total time spent in the block of code
 inline long double ProfileNode::getTotalTime() const {
-	return mTotalTime;
+	return m_totalTime;
 }
 
 // Return the number of frames
 inline uint32_t Profiler::getNbFrames() {
-	return mFrameCounter;
+	return m_frameCounter;
 }
 
 // Return the elasped time since the start/reset of the profiling
 inline long double Profiler::getElapsedTimeSinceStart() {
 	long double currentTime = Timer::getCurrentSystemTime() * 1000.0;
-	return currentTime - mProfilingStartTime;
+	return currentTime - m_profilingStartTime;
 }
 
 // Increment the frame counter
 inline void Profiler::incrementFrameCounter() {
-	mFrameCounter++;
+	m_frameCounter++;
 }
 
 // Return an iterator over the profiler tree starting at the root
 inline ProfileNodeIterator* Profiler::getIterator() {
-	return new ProfileNodeIterator(&mRootNode);
+	return new ProfileNodeIterator(&m_rootNode);
 }
 
 // Destroy a previously allocated iterator
@@ -354,7 +354,7 @@ inline void Profiler::destroyIterator(ProfileNodeIterator* iterator) {
 
 // Destroy the profiler (release the memory)
 inline void Profiler::destroy() {
-	mRootNode.destroy();
+	m_rootNode.destroy();
 }
 
 }

@@ -102,17 +102,17 @@ void BroadPhaseAlgorithm::addProxyCollisionShape(ProxyShape* proxyShape, const A
 	int32_t nodeId = m_dynamicAABBTree.addObject(aabb, proxyShape);
 
 	// Set the broad-phase ID of the proxy shape
-	proxyShape->mBroadPhaseID = nodeId;
+	proxyShape->m_broadPhaseID = nodeId;
 
 	// Add the collision shape int32_to the array of bodies that have moved (or have been created)
 	// during the last simulation step
-	addMovedCollisionShape(proxyShape->mBroadPhaseID);
+	addMovedCollisionShape(proxyShape->m_broadPhaseID);
 }
 
 // Remove a proxy collision shape from the broad-phase collision detection
 void BroadPhaseAlgorithm::removeProxyCollisionShape(ProxyShape* proxyShape) {
 
-	int32_t broadPhaseID = proxyShape->mBroadPhaseID;
+	int32_t broadPhaseID = proxyShape->m_broadPhaseID;
 
 	// Remove the collision shape from the dynamic AABB tree
 	m_dynamicAABBTree.removeObject(broadPhaseID);
@@ -126,7 +126,7 @@ void BroadPhaseAlgorithm::removeProxyCollisionShape(ProxyShape* proxyShape) {
 void BroadPhaseAlgorithm::updateProxyCollisionShape(ProxyShape* proxyShape, const AABB& aabb,
 													const Vector3& displacement, bool forceReinsert) {
 
-	int32_t broadPhaseID = proxyShape->mBroadPhaseID;
+	int32_t broadPhaseID = proxyShape->m_broadPhaseID;
 
 	assert(broadPhaseID >= 0);
 
@@ -249,7 +249,7 @@ void BroadPhaseAlgorithm::notifyOverlappingNodes(int32_t node1ID, int32_t node2I
 // DynamicAABBTree:reportAllShapesOverlappingWithAABB()
 void AABBOverlapCallback::notifyOverlappingNode(int32_t nodeId) {
 
-	mBroadPhaseAlgorithm.notifyOverlappingNodes(m_referenceNodeId, nodeId);
+	m_broadPhaseAlgorithm.notifyOverlappingNodes(m_referenceNodeId, nodeId);
 }
 
 // Called for a broad-phase shape that has to be tested for raycast

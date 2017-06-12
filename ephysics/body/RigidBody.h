@@ -63,10 +63,10 @@ class RigidBody : public CollisionBody {
 		Matrix3x3 mInertiaTensorLocalInverse;
 
 		/// Inverse of the mass of the body
-		float mMassInverse;
+		float m_massInverse;
 
 		/// True if the gravity needs to be applied to this rigid body
-		bool mIsGravityEnabled;
+		bool m_isGravityEnabled;
 
 		/// Material properties of the rigid body
 		Material mMaterial;
@@ -78,7 +78,7 @@ class RigidBody : public CollisionBody {
 		float mAngularDamping;
 
 		/// First element of the linked list of joints involving this body
-		JointListElement* mJointsList;		
+		JointListElement* m_jointsList;		
 
 		// -------------------- Methods -------------------- //
 
@@ -89,7 +89,7 @@ class RigidBody : public CollisionBody {
 		RigidBody& operator=(const RigidBody& body);
 
 		/// Remove a joint from the joints list
-		void removeJointFromJointsList(MemoryAllocator& memoryAllocator, const Joint* joint);
+		void removeJointFrom_jointsList(MemoryAllocator& memoryAllocator, const Joint* joint);
 
 		/// Update the transform of the body after a change of the center of mass
 		void updateTransformWithCenterOfMass();
@@ -254,8 +254,8 @@ inline const Matrix3x3& RigidBody::getInertiaTensorLocal() const {
 inline Matrix3x3 RigidBody::getInertiaTensorWorld() const {
 
 	// Compute and return the inertia tensor in world coordinates
-	return mTransform.getOrientation().getMatrix() * mInertiaTensorLocal *
-		   mTransform.getOrientation().getMatrix().getTranspose();
+	return m_transform.getOrientation().getMatrix() * mInertiaTensorLocal *
+		   m_transform.getOrientation().getMatrix().getTranspose();
 }
 
 // Return the inverse of the inertia tensor in world coordinates.
@@ -274,8 +274,8 @@ inline Matrix3x3 RigidBody::getInertiaTensorInverseWorld() const {
 	//		INVERSE WORLD TENSOR IN THE CLASS AND UPLDATE IT WHEN THE ORIENTATION OF THE BODY CHANGES
 
 	// Compute and return the inertia tensor in world coordinates
-	return mTransform.getOrientation().getMatrix() * mInertiaTensorLocalInverse *
-		   mTransform.getOrientation().getMatrix().getTranspose();
+	return m_transform.getOrientation().getMatrix() * mInertiaTensorLocalInverse *
+		   m_transform.getOrientation().getMatrix().getTranspose();
 }
 
 // Return true if the gravity needs to be applied to this rigid body
@@ -283,7 +283,7 @@ inline Matrix3x3 RigidBody::getInertiaTensorInverseWorld() const {
  * @return True if the gravity is applied to the body
  */
 inline bool RigidBody::isGravityEnabled() const {
-	return mIsGravityEnabled;
+	return m_isGravityEnabled;
 }
 
 // Set the variable to know if the gravity is applied to this rigid body
@@ -291,7 +291,7 @@ inline bool RigidBody::isGravityEnabled() const {
  * @param isEnabled True if you want the gravity to be applied to this body
  */
 inline void RigidBody::enableGravity(bool isEnabled) {
-	mIsGravityEnabled = isEnabled;
+	m_isGravityEnabled = isEnabled;
 }
 
 // Return a reference to the material properties of the rigid body
@@ -351,7 +351,7 @@ inline void RigidBody::setAngularDamping(float angularDamping) {
  * @return The first element of the linked-list of all the joints involving this body
  */
 inline const JointListElement* RigidBody::getJointsList() const {
-	return mJointsList;
+	return m_jointsList;
 }
 
 // Return the first element of the linked list of joints involving this body
@@ -359,7 +359,7 @@ inline const JointListElement* RigidBody::getJointsList() const {
  * @return The first element of the linked-list of all the joints involving this body
  */
 inline JointListElement* RigidBody::getJointsList() {
-	return mJointsList;
+	return m_jointsList;
 }
 
 // Set the variable to know whether or not the body is sleeping
@@ -386,7 +386,7 @@ inline void RigidBody::setIsSleeping(bool isSleeping) {
 inline void RigidBody::applyForceToCenterOfMass(const Vector3& force) {
 
 	// If it is not a dynamic body, we do nothing
-	if (mType != DYNAMIC) return;
+	if (m_type != DYNAMIC) return;
 
 	// Awake the body if it was sleeping
 	if (m_isSleeping) {
@@ -411,7 +411,7 @@ inline void RigidBody::applyForceToCenterOfMass(const Vector3& force) {
 inline void RigidBody::applyForce(const Vector3& force, const Vector3& point) {
 
 	// If it is not a dynamic body, we do nothing
-	if (mType != DYNAMIC) return;
+	if (m_type != DYNAMIC) return;
 
 	// Awake the body if it was sleeping
 	if (m_isSleeping) {
@@ -434,7 +434,7 @@ inline void RigidBody::applyForce(const Vector3& force, const Vector3& point) {
 inline void RigidBody::applyTorque(const Vector3& torque) {
 
 	// If it is not a dynamic body, we do nothing
-	if (mType != DYNAMIC) return;
+	if (m_type != DYNAMIC) return;
 
 	// Awake the body if it was sleeping
 	if (m_isSleeping) {
@@ -449,7 +449,7 @@ inline void RigidBody::applyTorque(const Vector3& torque) {
 inline void RigidBody::updateTransformWithCenterOfMass() {
 
 	// Translate the body according to the translation of the center of mass position
-	mTransform.setPosition(mCenterOfMassWorld - mTransform.getOrientation() * mCenterOfMassLocal);
+	m_transform.setPosition(mCenterOfMassWorld - m_transform.getOrientation() * mCenterOfMassLocal);
 }
 
 }

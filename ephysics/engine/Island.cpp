@@ -12,24 +12,24 @@ using namespace reactphysics3d;
 // Constructor
 Island::Island(uint32_t nbMaxBodies, uint32_t nbMaxContactManifolds, uint32_t nbMaxJoints,
 			   MemoryAllocator& memoryAllocator)
-	   : mBodies(NULL), mContactManifolds(NULL), mJoints(NULL), mNbBodies(0),
-		 mNbContactManifolds(0), mNbJoints(0), mMemoryAllocator(memoryAllocator) {
+	   : m_bodies(NULL), m_contactManifolds(NULL), m_joints(NULL), m_numberBodies(0),
+		 m_numberContactManifolds(0), m_numberJoints(0), m_memoryAllocator(memoryAllocator) {
 
 	// Allocate memory for the arrays
-	mNbAllocatedBytesBodies = sizeof(RigidBody*) * nbMaxBodies;
-	mBodies = (RigidBody**) mMemoryAllocator.allocate(mNbAllocatedBytesBodies);
-	mNbAllocatedBytesContactManifolds = sizeof(ContactManifold*) * nbMaxContactManifolds;
-	mContactManifolds = (ContactManifold**) mMemoryAllocator.allocate(
-																mNbAllocatedBytesContactManifolds);
-	mNbAllocatedBytesJoints = sizeof(Joint*) * nbMaxJoints;
-	mJoints = (Joint**) mMemoryAllocator.allocate(mNbAllocatedBytesJoints);
+	m_numberAllocatedBytesBodies = sizeof(RigidBody*) * nbMaxBodies;
+	m_bodies = (RigidBody**) m_memoryAllocator.allocate(m_numberAllocatedBytesBodies);
+	m_numberAllocatedBytesContactManifolds = sizeof(ContactManifold*) * nbMaxContactManifolds;
+	m_contactManifolds = (ContactManifold**) m_memoryAllocator.allocate(
+																m_numberAllocatedBytesContactManifolds);
+	m_numberAllocatedBytesJoints = sizeof(Joint*) * nbMaxJoints;
+	m_joints = (Joint**) m_memoryAllocator.allocate(m_numberAllocatedBytesJoints);
 }
 
 // Destructor
 Island::~Island() {
 
 	// Release the memory of the arrays
-	mMemoryAllocator.release(mBodies, mNbAllocatedBytesBodies);
-	mMemoryAllocator.release(mContactManifolds, mNbAllocatedBytesContactManifolds);
-	mMemoryAllocator.release(mJoints, mNbAllocatedBytesJoints);
+	m_memoryAllocator.release(m_bodies, m_numberAllocatedBytesBodies);
+	m_memoryAllocator.release(m_contactManifolds, m_numberAllocatedBytesContactManifolds);
+	m_memoryAllocator.release(m_joints, m_numberAllocatedBytesJoints);
 }

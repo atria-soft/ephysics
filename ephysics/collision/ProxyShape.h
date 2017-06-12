@@ -28,25 +28,25 @@ class ProxyShape {
 		// -------------------- Attributes -------------------- //
 
 		/// Pointer to the parent body
-		CollisionBody* mBody;
+		CollisionBody* m_body;
 
 		/// Internal collision shape
-		CollisionShape* mCollisionShape;
+		CollisionShape* m_collisionShape;
 
 		/// Local-space to parent body-space transform (does not change over time)
-		Transform mLocalToBodyTransform;
+		Transform m_localToBodyTransform;
 
 		/// Mass (in kilogramms) of the corresponding collision shape
-		float mMass;
+		float m_mass;
 
 		/// Pointer to the next proxy shape of the body (linked list)
-		ProxyShape* mNext;
+		ProxyShape* m_next;
 
 		/// Broad-phase ID (node ID in the dynamic AABB tree)
-		int32_t mBroadPhaseID;
+		int32_t m_broadPhaseID;
 
 		/// Cached collision data
-		void* mCachedCollisionData;
+		void* m_cachedCollisionData;
 
 		/// Pointer to user data
 		void* m_userData;
@@ -54,15 +54,15 @@ class ProxyShape {
 		/// Bits used to define the collision category of this shape.
 		/// You can set a single bit to one to define a category value for this
 		/// shape. This value is one (0x0001) by default. This variable can be used
-		/// together with the mCollideWithMaskBits variable so that given
+		/// together with the m_collideWithMaskBits variable so that given
 		/// categories of shapes collide with each other and do not collide with
 		/// other categories.
-		unsigned short mCollisionCategoryBits;
+		unsigned short m_collisionCategoryBits;
 
 		/// Bits mask used to state which collision categories this shape can
 		/// collide with. This value is 0xFFFF by default. It means that this
 		/// proxy shape will collide with every collision categories by default.
-		unsigned short mCollideWithMaskBits;
+		unsigned short m_collideWithMaskBits;
 
 		// -------------------- Methods -------------------- //
 
@@ -158,7 +158,7 @@ class ProxyShape {
 
 // Return the pointer to the cached collision data
 inline void** ProxyShape::getCachedCollisionData()  {
-	return &mCachedCollisionData;
+	return &m_cachedCollisionData;
 }
 
 // Return the collision shape
@@ -166,7 +166,7 @@ inline void** ProxyShape::getCachedCollisionData()  {
  * @return Pointer to the int32_ternal collision shape
  */
 inline const CollisionShape* ProxyShape::getCollisionShape() const {
-	return mCollisionShape;
+	return m_collisionShape;
 }
 
 // Return the parent body
@@ -174,7 +174,7 @@ inline const CollisionShape* ProxyShape::getCollisionShape() const {
  * @return Pointer to the parent body
  */
 inline CollisionBody* ProxyShape::getBody() const {
-	return mBody;
+	return m_body;
 }
 
 // Return the mass of the collision shape
@@ -182,7 +182,7 @@ inline CollisionBody* ProxyShape::getBody() const {
  * @return Mass of the collision shape (in kilograms)
  */
 inline float ProxyShape::getMass() const {
-	return mMass;
+	return m_mass;
 }
 
 // Return a pointer to the user data attached to this body
@@ -207,18 +207,18 @@ inline void ProxyShape::setUserData(void* userData) {
  *		 to the local-space of the parent body
  */
 inline const Transform& ProxyShape::getLocalToBodyTransform() const {
-	return mLocalToBodyTransform;
+	return m_localToBodyTransform;
 }
 
 // Set the local to parent body transform
 inline void ProxyShape::setLocalToBodyTransform(const Transform& transform) {
 
-	mLocalToBodyTransform = transform;
+	m_localToBodyTransform = transform;
 
-	mBody->setIsSleeping(false);
+	m_body->setIsSleeping(false);
 
 	// Notify the body that the proxy shape has to be updated in the broad-phase
-	mBody->updateProxyShapeInBroadPhase(this, true);
+	m_body->updateProxyShapeInBroadPhase(this, true);
 }
 
 // Return the local to world transform
@@ -227,7 +227,7 @@ inline void ProxyShape::setLocalToBodyTransform(const Transform& transform) {
  *		 shape to the world-space
  */
 inline const Transform ProxyShape::getLocalToWorldTransform() const {
-	return mBody->mTransform * mLocalToBodyTransform;
+	return m_body->m_transform * m_localToBodyTransform;
 }
 
 // Return the next proxy shape in the linked list of proxy shapes
@@ -235,7 +235,7 @@ inline const Transform ProxyShape::getLocalToWorldTransform() const {
  * @return Pointer to the next proxy shape in the linked list of proxy shapes
  */
 inline ProxyShape* ProxyShape::getNext() {
-	return mNext;
+	return m_next;
 }
 
 // Return the next proxy shape in the linked list of proxy shapes
@@ -243,7 +243,7 @@ inline ProxyShape* ProxyShape::getNext() {
  * @return Pointer to the next proxy shape in the linked list of proxy shapes
  */
 inline const ProxyShape* ProxyShape::getNext() const {
-	return mNext;
+	return m_next;
 }
 
 // Return the collision category bits
@@ -251,7 +251,7 @@ inline const ProxyShape* ProxyShape::getNext() const {
  * @return The collision category bits mask of the proxy shape
  */
 inline unsigned short ProxyShape::getCollisionCategoryBits() const {
-	return mCollisionCategoryBits;
+	return m_collisionCategoryBits;
 }
 
 // Set the collision category bits
@@ -259,7 +259,7 @@ inline unsigned short ProxyShape::getCollisionCategoryBits() const {
  * @param collisionCategoryBits The collision category bits mask of the proxy shape
  */
 inline void ProxyShape::setCollisionCategoryBits(unsigned short collisionCategoryBits) {
-	mCollisionCategoryBits = collisionCategoryBits;
+	m_collisionCategoryBits = collisionCategoryBits;
 }
 
 // Return the collision bits mask
@@ -267,7 +267,7 @@ inline void ProxyShape::setCollisionCategoryBits(unsigned short collisionCategor
  * @return The bits mask that specifies with which collision category this shape will collide
  */
 inline unsigned short ProxyShape::getCollideWithMaskBits() const {
-	return mCollideWithMaskBits;
+	return m_collideWithMaskBits;
 }
 
 // Set the collision bits mask
@@ -275,7 +275,7 @@ inline unsigned short ProxyShape::getCollideWithMaskBits() const {
  * @param collideWithMaskBits The bits mask that specifies with which collision category this shape will collide
  */
 inline void ProxyShape::setCollideWithMaskBits(unsigned short collideWithMaskBits) {
-	mCollideWithMaskBits = collideWithMaskBits;
+	m_collideWithMaskBits = collideWithMaskBits;
 }
 
 // Return the local scaling vector of the collision shape
@@ -283,7 +283,7 @@ inline void ProxyShape::setCollideWithMaskBits(unsigned short collideWithMaskBit
  * @return The local scaling vector
  */
 inline Vector3 ProxyShape::getLocalScaling() const {
-	return mCollisionShape->getScaling();
+	return m_collisionShape->getScaling();
 }
 
 // Set the local scaling vector of the collision shape
@@ -293,12 +293,12 @@ inline Vector3 ProxyShape::getLocalScaling() const {
 inline void ProxyShape::setLocalScaling(const Vector3& scaling) {
 
 	// Set the local scaling of the collision shape
-	mCollisionShape->setLocalScaling(scaling);
+	m_collisionShape->setLocalScaling(scaling);
 
-	mBody->setIsSleeping(false);
+	m_body->setIsSleeping(false);
 
 	// Notify the body that the proxy shape has to be updated in the broad-phase
-	mBody->updateProxyShapeInBroadPhase(this, true);
+	m_body->updateProxyShapeInBroadPhase(this, true);
 }
 
 }

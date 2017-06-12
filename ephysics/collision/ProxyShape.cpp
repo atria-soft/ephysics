@@ -17,9 +17,9 @@ using namespace reactphysics3d;
  * @param mass Mass of the collision shape (in kilograms)
  */
 ProxyShape::ProxyShape(CollisionBody* body, CollisionShape* shape, const Transform& transform, float mass)
-		   :mBody(body), mCollisionShape(shape), mLocalToBodyTransform(transform), mMass(mass),
-			mNext(NULL), mBroadPhaseID(-1), mCachedCollisionData(NULL), m_userData(NULL),
-			mCollisionCategoryBits(0x0001), mCollideWithMaskBits(0xFFFF) {
+		   :m_body(body), m_collisionShape(shape), m_localToBodyTransform(transform), m_mass(mass),
+			m_next(NULL), m_broadPhaseID(-1), m_cachedCollisionData(NULL), m_userData(NULL),
+			m_collisionCategoryBits(0x0001), m_collideWithMaskBits(0xFFFF) {
 
 }
 
@@ -27,8 +27,8 @@ ProxyShape::ProxyShape(CollisionBody* body, CollisionShape* shape, const Transfo
 ProxyShape::~ProxyShape() {
 
 	// Release the cached collision data memory
-	if (mCachedCollisionData != NULL) {
-		free(mCachedCollisionData);
+	if (m_cachedCollisionData != NULL) {
+		free(m_cachedCollisionData);
 	}
 }
 
@@ -38,9 +38,9 @@ ProxyShape::~ProxyShape() {
  * @return True if the point is inside the collision shape
  */
 bool ProxyShape::testPointInside(const Vector3& worldPoint) {
-	const Transform localToWorld = mBody->getTransform() * mLocalToBodyTransform;
+	const Transform localToWorld = m_body->getTransform() * m_localToBodyTransform;
 	const Vector3 localPoint = localToWorld.getInverse() * worldPoint;
-	return mCollisionShape->testPointInside(localPoint, this);
+	return m_collisionShape->testPointInside(localPoint, this);
 }
 
 // Raycast method with feedback information
@@ -53,7 +53,7 @@ bool ProxyShape::testPointInside(const Vector3& worldPoint) {
 bool ProxyShape::raycast(const Ray& ray, RaycastInfo& raycastInfo) {
 
 	// If the corresponding body is not active, it cannot be hit by rays
-	if (!mBody->isActive()) return false;
+	if (!m_body->isActive()) return false;
 
 	// Convert the ray int32_to the local-space of the collision shape
 	const Transform localToWorldTransform = getLocalToWorldTransform();
@@ -62,7 +62,7 @@ bool ProxyShape::raycast(const Ray& ray, RaycastInfo& raycastInfo) {
 				 worldToLocalTransform * ray.point2,
 				 ray.maxFraction);
 
-	bool isHit = mCollisionShape->raycast(rayLocal, raycastInfo, this);
+	bool isHit = m_collisionShape->raycast(rayLocal, raycastInfo, this);
 
 	// Convert the raycast info int32_to world-space
 	raycastInfo.worldPoint = localToWorldTransform * raycastInfo.worldPoint;

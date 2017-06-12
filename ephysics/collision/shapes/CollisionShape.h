@@ -39,7 +39,7 @@ class CollisionShape {
 		// -------------------- Attributes -------------------- //
 
 		/// Type of the collision shape
-		CollisionShapeType mType;
+		CollisionShapeType m_type;
 
 		/// Scaling vector of the collision shape
 		Vector3 mScaling;
@@ -110,7 +110,7 @@ class CollisionShape {
  * @return The type of the collision shape (box, sphere, cylinder, ...)
  */
 inline CollisionShapeType CollisionShape::getType() const {
-	return mType;
+	return m_type;
 }
 
 // Return true if the collision shape type is a convex shape

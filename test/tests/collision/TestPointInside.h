@@ -49,7 +49,7 @@ class TestPointInside : public Test {
 		// ---------- Atributes ---------- //
 
 		// Physics world
-		CollisionWorld* mWorld;
+		CollisionWorld* m_world;
 
 		// Bodies
 		CollisionBody* mBoxBody;
@@ -71,8 +71,8 @@ class TestPointInside : public Test {
 		CylinderShape* mCylinderShape;
 
 		// Transform
-		Transform mBodyTransform;
-		Transform mShapeTransform;
+		Transform m_bodyTransform;
+		Transform m_shapeTransform;
 		Transform mLocalShapeToWorld;
 		Transform mLocalShape2ToWorld;
 
@@ -93,43 +93,43 @@ class TestPointInside : public Test {
 		TestPointInside(const std::string& name) : Test(name) {
 
 			// Create the world
-			mWorld = new CollisionWorld();
+			m_world = new CollisionWorld();
 
 			// Body transform
 			Vector3 position(-3, 2, 7);
 			Quaternion orientation(PI / 5, PI / 6, PI / 7);
-			mBodyTransform = Transform(position, orientation);
+			m_bodyTransform = Transform(position, orientation);
 
 			// Create the bodies
-			mBoxBody = mWorld->createCollisionBody(mBodyTransform);
-			mSphereBody = mWorld->createCollisionBody(mBodyTransform);
-			mCapsuleBody = mWorld->createCollisionBody(mBodyTransform);
-			mConeBody = mWorld->createCollisionBody(mBodyTransform);
-			mConvexMeshBody = mWorld->createCollisionBody(mBodyTransform);
-			mConvexMeshBodyEdgesInfo = mWorld->createCollisionBody(mBodyTransform);
-			mCylinderBody = mWorld->createCollisionBody(mBodyTransform);
-			mCompoundBody = mWorld->createCollisionBody(mBodyTransform);
+			mBoxBody = m_world->createCollisionBody(m_bodyTransform);
+			mSphereBody = m_world->createCollisionBody(m_bodyTransform);
+			mCapsuleBody = m_world->createCollisionBody(m_bodyTransform);
+			mConeBody = m_world->createCollisionBody(m_bodyTransform);
+			mConvexMeshBody = m_world->createCollisionBody(m_bodyTransform);
+			mConvexMeshBodyEdgesInfo = m_world->createCollisionBody(m_bodyTransform);
+			mCylinderBody = m_world->createCollisionBody(m_bodyTransform);
+			mCompoundBody = m_world->createCollisionBody(m_bodyTransform);
 
 			// Collision shape transform
 			Vector3 shapePosition(1, -4, -3);
 			Quaternion shapeOrientation(3 * PI / 6 , -PI / 8, PI / 3);
-			mShapeTransform = Transform(shapePosition, shapeOrientation);
+			m_shapeTransform = Transform(shapePosition, shapeOrientation);
 
 			// Compute the the transform from a local shape point to world-space
-			mLocalShapeToWorld = mBodyTransform * mShapeTransform;
+			mLocalShapeToWorld = m_bodyTransform * m_shapeTransform;
 
 			// Create collision shapes
 			mBoxShape = new BoxShape(Vector3(2, 3, 4), 0);
-			mBoxProxyShape = mBoxBody->addCollisionShape(mBoxShape, mShapeTransform);
+			mBoxProxyShape = mBoxBody->addCollisionShape(mBoxShape, m_shapeTransform);
 
 			mSphereShape = new SphereShape(3);
-			mSphereProxyShape = mSphereBody->addCollisionShape(mSphereShape, mShapeTransform);
+			mSphereProxyShape = mSphereBody->addCollisionShape(mSphereShape, m_shapeTransform);
 
 			mCapsuleShape = new CapsuleShape(2, 10);
-			mCapsuleProxyShape = mCapsuleBody->addCollisionShape(mCapsuleShape, mShapeTransform);
+			mCapsuleProxyShape = mCapsuleBody->addCollisionShape(mCapsuleShape, m_shapeTransform);
 
 			mConeShape = new ConeShape(2, 6, 0);
-			mConeProxyShape = mConeBody->addCollisionShape(mConeShape, mShapeTransform);
+			mConeProxyShape = mConeBody->addCollisionShape(mConeShape, m_shapeTransform);
 
 			mConvexMeshShape = new ConvexMeshShape(0.0);			 // Box of dimension (2, 3, 4)
 			mConvexMeshShape->addVertex(Vector3(-2, -3, -4));
@@ -140,7 +140,7 @@ class TestPointInside : public Test {
 			mConvexMeshShape->addVertex(Vector3(2, 3, -4));
 			mConvexMeshShape->addVertex(Vector3(2, 3, 4));
 			mConvexMeshShape->addVertex(Vector3(-2, 3, 4));
-			mConvexMeshProxyShape = mConvexMeshBody->addCollisionShape(mConvexMeshShape, mShapeTransform);
+			mConvexMeshProxyShape = mConvexMeshBody->addCollisionShape(mConvexMeshShape, m_shapeTransform);
 
 			mConvexMeshShapeBodyEdgesInfo = new ConvexMeshShape(0.0);
 			mConvexMeshShapeBodyEdgesInfo->addVertex(Vector3(-2, -3, -4));
@@ -166,17 +166,17 @@ class TestPointInside : public Test {
 			mConvexMeshShapeBodyEdgesInfo->setIsEdgesInformationUsed(true);
 			mConvexMeshProxyShapeEdgesInfo = mConvexMeshBodyEdgesInfo->addCollisionShape(
 																	 mConvexMeshShapeBodyEdgesInfo,
-																	 mShapeTransform);
+																	 m_shapeTransform);
 
 			mCylinderShape = new CylinderShape(3, 8, 0);
-			mCylinderProxyShape = mCylinderBody->addCollisionShape(mCylinderShape, mShapeTransform);
+			mCylinderProxyShape = mCylinderBody->addCollisionShape(mCylinderShape, m_shapeTransform);
 
 			// Compound shape is a cylinder and a sphere
 			Vector3 positionShape2(Vector3(4, 2, -3));
 			Quaternion orientationShape2(-3 *PI / 8, 1.5 * PI/ 3, PI / 13);
 			Transform shapeTransform2(positionShape2, orientationShape2);
-			mLocalShape2ToWorld = mBodyTransform * shapeTransform2;
-			mCompoundBody->addCollisionShape(mCylinderShape, mShapeTransform);
+			mLocalShape2ToWorld = m_bodyTransform * shapeTransform2;
+			mCompoundBody->addCollisionShape(mCylinderShape, m_shapeTransform);
 			mCompoundBody->addCollisionShape(mSphereShape, shapeTransform2);
 		}
 

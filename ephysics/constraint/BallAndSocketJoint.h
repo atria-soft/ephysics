@@ -23,7 +23,7 @@ struct BallAndSocketJointInfo : public JointInfo {
 		// -------------------- Attributes -------------------- //
 
 		/// Anchor point (in world-space coordinates)
-		Vector3 m_m_m_m_anchorPointWorldSpace;
+		Vector3 m_anchorPointWorldSpace;
 
 		/// Constructor
 		/**
@@ -35,7 +35,7 @@ struct BallAndSocketJointInfo : public JointInfo {
 		BallAndSocketJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
 							   const Vector3& initAnchorPointWorldSpace)
 							  : JointInfo(rigidBody1, rigidBody2, BALLSOCKETJOINT),
-								m_m_m_m_anchorPointWorldSpace(initAnchorPointWorldSpace) {}
+								m_anchorPointWorldSpace(initAnchorPointWorldSpace) {}
 };
 
 // Class BallAndSocketJoint

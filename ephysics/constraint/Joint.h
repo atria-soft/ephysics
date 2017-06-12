@@ -100,25 +100,25 @@ class Joint {
 		// -------------------- Attributes -------------------- //
 
 		/// Pointer to the first body of the joint
-		RigidBody* const mBody1;
+		RigidBody* const m_body1;
 
 		/// Pointer to the second body of the joint
-		RigidBody* const mBody2;
+		RigidBody* const m_body2;
 
 		/// Type of the joint
-		const JointType mType;
+		const JointType m_type;
 
 		/// Body 1 index in the velocity array to solve the constraint
-		uint32_t mIndexBody1;
+		uint32_t m_indexBody1;
 
 		/// Body 2 index in the velocity array to solve the constraint
-		uint32_t mIndexBody2;
+		uint32_t m_indexBody2;
 
 		/// Position correction technique used for the constraint (used for joints)
-		JointsPositionCorrectionTechnique mPositionCorrectionTechnique;
+		JointsPositionCorrectionTechnique m_positionCorrectionTechnique;
 
 		/// True if the two bodies of the constraint are allowed to collide with each other
-		bool mIsCollisionEnabled;
+		bool m_isCollisionEnabled;
 
 		/// True if the joint has already been added int32_to an island
 		bool m_isAlreadyInIsland;
@@ -186,7 +186,7 @@ class Joint {
  * @return The first body involved in the joint
  */
 inline RigidBody* Joint::getBody1() const {
-	return mBody1;
+	return m_body1;
 }
 
 // Return the reference to the body 2
@@ -194,7 +194,7 @@ inline RigidBody* Joint::getBody1() const {
  * @return The second body involved in the joint
  */
 inline RigidBody* Joint::getBody2() const {
-	return mBody2;
+	return m_body2;
 }
 
 // Return true if the joint is active
@@ -202,7 +202,7 @@ inline RigidBody* Joint::getBody2() const {
  * @return True if the joint is active
  */
 inline bool Joint::isActive() const {
-	return (mBody1->isActive() && mBody2->isActive());
+	return (m_body1->isActive() && m_body2->isActive());
 }
 
 // Return the type of the joint
@@ -210,7 +210,7 @@ inline bool Joint::isActive() const {
  * @return The type of the joint
  */
 inline JointType Joint::getType() const {
-	return mType;
+	return m_type;
 }
 
 // Return true if the collision between the two bodies of the joint is enabled
@@ -219,7 +219,7 @@ inline JointType Joint::getType() const {
  *			  is enabled and false otherwise
  */
 inline bool Joint::isCollisionEnabled() const {
-	return mIsCollisionEnabled;
+	return m_isCollisionEnabled;
 }
 
 // Return true if the joint has already been added int32_to an island

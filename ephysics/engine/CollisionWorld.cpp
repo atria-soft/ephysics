@@ -14,8 +14,8 @@ using namespace std;
 
 // Constructor
 CollisionWorld::CollisionWorld()
-			   : m_collisionDetection(this, mMemoryAllocator), mCurrentBodyID(0),
-				 mEventListener(NULL) {
+			   : m_collisionDetection(this, m_memoryAllocator), m_currentBodyID(0),
+				 m_eventListener(NULL) {
 
 }
 
@@ -24,13 +24,13 @@ CollisionWorld::~CollisionWorld() {
 
 	// Destroy all the collision bodies that have not been removed
 	std::set<CollisionBody*>::iterator itBodies;
-	for (itBodies = mBodies.begin(); itBodies != mBodies.end(); ) {
+	for (itBodies = m_bodies.begin(); itBodies != m_bodies.end(); ) {
 		 std::set<CollisionBody*>::iterator itToRemove = itBodies;
 		 ++itBodies;
 		destroyCollisionBody(*itToRemove);
 	}
 
-	assert(mBodies.empty());
+	assert(m_bodies.empty());
 }
 
 // Create a collision body and add it to the world
@@ -47,13 +47,13 @@ CollisionBody* CollisionWorld::createCollisionBody(const Transform& transform) {
 	assert(bodyID < std::numeric_limits<reactphysics3d::bodyindex>::max());
 
 	// Create the collision body
-	CollisionBody* collisionBody = new (mMemoryAllocator.allocate(sizeof(CollisionBody)))
+	CollisionBody* collisionBody = new (m_memoryAllocator.allocate(sizeof(CollisionBody)))
 										CollisionBody(transform, *this, bodyID);
 
 	assert(collisionBody != NULL);
 
 	// Add the collision body to the world
-	mBodies.insert(collisionBody);
+	m_bodies.insert(collisionBody);
 
 	// Return the pointer to the rigid body
 	return collisionBody;
@@ -69,16 +69,16 @@ void CollisionWorld::destroyCollisionBody(CollisionBody* collisionBody) {
 	collisionBody->removeAllCollisionShapes();
 
 	// Add the body ID to the list of free IDs
-	mFreeBodiesIDs.push_back(collisionBody->getID());
+	m_freeBodiesIDs.push_back(collisionBody->getID());
 
 	// Call the destructor of the collision body
 	collisionBody->~CollisionBody();
 
 	// Remove the collision body from the list of bodies
-	mBodies.erase(collisionBody);
+	m_bodies.erase(collisionBody);
 
 	// Free the object from the memory allocator
-	mMemoryAllocator.release(collisionBody, sizeof(CollisionBody));
+	m_memoryAllocator.release(collisionBody, sizeof(CollisionBody));
 }
 
 // Return the next available body ID
@@ -86,13 +86,13 @@ bodyindex CollisionWorld::computeNextAvailableBodyID() {
 
 	// Compute the body ID
 	bodyindex bodyID;
-	if (!mFreeBodiesIDs.empty()) {
-		bodyID = mFreeBodiesIDs.back();
-		mFreeBodiesIDs.pop_back();
+	if (!m_freeBodiesIDs.empty()) {
+		bodyID = m_freeBodiesIDs.back();
+		m_freeBodiesIDs.pop_back();
 	}
 	else {
-		bodyID = mCurrentBodyID;
-		mCurrentBodyID++;
+		bodyID = m_currentBodyID;
+		m_currentBodyID++;
 	}
 
 	return bodyID;
@@ -102,7 +102,7 @@ bodyindex CollisionWorld::computeNextAvailableBodyID() {
 void CollisionWorld::resetContactManifoldListsOfBodies() {
 
 	// For each rigid body of the world
-	for (std::set<CollisionBody*>::iterator it = mBodies.begin(); it != mBodies.end(); ++it) {
+	for (std::set<CollisionBody*>::iterator it = m_bodies.begin(); it != m_bodies.end(); ++it) {
 
 		// Reset the contact manifold list of the body
 		(*it)->resetContactManifoldsList();
@@ -143,7 +143,7 @@ void CollisionWorld::testCollision(const ProxyShape* shape,
 
 	// Create the sets of shapes
 	std::set<uint32_t> shapes;
-	shapes.insert(shape->mBroadPhaseID);
+	shapes.insert(shape->m_broadPhaseID);
 	std::set<uint32_t> emptySet;
 
 	// Perform the collision detection and report contacts
@@ -165,9 +165,9 @@ void CollisionWorld::testCollision(const ProxyShape* shape1,
 
 	// Create the sets of shapes
 	std::set<uint32_t> shapes1;
-	shapes1.insert(shape1->mBroadPhaseID);
+	shapes1.insert(shape1->m_broadPhaseID);
 	std::set<uint32_t> shapes2;
-	shapes2.insert(shape2->mBroadPhaseID);
+	shapes2.insert(shape2->m_broadPhaseID);
 
 	// Perform the collision detection and report contacts
 	m_collisionDetection.testCollisionBetweenShapes(callback, shapes1, shapes2);
@@ -191,7 +191,7 @@ void CollisionWorld::testCollision(const CollisionBody* body,
 	// For each shape of the body
 	for (const ProxyShape* shape=body->getProxyShapesList(); shape != NULL;
 		 shape = shape->getNext()) {
-		shapes1.insert(shape->mBroadPhaseID);
+		shapes1.insert(shape->m_broadPhaseID);
 	}
 
 	std::set<uint32_t> emptySet;
@@ -217,13 +217,13 @@ void CollisionWorld::testCollision(const CollisionBody* body1,
 	std::set<uint32_t> shapes1;
 	for (const ProxyShape* shape=body1->getProxyShapesList(); shape != NULL;
 		 shape = shape->getNext()) {
-		shapes1.insert(shape->mBroadPhaseID);
+		shapes1.insert(shape->m_broadPhaseID);
 	}
 
 	std::set<uint32_t> shapes2;
 	for (const ProxyShape* shape=body2->getProxyShapesList(); shape != NULL;
 		 shape = shape->getNext()) {
-		shapes2.insert(shape->mBroadPhaseID);
+		shapes2.insert(shape->m_broadPhaseID);
 	}
 
 	// Perform the collision detection and report contacts

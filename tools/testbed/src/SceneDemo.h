@@ -59,7 +59,7 @@ class SceneDemo : public Scene {
 		static int32_t shadowMapTextureLevel;
 
 		/// All the visual contact points
-		std::vector<VisualContactPoint*> mContactPoints;
+		std::vector<VisualContactPoint*> m_contactPoints;
 
 		/// Shadow map bias matrix
 		openglframework::Matrix4 mShadowMapBiasMatrix;

@@ -24,13 +24,13 @@ class Material {
 		// -------------------- Attributes -------------------- //
 
 		/// Friction coefficient (positive value)
-		float mFrictionCoefficient;
+		float m_frictionCoefficient;
 
 		/// Rolling resistance factor (positive value)
-		float mRollingResistance;
+		float m_rollingResistance;
 
 		/// Bounciness during collisions (between 0 and 1) where 1 is for a very bouncy body
-		float mBounciness;
+		float m_bounciness;
 
 	public :
 
@@ -72,7 +72,7 @@ class Material {
  * @return Bounciness factor (between 0 and 1) where 1 is very bouncy
  */
 inline float Material::getBounciness() const {
-	return mBounciness;
+	return m_bounciness;
 }
 
 // Set the bounciness.
@@ -83,7 +83,7 @@ inline float Material::getBounciness() const {
  */
 inline void Material::setBounciness(float bounciness) {
 	assert(bounciness >= float(0.0) && bounciness <= float(1.0));
-	mBounciness = bounciness;
+	m_bounciness = bounciness;
 }
 
 // Return the friction coefficient
@@ -91,7 +91,7 @@ inline void Material::setBounciness(float bounciness) {
  * @return Friction coefficient (positive value)
  */
 inline float Material::getFrictionCoefficient() const {
-	return mFrictionCoefficient;
+	return m_frictionCoefficient;
 }
 
 // Set the friction coefficient.
@@ -102,7 +102,7 @@ inline float Material::getFrictionCoefficient() const {
  */
 inline void Material::setFrictionCoefficient(float frictionCoefficient) {
 	assert(frictionCoefficient >= float(0.0));
-	mFrictionCoefficient = frictionCoefficient;
+	m_frictionCoefficient = frictionCoefficient;
 }
 
 // Return the rolling resistance factor. If this value is larger than zero,
@@ -112,7 +112,7 @@ inline void Material::setFrictionCoefficient(float frictionCoefficient) {
  * @return The rolling resistance factor (positive value)
  */
 inline float Material::getRollingResistance() const {
-	return mRollingResistance;
+	return m_rollingResistance;
 }
 
 // Set the rolling resistance factor. If this value is larger than zero,
@@ -123,7 +123,7 @@ inline float Material::getRollingResistance() const {
  */
 inline void Material::setRollingResistance(float rollingResistance) {
 	assert(rollingResistance >= 0);
-	mRollingResistance = rollingResistance;
+	m_rollingResistance = rollingResistance;
 }
 
 // Overloaded assignment operator
@@ -131,9 +131,9 @@ inline Material& Material::operator=(const Material& material) {
 
 	// Check for self-assignment
 	if (this != &material) {
-		mFrictionCoefficient = material.mFrictionCoefficient;
-		mBounciness = material.mBounciness;
-		mRollingResistance = material.mRollingResistance;
+		m_frictionCoefficient = material.m_frictionCoefficient;
+		m_bounciness = material.m_bounciness;
+		m_rollingResistance = material.m_rollingResistance;
 	}
 
 	// Return this material

@@ -66,12 +66,12 @@ Cone::Cone(float radius, float height, const openglframework::Vector3 &position,
 	mPreviousTransform = transform;
 
 	// Create a rigid body corresponding to the cone in the dynamics world
-	mBody = world->createCollisionBody(transform);
+	m_body = world->createCollisionBody(transform);
 
 	// Add a collision shape to the body and specify the mass of the shape
-	m_proxyShape = mBody->addCollisionShape(mConeShape, rp3d::Transform::identity());
+	m_proxyShape = m_body->addCollisionShape(mConeShape, rp3d::Transform::identity());
 
-	mTransformMatrix = mTransformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * mScalingMatrix;
 
 	// Create the VBOs and VAO
 	if (totalNbCones == 0) {
@@ -117,9 +117,9 @@ Cone::Cone(float radius, float height, const openglframework::Vector3 &position,
 	// Add a collision shape to the body and specify the mass of the shape
 	m_proxyShape = body->addCollisionShape(mConeShape, rp3d::Transform::identity(), mass);
 
-	mBody = body;
+	m_body = body;
 
-	mTransformMatrix = mTransformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * mScalingMatrix;
 
 	// Create the VBOs and VAO
 	if (totalNbCones == 0) {
@@ -155,18 +155,18 @@ void Cone::render(openglframework::Shader& shader,
 	shader.bind();
 
 	// Set the model to camera matrix
-	shader.setMatrix4x4Uniform("localToWorldMatrix", mTransformMatrix);
+	shader.setMatrix4x4Uniform("localToWorldMatrix", m_transformMatrix);
 	shader.setMatrix4x4Uniform("worldToCameraMatrix", worldToCameraMatrix);
 
 	// Set the normal matrix (inverse transpose of the 3x3 upper-left sub matrix of the
 	// model-view matrix)
-	const openglframework::Matrix4 localToCameraMatrix = worldToCameraMatrix * mTransformMatrix;
+	const openglframework::Matrix4 localToCameraMatrix = worldToCameraMatrix * m_transformMatrix;
 	const openglframework::Matrix3 normalMatrix =
 					   localToCameraMatrix.getUpperLeft3x3Matrix().getInverse().getTranspose();
 	shader.setMatrix3x3Uniform("normalMatrix", normalMatrix, false);
 
 	// Set the vertex color
-	openglframework::Color currentColor = mBody->isSleeping() ? mSleepingColor : mColor;
+	openglframework::Color currentColor = m_body->isSleeping() ? mSleepingColor : mColor;
 	openglframework::Vector4 color(currentColor.r, currentColor.g, currentColor.b, currentColor.a);
 	shader.setVector4Uniform("vertexColor", color, false);
 
@@ -265,12 +265,12 @@ void Cone::createVBOAndVAO() {
 void Cone::resetTransform(const rp3d::Transform& transform) {
 
 	// Reset the transform
-	mBody->setTransform(transform);
+	m_body->setTransform(transform);
 
-	mBody->setIsSleeping(false);
+	m_body->setIsSleeping(false);
 
 	// Reset the velocity of the rigid body
-	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(mBody);
+	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(m_body);
 	if (rigidBody != NULL) {
 		rigidBody->setLinearVelocity(rp3d::Vector3(0, 0, 0));
 		rigidBody->setAngularVelocity(rp3d::Vector3(0, 0, 0));

@@ -304,19 +304,19 @@ class ContactSolver {
 		// -------------------- Attributes -------------------- //
 
 		/// Split linear velocities for the position contact solver (split impulse)
-		Vector3* mSplitLinearVelocities;
+		Vector3* m_splitLinearVelocities;
 
 		/// Split angular velocities for the position contact solver (split impulse)
-		Vector3* mSplitAngularVelocities;
+		Vector3* m_splitAngularVelocities;
 
 		/// Current time step
-		float mTimeStep;
+		float m_timeStep;
 
 		/// Contact constraints
 		ContactManifoldSolver* mContactConstraints;
 
 		/// Number of contact constraints
-		uint32_t mNbContactManifolds;
+		uint32_t m_numberContactManifolds;
 
 		/// Array of linear velocities
 		Vector3* mLinearVelocities;
@@ -325,7 +325,7 @@ class ContactSolver {
 		Vector3* mAngularVelocities;
 
 		/// Reference to the map of rigid body to their index in the constrained velocities array
-		const std::map<RigidBody*, uint32_t>& mMapBodyToConstrainedVelocityIndex;
+		const std::map<RigidBody*, uint32_t>& m_mapBodyToConstrainedVelocityIndex;
 
 		/// True if the warm starting of the solver is active
 		bool mIsWarmStartingActive;
@@ -434,8 +434,8 @@ inline void ContactSolver::setSplitVelocitiesArrays(Vector3* splitLinearVelociti
 													Vector3* splitAngularVelocities) {
 	assert(splitLinearVelocities != NULL);
 	assert(splitAngularVelocities != NULL);
-	mSplitLinearVelocities = splitLinearVelocities;
-	mSplitAngularVelocities = splitAngularVelocities;
+	m_splitLinearVelocities = splitLinearVelocities;
+	m_splitAngularVelocities = splitAngularVelocities;
 }
 
 // Set the constrained velocities arrays

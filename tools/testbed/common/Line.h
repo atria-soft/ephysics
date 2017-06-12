@@ -37,7 +37,7 @@ class Line : public openglframework::Object3D {
 
 		// -------------------- Attributes -------------------- //
 
-		openglframework::Vector3 mWorldPoint1, mWorldPoint2;
+		openglframework::Vector3 m_worldPoint1, m_worldPoint2;
 
 		// -------------------- Methods -------------------- //
 
@@ -65,12 +65,12 @@ class Line : public openglframework::Object3D {
 
 // Return the first point of the line
 inline openglframework::Vector3 Line::getPoint1() const {
-	return mWorldPoint1;
+	return m_worldPoint1;
 }
 
 // Return the second point of the line
 inline openglframework::Vector3 Line::getPoint2() const {
-	return mWorldPoint2;
+	return m_worldPoint2;
 }
 
 #endif

@@ -23,7 +23,7 @@ struct FixedJointInfo : public JointInfo {
 		// -------------------- Attributes -------------------- //
 
 		/// Anchor point (in world-space coordinates)
-		Vector3 m_m_m_m_anchorPointWorldSpace;
+		Vector3 m_anchorPointWorldSpace;
 
 		/// Constructor
 		/**
@@ -35,7 +35,7 @@ struct FixedJointInfo : public JointInfo {
 		FixedJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
 					   const Vector3& initAnchorPointWorldSpace)
 					   : JointInfo(rigidBody1, rigidBody2, FIXEDJOINT),
-						 m_m_m_m_anchorPointWorldSpace(initAnchorPointWorldSpace){}
+						 m_anchorPointWorldSpace(initAnchorPointWorldSpace){}
 };
 
 // Class FixedJoint
@@ -85,13 +85,13 @@ class FixedJoint : public Joint {
 		Matrix3x3 m_inverseMassMatrixRotation;
 
 		/// Bias vector for the 3 translation constraints
-		Vector3 mBiasTranslation;
+		Vector3 m_biasTranslation;
 
 		/// Bias vector for the 3 rotation constraints
-		Vector3 mBiasRotation;
+		Vector3 m_biasRotation;
 
 		/// Inverse of the initial orientation difference between the two bodies
-		Quaternion mInitOrientationDifferenceInv;
+		Quaternion m_initOrientationDifferenceInv;
 
 		// -------------------- Methods -------------------- //
 

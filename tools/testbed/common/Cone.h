@@ -107,7 +107,7 @@ class Cone : public openglframework::Mesh, public PhysicsObject {
 };
 
 inline void Cone::updateTransform(float int32_terpolationFactor) {
-	mTransformMatrix = computeTransform(int32_terpolationFactor, mScalingMatrix);
+	m_transformMatrix = computeTransform(int32_terpolationFactor, mScalingMatrix);
 }
 
 #endif

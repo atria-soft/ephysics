@@ -71,9 +71,9 @@ Dumbbell::Dumbbell(const openglframework::Vector3 &position,
 	rp3d::Vector3 initPosition(position.x, position.y, position.z);
 	rp3d::float angleAroundX = 0;//rp3d::PI / 2;
 	rp3d::Quaternion initOrientation(angleAroundX, 0, 0);
-	rp3d::Transform transformBody(initPosition, initOrientation);
+	rp3d::Transform transform_body(initPosition, initOrientation);
 
-	mPreviousTransform = transformBody;
+	mPreviousTransform = transform_body;
 
 	// Initial transform of the first sphere collision shape of the dumbbell (in local-space)
 	rp3d::Transform transformSphereShape1(rp3d::Vector3(0, mDistanceBetweenSphere / 2.0f, 0), rp3d::Quaternion::identity());
@@ -85,16 +85,16 @@ Dumbbell::Dumbbell(const openglframework::Vector3 &position,
 	rp3d::Transform transformCylinderShape(rp3d::Vector3(0, 0, 0), rp3d::Quaternion::identity());
 
 	// Create a rigid body corresponding to the dumbbell in the dynamics world
-	rp3d::RigidBody* body = dynamicsWorld->createRigidBody(transformBody);
+	rp3d::RigidBody* body = dynamicsWorld->createRigidBody(transform_body);
 
 	// Add the three collision shapes to the body and specify the mass and transform of the shapes
 	m_proxyShapeSphere1 = body->addCollisionShape(mSphereShape, transformSphereShape1, massSphere);
 	m_proxyShapeSphere2 = body->addCollisionShape(mSphereShape, transformSphereShape2, massSphere);
 	m_proxyShapeCylinder = body->addCollisionShape(mCylinderShape, transformCylinderShape, massCylinder);
 
-	mBody = body;
+	m_body = body;
 
-	mTransformMatrix = mTransformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * mScalingMatrix;
 
 	// Create the VBOs and VAO
 	if (totalNbDumbbells == 0) {
@@ -140,7 +140,7 @@ Dumbbell::Dumbbell(const openglframework::Vector3 &position,
 	rp3d::Vector3 initPosition(position.x, position.y, position.z);
 	rp3d::float angleAroundX = 0;//rp3d::PI / 2;
 	rp3d::Quaternion initOrientation(angleAroundX, 0, 0);
-	rp3d::Transform transformBody(initPosition, initOrientation);
+	rp3d::Transform transform_body(initPosition, initOrientation);
 
 	// Initial transform of the first sphere collision shape of the dumbbell (in local-space)
 	rp3d::Transform transformSphereShape1(rp3d::Vector3(0, mDistanceBetweenSphere / 2.0f, 0), rp3d::Quaternion::identity());
@@ -152,14 +152,14 @@ Dumbbell::Dumbbell(const openglframework::Vector3 &position,
 	rp3d::Transform transformCylinderShape(rp3d::Vector3(0, 0, 0), rp3d::Quaternion::identity());
 
 	// Create a rigid body corresponding to the dumbbell in the dynamics world
-	mBody = world->createCollisionBody(transformBody);
+	m_body = world->createCollisionBody(transform_body);
 
 	// Add the three collision shapes to the body and specify the mass and transform of the shapes
-	m_proxyShapeSphere1 = mBody->addCollisionShape(mSphereShape, transformSphereShape1);
-	m_proxyShapeSphere2 = mBody->addCollisionShape(mSphereShape, transformSphereShape2);
-	m_proxyShapeCylinder = mBody->addCollisionShape(mCylinderShape, transformCylinderShape);
+	m_proxyShapeSphere1 = m_body->addCollisionShape(mSphereShape, transformSphereShape1);
+	m_proxyShapeSphere2 = m_body->addCollisionShape(mSphereShape, transformSphereShape2);
+	m_proxyShapeCylinder = m_body->addCollisionShape(mCylinderShape, transformCylinderShape);
 
-	mTransformMatrix = mTransformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * mScalingMatrix;
 
 	// Create the VBOs and VAO
 	if (totalNbDumbbells == 0) {
@@ -197,18 +197,18 @@ void Dumbbell::render(openglframework::Shader& shader,
 	shader.bind();
 
 	// Set the model to camera matrix
-	shader.setMatrix4x4Uniform("localToWorldMatrix", mTransformMatrix);
+	shader.setMatrix4x4Uniform("localToWorldMatrix", m_transformMatrix);
 	shader.setMatrix4x4Uniform("worldToCameraMatrix", worldToCameraMatrix);
 
 	// Set the normal matrix (inverse transpose of the 3x3 upper-left sub matrix of the
 	// model-view matrix)
-	const openglframework::Matrix4 localToCameraMatrix = worldToCameraMatrix * mTransformMatrix;
+	const openglframework::Matrix4 localToCameraMatrix = worldToCameraMatrix * m_transformMatrix;
 	const openglframework::Matrix3 normalMatrix =
 					   localToCameraMatrix.getUpperLeft3x3Matrix().getInverse().getTranspose();
 	shader.setMatrix3x3Uniform("normalMatrix", normalMatrix, false);
 
 	// Set the vertex color
-	openglframework::Color currentColor = mBody->isSleeping() ? mSleepingColor : mColor;
+	openglframework::Color currentColor = m_body->isSleeping() ? mSleepingColor : mColor;
 	openglframework::Vector4 color(currentColor.r, currentColor.g, currentColor.b, currentColor.a);
 	shader.setVector4Uniform("vertexColor", color, false);
 
@@ -307,12 +307,12 @@ void Dumbbell::createVBOAndVAO() {
 void Dumbbell::resetTransform(const rp3d::Transform& transform) {
 
 	// Reset the transform
-	mBody->setTransform(transform);
+	m_body->setTransform(transform);
 
-	mBody->setIsSleeping(false);
+	m_body->setIsSleeping(false);
 
 	// Reset the velocity of the rigid body
-	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(mBody);
+	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(m_body);
 	if (rigidBody != NULL) {
 		rigidBody->setLinearVelocity(rp3d::Vector3(0, 0, 0));
 		rigidBody->setAngularVelocity(rp3d::Vector3(0, 0, 0));

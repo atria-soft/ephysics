@@ -22,16 +22,16 @@ using namespace reactphysics3d;
 RigidBody::RigidBody(const Transform& transform, CollisionWorld& world, bodyindex id)
 		  : CollisionBody(transform, world, id), mInitMass(float(1.0)),
 			mCenterOfMassLocal(0, 0, 0), mCenterOfMassWorld(transform.getPosition()),
-			mIsGravityEnabled(true), mLinearDamping(float(0.0)), mAngularDamping(float(0.0)),
-			mJointsList(NULL) {
+			m_isGravityEnabled(true), mLinearDamping(float(0.0)), mAngularDamping(float(0.0)),
+			m_jointsList(NULL) {
 
 	// Compute the inverse mass
-	mMassInverse = float(1.0) / mInitMass;
+	m_massInverse = float(1.0) / mInitMass;
 }
 
 // Destructor
 RigidBody::~RigidBody() {
-	assert(mJointsList == NULL);
+	assert(m_jointsList == NULL);
 }
 
 // Set the type of the body
@@ -49,7 +49,7 @@ RigidBody::~RigidBody() {
  */
 void RigidBody::setType(BodyType type) {
 
-	if (mType == type) return;
+	if (m_type == type) return;
 
 	CollisionBody::setType(type);
 
@@ -57,7 +57,7 @@ void RigidBody::setType(BodyType type) {
 	recomputeMassInformation();
 
 	// If it is a static body
-	if (mType == STATIC) {
+	if (m_type == STATIC) {
 
 		// Reset the velocity to zero
 		mLinearVelocity.setToZero();
@@ -65,16 +65,16 @@ void RigidBody::setType(BodyType type) {
 	}
 
 	// If it is a static or a kinematic body
-	if (mType == STATIC || mType == KINEMATIC) {
+	if (m_type == STATIC || m_type == KINEMATIC) {
 
 		// Reset the inverse mass and inverse inertia tensor to zero
-		mMassInverse = float(0.0);
+		m_massInverse = float(0.0);
 		mInertiaTensorLocal.setToZero();
 		mInertiaTensorLocalInverse.setToZero();
 
 	}
 	else {  // If it is a dynamic body
-		mMassInverse = float(1.0) / mInitMass;
+		m_massInverse = float(1.0) / mInitMass;
 		mInertiaTensorLocalInverse = mInertiaTensorLocal.getInverse();
 	}
 
@@ -100,7 +100,7 @@ void RigidBody::setType(BodyType type) {
  */
 void RigidBody::setInertiaTensorLocal(const Matrix3x3& inertiaTensorLocal) {
 
-	if (mType != DYNAMIC) return;
+	if (m_type != DYNAMIC) return;
 
 	mInertiaTensorLocal = inertiaTensorLocal;
 
@@ -115,13 +115,13 @@ void RigidBody::setInertiaTensorLocal(const Matrix3x3& inertiaTensorLocal) {
  */
 void RigidBody::setCenterOfMassLocal(const Vector3& centerOfMassLocal) {
 
-	if (mType != DYNAMIC) return;
+	if (m_type != DYNAMIC) return;
 
 	const Vector3 oldCenterOfMass = mCenterOfMassWorld;
 	mCenterOfMassLocal = centerOfMassLocal;
 
 	// Compute the center of mass in world-space coordinates
-	mCenterOfMassWorld = mTransform * mCenterOfMassLocal;
+	mCenterOfMassWorld = m_transform * mCenterOfMassLocal;
 
 	// Update the linear velocity of the center of mass
 	mLinearVelocity += mAngularVelocity.cross(mCenterOfMassWorld - oldCenterOfMass);
@@ -133,34 +133,34 @@ void RigidBody::setCenterOfMassLocal(const Vector3& centerOfMassLocal) {
  */
 void RigidBody::setMass(float mass) {
 
-	if (mType != DYNAMIC) return;
+	if (m_type != DYNAMIC) return;
 
 	mInitMass = mass;
 
 	if (mInitMass > float(0.0)) {
-		mMassInverse = float(1.0) / mInitMass;
+		m_massInverse = float(1.0) / mInitMass;
 	}
 	else {
 		mInitMass = float(1.0);
-		mMassInverse = float(1.0);
+		m_massInverse = float(1.0);
 	}
 }
 
 // Remove a joint from the joints list
-void RigidBody::removeJointFromJointsList(MemoryAllocator& memoryAllocator, const Joint* joint) {
+void RigidBody::removeJointFrom_jointsList(MemoryAllocator& memoryAllocator, const Joint* joint) {
 
 	assert(joint != NULL);
-	assert(mJointsList != NULL);
+	assert(m_jointsList != NULL);
 
 	// Remove the joint from the linked list of the joints of the first body
-	if (mJointsList->joint == joint) {   // If the first element is the one to remove
-		JointListElement* elementToRemove = mJointsList;
-		mJointsList = elementToRemove->next;
+	if (m_jointsList->joint == joint) {   // If the first element is the one to remove
+		JointListElement* elementToRemove = m_jointsList;
+		m_jointsList = elementToRemove->next;
 		elementToRemove->~JointListElement();
 		memoryAllocator.release(elementToRemove, sizeof(JointListElement));
 	}
 	else {  // If the element to remove is not the first one in the list
-		JointListElement* currentElement = mJointsList;
+		JointListElement* currentElement = m_jointsList;
 		while (currentElement->next != NULL) {
 			if (currentElement->next->joint == joint) {
 				JointListElement* elementToRemove = currentElement->next;
@@ -197,27 +197,27 @@ ProxyShape* RigidBody::addCollisionShape(CollisionShape* collisionShape,
 	assert(mass > float(0.0));
 
 	// Create a new proxy collision shape to attach the collision shape to the body
-	ProxyShape* proxyShape = new (mWorld.mMemoryAllocator.allocate(
+	ProxyShape* proxyShape = new (m_world.m_memoryAllocator.allocate(
 									  sizeof(ProxyShape))) ProxyShape(this, collisionShape,
 																	  transform, mass);
 
 	// Add it to the list of proxy collision shapes of the body
-	if (mProxyCollisionShapes == NULL) {
-		mProxyCollisionShapes = proxyShape;
+	if (m_proxyCollisionShapes == NULL) {
+		m_proxyCollisionShapes = proxyShape;
 	}
 	else {
-		proxyShape->mNext = mProxyCollisionShapes;
-		mProxyCollisionShapes = proxyShape;
+		proxyShape->m_next = m_proxyCollisionShapes;
+		m_proxyCollisionShapes = proxyShape;
 	}
 
 	// Compute the world-space AABB of the new collision shape
 	AABB aabb;
-	collisionShape->computeAABB(aabb, mTransform * transform);
+	collisionShape->computeAABB(aabb, m_transform * transform);
 
 	// Notify the collision detection about this new collision shape
-	mWorld.m_collisionDetection.addProxyCollisionShape(proxyShape, aabb);
+	m_world.m_collisionDetection.addProxyCollisionShape(proxyShape, aabb);
 
-	mNbCollisionShapes++;
+	m_numberCollisionShapes++;
 
 	// Recompute the center of mass, total mass and inertia tensor of the body with the new
 	// collision shape
@@ -250,7 +250,7 @@ void RigidBody::removeCollisionShape(const ProxyShape* proxyShape) {
 void RigidBody::setLinearVelocity(const Vector3& linearVelocity) {
 
 	// If it is a static body, we do nothing
-	if (mType == STATIC) return;
+	if (m_type == STATIC) return;
 
 	// Update the linear velocity of the current body state
 	mLinearVelocity = linearVelocity;
@@ -268,7 +268,7 @@ void RigidBody::setLinearVelocity(const Vector3& linearVelocity) {
 void RigidBody::setAngularVelocity(const Vector3& angularVelocity) {
 
 	// If it is a static body, we do nothing
-	if (mType == STATIC) return;
+	if (m_type == STATIC) return;
 
 	// Set the angular velocity
 	mAngularVelocity = angularVelocity;
@@ -287,12 +287,12 @@ void RigidBody::setAngularVelocity(const Vector3& angularVelocity) {
 void RigidBody::setTransform(const Transform& transform) {
 
 	// Update the transform of the body
-	mTransform = transform;
+	m_transform = transform;
 
 	const Vector3 oldCenterOfMass = mCenterOfMassWorld;
 
 	// Compute the new center of mass in world-space coordinates
-	mCenterOfMassWorld = mTransform * mCenterOfMassLocal;
+	mCenterOfMassWorld = m_transform * mCenterOfMassLocal;
 
 	// Update the linear velocity of the center of mass
 	mLinearVelocity += mAngularVelocity.cross(mCenterOfMassWorld - oldCenterOfMass);
@@ -306,40 +306,40 @@ void RigidBody::setTransform(const Transform& transform) {
 void RigidBody::recomputeMassInformation() {
 
 	mInitMass = float(0.0);
-	mMassInverse = float(0.0);
+	m_massInverse = float(0.0);
 	mInertiaTensorLocal.setToZero();
 	mInertiaTensorLocalInverse.setToZero();
 	mCenterOfMassLocal.setToZero();
 
 	// If it is STATIC or KINEMATIC body
-	if (mType == STATIC || mType == KINEMATIC) {
-		mCenterOfMassWorld = mTransform.getPosition();
+	if (m_type == STATIC || m_type == KINEMATIC) {
+		mCenterOfMassWorld = m_transform.getPosition();
 		return;
 	}
 
-	assert(mType == DYNAMIC);
+	assert(m_type == DYNAMIC);
 
 	// Compute the total mass of the body
-	for (ProxyShape* shape = mProxyCollisionShapes; shape != NULL; shape = shape->mNext) {
+	for (ProxyShape* shape = m_proxyCollisionShapes; shape != NULL; shape = shape->m_next) {
 		mInitMass += shape->getMass();
 		mCenterOfMassLocal += shape->getLocalToBodyTransform().getPosition() * shape->getMass();
 	}
 
 	if (mInitMass > float(0.0)) {
-		mMassInverse = float(1.0) / mInitMass;
+		m_massInverse = float(1.0) / mInitMass;
 	}
 	else {
 		mInitMass = float(1.0);
-		mMassInverse = float(1.0);
+		m_massInverse = float(1.0);
 	}
 
 	// Compute the center of mass
 	const Vector3 oldCenterOfMass = mCenterOfMassWorld;
-	mCenterOfMassLocal *= mMassInverse;
-	mCenterOfMassWorld = mTransform * mCenterOfMassLocal;
+	mCenterOfMassLocal *= m_massInverse;
+	mCenterOfMassWorld = m_transform * mCenterOfMassLocal;
 
 	// Compute the total mass and inertia tensor using all the collision shapes
-	for (ProxyShape* shape = mProxyCollisionShapes; shape != NULL; shape = shape->mNext) {
+	for (ProxyShape* shape = m_proxyCollisionShapes; shape != NULL; shape = shape->m_next) {
 
 		// Get the inertia tensor of the collision shape in its local-space
 		Matrix3x3 inertiaTensor;
@@ -378,18 +378,18 @@ void RigidBody::updateBroadPhaseState() const {
 
 	PROFILE("RigidBody::updateBroadPhaseState()");
 
-	DynamicsWorld& world = static_cast<DynamicsWorld&>(mWorld);
- 	 const Vector3 displacement = world.mTimeStep * mLinearVelocity;
+	DynamicsWorld& world = static_cast<DynamicsWorld&>(m_world);
+ 	 const Vector3 displacement = world.m_timeStep * mLinearVelocity;
 
 	// For all the proxy collision shapes of the body
-	for (ProxyShape* shape = mProxyCollisionShapes; shape != NULL; shape = shape->mNext) {
+	for (ProxyShape* shape = m_proxyCollisionShapes; shape != NULL; shape = shape->m_next) {
 
 		// Recompute the world-space AABB of the collision shape
 		AABB aabb;
-		shape->getCollisionShape()->computeAABB(aabb, mTransform *shape->getLocalToBodyTransform());
+		shape->getCollisionShape()->computeAABB(aabb, m_transform *shape->getLocalToBodyTransform());
 
 		// Update the broad-phase state for the proxy collision shape
-		mWorld.m_collisionDetection.updateProxyCollisionShape(shape, aabb, displacement);
+		m_world.m_collisionDetection.updateProxyCollisionShape(shape, aabb, displacement);
 	}
 }
 

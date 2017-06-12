@@ -57,7 +57,7 @@ Sphere::Sphere(float radius, const openglframework::Vector3 &position,
 	// Create the collision shape for the rigid body (sphere shape)
 	// ReactPhysics3D will clone this object to create an int32_ternal one. Therefore,
 	// it is OK if this object is destroyed right after calling RigidBody::addCollisionShape()
-	mCollisionShape = new rp3d::SphereShape(mRadius);
+	m_collisionShape = new rp3d::SphereShape(mRadius);
 
 	// Initial position and orientation of the rigid body
 	rp3d::Vector3 initPosition(position.x, position.y, position.z);
@@ -67,12 +67,12 @@ Sphere::Sphere(float radius, const openglframework::Vector3 &position,
 	mPreviousTransform = transform;
 
 	// Create a rigid body corresponding to the sphere in the dynamics world
-	mBody = world->createCollisionBody(transform);
+	m_body = world->createCollisionBody(transform);
 
 	// Add a collision shape to the body and specify the mass of the shape
-	m_proxyShape = mBody->addCollisionShape(mCollisionShape, rp3d::Transform::identity());
+	m_proxyShape = m_body->addCollisionShape(m_collisionShape, rp3d::Transform::identity());
 
-	mTransformMatrix = mTransformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * mScalingMatrix;
 
 	// Create the VBOs and VAO
 	if (totalNbSpheres == 0) {
@@ -106,7 +106,7 @@ Sphere::Sphere(float radius, const openglframework::Vector3 &position,
 	// Create the collision shape for the rigid body (sphere shape)
 	// ReactPhysics3D will clone this object to create an int32_ternal one. Therefore,
 	// it is OK if this object is destroyed right after calling RigidBody::addCollisionShape()
-	mCollisionShape = new rp3d::SphereShape(mRadius);
+	m_collisionShape = new rp3d::SphereShape(mRadius);
 
 	// Initial position and orientation of the rigid body
 	rp3d::Vector3 initPosition(position.x, position.y, position.z);
@@ -117,11 +117,11 @@ Sphere::Sphere(float radius, const openglframework::Vector3 &position,
 	rp3d::RigidBody* body = world->createRigidBody(transform);
 
 	// Add a collision shape to the body and specify the mass of the shape
-	m_proxyShape = body->addCollisionShape(mCollisionShape, rp3d::Transform::identity(), mass);
+	m_proxyShape = body->addCollisionShape(m_collisionShape, rp3d::Transform::identity(), mass);
 
-	mBody = body;
+	m_body = body;
 
-	mTransformMatrix = mTransformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * mScalingMatrix;
 
 	// Create the VBOs and VAO
 	if (totalNbSpheres == 0) {
@@ -145,7 +145,7 @@ Sphere::~Sphere() {
 		mVBOTextureCoords.destroy();
 		mVAO.destroy();
 	}
-	delete mCollisionShape;
+	delete m_collisionShape;
 	totalNbSpheres--;
 }
 
@@ -157,18 +157,18 @@ void Sphere::render(openglframework::Shader& shader,
 	shader.bind();
 
 	// Set the model to camera matrix
-	shader.setMatrix4x4Uniform("localToWorldMatrix", mTransformMatrix);
+	shader.setMatrix4x4Uniform("localToWorldMatrix", m_transformMatrix);
 	shader.setMatrix4x4Uniform("worldToCameraMatrix", worldToCameraMatrix);
 
 	// Set the normal matrix (inverse transpose of the 3x3 upper-left sub matrix of the
 	// model-view matrix)
-	const openglframework::Matrix4 localToCameraMatrix = worldToCameraMatrix * mTransformMatrix;
+	const openglframework::Matrix4 localToCameraMatrix = worldToCameraMatrix * m_transformMatrix;
 	const openglframework::Matrix3 normalMatrix =
 					   localToCameraMatrix.getUpperLeft3x3Matrix().getInverse().getTranspose();
 	shader.setMatrix3x3Uniform("normalMatrix", normalMatrix, false);
 
 	// Set the vertex color
-	openglframework::Color currentColor = mBody->isSleeping() ? mSleepingColor : mColor;
+	openglframework::Color currentColor = m_body->isSleeping() ? mSleepingColor : mColor;
 	openglframework::Vector4 color(currentColor.r, currentColor.g, currentColor.b, currentColor.a);
 	shader.setVector4Uniform("vertexColor", color, false);
 
@@ -267,12 +267,12 @@ void Sphere::createVBOAndVAO() {
 void Sphere::resetTransform(const rp3d::Transform& transform) {
 
 	// Reset the transform
-	mBody->setTransform(transform);
+	m_body->setTransform(transform);
 
-	mBody->setIsSleeping(false);
+	m_body->setIsSleeping(false);
 
 	// Reset the velocity of the rigid body
-	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(mBody);
+	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(m_body);
 	if (rigidBody != NULL) {
 		rigidBody->setLinearVelocity(rp3d::Vector3(0, 0, 0));
 		rigidBody->setAngularVelocity(rp3d::Vector3(0, 0, 0));

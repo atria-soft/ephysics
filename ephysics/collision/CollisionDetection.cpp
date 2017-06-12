@@ -23,12 +23,12 @@ using namespace std;
 
 // Constructor
 CollisionDetection::CollisionDetection(CollisionWorld* world, MemoryAllocator& memoryAllocator)
-				   : mMemoryAllocator(memoryAllocator),
-					 mWorld(world), mBroadPhaseAlgorithm(*this),
-					 mIsCollisionShapesAdded(false) {
+				   : m_memoryAllocator(memoryAllocator),
+					 m_world(world), m_broadPhaseAlgorithm(*this),
+					 m_isCollisionShapesAdded(false) {
 
 	// Set the default collision dispatch configuration
-	setCollisionDispatch(&mDefaultCollisionDispatch);
+	setCollisionDispatch(&m_defaultCollisionDispatch);
 
 	// Fill-in the collision detection matrix with algorithms
 	fillInCollisionMatrix();
@@ -73,29 +73,29 @@ void CollisionDetection::reportCollisionBetweenShapes(CollisionCallback* callbac
 
 	// For each possible collision pair of bodies
 	map<overlappingpairid, OverlappingPair*>::iterator it;
-	for (it = mOverlappingPairs.begin(); it != mOverlappingPairs.end(); ++it) {
+	for (it = m_overlappingPairs.begin(); it != m_overlappingPairs.end(); ++it) {
 
 		OverlappingPair* pair = it->second;
 
 		const ProxyShape* shape1 = pair->getShape1();
 		const ProxyShape* shape2 = pair->getShape2();
 
-		assert(shape1->mBroadPhaseID != shape2->mBroadPhaseID);
+		assert(shape1->m_broadPhaseID != shape2->m_broadPhaseID);
 
 		// If both shapes1 and shapes2 sets are non-empty, we check that
 		// shape1 is among on set and shape2 is among the other one
 		if (!shapes1.empty() && !shapes2.empty() &&
-			(shapes1.count(shape1->mBroadPhaseID) == 0 || shapes2.count(shape2->mBroadPhaseID) == 0) &&
-			(shapes1.count(shape2->mBroadPhaseID) == 0 || shapes2.count(shape1->mBroadPhaseID) == 0)) {
+			(shapes1.count(shape1->m_broadPhaseID) == 0 || shapes2.count(shape2->m_broadPhaseID) == 0) &&
+			(shapes1.count(shape2->m_broadPhaseID) == 0 || shapes2.count(shape1->m_broadPhaseID) == 0)) {
 			continue;
 		}
 		if (!shapes1.empty() && shapes2.empty() &&
-			shapes1.count(shape1->mBroadPhaseID) == 0 && shapes1.count(shape2->mBroadPhaseID) == 0)
+			shapes1.count(shape1->m_broadPhaseID) == 0 && shapes1.count(shape2->m_broadPhaseID) == 0)
 		{
 			continue;
 		}
 		if (!shapes2.empty() && shapes1.empty() &&
-			shapes2.count(shape1->mBroadPhaseID) == 0 && shapes2.count(shape2->mBroadPhaseID) == 0)
+			shapes2.count(shape1->m_broadPhaseID) == 0 && shapes2.count(shape2->m_broadPhaseID) == 0)
 		{
 			continue;
 		}
@@ -133,12 +133,12 @@ void CollisionDetection::computeBroadPhase() {
 	PROFILE("CollisionDetection::computeBroadPhase()");
 
 	// If new collision shapes have been added to bodies
-	if (mIsCollisionShapesAdded) {
+	if (m_isCollisionShapesAdded) {
 
 		// Ask the broad-phase to recompute the overlapping pairs of collision
 		// shapes. This call can only add new overlapping pairs in the collision
 		// detection.
-		mBroadPhaseAlgorithm.computeOverlappingPairs();
+		m_broadPhaseAlgorithm.computeOverlappingPairs();
 	}
 }
 
@@ -148,25 +148,25 @@ void CollisionDetection::computeNarrowPhase() {
 	PROFILE("CollisionDetection::computeNarrowPhase()");
 
 	// Clear the set of overlapping pairs in narrow-phase contact
-	mContactOverlappingPairs.clear();
+	m_contactOverlappingPairs.clear();
 	
 	// For each possible collision pair of bodies
 	map<overlappingpairid, OverlappingPair*>::iterator it;
-	for (it = mOverlappingPairs.begin(); it != mOverlappingPairs.end(); ) {
+	for (it = m_overlappingPairs.begin(); it != m_overlappingPairs.end(); ) {
 
 		OverlappingPair* pair = it->second;
 
 		ProxyShape* shape1 = pair->getShape1();
 		ProxyShape* shape2 = pair->getShape2();
 
-		assert(shape1->mBroadPhaseID != shape2->mBroadPhaseID);
+		assert(shape1->m_broadPhaseID != shape2->m_broadPhaseID);
 
 		// Check if the collision filtering allows collision between the two shapes and
 		// that the two shapes are still overlapping. Otherwise, we destroy the
 		// overlapping pair
 		if (((shape1->getCollideWithMaskBits() & shape2->getCollisionCategoryBits()) == 0 ||
 			 (shape1->getCollisionCategoryBits() & shape2->getCollideWithMaskBits()) == 0) ||
-			 !mBroadPhaseAlgorithm.testOverlappingShapes(shape1, shape2)) {
+			 !m_broadPhaseAlgorithm.testOverlappingShapes(shape1, shape2)) {
 
 			std::map<overlappingpairid, OverlappingPair*>::iterator itToRemove = it;
 			++it;
@@ -175,8 +175,8 @@ void CollisionDetection::computeNarrowPhase() {
 
 			// Destroy the overlapping pair
 			itToRemove->second->~OverlappingPair();
-			mWorld->mMemoryAllocator.release(itToRemove->second, sizeof(OverlappingPair));
-			mOverlappingPairs.erase(itToRemove);
+			m_world->m_memoryAllocator.release(itToRemove->second, sizeof(OverlappingPair));
+			m_overlappingPairs.erase(itToRemove);
 			continue;
 		}
 		else {
@@ -196,12 +196,12 @@ void CollisionDetection::computeNarrowPhase() {
 
 		// Check if the bodies are in the set of bodies that cannot collide between each other
 		bodyindexpair bodiesIndex = OverlappingPair::computeBodiesIndexPair(body1, body2);
-		if (mNoCollisionPairs.count(bodiesIndex) > 0) continue;
+		if (m_noCollisionPairs.count(bodiesIndex) > 0) continue;
 		
 		// Select the narrow phase algorithm to use according to the two collision shapes
 		const CollisionShapeType shape1Type = shape1->getCollisionShape()->getType();
 		const CollisionShapeType shape2Type = shape2->getCollisionShape()->getType();
-		NarrowPhaseAlgorithm* narrowPhaseAlgorithm = mCollisionMatrix[shape1Type][shape2Type];
+		NarrowPhaseAlgorithm* narrowPhaseAlgorithm = m_collisionMatrix[shape1Type][shape2Type];
 
 		// If there is no collision algorithm between those two kinds of shapes
 		if (narrowPhaseAlgorithm == NULL) continue;
@@ -230,35 +230,35 @@ void CollisionDetection::computeNarrowPhaseBetweenShapes(CollisionCallback* call
 														 const std::set<uint32_t>& shapes1,
 														 const std::set<uint32_t>& shapes2) {
 
-	mContactOverlappingPairs.clear();
+	m_contactOverlappingPairs.clear();
 
 	// For each possible collision pair of bodies
 	map<overlappingpairid, OverlappingPair*>::iterator it;
-	for (it = mOverlappingPairs.begin(); it != mOverlappingPairs.end(); ) {
+	for (it = m_overlappingPairs.begin(); it != m_overlappingPairs.end(); ) {
 
 		OverlappingPair* pair = it->second;
 
 		ProxyShape* shape1 = pair->getShape1();
 		ProxyShape* shape2 = pair->getShape2();
 
-		assert(shape1->mBroadPhaseID != shape2->mBroadPhaseID);
+		assert(shape1->m_broadPhaseID != shape2->m_broadPhaseID);
 
 		// If both shapes1 and shapes2 sets are non-empty, we check that
 		// shape1 is among on set and shape2 is among the other one
 		if (!shapes1.empty() && !shapes2.empty() &&
-			(shapes1.count(shape1->mBroadPhaseID) == 0 || shapes2.count(shape2->mBroadPhaseID) == 0) &&
-			(shapes1.count(shape2->mBroadPhaseID) == 0 || shapes2.count(shape1->mBroadPhaseID) == 0)) {
+			(shapes1.count(shape1->m_broadPhaseID) == 0 || shapes2.count(shape2->m_broadPhaseID) == 0) &&
+			(shapes1.count(shape2->m_broadPhaseID) == 0 || shapes2.count(shape1->m_broadPhaseID) == 0)) {
 			++it;
 			continue;
 		}
 		if (!shapes1.empty() && shapes2.empty() &&
-			shapes1.count(shape1->mBroadPhaseID) == 0 && shapes1.count(shape2->mBroadPhaseID) == 0)
+			shapes1.count(shape1->m_broadPhaseID) == 0 && shapes1.count(shape2->m_broadPhaseID) == 0)
 		{
 			++it;
 			continue;
 		}
 		if (!shapes2.empty() && shapes1.empty() &&
-			shapes2.count(shape1->mBroadPhaseID) == 0 && shapes2.count(shape2->mBroadPhaseID) == 0)
+			shapes2.count(shape1->m_broadPhaseID) == 0 && shapes2.count(shape2->m_broadPhaseID) == 0)
 		{
 			++it;
 			continue;
@@ -269,7 +269,7 @@ void CollisionDetection::computeNarrowPhaseBetweenShapes(CollisionCallback* call
 		// overlapping pair
 		if (((shape1->getCollideWithMaskBits() & shape2->getCollisionCategoryBits()) == 0 ||
 			 (shape1->getCollisionCategoryBits() & shape2->getCollideWithMaskBits()) == 0) ||
-			 !mBroadPhaseAlgorithm.testOverlappingShapes(shape1, shape2)) {
+			 !m_broadPhaseAlgorithm.testOverlappingShapes(shape1, shape2)) {
 
 			std::map<overlappingpairid, OverlappingPair*>::iterator itToRemove = it;
 			++it;
@@ -278,8 +278,8 @@ void CollisionDetection::computeNarrowPhaseBetweenShapes(CollisionCallback* call
 
 			// Destroy the overlapping pair
 			itToRemove->second->~OverlappingPair();
-			mWorld->mMemoryAllocator.release(itToRemove->second, sizeof(OverlappingPair));
-			mOverlappingPairs.erase(itToRemove);
+			m_world->m_memoryAllocator.release(itToRemove->second, sizeof(OverlappingPair));
+			m_overlappingPairs.erase(itToRemove);
 			continue;
 		}
 		else {
@@ -295,7 +295,7 @@ void CollisionDetection::computeNarrowPhaseBetweenShapes(CollisionCallback* call
 		// Check if the two bodies are allowed to collide, otherwise, we do not test for collision
 		if (body1->getType() != DYNAMIC && body2->getType() != DYNAMIC) continue;
 		bodyindexpair bodiesIndex = OverlappingPair::computeBodiesIndexPair(body1, body2);
-		if (mNoCollisionPairs.count(bodiesIndex) > 0) continue;
+		if (m_noCollisionPairs.count(bodiesIndex) > 0) continue;
 
 		// Check if the two bodies are sleeping, if so, we do no test collision between them
 		if (body1->isSleeping() && body2->isSleeping()) continue;
@@ -303,7 +303,7 @@ void CollisionDetection::computeNarrowPhaseBetweenShapes(CollisionCallback* call
 		// Select the narrow phase algorithm to use according to the two collision shapes
 		const CollisionShapeType shape1Type = shape1->getCollisionShape()->getType();
 		const CollisionShapeType shape2Type = shape2->getCollisionShape()->getType();
-		NarrowPhaseAlgorithm* narrowPhaseAlgorithm = mCollisionMatrix[shape1Type][shape2Type];
+		NarrowPhaseAlgorithm* narrowPhaseAlgorithm = m_collisionMatrix[shape1Type][shape2Type];
 
 		// If there is no collision algorithm between those two kinds of shapes
 		if (narrowPhaseAlgorithm == NULL) continue;
@@ -332,7 +332,7 @@ void CollisionDetection::computeNarrowPhaseBetweenShapes(CollisionCallback* call
 /// This method is called by the broad-phase collision detection algorithm
 void CollisionDetection::broadPhaseNotifyOverlappingPair(ProxyShape* shape1, ProxyShape* shape2) {
 
-	assert(shape1->mBroadPhaseID != shape2->mBroadPhaseID);
+	assert(shape1->m_broadPhaseID != shape2->m_broadPhaseID);
 
 	// If the two proxy collision shapes are from the same body, skip it
 	if (shape1->getBody()->getID() == shape2->getBody()->getID()) return;
@@ -345,21 +345,21 @@ void CollisionDetection::broadPhaseNotifyOverlappingPair(ProxyShape* shape1, Pro
 	overlappingpairid pairID = OverlappingPair::computeID(shape1, shape2);
 
 	// Check if the overlapping pair already exists
-	if (mOverlappingPairs.find(pairID) != mOverlappingPairs.end()) return;
+	if (m_overlappingPairs.find(pairID) != m_overlappingPairs.end()) return;
 
 	// Compute the maximum number of contact manifolds for this pair
 	int32_t nbMaxManifolds = CollisionShape::computeNbMaxContactManifolds(shape1->getCollisionShape()->getType(),
 																	  shape2->getCollisionShape()->getType());
 
 	// Create the overlapping pair and add it int32_to the set of overlapping pairs
-	OverlappingPair* newPair = new (mWorld->mMemoryAllocator.allocate(sizeof(OverlappingPair)))
-							  OverlappingPair(shape1, shape2, nbMaxManifolds, mWorld->mMemoryAllocator);
+	OverlappingPair* newPair = new (m_world->m_memoryAllocator.allocate(sizeof(OverlappingPair)))
+							  OverlappingPair(shape1, shape2, nbMaxManifolds, m_world->m_memoryAllocator);
 	assert(newPair != NULL);
 
 #ifndef NDEBUG
 	std::pair<map<overlappingpairid, OverlappingPair*>::iterator, bool> check =
 #endif
-	mOverlappingPairs.insert(make_pair(pairID, newPair));
+	m_overlappingPairs.insert(make_pair(pairID, newPair));
 	assert(check.second);
 
 	// Wake up the two bodies
@@ -372,9 +372,9 @@ void CollisionDetection::removeProxyCollisionShape(ProxyShape* proxyShape) {
 
 	// Remove all the overlapping pairs involving this proxy shape
 	std::map<overlappingpairid, OverlappingPair*>::iterator it;
-	for (it = mOverlappingPairs.begin(); it != mOverlappingPairs.end(); ) {
-		if (it->second->getShape1()->mBroadPhaseID == proxyShape->mBroadPhaseID||
-			it->second->getShape2()->mBroadPhaseID == proxyShape->mBroadPhaseID) {
+	for (it = m_overlappingPairs.begin(); it != m_overlappingPairs.end(); ) {
+		if (it->second->getShape1()->m_broadPhaseID == proxyShape->m_broadPhaseID||
+			it->second->getShape2()->m_broadPhaseID == proxyShape->m_broadPhaseID) {
 			std::map<overlappingpairid, OverlappingPair*>::iterator itToRemove = it;
 			++it;
 
@@ -382,8 +382,8 @@ void CollisionDetection::removeProxyCollisionShape(ProxyShape* proxyShape) {
 
 			// Destroy the overlapping pair
 			itToRemove->second->~OverlappingPair();
-			mWorld->mMemoryAllocator.release(itToRemove->second, sizeof(OverlappingPair));
-			mOverlappingPairs.erase(itToRemove);
+			m_world->m_memoryAllocator.release(itToRemove->second, sizeof(OverlappingPair));
+			m_overlappingPairs.erase(itToRemove);
 		}
 		else {
 			++it;
@@ -391,7 +391,7 @@ void CollisionDetection::removeProxyCollisionShape(ProxyShape* proxyShape) {
 	}
 
 	// Remove the body from the broad-phase
-	mBroadPhaseAlgorithm.removeProxyCollisionShape(proxyShape);
+	m_broadPhaseAlgorithm.removeProxyCollisionShape(proxyShape);
 }
 
 // Called by a narrow-phase collision algorithm when a new contact has been found
@@ -401,14 +401,14 @@ void CollisionDetection::notifyContact(OverlappingPair* overlappingPair, const C
 	if (overlappingPair->getNbContactPoints() == 0) {
 
 		// Trigger a callback event
-		if (mWorld->mEventListener != NULL) mWorld->mEventListener->beginContact(contactInfo);
+		if (m_world->m_eventListener != NULL) m_world->m_eventListener->beginContact(contactInfo);
 	}
 
 	// Create a new contact
 	createContact(overlappingPair, contactInfo);
 
 	// Trigger a callback event for the new contact
-	if (mWorld->mEventListener != NULL) mWorld->mEventListener->newContact(contactInfo);
+	if (m_world->m_eventListener != NULL) m_world->m_eventListener->newContact(contactInfo);
 }
 
 // Create a new contact
@@ -416,7 +416,7 @@ void CollisionDetection::createContact(OverlappingPair* overlappingPair,
 									   const ContactPointInfo& contactInfo) {
 
 	// Create a new contact
-	ContactPoint* contact = new (mWorld->mMemoryAllocator.allocate(sizeof(ContactPoint)))
+	ContactPoint* contact = new (m_world->m_memoryAllocator.allocate(sizeof(ContactPoint)))
 								 ContactPoint(contactInfo);
 
 	// Add the contact to the contact manifold set of the corresponding overlapping pair
@@ -425,14 +425,14 @@ void CollisionDetection::createContact(OverlappingPair* overlappingPair,
 	// Add the overlapping pair int32_to the set of pairs in contact during narrow-phase
 	overlappingpairid pairId = OverlappingPair::computeID(overlappingPair->getShape1(),
 														  overlappingPair->getShape2());
-	mContactOverlappingPairs[pairId] = overlappingPair;
+	m_contactOverlappingPairs[pairId] = overlappingPair;
 }
 
 void CollisionDetection::addAllContactManifoldsToBodies() {
 
 	// For each overlapping pairs in contact during the narrow-phase
 	std::map<overlappingpairid, OverlappingPair*>::iterator it;
-	for (it = mContactOverlappingPairs.begin(); it != mContactOverlappingPairs.end(); ++it) {
+	for (it = m_contactOverlappingPairs.begin(); it != m_contactOverlappingPairs.end(); ++it) {
 
 		// Add all the contact manifolds of the pair int32_to the list of contact manifolds
 		// of the two bodies involved in the contact
@@ -459,19 +459,19 @@ void CollisionDetection::addContactManifoldToBody(OverlappingPair* pair) {
 
 		// Add the contact manifold at the beginning of the linked
 		// list of contact manifolds of the first body
-		void* allocatedMemory1 = mWorld->mMemoryAllocator.allocate(sizeof(ContactManifoldListElement));
+		void* allocatedMemory1 = m_world->m_memoryAllocator.allocate(sizeof(ContactManifoldListElement));
 		ContactManifoldListElement* listElement1 = new (allocatedMemory1)
 													  ContactManifoldListElement(contactManifold,
-																		 body1->mContactManifoldsList);
-		body1->mContactManifoldsList = listElement1;
+																		 body1->m_contactManifoldsList);
+		body1->m_contactManifoldsList = listElement1;
 
 		// Add the contact manifold at the beginning of the linked
 		// list of the contact manifolds of the second body
-		void* allocatedMemory2 = mWorld->mMemoryAllocator.allocate(sizeof(ContactManifoldListElement));
+		void* allocatedMemory2 = m_world->m_memoryAllocator.allocate(sizeof(ContactManifoldListElement));
 		ContactManifoldListElement* listElement2 = new (allocatedMemory2)
 													  ContactManifoldListElement(contactManifold,
-																		 body2->mContactManifoldsList);
-		body2->mContactManifoldsList = listElement2;
+																		 body2->m_contactManifoldsList);
+		body2->m_contactManifoldsList = listElement2;
 	}
 }
 
@@ -480,7 +480,7 @@ void CollisionDetection::clearContactPoints() {
 
 	// For each overlapping pair
 	std::map<overlappingpairid, OverlappingPair*>::iterator it;
-	for (it = mOverlappingPairs.begin(); it != mOverlappingPairs.end(); ++it) {
+	for (it = m_overlappingPairs.begin(); it != m_overlappingPairs.end(); ++it) {
 		it->second->clearContactPoints();
 	}
 }
@@ -491,23 +491,23 @@ void CollisionDetection::fillInCollisionMatrix() {
 	// For each possible type of collision shape
 	for (int32_t i=0; i<NB_COLLISION_SHAPE_TYPES; i++) {
 		for (int32_t j=0; j<NB_COLLISION_SHAPE_TYPES; j++) {
-			mCollisionMatrix[i][j] = mCollisionDispatch->selectAlgorithm(i, j);
+			m_collisionMatrix[i][j] = m_collisionDispatch->selectAlgorithm(i, j);
 		}
 	}
 }
 
 // Return the world event listener
 EventListener* CollisionDetection::getWorldEventListener() {
-   return mWorld->mEventListener;
+   return m_world->m_eventListener;
 }
 
 /// Return a reference to the world memory allocator
 MemoryAllocator& CollisionDetection::getWorldMemoryAllocator() {
-  return mWorld->mMemoryAllocator;
+  return m_world->m_memoryAllocator;
 }
 
 // Called by a narrow-phase collision algorithm when a new contact has been found
 void TestCollisionBetweenShapesCallback::notifyContact(OverlappingPair* overlappingPair,
 						   const ContactPointInfo& contactInfo) {
-	mCollisionCallback->notifyContact(contactInfo);
+	m_collisionCallback->notifyContact(contactInfo);
 }

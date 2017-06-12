@@ -28,22 +28,22 @@ class ContactManifoldSet {
 		// -------------------- Attributes -------------------- //
 
 		/// Maximum number of contact manifolds in the set
-		int32_t mNbMaxManifolds;
+		int32_t m_nbMaxManifolds;
 
 		/// Current number of contact manifolds in the set
-		int32_t mNbManifolds;
+		int32_t m_nbManifolds;
 
 		/// Pointer to the first proxy shape of the contact
-		ProxyShape* mShape1;
+		ProxyShape* m_shape1;
 
 		/// Pointer to the second proxy shape of the contact
-		ProxyShape* mShape2;
+		ProxyShape* m_shape2;
 
 		/// Reference to the memory allocator
-		MemoryAllocator& mMemoryAllocator;
+		MemoryAllocator& m_memoryAllocator;
 
 		/// Contact manifolds of the set
-		ContactManifold* mManifolds[MAX_MANIFOLDS_IN_CONTACT_MANIFOLD_SET];
+		ContactManifold* m_manifolds[MAX_MANIFOLDS_IN_CONTACT_MANIFOLD_SET];
 
 		// -------------------- Methods -------------------- //
 
@@ -99,30 +99,30 @@ class ContactManifoldSet {
 
 // Return the first proxy shape
 inline ProxyShape* ContactManifoldSet::getShape1() const {
-	return mShape1;
+	return m_shape1;
 }
 
 // Return the second proxy shape
 inline ProxyShape* ContactManifoldSet::getShape2() const {
-	return mShape2;
+	return m_shape2;
 }
 
 // Return the number of manifolds in the set
 inline int32_t ContactManifoldSet::getNbContactManifolds() const {
-	return mNbManifolds;
+	return m_nbManifolds;
 }
 
 // Return a given contact manifold
 inline ContactManifold* ContactManifoldSet::getContactManifold(int32_t index) const {
-	assert(index >= 0 && index < mNbManifolds);
-	return mManifolds[index];
+	assert(index >= 0 && index < m_nbManifolds);
+	return m_manifolds[index];
 }
 
 // Return the total number of contact points in the set of manifolds
 inline int32_t ContactManifoldSet::getTotalNbContactPoints() const {
 	int32_t nbPoints = 0;
-	for (int32_t i=0; i<mNbManifolds; i++) {
-		nbPoints += mManifolds[i]->getNbContactPoints();
+	for (int32_t i=0; i<m_nbManifolds; i++) {
+		nbPoints += m_manifolds[i]->getNbContactPoints();
 	}
 	return nbPoints;
 }

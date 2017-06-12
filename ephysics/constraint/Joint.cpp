@@ -12,12 +12,12 @@ using namespace reactphysics3d;
 
 // Constructor
 Joint::Joint(const JointInfo& jointInfo)
-		   :mBody1(jointInfo.body1), mBody2(jointInfo.body2), mType(jointInfo.type),
-			mPositionCorrectionTechnique(jointInfo.positionCorrectionTechnique),
-			mIsCollisionEnabled(jointInfo.isCollisionEnabled), m_isAlreadyInIsland(false) {
+		   :m_body1(jointInfo.body1), m_body2(jointInfo.body2), m_type(jointInfo.type),
+			m_positionCorrectionTechnique(jointInfo.positionCorrectionTechnique),
+			m_isCollisionEnabled(jointInfo.isCollisionEnabled), m_isAlreadyInIsland(false) {
 
-	assert(mBody1 != NULL);
-	assert(mBody2 != NULL);
+	assert(m_body1 != NULL);
+	assert(m_body2 != NULL);
 }
 
 // Destructor

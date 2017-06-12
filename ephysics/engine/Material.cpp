@@ -11,16 +11,16 @@ using namespace reactphysics3d;
 
 // Constructor
 Material::Material()
-		 : mFrictionCoefficient(DEFAULT_FRICTION_COEFFICIENT),
-		   mRollingResistance(DEFAULT_ROLLING_RESISTANCE),
-		   mBounciness(DEFAULT_BOUNCINESS) {
+		 : m_frictionCoefficient(DEFAULT_FRICTION_COEFFICIENT),
+		   m_rollingResistance(DEFAULT_ROLLING_RESISTANCE),
+		   m_bounciness(DEFAULT_BOUNCINESS) {
 
 }
 
 // Copy-constructor
 Material::Material(const Material& material)
-		 : mFrictionCoefficient(material.mFrictionCoefficient),
-		   mRollingResistance(material.mRollingResistance), mBounciness(material.mBounciness) {
+		 : m_frictionCoefficient(material.m_frictionCoefficient),
+		   m_rollingResistance(material.m_rollingResistance), m_bounciness(material.m_bounciness) {
 
 }
 

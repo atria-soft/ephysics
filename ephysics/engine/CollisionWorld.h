@@ -43,19 +43,19 @@ class CollisionWorld {
 		CollisionDetection m_collisionDetection;
 
 		/// All the bodies (rigid and soft) of the world
-		std::set<CollisionBody*> mBodies;
+		std::set<CollisionBody*> m_bodies;
 
 		/// Current body ID
-		bodyindex mCurrentBodyID;
+		bodyindex m_currentBodyID;
 
 		/// List of free ID for rigid bodies
-		std::vector<uint64_t> mFreeBodiesIDs;
+		std::vector<uint64_t> m_freeBodiesIDs;
 
 		/// Memory allocator
-		MemoryAllocator mMemoryAllocator;
+		MemoryAllocator m_memoryAllocator;
 
 		/// Pointer to an event listener object
-		EventListener* mEventListener;
+		EventListener* m_eventListener;
 
 		// -------------------- Methods -------------------- //
 
@@ -144,7 +144,7 @@ class CollisionWorld {
  * @return An starting iterator to the set of bodies of the world
  */
 inline std::set<CollisionBody*>::iterator CollisionWorld::getBodiesBeginIterator() {
-	return mBodies.begin();
+	return m_bodies.begin();
 }
 
 // Return an iterator to the end of the bodies of the physics world
@@ -152,7 +152,7 @@ inline std::set<CollisionBody*>::iterator CollisionWorld::getBodiesBeginIterator
  * @return An ending iterator to the set of bodies of the world
  */
 inline std::set<CollisionBody*>::iterator CollisionWorld::getBodiesEndIterator() {
-	return mBodies.end();
+	return m_bodies.end();
 }
 
 // Set the collision dispatch configuration

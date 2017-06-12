@@ -73,7 +73,7 @@ class Scene {
 		// -------------------- Attributes -------------------- //
 
 		/// Scene name
-		std::string mName;
+		std::string m_name;
 
 		/// Physics engine settings
 		EngineSettings mEngineSettings;
@@ -249,7 +249,7 @@ inline void Scene::setInterpolationFactor(float int32_terpolationFactor) {
 
 // Return the name of the scene
 inline std::string Scene::getName() const {
-	return mName;
+	return m_name;
 }
 
 // Return true if the shadow mapping is enabled

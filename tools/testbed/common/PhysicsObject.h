@@ -36,7 +36,7 @@ class PhysicsObject {
 	protected:
 
 		/// Body used to simulate the dynamics of the box
-		rp3d::CollisionBody* mBody;
+		rp3d::CollisionBody* m_body;
 
 		/// Previous transform of the body (for int32_terpolation)
 		rp3d::Transform mPreviousTransform;
@@ -87,12 +87,12 @@ inline void PhysicsObject::setSleepingColor(const openglframework::Color& color)
 
 // Return a pointer to the collision body of the box
 inline rp3d::CollisionBody* PhysicsObject::getCollisionBody() {
-	return mBody;
+	return m_body;
 }
 
 // Return a pointer to the rigid body of the box (NULL if it's not a rigid body)
 inline rp3d::RigidBody* PhysicsObject::getRigidBody() {
-	return dynamic_cast<rp3d::RigidBody*>(mBody);
+	return dynamic_cast<rp3d::RigidBody*>(m_body);
 }
 
 #endif

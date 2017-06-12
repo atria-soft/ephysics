@@ -27,10 +27,10 @@ HingeJoint::HingeJoint(const HingeJointInfo& jointInfo)
 	assert(mUpperLimit >= 0 && mUpperLimit <= 2.0 * PI);
 
 	// Compute the local-space anchor point for each body
-	Transform transform1 = mBody1->getTransform();
-	Transform transform2 = mBody2->getTransform();
-	m_localAnchorPointBody1 = transform1.getInverse() * jointInfo.m_m_m_m_anchorPointWorldSpace;
-	m_localAnchorPointBody2 = transform2.getInverse() * jointInfo.m_m_m_m_anchorPointWorldSpace;
+	Transform transform1 = m_body1->getTransform();
+	Transform transform2 = m_body2->getTransform();
+	m_localAnchorPointBody1 = transform1.getInverse() * jointInfo.m_anchorPointWorldSpace;
+	m_localAnchorPointBody2 = transform2.getInverse() * jointInfo.m_anchorPointWorldSpace;
 
 	// Compute the local-space hinge axis
 	mHingeLocalAxisBody1 = transform1.getOrientation().getInverse() * jointInfo.rotationAxisWorld;
@@ -39,10 +39,10 @@ HingeJoint::HingeJoint(const HingeJointInfo& jointInfo)
 	mHingeLocalAxisBody2.normalize();
 
 	// Compute the inverse of the initial orientation difference between the two bodies
-	mInitOrientationDifferenceInv = transform2.getOrientation() *
+	m_initOrientationDifferenceInv = transform2.getOrientation() *
 									transform1.getOrientation().getInverse();
-	mInitOrientationDifferenceInv.normalize();
-	mInitOrientationDifferenceInv.inverse();
+	m_initOrientationDifferenceInv.normalize();
+	m_initOrientationDifferenceInv.inverse();
 }
 
 // Destructor
@@ -54,18 +54,18 @@ HingeJoint::~HingeJoint() {
 void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverData) {
 
 	// Initialize the bodies index in the velocity array
-	mIndexBody1 = constraintSolverData.mapBodyToConstrainedVelocityIndex.find(mBody1)->second;
-	mIndexBody2 = constraintSolverData.mapBodyToConstrainedVelocityIndex.find(mBody2)->second;
+	m_indexBody1 = constraintSolverData.mapBodyToConstrainedVelocityIndex.find(m_body1)->second;
+	m_indexBody2 = constraintSolverData.mapBodyToConstrainedVelocityIndex.find(m_body2)->second;
 
 	// Get the bodies positions and orientations
-	const Vector3& x1 = mBody1->mCenterOfMassWorld;
-	const Vector3& x2 = mBody2->mCenterOfMassWorld;
-	const Quaternion& orientationBody1 = mBody1->getTransform().getOrientation();
-	const Quaternion& orientationBody2 = mBody2->getTransform().getOrientation();
+	const Vector3& x1 = m_body1->mCenterOfMassWorld;
+	const Vector3& x2 = m_body2->mCenterOfMassWorld;
+	const Quaternion& orientationBody1 = m_body1->getTransform().getOrientation();
+	const Quaternion& orientationBody2 = m_body2->getTransform().getOrientation();
 
 	// Get the inertia tensor of bodies
-	m_i1 = mBody1->getInertiaTensorInverseWorld();
-	m_i2 = mBody2->getInertiaTensorInverseWorld();
+	m_i1 = m_body1->getInertiaTensorInverseWorld();
+	m_i2 = m_body2->getInertiaTensorInverseWorld();
 
 	// Compute the vector from body center to the anchor point in world-space
 	m_r1World = orientationBody1 * m_localAnchorPointBody1;
@@ -103,21 +103,21 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 	Matrix3x3 skewSymmetricMatrixU2= Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r2World);
 
 	// Compute the inverse mass matrix K=JM^-1J^t for the 3 translation constraints (3x3 matrix)
-	float inverseMassBodies = mBody1->mMassInverse + mBody2->mMassInverse;
+	float inverseMassBodies = m_body1->m_massInverse + m_body2->m_massInverse;
 	Matrix3x3 massMatrix = Matrix3x3(inverseMassBodies, 0, 0,
 									0, inverseMassBodies, 0,
 									0, 0, inverseMassBodies) +
 						   skewSymmetricMatrixU1 * m_i1 * skewSymmetricMatrixU1.getTranspose() +
 						   skewSymmetricMatrixU2 * m_i2 * skewSymmetricMatrixU2.getTranspose();
 	m_inverseMassMatrixTranslation.setToZero();
-	if (mBody1->getType() == DYNAMIC || mBody2->getType() == DYNAMIC) {
+	if (m_body1->getType() == DYNAMIC || m_body2->getType() == DYNAMIC) {
 		m_inverseMassMatrixTranslation = massMatrix.getInverse();
 	}
 
 	// Compute the bias "b" of the translation constraints
 	mBTranslation.setToZero();
 	float biasFactor = (BETA / constraintSolverData.timeStep);
-	if (mPositionCorrectionTechnique == BAUMGARTE_JOINTS) {
+	if (m_positionCorrectionTechnique == BAUMGARTE_JOINTS) {
 		mBTranslation = biasFactor * (x2 + m_r2World - x1 - m_r1World);
 	}
 
@@ -136,13 +136,13 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 						 mC2CrossA1.dot(I2C2CrossA1);
 	const Matrix2x2 matrixKRotation(el11, el12, el21, el22);
 	m_inverseMassMatrixRotation.setToZero();
-	if (mBody1->getType() == DYNAMIC || mBody2->getType() == DYNAMIC) {
+	if (m_body1->getType() == DYNAMIC || m_body2->getType() == DYNAMIC) {
 		m_inverseMassMatrixRotation = matrixKRotation.getInverse();
 	}
 
 	// Compute the bias "b" of the rotation constraints
 	mBRotation.setToZero();
-	if (mPositionCorrectionTechnique == BAUMGARTE_JOINTS) {
+	if (m_positionCorrectionTechnique == BAUMGARTE_JOINTS) {
 		mBRotation = biasFactor * Vector2(mA1.dot(b2), mA1.dot(c2));
 	}
 
@@ -169,13 +169,13 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 
 			// Compute the bias "b" of the lower limit constraint
 			mBLowerLimit = 0.0;
-			if (mPositionCorrectionTechnique == BAUMGARTE_JOINTS) {
+			if (m_positionCorrectionTechnique == BAUMGARTE_JOINTS) {
 				mBLowerLimit = biasFactor * lowerLimitError;
 			}
 
 			// Compute the bias "b" of the upper limit constraint
 			mBUpperLimit = 0.0;
-			if (mPositionCorrectionTechnique == BAUMGARTE_JOINTS) {
+			if (m_positionCorrectionTechnique == BAUMGARTE_JOINTS) {
 				mBUpperLimit = biasFactor * upperLimitError;
 			}
 		}
@@ -186,14 +186,14 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 void HingeJoint::warmstart(const ConstraintSolverData& constraintSolverData) {
 
 	// Get the velocities
-	Vector3& v1 = constraintSolverData.linearVelocities[mIndexBody1];
-	Vector3& v2 = constraintSolverData.linearVelocities[mIndexBody2];
-	Vector3& w1 = constraintSolverData.angularVelocities[mIndexBody1];
-	Vector3& w2 = constraintSolverData.angularVelocities[mIndexBody2];
+	Vector3& v1 = constraintSolverData.linearVelocities[m_indexBody1];
+	Vector3& v2 = constraintSolverData.linearVelocities[m_indexBody2];
+	Vector3& w1 = constraintSolverData.angularVelocities[m_indexBody1];
+	Vector3& w2 = constraintSolverData.angularVelocities[m_indexBody2];
 
 	// Get the inverse mass and inverse inertia tensors of the bodies
-	const float inverseMassBody1 = mBody1->mMassInverse;
-	const float inverseMassBody2 = mBody2->mMassInverse;
+	const float inverseMassBody1 = m_body1->m_massInverse;
+	const float inverseMassBody2 = m_body2->m_massInverse;
 
 	// Compute the impulse P=J^T * lambda for the 2 rotation constraints
 	Vector3 rotationImpulse = -mB2CrossA1 * m_impulseRotation.x - mC2CrossA1 * m_impulseRotation.y;
@@ -242,14 +242,14 @@ void HingeJoint::warmstart(const ConstraintSolverData& constraintSolverData) {
 void HingeJoint::solveVelocityConstraint(const ConstraintSolverData& constraintSolverData) {
 
 	// Get the velocities
-	Vector3& v1 = constraintSolverData.linearVelocities[mIndexBody1];
-	Vector3& v2 = constraintSolverData.linearVelocities[mIndexBody2];
-	Vector3& w1 = constraintSolverData.angularVelocities[mIndexBody1];
-	Vector3& w2 = constraintSolverData.angularVelocities[mIndexBody2];
+	Vector3& v1 = constraintSolverData.linearVelocities[m_indexBody1];
+	Vector3& v2 = constraintSolverData.linearVelocities[m_indexBody2];
+	Vector3& w1 = constraintSolverData.angularVelocities[m_indexBody1];
+	Vector3& w2 = constraintSolverData.angularVelocities[m_indexBody2];
 
 	// Get the inverse mass and inverse inertia tensors of the bodies
-	float inverseMassBody1 = mBody1->mMassInverse;
-	float inverseMassBody2 = mBody2->mMassInverse;
+	float inverseMassBody1 = m_body1->m_massInverse;
+	float inverseMassBody2 = m_body2->m_massInverse;
 
 	// --------------- Translation Constraints --------------- //
 
@@ -389,21 +389,21 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 
 	// If the error position correction technique is not the non-linear-gauss-seidel, we do
 	// do not execute this method
-	if (mPositionCorrectionTechnique != NON_LINEAR_GAUSS_SEIDEL) return;
+	if (m_positionCorrectionTechnique != NON_LINEAR_GAUSS_SEIDEL) return;
 
 	// Get the bodies positions and orientations
-	Vector3& x1 = constraintSolverData.positions[mIndexBody1];
-	Vector3& x2 = constraintSolverData.positions[mIndexBody2];
-	Quaternion& q1 = constraintSolverData.orientations[mIndexBody1];
-	Quaternion& q2 = constraintSolverData.orientations[mIndexBody2];
+	Vector3& x1 = constraintSolverData.positions[m_indexBody1];
+	Vector3& x2 = constraintSolverData.positions[m_indexBody2];
+	Quaternion& q1 = constraintSolverData.orientations[m_indexBody1];
+	Quaternion& q2 = constraintSolverData.orientations[m_indexBody2];
 
 	// Get the inverse mass and inverse inertia tensors of the bodies
-	float inverseMassBody1 = mBody1->mMassInverse;
-	float inverseMassBody2 = mBody2->mMassInverse;
+	float inverseMassBody1 = m_body1->m_massInverse;
+	float inverseMassBody2 = m_body2->m_massInverse;
 
 	// Recompute the inverse inertia tensors
-	m_i1 = mBody1->getInertiaTensorInverseWorld();
-	m_i2 = mBody2->getInertiaTensorInverseWorld();
+	m_i1 = m_body1->getInertiaTensorInverseWorld();
+	m_i2 = m_body2->getInertiaTensorInverseWorld();
 
 	// Compute the vector from body center to the anchor point in world-space
 	m_r1World = q1 * m_localAnchorPointBody1;
@@ -435,14 +435,14 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 	// --------------- Translation Constraints --------------- //
 
 	// Compute the matrix K=JM^-1J^t (3x3 matrix) for the 3 translation constraints
-	float inverseMassBodies = mBody1->mMassInverse + mBody2->mMassInverse;
+	float inverseMassBodies = m_body1->m_massInverse + m_body2->m_massInverse;
 	Matrix3x3 massMatrix = Matrix3x3(inverseMassBodies, 0, 0,
 									0, inverseMassBodies, 0,
 									0, 0, inverseMassBodies) +
 						   skewSymmetricMatrixU1 * m_i1 * skewSymmetricMatrixU1.getTranspose() +
 						   skewSymmetricMatrixU2 * m_i2 * skewSymmetricMatrixU2.getTranspose();
 	m_inverseMassMatrixTranslation.setToZero();
-	if (mBody1->getType() == DYNAMIC || mBody2->getType() == DYNAMIC) {
+	if (m_body1->getType() == DYNAMIC || m_body2->getType() == DYNAMIC) {
 		m_inverseMassMatrixTranslation = massMatrix.getInverse();
 	}
 
@@ -494,7 +494,7 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 						 mC2CrossA1.dot(I2C2CrossA1);
 	const Matrix2x2 matrixKRotation(el11, el12, el21, el22);
 	m_inverseMassMatrixRotation.setToZero();
-	if (mBody1->getType() == DYNAMIC || mBody2->getType() == DYNAMIC) {
+	if (m_body1->getType() == DYNAMIC || m_body2->getType() == DYNAMIC) {
 		m_inverseMassMatrixRotation = matrixKRotation.getInverse();
 	}
 
@@ -620,8 +620,8 @@ void HingeJoint::enableMotor(bool isMotorEnabled) {
 	m_impulseMotor = 0.0;
 
 	// Wake up the two bodies of the joint
-	mBody1->setIsSleeping(false);
-	mBody2->setIsSleeping(false);
+	m_body1->setIsSleeping(false);
+	m_body2->setIsSleeping(false);
 }
 
 // Set the minimum angle limit
@@ -666,8 +666,8 @@ void HingeJoint::resetLimits() {
 	m_impulseUpperLimit = 0.0;
 
 	// Wake up the two bodies of the joint
-	mBody1->setIsSleeping(false);
-	mBody2->setIsSleeping(false);
+	m_body1->setIsSleeping(false);
+	m_body2->setIsSleeping(false);
 }
 
 // Set the motor speed
@@ -678,8 +678,8 @@ void HingeJoint::setMotorSpeed(float motorSpeed) {
 		mMotorSpeed = motorSpeed;
 
 		// Wake up the two bodies of the joint
-		mBody1->setIsSleeping(false);
-		mBody2->setIsSleeping(false);
+		m_body1->setIsSleeping(false);
+		m_body2->setIsSleeping(false);
 	}
 }
 
@@ -695,8 +695,8 @@ void HingeJoint::setMaxMotorTorque(float maxMotorTorque) {
 		mMaxMotorTorque = maxMotorTorque;
 
 		// Wake up the two bodies of the joint
-		mBody1->setIsSleeping(false);
-		mBody2->setIsSleeping(false);
+		m_body1->setIsSleeping(false);
+		m_body2->setIsSleeping(false);
 	}
 }
 
@@ -752,7 +752,7 @@ float HingeJoint::computeCurrentHingeAngle(const Quaternion& orientationBody1,
 	currentOrientationDiff.normalize();
 
 	// Compute the relative rotation considering the initial orientation difference
-	Quaternion relativeRotation = currentOrientationDiff * mInitOrientationDifferenceInv;
+	Quaternion relativeRotation = currentOrientationDiff * m_initOrientationDifferenceInv;
 	relativeRotation.normalize();
 
 	// A quaternion q = [cos(theta/2); sin(theta/2) * rotAxis] where rotAxis is a unit

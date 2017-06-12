@@ -12,7 +12,7 @@ using namespace reactphysics3d;
 
 // Constructor
 NarrowPhaseAlgorithm::NarrowPhaseAlgorithm()
-					 : mMemoryAllocator(NULL), mCurrentOverlappingPair(NULL) {
+					 : m_memoryAllocator(NULL), mCurrentOverlappingPair(NULL) {
 
 }
 
@@ -24,5 +24,5 @@ NarrowPhaseAlgorithm::~NarrowPhaseAlgorithm() {
 // Initalize the algorithm
 void NarrowPhaseAlgorithm::init(CollisionDetection* collisionDetection, MemoryAllocator* memoryAllocator) {
 	m_collisionDetection = collisionDetection;
-	mMemoryAllocator = memoryAllocator;
+	m_memoryAllocator = memoryAllocator;
 }
