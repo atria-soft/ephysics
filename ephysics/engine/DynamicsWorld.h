@@ -290,8 +290,8 @@ inline void DynamicsWorld::resetBodiesForceAndTorque() {
 	// For each body of the world
 	std::set<RigidBody*>::iterator it;
 	for (it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
-		(*it)->mExternalForce.setToZero();
-		(*it)->mExternalTorque.setToZero();
+		(*it)->m_externalForce.setToZero();
+		(*it)->m_externalTorque.setToZero();
 	}
 }
 

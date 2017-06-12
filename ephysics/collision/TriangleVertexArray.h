@@ -43,20 +43,20 @@ class TriangleVertexArray {
 		int32_t m_verticesStride;
 
 		/// Number of triangles in the array
-		uint32_t mNbTriangles;
+		uint32_t m_numberTriangles;
 
 		/// Pointer to the first vertex index of the array
-		unsigned char* mIndicesStart;
+		unsigned char* m_indicesStart;
 
 		/// Stride (number of bytes) between the beginning of two indices in
 		/// the array
-		int32_t mIndicesStride;
+		int32_t m_indicesStride;
 
 		/// Data type of the vertices in the array
-		VertexDataType mVertexDataType;
+		VertexDataType m_vertexDataType;
 
 		/// Data type of the indices in the array
-		IndexDataType mIndexDataType;
+		IndexDataType m_indexDataType;
 
 	public:
 
@@ -95,12 +95,12 @@ class TriangleVertexArray {
 
 // Return the vertex data type
 inline TriangleVertexArray::VertexDataType TriangleVertexArray::getVertexDataType() const {
-	return mVertexDataType;
+	return m_vertexDataType;
 }
 
 // Return the index data type
 inline TriangleVertexArray::IndexDataType TriangleVertexArray::getIndexDataType() const {
-   return mIndexDataType;
+   return m_indexDataType;
 }
 
 // Return the number of vertices
@@ -110,7 +110,7 @@ inline uint32_t TriangleVertexArray::getNbVertices() const {
 
 // Return the number of triangles
 inline uint32_t TriangleVertexArray::getNbTriangles() const {
-	return mNbTriangles;
+	return m_numberTriangles;
 }
 
 // Return the vertices stride (number of bytes)
@@ -120,7 +120,7 @@ inline int32_t TriangleVertexArray::getVerticesStride() const {
 
 // Return the indices stride (number of bytes)
 inline int32_t TriangleVertexArray::getIndicesStride() const {
-	return mIndicesStride;
+	return m_indicesStride;
 }
 
 // Return the pointer to the start of the vertices array
@@ -130,7 +130,7 @@ inline unsigned char* TriangleVertexArray::getVerticesStart() const {
 
 // Return the pointer to the start of the indices array
 inline unsigned char* TriangleVertexArray::getIndicesStart() const {
-	return mIndicesStart;
+	return m_indicesStart;
 }
 
 }

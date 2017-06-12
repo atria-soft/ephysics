@@ -29,11 +29,11 @@ TriangleVertexArray::TriangleVertexArray(uint32_t nbVertices, void* verticesStar
 	m_numberVertices = nbVertices;
 	m_verticesStart = reinterpret_cast<unsigned char*>(verticesStart);
 	m_verticesStride = verticesStride;
-	mNbTriangles = nbTriangles;
-	mIndicesStart = reinterpret_cast<unsigned char*>(indexesStart);
-	mIndicesStride = indexesStride;
-	mVertexDataType = vertexDataType;
-	mIndexDataType = indexDataType;
+	m_numberTriangles = nbTriangles;
+	m_indicesStart = reinterpret_cast<unsigned char*>(indexesStart);
+	m_indicesStride = indexesStride;
+	m_vertexDataType = vertexDataType;
+	m_indexDataType = indexDataType;
 }
 
 // Destructor

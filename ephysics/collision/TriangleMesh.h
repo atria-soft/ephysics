@@ -25,7 +25,7 @@ class TriangleMesh {
 	protected:
 
 		/// All the triangle arrays of the mesh (one triangle array per part)
-		std::vector<TriangleVertexArray*> mTriangleArrays;
+		std::vector<TriangleVertexArray*> m_triangleArrays;
 
 	public:
 
@@ -47,18 +47,18 @@ class TriangleMesh {
 
 // Add a subpart of the mesh
 inline void TriangleMesh::addSubpart(TriangleVertexArray* triangleVertexArray) {
-	mTriangleArrays.push_back(triangleVertexArray );
+	m_triangleArrays.push_back(triangleVertexArray );
 }
 
 // Return a pointer to a given subpart (triangle vertex array) of the mesh
 inline TriangleVertexArray* TriangleMesh::getSubpart(uint32_t indexSubpart) const {
-   assert(indexSubpart < mTriangleArrays.size());
-   return mTriangleArrays[indexSubpart];
+   assert(indexSubpart < m_triangleArrays.size());
+   return m_triangleArrays[indexSubpart];
 }
 
 // Return the number of subparts of the mesh
 inline uint32_t TriangleMesh::getNbSubparts() const {
-	return mTriangleArrays.size();
+	return m_triangleArrays.size();
 }
 
 }

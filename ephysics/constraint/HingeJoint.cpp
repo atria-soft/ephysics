@@ -58,8 +58,8 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 	m_indexBody2 = constraintSolverData.mapBodyToConstrainedVelocityIndex.find(m_body2)->second;
 
 	// Get the bodies positions and orientations
-	const Vector3& x1 = m_body1->mCenterOfMassWorld;
-	const Vector3& x2 = m_body2->mCenterOfMassWorld;
+	const Vector3& x1 = m_body1->m_centerOfMassWorld;
+	const Vector3& x2 = m_body2->m_centerOfMassWorld;
 	const Quaternion& orientationBody1 = m_body1->getTransform().getOrientation();
 	const Quaternion& orientationBody2 = m_body2->getTransform().getOrientation();
 

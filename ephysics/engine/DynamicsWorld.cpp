@@ -180,7 +180,7 @@ void DynamicsWorld::int32_tegrateRigidBodiesPositions() {
 			}
 
 			// Get current position and orientation of the body
-			const Vector3& currentPosition = bodies[b]->mCenterOfMassWorld;
+			const Vector3& currentPosition = bodies[b]->m_centerOfMassWorld;
 			const Quaternion& currentOrientation = bodies[b]->getTransform().getOrientation();
 
 			// Update the new constrained position and orientation of the body
@@ -208,11 +208,11 @@ void DynamicsWorld::updateBodiesState() {
 			uint32_t index = m_mapBodyToConstrainedVelocityIndex.find(bodies[b])->second;
 
 			// Update the linear and angular velocity of the body
-			bodies[b]->mLinearVelocity = m_constrainedLinearVelocities[index];
-			bodies[b]->mAngularVelocity = m_constrainedAngularVelocities[index];
+			bodies[b]->m_linearVelocity = m_constrainedLinearVelocities[index];
+			bodies[b]->m_angularVelocity = m_constrainedAngularVelocities[index];
 
 			// Update the position of the center of mass of the body
-			bodies[b]->mCenterOfMassWorld = m_constrainedPositions[index];
+			bodies[b]->m_centerOfMassWorld = m_constrainedPositions[index];
 
 			// Update the orientation of the body
 			bodies[b]->m_transform.setOrientation(m_constrainedOrientations[index].getUnit());
@@ -298,10 +298,10 @@ void DynamicsWorld::int32_tegrateRigidBodiesVelocities() {
 
 			// Integrate the external force to get the new velocity of the body
 			m_constrainedLinearVelocities[indexBody] = bodies[b]->getLinearVelocity() +
-										m_timeStep * bodies[b]->m_massInverse * bodies[b]->mExternalForce;
+										m_timeStep * bodies[b]->m_massInverse * bodies[b]->m_externalForce;
 			m_constrainedAngularVelocities[indexBody] = bodies[b]->getAngularVelocity() +
 										m_timeStep * bodies[b]->getInertiaTensorInverseWorld() *
-										bodies[b]->mExternalTorque;
+										bodies[b]->m_externalTorque;
 
 			// If the gravity has to be applied to this rigid body
 			if (bodies[b]->isGravityEnabled() && m_isGravityEnabled) {

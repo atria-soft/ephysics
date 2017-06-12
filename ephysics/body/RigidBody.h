@@ -34,33 +34,33 @@ class RigidBody : public CollisionBody {
 		// -------------------- Attributes -------------------- //
 
 		/// Intial mass of the body
-		float mInitMass;
+		float m_initMass;
 
 		/// Center of mass of the body in local-space coordinates.
 		/// The center of mass can therefore be different from the body origin
-		Vector3 mCenterOfMassLocal;
+		Vector3 m_centerOfMassLocal;
 
 		/// Center of mass of the body in world-space coordinates
-		Vector3 mCenterOfMassWorld;
+		Vector3 m_centerOfMassWorld;
 
 		/// Linear velocity of the body
-		Vector3 mLinearVelocity;
+		Vector3 m_linearVelocity;
 
 		/// Angular velocity of the body
-		Vector3 mAngularVelocity;
+		Vector3 m_angularVelocity;
 
 		/// Current external force on the body
-		Vector3 mExternalForce;
+		Vector3 m_externalForce;
 
 		/// Current external torque on the body
-		Vector3 mExternalTorque;
+		Vector3 m_externalTorque;
 
 		/// Local inertia tensor of the body (in local-space) with respect to the
 		/// center of mass of the body
-		Matrix3x3 mInertiaTensorLocal;
+		Matrix3x3 m_inertiaTensorLocal;
 
 		/// Inverse of the inertia tensor of the body
-		Matrix3x3 mInertiaTensorLocalInverse;
+		Matrix3x3 m_inertiaTensorLocalInverse;
 
 		/// Inverse of the mass of the body
 		float m_massInverse;
@@ -69,13 +69,13 @@ class RigidBody : public CollisionBody {
 		bool m_isGravityEnabled;
 
 		/// Material properties of the rigid body
-		Material mMaterial;
+		Material m_material;
 
 		/// Linear velocity damping factor
-		float mLinearDamping;
+		float m_linearDamping;
 
 		/// Angular velocity damping factor
-		float mAngularDamping;
+		float m_angularDamping;
 
 		/// First element of the linked list of joints involving this body
 		JointListElement* m_jointsList;		
@@ -215,7 +215,7 @@ class RigidBody : public CollisionBody {
  * @return The mass (in kilograms) of the body
  */
 inline float RigidBody::getMass() const {
-	return mInitMass;
+	return m_initMass;
 }
 
 // Return the linear velocity
@@ -223,7 +223,7 @@ inline float RigidBody::getMass() const {
  * @return The linear velocity vector of the body
  */
 inline Vector3 RigidBody::getLinearVelocity() const {
-	return mLinearVelocity;
+	return m_linearVelocity;
 }
 
 // Return the angular velocity of the body
@@ -231,7 +231,7 @@ inline Vector3 RigidBody::getLinearVelocity() const {
  * @return The angular velocity vector of the body
  */
 inline Vector3 RigidBody::getAngularVelocity() const {
-	return mAngularVelocity;
+	return m_angularVelocity;
 }
 
 // Return the local inertia tensor of the body (in local-space coordinates)
@@ -239,7 +239,7 @@ inline Vector3 RigidBody::getAngularVelocity() const {
  * @return The 3x3 inertia tensor matrix of the body (in local-space coordinates)
  */
 inline const Matrix3x3& RigidBody::getInertiaTensorLocal() const {
-	return mInertiaTensorLocal;
+	return m_inertiaTensorLocal;
 }
 
 // Return the inertia tensor in world coordinates.
@@ -254,7 +254,7 @@ inline const Matrix3x3& RigidBody::getInertiaTensorLocal() const {
 inline Matrix3x3 RigidBody::getInertiaTensorWorld() const {
 
 	// Compute and return the inertia tensor in world coordinates
-	return m_transform.getOrientation().getMatrix() * mInertiaTensorLocal *
+	return m_transform.getOrientation().getMatrix() * m_inertiaTensorLocal *
 		   m_transform.getOrientation().getMatrix().getTranspose();
 }
 
@@ -274,7 +274,7 @@ inline Matrix3x3 RigidBody::getInertiaTensorInverseWorld() const {
 	//		INVERSE WORLD TENSOR IN THE CLASS AND UPLDATE IT WHEN THE ORIENTATION OF THE BODY CHANGES
 
 	// Compute and return the inertia tensor in world coordinates
-	return m_transform.getOrientation().getMatrix() * mInertiaTensorLocalInverse *
+	return m_transform.getOrientation().getMatrix() * m_inertiaTensorLocalInverse *
 		   m_transform.getOrientation().getMatrix().getTranspose();
 }
 
@@ -299,7 +299,7 @@ inline void RigidBody::enableGravity(bool isEnabled) {
  * @return A reference to the material of the body
  */
 inline Material& RigidBody::getMaterial() {
-	return mMaterial;
+	return m_material;
 }
 
 // Set a new material for this rigid body
@@ -307,7 +307,7 @@ inline Material& RigidBody::getMaterial() {
  * @param material The material you want to set to the body
  */
 inline void RigidBody::setMaterial(const Material& material) {
-	mMaterial = material;
+	m_material = material;
 }
 
 // Return the linear velocity damping factor
@@ -315,7 +315,7 @@ inline void RigidBody::setMaterial(const Material& material) {
  * @return The linear damping factor of this body
  */
 inline float RigidBody::getLinearDamping() const {
-	return mLinearDamping;
+	return m_linearDamping;
 }
 
 // Set the linear damping factor. This is the ratio of the linear velocity
@@ -325,7 +325,7 @@ inline float RigidBody::getLinearDamping() const {
  */
 inline void RigidBody::setLinearDamping(float linearDamping) {
 	assert(linearDamping >= float(0.0));
-	mLinearDamping = linearDamping;
+	m_linearDamping = linearDamping;
 }
 
 // Return the angular velocity damping factor
@@ -333,7 +333,7 @@ inline void RigidBody::setLinearDamping(float linearDamping) {
  * @return The angular damping factor of this body
  */
 inline float RigidBody::getAngularDamping() const {
-	return mAngularDamping;
+	return m_angularDamping;
 }
 
 // Set the angular damping factor. This is the ratio of the angular velocity
@@ -343,7 +343,7 @@ inline float RigidBody::getAngularDamping() const {
  */
 inline void RigidBody::setAngularDamping(float angularDamping) {
 	assert(angularDamping >= float(0.0));
-	mAngularDamping = angularDamping;
+	m_angularDamping = angularDamping;
 }
 
 // Return the first element of the linked list of joints involving this body
@@ -366,10 +366,10 @@ inline JointListElement* RigidBody::getJointsList() {
 inline void RigidBody::setIsSleeping(bool isSleeping) {
 
 	if (isSleeping) {
-		mLinearVelocity.setToZero();
-		mAngularVelocity.setToZero();
-		mExternalForce.setToZero();
-		mExternalTorque.setToZero();
+		m_linearVelocity.setToZero();
+		m_angularVelocity.setToZero();
+		m_externalForce.setToZero();
+		m_externalTorque.setToZero();
 	}
 
 	Body::setIsSleeping(isSleeping);
@@ -394,7 +394,7 @@ inline void RigidBody::applyForceToCenterOfMass(const Vector3& force) {
 	}
 
 	// Add the force
-	mExternalForce += force;
+	m_externalForce += force;
 }
 
 // Apply an external force to the body at a given point (in world-space coordinates).
@@ -419,8 +419,8 @@ inline void RigidBody::applyForce(const Vector3& force, const Vector3& point) {
 	}
 
 	// Add the force and torque
-	mExternalForce += force;
-	mExternalTorque += (point - mCenterOfMassWorld).cross(force);
+	m_externalForce += force;
+	m_externalTorque += (point - m_centerOfMassWorld).cross(force);
 }
 
 // Apply an external torque to the body.
@@ -442,14 +442,14 @@ inline void RigidBody::applyTorque(const Vector3& torque) {
 	}
 
 	// Add the torque
-	mExternalTorque += torque;
+	m_externalTorque += torque;
 }
 
 /// Update the transform of the body after a change of the center of mass
 inline void RigidBody::updateTransformWithCenterOfMass() {
 
 	// Translate the body according to the translation of the center of mass position
-	m_transform.setPosition(mCenterOfMassWorld - m_transform.getOrientation() * mCenterOfMassLocal);
+	m_transform.setPosition(m_centerOfMassWorld - m_transform.getOrientation() * m_centerOfMassLocal);
 }
 
 }

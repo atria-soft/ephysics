@@ -11,7 +11,7 @@
 using namespace reactphysics3d;
 
 // Constructor
-TrianglesStore::TrianglesStore() : mNbTriangles(0) {
+TrianglesStore::TrianglesStore() : m_numberTriangles(0) {
 	
 }
 

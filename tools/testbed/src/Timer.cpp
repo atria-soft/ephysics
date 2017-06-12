@@ -28,7 +28,7 @@
 
 
 // Constructor
-Timer::Timer() : mIsRunning(false) {
+Timer::Timer() : m_isRunning(false) {
 
 }
 

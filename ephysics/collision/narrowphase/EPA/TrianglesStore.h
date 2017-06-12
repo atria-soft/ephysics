@@ -31,7 +31,7 @@ class TrianglesStore {
 		TriangleEPA mTriangles[MAX_TRIANGLES];
 
 		/// Number of triangles
-		int32_t mNbTriangles;
+		int32_t m_numberTriangles;
 
 		// -------------------- Methods -------------------- //
 
@@ -72,23 +72,23 @@ class TrianglesStore {
 
 // Clear all the storage
 inline void TrianglesStore::clear() {
-	mNbTriangles = 0;
+	m_numberTriangles = 0;
 }
 
 // Return the number of triangles
 inline int32_t TrianglesStore::getNbTriangles() const {
-	return mNbTriangles;
+	return m_numberTriangles;
 }
 
 
 inline void TrianglesStore::setNbTriangles(int32_t backup) {
-	mNbTriangles = backup;
+	m_numberTriangles = backup;
 }
 
 // Return the last triangle
 inline TriangleEPA& TrianglesStore::last() {
-	assert(mNbTriangles > 0);
-	return mTriangles[mNbTriangles - 1];
+	assert(m_numberTriangles > 0);
+	return mTriangles[m_numberTriangles - 1];
 }
 
 // Create a new triangle
@@ -97,11 +97,11 @@ inline TriangleEPA* TrianglesStore::newTriangle(const Vector3* vertices,
 	TriangleEPA* newTriangle = NULL;
 
 	// If we have not reached the maximum number of triangles
-	if (mNbTriangles != MAX_TRIANGLES) {
-		newTriangle = &mTriangles[mNbTriangles++];
+	if (m_numberTriangles != MAX_TRIANGLES) {
+		newTriangle = &mTriangles[m_numberTriangles++];
 		new (newTriangle) TriangleEPA(v0, v1, v2);
 		if (!newTriangle->computeClosestPoint(vertices)) {
-			mNbTriangles--;
+			m_numberTriangles--;
 			newTriangle = NULL;
 		}
 	}

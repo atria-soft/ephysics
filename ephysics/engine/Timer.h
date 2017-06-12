@@ -39,16 +39,16 @@ class Timer {
 		double m_timeStep;
 
 		/// Last time the timer has been updated
-		long double mLastUpdateTime;
+		long double m_lastUpdateTime;
 
 		/// Time difference between the two last timer update() calls
-		long double mDeltaTime;
+		long double m_deltaTime;
 
 		/// Used to fix the time step and avoid strange time effects
-		double mAccumulator;
+		double m_accumulator;
 
 		/// True if the timer is running
-		bool mIsRunning;
+		bool m_isRunning;
 
 		// -------------------- Methods -------------------- //
 
@@ -115,47 +115,47 @@ inline void Timer::setTimeStep(double timeStep) {
 
 // Return the current time
 inline long double Timer::getPhysicsTime() const {
-	return mLastUpdateTime;
+	return m_lastUpdateTime;
 }
 
 // Return if the timer is running
 inline bool Timer::getIsRunning() const {
-	return mIsRunning;
+	return m_isRunning;
 }
 
 // Start the timer
 inline void Timer::start() {
-	if (!mIsRunning) {
+	if (!m_isRunning) {
 
 		// Get the current system time
-		mLastUpdateTime = getCurrentSystemTime();
+		m_lastUpdateTime = getCurrentSystemTime();
 
-		mAccumulator = 0.0;
-		mIsRunning = true;
+		m_accumulator = 0.0;
+		m_isRunning = true;
 	}
 }
 
 // Stop the timer
 inline void Timer::stop() {
-	mIsRunning = false;
+	m_isRunning = false;
 }
 
 // True if it's possible to take a new step
 inline bool Timer::isPossibleToTakeStep() const {
-	return (mAccumulator >= m_timeStep);
+	return (m_accumulator >= m_timeStep);
 }
 
 // Take a new step => update the timer by adding the timeStep value to the current time
 inline void Timer::nextStep() {
-	assert(mIsRunning);
+	assert(m_isRunning);
 
 	// Update the accumulator value
-	mAccumulator -= m_timeStep;
+	m_accumulator -= m_timeStep;
 }
 
 // Compute the int32_terpolation factor
 inline float Timer::computeInterpolationFactor() {
-	return (float(mAccumulator / m_timeStep));
+	return (float(m_accumulator / m_timeStep));
 }
 
 // Compute the time since the last update() call and add it to the accumulator
@@ -165,13 +165,13 @@ inline void Timer::update() {
 	long double currentTime = getCurrentSystemTime();
 
 	// Compute the delta display time between two display frames
-	mDeltaTime = currentTime - mLastUpdateTime;
+	m_deltaTime = currentTime - m_lastUpdateTime;
 
 	// Update the current display time
-	mLastUpdateTime = currentTime;
+	m_lastUpdateTime = currentTime;
 
 	// Update the accumulator value
-	mAccumulator += mDeltaTime;
+	m_accumulator += m_deltaTime;
 }
 
 }

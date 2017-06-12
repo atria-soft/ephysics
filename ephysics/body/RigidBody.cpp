@@ -20,13 +20,13 @@ using namespace reactphysics3d;
 * @param id The ID of the body
 */
 RigidBody::RigidBody(const Transform& transform, CollisionWorld& world, bodyindex id)
-		  : CollisionBody(transform, world, id), mInitMass(float(1.0)),
-			mCenterOfMassLocal(0, 0, 0), mCenterOfMassWorld(transform.getPosition()),
-			m_isGravityEnabled(true), mLinearDamping(float(0.0)), mAngularDamping(float(0.0)),
+		  : CollisionBody(transform, world, id), m_initMass(float(1.0)),
+			m_centerOfMassLocal(0, 0, 0), m_centerOfMassWorld(transform.getPosition()),
+			m_isGravityEnabled(true), m_linearDamping(float(0.0)), m_angularDamping(float(0.0)),
 			m_jointsList(NULL) {
 
 	// Compute the inverse mass
-	m_massInverse = float(1.0) / mInitMass;
+	m_massInverse = float(1.0) / m_initMass;
 }
 
 // Destructor
@@ -60,8 +60,8 @@ void RigidBody::setType(BodyType type) {
 	if (m_type == STATIC) {
 
 		// Reset the velocity to zero
-		mLinearVelocity.setToZero();
-		mAngularVelocity.setToZero();
+		m_linearVelocity.setToZero();
+		m_angularVelocity.setToZero();
 	}
 
 	// If it is a static or a kinematic body
@@ -69,13 +69,13 @@ void RigidBody::setType(BodyType type) {
 
 		// Reset the inverse mass and inverse inertia tensor to zero
 		m_massInverse = float(0.0);
-		mInertiaTensorLocal.setToZero();
-		mInertiaTensorLocalInverse.setToZero();
+		m_inertiaTensorLocal.setToZero();
+		m_inertiaTensorLocalInverse.setToZero();
 
 	}
 	else {  // If it is a dynamic body
-		m_massInverse = float(1.0) / mInitMass;
-		mInertiaTensorLocalInverse = mInertiaTensorLocal.getInverse();
+		m_massInverse = float(1.0) / m_initMass;
+		m_inertiaTensorLocalInverse = m_inertiaTensorLocal.getInverse();
 	}
 
 	// Awake the body
@@ -89,8 +89,8 @@ void RigidBody::setType(BodyType type) {
 	askForBroadPhaseCollisionCheck();
 
 	// Reset the force and torque on the body
-	mExternalForce.setToZero();
-	mExternalTorque.setToZero();
+	m_externalForce.setToZero();
+	m_externalTorque.setToZero();
 }
 
 // Set the local inertia tensor of the body (in local-space coordinates)
@@ -102,10 +102,10 @@ void RigidBody::setInertiaTensorLocal(const Matrix3x3& inertiaTensorLocal) {
 
 	if (m_type != DYNAMIC) return;
 
-	mInertiaTensorLocal = inertiaTensorLocal;
+	m_inertiaTensorLocal = inertiaTensorLocal;
 
 	// Compute the inverse local inertia tensor
-	mInertiaTensorLocalInverse = mInertiaTensorLocal.getInverse();
+	m_inertiaTensorLocalInverse = m_inertiaTensorLocal.getInverse();
 }
 
 // Set the local center of mass of the body (in local-space coordinates)
@@ -117,14 +117,14 @@ void RigidBody::setCenterOfMassLocal(const Vector3& centerOfMassLocal) {
 
 	if (m_type != DYNAMIC) return;
 
-	const Vector3 oldCenterOfMass = mCenterOfMassWorld;
-	mCenterOfMassLocal = centerOfMassLocal;
+	const Vector3 oldCenterOfMass = m_centerOfMassWorld;
+	m_centerOfMassLocal = centerOfMassLocal;
 
 	// Compute the center of mass in world-space coordinates
-	mCenterOfMassWorld = m_transform * mCenterOfMassLocal;
+	m_centerOfMassWorld = m_transform * m_centerOfMassLocal;
 
 	// Update the linear velocity of the center of mass
-	mLinearVelocity += mAngularVelocity.cross(mCenterOfMassWorld - oldCenterOfMass);
+	m_linearVelocity += m_angularVelocity.cross(m_centerOfMassWorld - oldCenterOfMass);
 }
 
 // Set the mass of the rigid body
@@ -135,13 +135,13 @@ void RigidBody::setMass(float mass) {
 
 	if (m_type != DYNAMIC) return;
 
-	mInitMass = mass;
+	m_initMass = mass;
 
-	if (mInitMass > float(0.0)) {
-		m_massInverse = float(1.0) / mInitMass;
+	if (m_initMass > float(0.0)) {
+		m_massInverse = float(1.0) / m_initMass;
 	}
 	else {
-		mInitMass = float(1.0);
+		m_initMass = float(1.0);
 		m_massInverse = float(1.0);
 	}
 }
@@ -253,10 +253,10 @@ void RigidBody::setLinearVelocity(const Vector3& linearVelocity) {
 	if (m_type == STATIC) return;
 
 	// Update the linear velocity of the current body state
-	mLinearVelocity = linearVelocity;
+	m_linearVelocity = linearVelocity;
 
 	// If the linear velocity is not zero, awake the body
-	if (mLinearVelocity.lengthSquare() > float(0.0)) {
+	if (m_linearVelocity.lengthSquare() > float(0.0)) {
 		setIsSleeping(false);
 	}
 }
@@ -271,10 +271,10 @@ void RigidBody::setAngularVelocity(const Vector3& angularVelocity) {
 	if (m_type == STATIC) return;
 
 	// Set the angular velocity
-	mAngularVelocity = angularVelocity;
+	m_angularVelocity = angularVelocity;
 
 	// If the velocity is not zero, awake the body
-	if (mAngularVelocity.lengthSquare() > float(0.0)) {
+	if (m_angularVelocity.lengthSquare() > float(0.0)) {
 		setIsSleeping(false);
 	}
 }
@@ -289,13 +289,13 @@ void RigidBody::setTransform(const Transform& transform) {
 	// Update the transform of the body
 	m_transform = transform;
 
-	const Vector3 oldCenterOfMass = mCenterOfMassWorld;
+	const Vector3 oldCenterOfMass = m_centerOfMassWorld;
 
 	// Compute the new center of mass in world-space coordinates
-	mCenterOfMassWorld = m_transform * mCenterOfMassLocal;
+	m_centerOfMassWorld = m_transform * m_centerOfMassLocal;
 
 	// Update the linear velocity of the center of mass
-	mLinearVelocity += mAngularVelocity.cross(mCenterOfMassWorld - oldCenterOfMass);
+	m_linearVelocity += m_angularVelocity.cross(m_centerOfMassWorld - oldCenterOfMass);
 
 	// Update the broad-phase state of the body
 	updateBroadPhaseState();
@@ -305,15 +305,15 @@ void RigidBody::setTransform(const Transform& transform) {
 // the collision shapes attached to the body.
 void RigidBody::recomputeMassInformation() {
 
-	mInitMass = float(0.0);
+	m_initMass = float(0.0);
 	m_massInverse = float(0.0);
-	mInertiaTensorLocal.setToZero();
-	mInertiaTensorLocalInverse.setToZero();
-	mCenterOfMassLocal.setToZero();
+	m_inertiaTensorLocal.setToZero();
+	m_inertiaTensorLocalInverse.setToZero();
+	m_centerOfMassLocal.setToZero();
 
 	// If it is STATIC or KINEMATIC body
 	if (m_type == STATIC || m_type == KINEMATIC) {
-		mCenterOfMassWorld = m_transform.getPosition();
+		m_centerOfMassWorld = m_transform.getPosition();
 		return;
 	}
 
@@ -321,22 +321,22 @@ void RigidBody::recomputeMassInformation() {
 
 	// Compute the total mass of the body
 	for (ProxyShape* shape = m_proxyCollisionShapes; shape != NULL; shape = shape->m_next) {
-		mInitMass += shape->getMass();
-		mCenterOfMassLocal += shape->getLocalToBodyTransform().getPosition() * shape->getMass();
+		m_initMass += shape->getMass();
+		m_centerOfMassLocal += shape->getLocalToBodyTransform().getPosition() * shape->getMass();
 	}
 
-	if (mInitMass > float(0.0)) {
-		m_massInverse = float(1.0) / mInitMass;
+	if (m_initMass > float(0.0)) {
+		m_massInverse = float(1.0) / m_initMass;
 	}
 	else {
-		mInitMass = float(1.0);
+		m_initMass = float(1.0);
 		m_massInverse = float(1.0);
 	}
 
 	// Compute the center of mass
-	const Vector3 oldCenterOfMass = mCenterOfMassWorld;
-	mCenterOfMassLocal *= m_massInverse;
-	mCenterOfMassWorld = m_transform * mCenterOfMassLocal;
+	const Vector3 oldCenterOfMass = m_centerOfMassWorld;
+	m_centerOfMassLocal *= m_massInverse;
+	m_centerOfMassWorld = m_transform * m_centerOfMassLocal;
 
 	// Compute the total mass and inertia tensor using all the collision shapes
 	for (ProxyShape* shape = m_proxyCollisionShapes; shape != NULL; shape = shape->m_next) {
@@ -352,7 +352,7 @@ void RigidBody::recomputeMassInformation() {
 
 		// Use the parallel axis theorem to convert the inertia tensor w.r.t the collision shape
 		// center int32_to a inertia tensor w.r.t to the body origin.
-		Vector3 offset = shapeTransform.getPosition() - mCenterOfMassLocal;
+		Vector3 offset = shapeTransform.getPosition() - m_centerOfMassLocal;
 		float offsetSquare = offset.lengthSquare();
 		Matrix3x3 offsetMatrix;
 		offsetMatrix[0].setAllValues(offsetSquare, float(0.0), float(0.0));
@@ -363,14 +363,14 @@ void RigidBody::recomputeMassInformation() {
 		offsetMatrix[2] += offset * (-offset.z);
 		offsetMatrix *= shape->getMass();
 
-		mInertiaTensorLocal += inertiaTensor + offsetMatrix;
+		m_inertiaTensorLocal += inertiaTensor + offsetMatrix;
 	}
 
 	// Compute the local inverse inertia tensor
-	mInertiaTensorLocalInverse = mInertiaTensorLocal.getInverse();
+	m_inertiaTensorLocalInverse = m_inertiaTensorLocal.getInverse();
 
 	// Update the linear velocity of the center of mass
-	mLinearVelocity += mAngularVelocity.cross(mCenterOfMassWorld - oldCenterOfMass);
+	m_linearVelocity += m_angularVelocity.cross(m_centerOfMassWorld - oldCenterOfMass);
 }
 
 // Update the broad-phase state for this body (because it has moved for instance)
@@ -379,7 +379,7 @@ void RigidBody::updateBroadPhaseState() const {
 	PROFILE("RigidBody::updateBroadPhaseState()");
 
 	DynamicsWorld& world = static_cast<DynamicsWorld&>(m_world);
- 	 const Vector3 displacement = world.m_timeStep * mLinearVelocity;
+ 	 const Vector3 displacement = world.m_timeStep * m_linearVelocity;
 
 	// For all the proxy collision shapes of the body
 	for (ProxyShape* shape = m_proxyCollisionShapes; shape != NULL; shape = shape->m_next) {

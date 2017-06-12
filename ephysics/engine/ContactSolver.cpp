@@ -70,8 +70,8 @@ void ContactSolver::initializeForIsland(float dt, Island* island) {
 		assert(body2 != NULL);
 
 		// Get the position of the two bodies
-		const Vector3& x1 = body1->mCenterOfMassWorld;
-		const Vector3& x2 = body2->mCenterOfMassWorld;
+		const Vector3& x1 = body1->m_centerOfMassWorld;
+		const Vector3& x2 = body2->m_centerOfMassWorld;
 
 		// Initialize the int32_ternal contact manifold structure using the external
 		// contact manifold
