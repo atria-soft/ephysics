@@ -31,15 +31,15 @@ struct CollisionShapeInfo {
 		/// Pointer to the collision shape
 		const CollisionShape* collisionShape;
 
-		/// Transform that maps from collision shape local-space to world-space
-		Transform shapeToWorldTransform;
+		/// etk::Transform3D that maps from collision shape local-space to world-space
+		etk::Transform3D shapeToWorldTransform;
 
 		/// Cached collision data of the proxy shape
 		void** cachedCollisionData;
 
 		/// Constructor
 		CollisionShapeInfo(ProxyShape* proxyCollisionShape, const CollisionShape* shape,
-						   const Transform& shapeLocalToWorldTransform, OverlappingPair* pair,
+						   const etk::Transform3D& shapeLocalToWorldTransform, OverlappingPair* pair,
 						   void** cachedData)
 			  : overlappingPair(pair), proxyShape(proxyCollisionShape), collisionShape(shape),
 				shapeToWorldTransform(shapeLocalToWorldTransform),

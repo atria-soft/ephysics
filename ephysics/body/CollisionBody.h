@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <cassert>
 #include <ephysics/body/Body.h>
-#include <ephysics/mathematics/Transform.h>
+#include <etk/math/Transform3D.hpp>
 #include <ephysics/collision/shapes/AABB.h>
 #include <ephysics/collision/shapes/CollisionShape.h>
 #include <ephysics/collision/RaycastInfo.h>
@@ -50,7 +50,7 @@ class CollisionBody : public Body {
 		BodyType m_type;
 
 		/// Position and orientation of the body
-		Transform m_transform;
+		etk::Transform3D m_transform;
 
 		/// First element of the linked list of proxy collision shapes of this body
 		ProxyShape* m_proxyCollisionShapes;
@@ -96,29 +96,40 @@ class CollisionBody : public Body {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		CollisionBody(const Transform& transform, CollisionWorld& world, bodyindex id);
+		CollisionBody(const etk::Transform3D& transform, CollisionWorld& world, bodyindex id);
 
 		/// Destructor
 		virtual ~CollisionBody();
 
 		/// Return the type of the body
 		BodyType getType() const;
-
-		/// Set the type of the body
-		void setType(BodyType type);
+		/**
+		 * @brief Set the type of the body
+		 * The type of the body can either STATIC, KINEMATIC or DYNAMIC as described bellow:
+		 * STATIC : A static body has infinite mass, zero velocity but the position can be
+		 *          changed manually. A static body does not collide with other static or kinematic bodies.
+		 * KINEMATIC : A kinematic body has infinite mass, the velocity can be changed manually and its
+		 *             position is computed by the physics engine. A kinematic body does not collide with
+		 *             other static or kinematic bodies.
+		 * DYNAMIC : A dynamic body has non-zero mass, non-zero velocity determined by forces and its
+		 *           position is determined by the physics engine. A dynamic body can collide with other
+		 *           dynamic, static or kinematic bodies.
+		 * @param[in] type The type of the body (STATIC, KINEMATIC, DYNAMIC)
+		 */
+		virtual void setType(BodyType _type);
 
 		/// Set whether or not the body is active
 		virtual void setIsActive(bool isActive);
 
 		/// Return the current position and orientation
-		const Transform& getTransform() const;
+		const etk::Transform3D& getTransform() const;
 
 		/// Set the current position and orientation
-		virtual void setTransform(const Transform& transform);
+		virtual void setTransform(const etk::Transform3D& transform);
 
 		/// Add a collision shape to the body.
 		virtual ProxyShape* addCollisionShape(CollisionShape* collisionShape,
-											  const Transform& transform);
+											  const etk::Transform3D& transform);
 
 		/// Remove a collision shape from the body
 		virtual void removeCollisionShape(const ProxyShape* proxyShape);
@@ -127,7 +138,7 @@ class CollisionBody : public Body {
 		const ContactManifoldListElement* getContactManifoldsList() const;
 
 		/// Return true if a point is inside the collision body
-		bool testPointInside(const Vector3& worldPoint) const;
+		bool testPointInside(const vec3& worldPoint) const;
 
 		/// Raycast method with feedback information
 		bool raycast(const Ray& ray, RaycastInfo& raycastInfo);
@@ -142,16 +153,16 @@ class CollisionBody : public Body {
 		const ProxyShape* getProxyShapesList() const;
 
 		/// Return the world-space coordinates of a point given the local-space coordinates of the body
-		Vector3 getWorldPoint(const Vector3& localPoint) const;
+		vec3 getWorldPoint(const vec3& localPoint) const;
 
 		/// Return the world-space vector of a vector given in local-space coordinates of the body
-		Vector3 getWorldVector(const Vector3& localVector) const;
+		vec3 getWorldVector(const vec3& localVector) const;
 
 		/// Return the body local-space coordinates of a point given in the world-space coordinates
-		Vector3 getLocalPoint(const Vector3& worldPoint) const;
+		vec3 getLocalPoint(const vec3& worldPoint) const;
 
 		/// Return the body local-space coordinates of a vector given in the world-space coordinates
-		Vector3 getLocalVector(const Vector3& worldVector) const;
+		vec3 getLocalVector(const vec3& worldVector) const;
 
 		// -------------------- Friendship -------------------- //
 
@@ -171,35 +182,13 @@ inline BodyType CollisionBody::getType() const {
 	return m_type;
 }
 
-// Set the type of the body
-/// The type of the body can either STATIC, KINEMATIC or DYNAMIC as described bellow:
-/// STATIC : A static body has infinite mass, zero velocity but the position can be
-///		  changed manually. A static body does not collide with other static or kinematic bodies.
-/// KINEMATIC : A kinematic body has infinite mass, the velocity can be changed manually and its
-///			 position is computed by the physics engine. A kinematic body does not collide with
-///			 other static or kinematic bodies.
-/// DYNAMIC : A dynamic body has non-zero mass, non-zero velocity determined by forces and its
-///		   position is determined by the physics engine. A dynamic body can collide with other
-///		   dynamic, static or kinematic bodies.
-/**
- * @param type The type of the body (STATIC, KINEMATIC, DYNAMIC)
- */
-inline void CollisionBody::setType(BodyType type) {
-	m_type = type;
-
-	if (m_type == STATIC) {
-
-		// Update the broad-phase state of the body
-		updateBroadPhaseState();
-	}
-}
 
 // Return the current position and orientation
 /**
  * @return The current transformation of the body that transforms the local-space
  *		 of the body int32_to world-space
  */
-inline const Transform& CollisionBody::getTransform() const {
+inline const etk::Transform3D& CollisionBody::getTransform() const {
 	return m_transform;
 }
 
@@ -208,7 +197,7 @@ inline const Transform& CollisionBody::getTransform() const {
  * @param transform The transformation of the body that transforms the local-space
  *				  of the body int32_to world-space
  */
-inline void CollisionBody::setTransform(const Transform& transform) {
+inline void CollisionBody::setTransform(const etk::Transform3D& transform) {
 
 	// Update the transform of the body
 	m_transform = transform;
@@ -249,7 +238,7 @@ inline const ProxyShape* CollisionBody::getProxyShapesList() const {
 * @param localPoint A point in the local-space coordinates of the body
 * @return The point in world-space coordinates
 */
-inline Vector3 CollisionBody::getWorldPoint(const Vector3& localPoint) const {
+inline vec3 CollisionBody::getWorldPoint(const vec3& localPoint) const {
 	return m_transform * localPoint;
 }
 
@@ -258,7 +247,7 @@ inline Vector3 CollisionBody::getWorldPoint(const Vector3& localPoint) const {
 * @param localVector A vector in the local-space coordinates of the body
 * @return The vector in world-space coordinates
 */
-inline Vector3 CollisionBody::getWorldVector(const Vector3& localVector) const {
+inline vec3 CollisionBody::getWorldVector(const vec3& localVector) const {
 	return m_transform.getOrientation() * localVector;
 }
 
@@ -267,7 +256,7 @@ inline Vector3 CollisionBody::getWorldVector(const Vector3& localVector) const {
 * @param worldPoint A point in world-space coordinates
 * @return The point in the local-space coordinates of the body
 */
-inline Vector3 CollisionBody::getLocalPoint(const Vector3& worldPoint) const {
+inline vec3 CollisionBody::getLocalPoint(const vec3& worldPoint) const {
 	return m_transform.getInverse() * worldPoint;
 }
 
@@ -276,7 +265,7 @@ inline Vector3 CollisionBody::getLocalPoint(const Vector3& worldPoint) const {
 * @param worldVector A vector in world-space coordinates
 * @return The vector in the local-space coordinates of the body
 */
-inline Vector3 CollisionBody::getLocalVector(const Vector3& worldVector) const {
+inline vec3 CollisionBody::getLocalVector(const vec3& worldVector) const {
 	return m_transform.getOrientation().getInverse() * worldVector;
 }
 

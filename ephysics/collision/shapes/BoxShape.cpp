@@ -18,11 +18,11 @@ using namespace reactphysics3d;
  * @param extent The vector with the three extents of the box (in meters)
  * @param margin The collision margin (in meters) around the collision shape
  */
-BoxShape::BoxShape(const Vector3& extent, float margin)
-		 : ConvexShape(BOX, margin), m_extent(extent - Vector3(margin, margin, margin)) {
-	assert(extent.x > float(0.0) && extent.x > margin);
-	assert(extent.y > float(0.0) && extent.y > margin);
-	assert(extent.z > float(0.0) && extent.z > margin);
+BoxShape::BoxShape(const vec3& extent, float margin)
+		 : ConvexShape(BOX, margin), m_extent(extent - vec3(margin, margin, margin)) {
+	assert(extent.x() > 0.0f && extent.x() > margin);
+	assert(extent.y() > 0.0f && extent.y() > margin);
+	assert(extent.z() > 0.0f && extent.z() > margin);
 }
 
 // Destructor
@@ -36,13 +36,13 @@ BoxShape::~BoxShape() {
  *					coordinates
  * @param mass Mass to use to compute the inertia tensor of the collision shape
  */
-void BoxShape::computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const {
-	float factor = (float(1.0) / float(3.0)) * mass;
-	Vector3 realExtent = m_extent + Vector3(mMargin, mMargin, mMargin);
-	float xSquare = realExtent.x * realExtent.x;
-	float ySquare = realExtent.y * realExtent.y;
-	float zSquare = realExtent.z * realExtent.z;
-	tensor.setAllValues(factor * (ySquare + zSquare), 0.0, 0.0,
+void BoxShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
+	float factor = (1.0f / float(3.0)) * mass;
+	vec3 realExtent = m_extent + vec3(m_margin, m_margin, m_margin);
+	float xSquare = realExtent.x() * realExtent.x();
+	float ySquare = realExtent.y() * realExtent.y();
+	float zSquare = realExtent.z() * realExtent.z();
+	tensor.setValue(factor * (ySquare + zSquare), 0.0, 0.0,
 						0.0, factor * (xSquare + zSquare), 0.0,
 						0.0, 0.0, factor * (xSquare + ySquare));
 }
@@ -50,11 +50,11 @@ void BoxShape::computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const {
 // Raycast method with feedback information
 bool BoxShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const {
 
-	Vector3 rayDirection = ray.point2 - ray.point1;
+	vec3 rayDirection = ray.point2 - ray.point1;
 	float tMin = DECIMAL_SMALLEST;
 	float tMax = DECIMAL_LARGEST;
-	Vector3 normalDirection(float(0), float(0), float(0));
-	Vector3 currentNormal;
+	vec3 normalDirection(float(0), float(0), float(0));
+	vec3 currentNormal;
 
 	// For each of the three slabs
 	for (int32_t i=0; i<3; i++) {
@@ -68,12 +68,12 @@ bool BoxShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pro
 		else {
 
 			// Compute the int32_tersection of the ray with the near and far plane of the slab
-			float oneOverD = float(1.0) / rayDirection[i];
+			float oneOverD = 1.0f / rayDirection[i];
 			float t1 = (-m_extent[i] - ray.point1[i]) * oneOverD;
 			float t2 = (m_extent[i] - ray.point1[i]) * oneOverD;
-			currentNormal[0] = (i == 0) ? -m_extent[i] : float(0.0);
-			currentNormal[1] = (i == 1) ? -m_extent[i] : float(0.0);
-			currentNormal[2] = (i == 2) ? -m_extent[i] : float(0.0);
+			currentNormal[0] = (i == 0) ? -m_extent[i] : 0.0f;
+			currentNormal[1] = (i == 1) ? -m_extent[i] : 0.0f;
+			currentNormal[2] = (i == 2) ? -m_extent[i] : 0.0f;
 
 			// Swap t1 and t2 if need so that t1 is int32_tersection with near plane and
 			// t2 with far plane
@@ -98,10 +98,10 @@ bool BoxShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pro
 	}
 
 	// If tMin is negative, we return no hit
-	if (tMin < float(0.0) || tMin > ray.maxFraction) return false;
+	if (tMin < 0.0f || tMin > ray.maxFraction) return false;
 
 	// The ray int32_tersects the three slabs, we compute the hit point
-	Vector3 localHitPoint = ray.point1 + tMin * rayDirection;
+	vec3 localHitPoint = ray.point1 + tMin * rayDirection;
 
 	raycastInfo.body = proxyShape->getBody();
 	raycastInfo.proxyShape = proxyShape;

@@ -36,7 +36,7 @@ openglframework::Mesh VisualContactPoint::mMesh;
 bool VisualContactPoint::mStaticDataCreated = false;
 
 // Constructor
-VisualContactPoint::VisualContactPoint(const openglframework::Vector3& position,
+VisualContactPoint::VisualContactPoint(const openglframework::vec3& position,
 									   const std::string& meshFolderPath)
 	: mColor(1.0f, 0.0f, 0.0f, 1.0f) {
 
@@ -104,7 +104,7 @@ void VisualContactPoint::render(openglframework::Shader& shader,
 	const openglframework::Matrix4 localToCameraMatrix = worldToCameraMatrix * m_transformMatrix;
 	const openglframework::Matrix3 normalMatrix =
 					   localToCameraMatrix.getUpperLeft3x3Matrix().getInverse().getTranspose();
-	shader.setMatrix3x3Uniform("normalMatrix", normalMatrix, false);
+	shader.setetk::Matrix3x3Uniform("normalMatrix", normalMatrix, false);
 
 	// Set the vertex color
 	openglframework::Vector4 color(mColor.r, mColor.g, mColor.b, mColor.a);
@@ -147,14 +147,14 @@ void VisualContactPoint::createVBOAndVAO() {
 	// Create the VBO for the vertices data
 	mVBOVertices.create();
 	mVBOVertices.bind();
-	size_t sizeVertices = mMesh.getVertices().size() * sizeof(openglframework::Vector3);
+	size_t sizeVertices = mMesh.getVertices().size() * sizeof(openglframework::vec3);
 	mVBOVertices.copyDataIntoVBO(sizeVertices, mMesh.getVerticesPointer(), GL_STATIC_DRAW);
 	mVBOVertices.unbind();
 
 	// Create the VBO for the normals data
 	mVBONormals.create();
 	mVBONormals.bind();
-	size_t sizeNormals = mMesh.getNormals().size() * sizeof(openglframework::Vector3);
+	size_t sizeNormals = mMesh.getNormals().size() * sizeof(openglframework::vec3);
 	mVBONormals.copyDataIntoVBO(sizeNormals, mMesh.getNormalsPointer(), GL_STATIC_DRAW);
 	mVBONormals.unbind();
 

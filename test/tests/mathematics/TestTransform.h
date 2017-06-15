@@ -28,46 +28,46 @@
 
 // Libraries
 #include <test/Test.h>
-#include <ephysics/mathematics/Transform.h>
+#include <etk/math/Transform3D.hpp>
 
 /// Reactphysics3D namespace
 namespace reactphysics3d {
 
-// Class TestTransform
+// Class Testetk::Transform3D
 /**
- * Unit test for the Transform class
+ * Unit test for the etk::Transform3D class
  */
-class TestTransform : public Test {
+class Testetk::Transform3D : public Test {
 
 	private :
 
 		// ---------- Atributes ---------- //
 
 		/// Identity transform
-		Transform mIdentityTransform;
+		etk::Transform3D mIdentityTransform;
 
 		/// First example transform
-		Transform m_transform1;
+		etk::Transform3D m_transform1;
 
 		/// Second example transform
-		Transform m_transform2;
+		etk::Transform3D m_transform2;
 
 	public :
 
 		// ---------- Methods ---------- //
 
 		/// Constructor
-		TestTransform(const std::string& name) : Test(name) {
+		Testetk::Transform3D(const std::string& name) : Test(name) {
 
-			mIdentityTransform.setToIdentity();
+			mIdentityetk::Transform3D.setToIdentity();
 
 			float sinA = sin(PI/8.0f);
 			float cosA = cos(PI/8.0f);
-			m_transform1 = Transform(Vector3(4, 5, 6), Quaternion(sinA, sinA, sinA, cosA));
+			m_transform1 = etk::Transform3D(vec3(4, 5, 6), etk::Quaternion(sinA, sinA, sinA, cosA));
 
 			float sinB = sin(PI/3.0f);
 			float cosB = cos(PI/3.0f);
-			m_transform2 = Transform(Vector3(8, 45, -6), Quaternion(sinB, sinB, sinB, cosB));
+			m_transform2 = etk::Transform3D(vec3(8, 45, -6), etk::Quaternion(sinB, sinB, sinB, cosB));
 		}
 
 		/// Run the tests
@@ -76,60 +76,60 @@ class TestTransform : public Test {
 			testGetSet();
 			testInverse();
 			testGetSetOpenGLMatrix();
-			testInterpolateTransform();
+			testInterpolateetk::Transform3D();
 			testIdentity();
 			testOperators();
 		}
 
 		/// Test the constructors
 		void testConstructors() {
-			Transform transform1(Vector3(1, 2, 3), Quaternion(6, 7, 8, 9));
-			Transform transform2(Vector3(4, 5, 6), Matrix3x3(1, 0, 0, 0, 1, 0, 0, 0, 1));
-			Transform transform3(transform1);
-			test(transform1.getPosition() == Vector3(1, 2, 3));
-			test(transform1.getOrientation() == Quaternion(6, 7, 8, 9));
-			test(transform2.getPosition() == Vector3(4, 5, 6));
-			test(transform2.getOrientation() == Quaternion::identity());
+			etk::Transform3D transform1(vec3(1, 2, 3), etk::Quaternion(6, 7, 8, 9));
+			etk::Transform3D transform2(vec3(4, 5, 6), etk::Matrix3x3(1, 0, 0, 0, 1, 0, 0, 0, 1));
+			etk::Transform3D transform3(transform1);
+			test(transform1.getPosition() == vec3(1, 2, 3));
+			test(transform1.getOrientation() == etk::Quaternion(6, 7, 8, 9));
+			test(transform2.getPosition() == vec3(4, 5, 6));
+			test(transform2.getOrientation() == etk::Quaternion::identity());
 			test(transform3 == transform1);
 		}
 
 		/// Test getter and setter
 		void testGetSet() {
-			test(mIdentityTransform.getPosition() == Vector3(0, 0, 0));
-			test(mIdentityTransform.getOrientation() == Quaternion::identity());
-			Transform transform;
-			transform.setPosition(Vector3(5, 7, 8));
-			transform.setOrientation(Quaternion(1, 2, 3, 1));
-			test(transform.getPosition() == Vector3(5, 7, 8));
-			test(transform.getOrientation() == Quaternion(1, 2, 3, 1));
+			test(mIdentityetk::Transform3D.getPosition() == vec3(0, 0, 0));
+			test(mIdentityetk::Transform3D.getOrientation() == etk::Quaternion::identity());
+			etk::Transform3D transform;
+			transform.setPosition(vec3(5, 7, 8));
+			transform.setOrientation(etk::Quaternion(1, 2, 3, 1));
+			test(transform.getPosition() == vec3(5, 7, 8));
+			test(transform.getOrientation() == etk::Quaternion(1, 2, 3, 1));
 			transform.setToIdentity();
-			test(transform.getPosition() == Vector3(0, 0, 0));
-			test(transform.getOrientation() == Quaternion::identity());
+			test(transform.getPosition() == vec3(0, 0, 0));
+			test(transform.getOrientation() == etk::Quaternion::identity());
 		}
 
 		/// Test the inverse
 		void testInverse() {
-			Transform inverseTransform = m_transform1.getInverse();
-			Vector3 vector(2, 3, 4);
-			Vector3 tempVector = m_transform1 * vector;
-			Vector3 tempVector2 = inverseTransform * tempVector;
-			test(approxEqual(tempVector2.x, vector.x, float(10e-6)));
-			test(approxEqual(tempVector2.y, vector.y, float(10e-6)));
-			test(approxEqual(tempVector2.z, vector.z, float(10e-6)));
+			etk::Transform3D inverseTransform = m_transform1.getInverse();
+			vec3 vector(2, 3, 4);
+			vec3 tempVector = m_transform1 * vector;
+			vec3 tempvec2 = inverseetk::Transform3D * tempVector;
+			test(approxEqual(tempvec2.x(), vector.x, float(10e-6)));
+			test(approxEqual(tempvec2.y(), vector.y, float(10e-6)));
+			test(approxEqual(tempvec2.z(), vector.z, float(10e-6)));
 		}
 
 		/// Test methods to set and get transform matrix from and to OpenGL
 		void testGetSetOpenGLMatrix() {
-			Transform transform;
-			Vector3 position = m_transform1.getPosition();
-			Matrix3x3 orientation = m_transform1.getOrientation().getMatrix();
+			etk::Transform3D transform;
+			vec3 position = m_transform1.getPosition();
+			etk::Matrix3x3 orientation = m_transform1.getOrientation().getMatrix();
 			float openglMatrix[16] = {orientation[0][0], orientation[1][0],
 										orientation[2][0], 0,
 										orientation[0][1], orientation[1][1],
 										orientation[2][1], 0,
 										orientation[0][2], orientation[1][2],
 										orientation[2][2], 0,
-										position.x, position.y, position.z, 1};
+										position.x(), position.y(), position.z(), 1};
 			transform.setFromOpenGL(openglMatrix);
 			float openglMatrix2[16];
 			transform.getOpenGLMatrix(openglMatrix2);
@@ -145,16 +145,16 @@ class TestTransform : public Test {
 			test(approxEqual(openglMatrix2[9], orientation[1][2]));
 			test(approxEqual(openglMatrix2[10], orientation[2][2]));
 			test(approxEqual(openglMatrix2[11], 0));
-			test(approxEqual(openglMatrix2[12], position.x));
-			test(approxEqual(openglMatrix2[13], position.y));
-			test(approxEqual(openglMatrix2[14], position.z));
+			test(approxEqual(openglMatrix2[12], position.x()));
+			test(approxEqual(openglMatrix2[13], position.y()));
+			test(approxEqual(openglMatrix2[14], position.z()));
 			test(approxEqual(openglMatrix2[15], 1));
 		}
 
 		/// Test the method to int32_terpolate transforms
-		void testInterpolateTransform() {
-			Transform transformStart = Transform::int32_terpolateTransforms(m_transform1, m_transform2,0);
-			Transform transformEnd = Transform::int32_terpolateTransforms(m_transform1, m_transform2,1);
+		void testInterpolateetk::Transform3D() {
+			etk::Transform3D transformStart = Transform::int32_terpolateTransforms(m_transform1, m_transform2,0);
+			etk::Transform3D transformEnd = Transform::int32_terpolateTransforms(m_transform1, m_transform2,1);
 			test(transformStart == m_transform1);
 			test(transformEnd == m_transform2);
 
@@ -162,30 +162,30 @@ class TestTransform : public Test {
 			float cosA = cos(PI/3.0f);
 			float sinB = sin(PI/6.0f);
 			float cosB = cos(PI/6.0f);
-			Transform transform1(Vector3(4, 5, 6), Quaternion::identity());
-			Transform transform2(Vector3(8, 11, 16), Quaternion(sinA, sinA, sinA, cosA));
-			Transform transform = Transform::int32_terpolateTransforms(transform1, transform2, 0.5);
-			Vector3 position = transform.getPosition();
-			Quaternion orientation = transform.getOrientation();
-			test(approxEqual(position.x, 6));
-			test(approxEqual(position.y, 8));
-			test(approxEqual(position.z, 11));
-			test(approxEqual(orientation.x, sinB));
-			test(approxEqual(orientation.y, sinB));
-			test(approxEqual(orientation.z, sinB));
+			etk::Transform3D transform1(vec3(4, 5, 6), etk::Quaternion::identity());
+			etk::Transform3D transform2(vec3(8, 11, 16), etk::Quaternion(sinA, sinA, sinA, cosA));
+			etk::Transform3D transform = Transform::int32_terpolateTransforms(transform1, transform2, 0.5);
+			vec3 position = transform.getPosition();
+			etk::Quaternion orientation = transform.getOrientation();
+			test(approxEqual(position.x(), 6));
+			test(approxEqual(position.y(), 8));
+			test(approxEqual(position.z(), 11));
+			test(approxEqual(orientation.x(), sinB));
+			test(approxEqual(orientation.y(), sinB));
+			test(approxEqual(orientation.z(), sinB));
 			test(approxEqual(orientation.w, cosB));
 		}
 
 		/// Test the identity methods
 		void testIdentity() {
-			Transform transform = Transform::identity();
-			test(transform.getPosition() == Vector3(0, 0, 0));
-			test(transform.getOrientation() == Quaternion::identity());
+			etk::Transform3D transform = Transform::identity();
+			test(transform.getPosition() == vec3(0, 0, 0));
+			test(transform.getOrientation() == etk::Quaternion::identity());
 
-			Transform transform2(Vector3(5, 6, 2), Quaternion(3, 5, 1, 6));
+			etk::Transform3D transform2(vec3(5, 6, 2), etk::Quaternion(3, 5, 1, 6));
 			transform2.setToIdentity();
-			test(transform2.getPosition() == Vector3(0, 0, 0));
-			test(transform2.getOrientation() == Quaternion::identity());
+			test(transform2.getPosition() == vec3(0, 0, 0));
+			test(transform2.getOrientation() == etk::Quaternion::identity());
 		}
 
 		/// Test the overloaded operators
@@ -196,17 +196,17 @@ class TestTransform : public Test {
 			test(m_transform1 != m_transform2);
 
 			// Assignment operator
-			Transform transform;
+			etk::Transform3D transform;
 			transform = m_transform1;
 			test(transform == m_transform1);
 
 			// Multiplication
-			Vector3 vector(7, 53, 5);
-			Vector3 vector2 = m_transform2 * (m_transform1 * vector);
-			Vector3 vector3 = (m_transform2 * m_transform1) * vector;
-			test(approxEqual(vector2.x, vector3.x, float(10e-6)));
-			test(approxEqual(vector2.y, vector3.y, float(10e-6)));
-			test(approxEqual(vector2.z, vector3.z, float(10e-6)));
+			vec3 vector(7, 53, 5);
+			vec3 vector2 = m_transform2 * (m_transform1 * vector);
+			vec3 vector3 = (m_transform2 * m_transform1) * vector;
+			test(approxEqual(vector2.x(), vector3.x, float(10e-6)));
+			test(approxEqual(vector2.y(), vector3.y, float(10e-6)));
+			test(approxEqual(vector2.z(), vector3.z, float(10e-6)));
 		}
  };
 

@@ -16,7 +16,7 @@ using namespace reactphysics3d;
 const int32_t TreeNode::NULL_TREE_NODE = -1;
 
 // Constructor
-DynamicAABBTree::DynamicAABBTree(float extraAABBGap) : mExtraAABBGap(extraAABBGap) {
+DynamicAABBTree::DynamicAABBTree(float extraAABBGap) : m_extraAABBGap(extraAABBGap) {
 
 	init();
 }
@@ -25,36 +25,36 @@ DynamicAABBTree::DynamicAABBTree(float extraAABBGap) : mExtraAABBGap(extraAABBGa
 DynamicAABBTree::~DynamicAABBTree() {
 
 	// Free the allocated memory for the nodes
-	free(mNodes);
+	free(m_nodes);
 }
 
 // Initialize the tree
 void DynamicAABBTree::init() {
 
 	m_rootNodeID = TreeNode::NULL_TREE_NODE;
-	mNbNodes = 0;
-	mNbAllocatedNodes = 8;
+	m_numberNodes = 0;
+	m_numberAllocatedNodes = 8;
 
 	// Allocate memory for the nodes of the tree
-	mNodes = (TreeNode*) malloc(mNbAllocatedNodes * sizeof(TreeNode));
-	assert(mNodes);
-	memset(mNodes, 0, mNbAllocatedNodes * sizeof(TreeNode));
+	m_nodes = (TreeNode*) malloc(m_numberAllocatedNodes * sizeof(TreeNode));
+	assert(m_nodes);
+	memset(m_nodes, 0, m_numberAllocatedNodes * sizeof(TreeNode));
 
 	// Initialize the allocated nodes
-	for (int32_t i=0; i<mNbAllocatedNodes - 1; i++) {
-		mNodes[i].nextNodeID = i + 1;
-		mNodes[i].height = -1;
+	for (int32_t i=0; i<m_numberAllocatedNodes - 1; i++) {
+		m_nodes[i].nextNodeID = i + 1;
+		m_nodes[i].height = -1;
 	}
-	mNodes[mNbAllocatedNodes - 1].nextNodeID = TreeNode::NULL_TREE_NODE;
-	mNodes[mNbAllocatedNodes - 1].height = -1;
-	mFreeNodeID = 0;
+	m_nodes[m_numberAllocatedNodes - 1].nextNodeID = TreeNode::NULL_TREE_NODE;
+	m_nodes[m_numberAllocatedNodes - 1].height = -1;
+	m_freeNodeID = 0;
 }
 
 // Clear all the nodes and reset the tree
 void DynamicAABBTree::reset() {
 
 	// Free the allocated memory for the nodes
-	free(mNodes);
+	free(m_nodes);
 
 	// Initialize the tree
 	init();
@@ -64,34 +64,34 @@ void DynamicAABBTree::reset() {
 int32_t DynamicAABBTree::allocateNode() {
 
 	// If there is no more allocated node to use
-	if (mFreeNodeID == TreeNode::NULL_TREE_NODE) {
+	if (m_freeNodeID == TreeNode::NULL_TREE_NODE) {
 
-		assert(mNbNodes == mNbAllocatedNodes);
+		assert(m_numberNodes == m_numberAllocatedNodes);
 
 		// Allocate more nodes in the tree
-		mNbAllocatedNodes *= 2;
-		TreeNode* oldNodes = mNodes;
-		mNodes = (TreeNode*) malloc(mNbAllocatedNodes * sizeof(TreeNode));
-		assert(mNodes);
-		memcpy(mNodes, oldNodes, mNbNodes * sizeof(TreeNode));
+		m_numberAllocatedNodes *= 2;
+		TreeNode* oldNodes = m_nodes;
+		m_nodes = (TreeNode*) malloc(m_numberAllocatedNodes * sizeof(TreeNode));
+		assert(m_nodes);
+		memcpy(m_nodes, oldNodes, m_numberNodes * sizeof(TreeNode));
 		free(oldNodes);
 
 		// Initialize the allocated nodes
-		for (int32_t i=mNbNodes; i<mNbAllocatedNodes - 1; i++) {
-			mNodes[i].nextNodeID = i + 1;
-			mNodes[i].height = -1;
+		for (int32_t i=m_numberNodes; i<m_numberAllocatedNodes - 1; i++) {
+			m_nodes[i].nextNodeID = i + 1;
+			m_nodes[i].height = -1;
 		}
-		mNodes[mNbAllocatedNodes - 1].nextNodeID = TreeNode::NULL_TREE_NODE;
-		mNodes[mNbAllocatedNodes - 1].height = -1;
-		mFreeNodeID = mNbNodes;
+		m_nodes[m_numberAllocatedNodes - 1].nextNodeID = TreeNode::NULL_TREE_NODE;
+		m_nodes[m_numberAllocatedNodes - 1].height = -1;
+		m_freeNodeID = m_numberNodes;
 	}
 
 	// Get the next free node
-	int32_t freeNodeID = mFreeNodeID;
-	mFreeNodeID = mNodes[freeNodeID].nextNodeID;
-	mNodes[freeNodeID].parentID = TreeNode::NULL_TREE_NODE;
-	mNodes[freeNodeID].height = 0;
-	mNbNodes++;
+	int32_t freeNodeID = m_freeNodeID;
+	m_freeNodeID = m_nodes[freeNodeID].nextNodeID;
+	m_nodes[freeNodeID].parentID = TreeNode::NULL_TREE_NODE;
+	m_nodes[freeNodeID].height = 0;
+	m_numberNodes++;
 
 	return freeNodeID;
 }
@@ -99,13 +99,13 @@ int32_t DynamicAABBTree::allocateNode() {
 // Release a node
 void DynamicAABBTree::releaseNode(int32_t nodeID) {
 
-	assert(mNbNodes > 0);
-	assert(nodeID >= 0 && nodeID < mNbAllocatedNodes);
-	assert(mNodes[nodeID].height >= 0);
-	mNodes[nodeID].nextNodeID = mFreeNodeID;
-	mNodes[nodeID].height = -1;
-	mFreeNodeID = nodeID;
-	mNbNodes--;
+	assert(m_numberNodes > 0);
+	assert(nodeID >= 0 && nodeID < m_numberAllocatedNodes);
+	assert(m_nodes[nodeID].height >= 0);
+	m_nodes[nodeID].nextNodeID = m_freeNodeID;
+	m_nodes[nodeID].height = -1;
+	m_freeNodeID = nodeID;
+	m_numberNodes--;
 }
 
 // Internally add an object int32_to the tree
@@ -115,16 +115,16 @@ int32_t DynamicAABBTree::addObjectInternal(const AABB& aabb) {
 	int32_t nodeID = allocateNode();
 
 	// Create the fat aabb to use in the tree
-	const Vector3 gap(mExtraAABBGap, mExtraAABBGap, mExtraAABBGap);
-	mNodes[nodeID].aabb.setMin(aabb.getMin() - gap);
-	mNodes[nodeID].aabb.setMax(aabb.getMax() + gap);
+	const vec3 gap(m_extraAABBGap, m_extraAABBGap, m_extraAABBGap);
+	m_nodes[nodeID].aabb.setMin(aabb.getMin() - gap);
+	m_nodes[nodeID].aabb.setMax(aabb.getMax() + gap);
 
 	// Set the height of the node in the tree
-	mNodes[nodeID].height = 0;
+	m_nodes[nodeID].height = 0;
 
 	// Insert the new leaf node in the tree
 	insertLeafNode(nodeID);
-	assert(mNodes[nodeID].isLeaf());
+	assert(m_nodes[nodeID].isLeaf());
 
 	assert(nodeID >= 0);
 
@@ -135,8 +135,8 @@ int32_t DynamicAABBTree::addObjectInternal(const AABB& aabb) {
 // Remove an object from the tree
 void DynamicAABBTree::removeObject(int32_t nodeID) {
 
-	assert(nodeID >= 0 && nodeID < mNbAllocatedNodes);
-	assert(mNodes[nodeID].isLeaf());
+	assert(nodeID >= 0 && nodeID < m_numberAllocatedNodes);
+	assert(m_nodes[nodeID].isLeaf());
 
 	// Remove the node from the tree
 	removeLeafNode(nodeID);
@@ -150,16 +150,16 @@ void DynamicAABBTree::removeObject(int32_t nodeID) {
 /// argument is the linear velocity of the AABB multiplied by the elapsed time between two
 /// frames. If the "forceReinsert" parameter is true, we force a removal and reinsertion of the node
 /// (this can be useful if the shape AABB has become much smaller than the previous one for instance).
-bool DynamicAABBTree::updateObject(int32_t nodeID, const AABB& newAABB, const Vector3& displacement, bool forceReinsert) {
+bool DynamicAABBTree::updateObject(int32_t nodeID, const AABB& newAABB, const vec3& displacement, bool forceReinsert) {
 
 	PROFILE("DynamicAABBTree::updateObject()");
 
-	assert(nodeID >= 0 && nodeID < mNbAllocatedNodes);
-	assert(mNodes[nodeID].isLeaf());
-	assert(mNodes[nodeID].height >= 0);
+	assert(nodeID >= 0 && nodeID < m_numberAllocatedNodes);
+	assert(m_nodes[nodeID].isLeaf());
+	assert(m_nodes[nodeID].height >= 0);
 
 	// If the new AABB is still inside the fat AABB of the node
-	if (!forceReinsert && mNodes[nodeID].aabb.contains(newAABB)) {
+	if (!forceReinsert && m_nodes[nodeID].aabb.contains(newAABB)) {
 		return false;
 	}
 
@@ -167,32 +167,29 @@ bool DynamicAABBTree::updateObject(int32_t nodeID, const AABB& newAABB, const Ve
 	removeLeafNode(nodeID);
 
 	// Compute the fat AABB by inflating the AABB with a constant gap
-	mNodes[nodeID].aabb = newAABB;
-	const Vector3 gap(mExtraAABBGap, mExtraAABBGap, mExtraAABBGap);
-	mNodes[nodeID].aabb.m_minCoordinates -= gap;
-	mNodes[nodeID].aabb.m_maxCoordinates += gap;
+	m_nodes[nodeID].aabb = newAABB;
+	const vec3 gap(m_extraAABBGap, m_extraAABBGap, m_extraAABBGap);
+	m_nodes[nodeID].aabb.m_minCoordinates -= gap;
+	m_nodes[nodeID].aabb.m_maxCoordinates += gap;
 
 	// Inflate the fat AABB in direction of the linear motion of the AABB
-	if (displacement.x < float(0.0)) {
-	  mNodes[nodeID].aabb.m_minCoordinates.x += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.x;
+	if (displacement.x() < 0.0f) {
+		m_nodes[nodeID].aabb.m_minCoordinates.setX(m_nodes[nodeID].aabb.m_minCoordinates.x() + DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.x());
+	} else {
+		m_nodes[nodeID].aabb.m_maxCoordinates.setY(m_nodes[nodeID].aabb.m_maxCoordinates.x() + DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.x());
 	}
-	else {
-	  mNodes[nodeID].aabb.m_maxCoordinates.x += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.x;
+	if (displacement.y() < 0.0f) {
+		m_nodes[nodeID].aabb.m_minCoordinates.setY(m_nodes[nodeID].aabb.m_minCoordinates.y() + DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.y());
+	} else {
+		m_nodes[nodeID].aabb.m_maxCoordinates.setY(m_nodes[nodeID].aabb.m_maxCoordinates.y() + DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.y());
 	}
-	if (displacement.y < float(0.0)) {
-	  mNodes[nodeID].aabb.m_minCoordinates.y += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.y;
-	}
-	else {
-	  mNodes[nodeID].aabb.m_maxCoordinates.y += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.y;
-	}
-	if (displacement.z < float(0.0)) {
-	  mNodes[nodeID].aabb.m_minCoordinates.z += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.z;
-	}
-	else {
-	  mNodes[nodeID].aabb.m_maxCoordinates.z += DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.z;
+	if (displacement.z() < 0.0f) {
+		m_nodes[nodeID].aabb.m_minCoordinates.setZ(m_nodes[nodeID].aabb.m_minCoordinates.z() + DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.z());
+	} else {
+		m_nodes[nodeID].aabb.m_maxCoordinates.setZ(m_nodes[nodeID].aabb.m_maxCoordinates.z() + DYNAMIC_TREE_AABB_LIN_GAP_MULTIPLIER *displacement.z());
 	}
 
-	assert(mNodes[nodeID].aabb.contains(newAABB));
+	assert(m_nodes[nodeID].aabb.contains(newAABB));
 
 	// Reinsert the node int32_to the tree
 	insertLeafNode(nodeID);
@@ -208,24 +205,24 @@ void DynamicAABBTree::insertLeafNode(int32_t nodeID) {
 	// If the tree is empty
 	if (m_rootNodeID == TreeNode::NULL_TREE_NODE) {
 		m_rootNodeID = nodeID;
-		mNodes[m_rootNodeID].parentID = TreeNode::NULL_TREE_NODE;
+		m_nodes[m_rootNodeID].parentID = TreeNode::NULL_TREE_NODE;
 		return;
 	}
 
 	assert(m_rootNodeID != TreeNode::NULL_TREE_NODE);
 
 	// Find the best sibling node for the new node
-	AABB newNodeAABB = mNodes[nodeID].aabb;
+	AABB newNodeAABB = m_nodes[nodeID].aabb;
 	int32_t currentNodeID = m_rootNodeID;
-	while (!mNodes[currentNodeID].isLeaf()) {
+	while (!m_nodes[currentNodeID].isLeaf()) {
 
-		int32_t leftChild = mNodes[currentNodeID].children[0];
-		int32_t rightChild = mNodes[currentNodeID].children[1];
+		int32_t leftChild = m_nodes[currentNodeID].children[0];
+		int32_t rightChild = m_nodes[currentNodeID].children[1];
 
 		// Compute the merged AABB
-		float volumeAABB = mNodes[currentNodeID].aabb.getVolume();
+		float volumeAABB = m_nodes[currentNodeID].aabb.getVolume();
 		AABB mergedAABBs;
-		mergedAABBs.mergeTwoAABBs(mNodes[currentNodeID].aabb, newNodeAABB);
+		mergedAABBs.mergeTwoAABBs(m_nodes[currentNodeID].aabb, newNodeAABB);
 		float mergedVolume = mergedAABBs.getVolume();
 
 		// Compute the cost of making the current node the sibbling of the new node
@@ -237,24 +234,24 @@ void DynamicAABBTree::insertLeafNode(int32_t nodeID) {
 		// Compute the cost of descending int32_to the left child
 		float costLeft;
 		AABB currentAndLeftAABB;
-		currentAndLeftAABB.mergeTwoAABBs(newNodeAABB, mNodes[leftChild].aabb);
-		if (mNodes[leftChild].isLeaf()) {   // If the left child is a leaf
+		currentAndLeftAABB.mergeTwoAABBs(newNodeAABB, m_nodes[leftChild].aabb);
+		if (m_nodes[leftChild].isLeaf()) {   // If the left child is a leaf
 			costLeft = currentAndLeftAABB.getVolume() + costI;
 		}
 		else {
-			float leftChildVolume = mNodes[leftChild].aabb.getVolume();
+			float leftChildVolume = m_nodes[leftChild].aabb.getVolume();
 			costLeft = costI + currentAndLeftAABB.getVolume() - leftChildVolume;
 		}
 
 		// Compute the cost of descending int32_to the right child
 		float costRight;
 		AABB currentAndRightAABB;
-		currentAndRightAABB.mergeTwoAABBs(newNodeAABB, mNodes[rightChild].aabb);
-		if (mNodes[rightChild].isLeaf()) {   // If the right child is a leaf
+		currentAndRightAABB.mergeTwoAABBs(newNodeAABB, m_nodes[rightChild].aabb);
+		if (m_nodes[rightChild].isLeaf()) {   // If the right child is a leaf
 			costRight = currentAndRightAABB.getVolume() + costI;
 		}
 		else {
-			float rightChildVolume = mNodes[rightChild].aabb.getVolume();
+			float rightChildVolume = m_nodes[rightChild].aabb.getVolume();
 			costRight = costI + currentAndRightAABB.getVolume() - rightChildVolume;
 		}
 
@@ -274,69 +271,69 @@ void DynamicAABBTree::insertLeafNode(int32_t nodeID) {
 	int32_t siblingNode = currentNodeID;
 
 	// Create a new parent for the new node and the sibling node
-	int32_t oldParentNode = mNodes[siblingNode].parentID;
+	int32_t oldParentNode = m_nodes[siblingNode].parentID;
 	int32_t newParentNode = allocateNode();
-	mNodes[newParentNode].parentID = oldParentNode;
-	mNodes[newParentNode].aabb.mergeTwoAABBs(mNodes[siblingNode].aabb, newNodeAABB);
-	mNodes[newParentNode].height = mNodes[siblingNode].height + 1;
-	assert(mNodes[newParentNode].height > 0);
+	m_nodes[newParentNode].parentID = oldParentNode;
+	m_nodes[newParentNode].aabb.mergeTwoAABBs(m_nodes[siblingNode].aabb, newNodeAABB);
+	m_nodes[newParentNode].height = m_nodes[siblingNode].height + 1;
+	assert(m_nodes[newParentNode].height > 0);
 
 	// If the sibling node was not the root node
 	if (oldParentNode != TreeNode::NULL_TREE_NODE) {
-		assert(!mNodes[oldParentNode].isLeaf());
-		if (mNodes[oldParentNode].children[0] == siblingNode) {
-			mNodes[oldParentNode].children[0] = newParentNode;
+		assert(!m_nodes[oldParentNode].isLeaf());
+		if (m_nodes[oldParentNode].children[0] == siblingNode) {
+			m_nodes[oldParentNode].children[0] = newParentNode;
 		}
 		else {
-			mNodes[oldParentNode].children[1] = newParentNode;
+			m_nodes[oldParentNode].children[1] = newParentNode;
 		}
-		mNodes[newParentNode].children[0] = siblingNode;
-		mNodes[newParentNode].children[1] = nodeID;
-		mNodes[siblingNode].parentID = newParentNode;
-		mNodes[nodeID].parentID = newParentNode;
+		m_nodes[newParentNode].children[0] = siblingNode;
+		m_nodes[newParentNode].children[1] = nodeID;
+		m_nodes[siblingNode].parentID = newParentNode;
+		m_nodes[nodeID].parentID = newParentNode;
 	}
 	else {  // If the sibling node was the root node
-		mNodes[newParentNode].children[0] = siblingNode;
-		mNodes[newParentNode].children[1] = nodeID;
-		mNodes[siblingNode].parentID = newParentNode;
-		mNodes[nodeID].parentID = newParentNode;
+		m_nodes[newParentNode].children[0] = siblingNode;
+		m_nodes[newParentNode].children[1] = nodeID;
+		m_nodes[siblingNode].parentID = newParentNode;
+		m_nodes[nodeID].parentID = newParentNode;
 		m_rootNodeID = newParentNode;
 	}
 
 	// Move up in the tree to change the AABBs that have changed
-	currentNodeID = mNodes[nodeID].parentID;
-	assert(!mNodes[currentNodeID].isLeaf());
+	currentNodeID = m_nodes[nodeID].parentID;
+	assert(!m_nodes[currentNodeID].isLeaf());
 	while (currentNodeID != TreeNode::NULL_TREE_NODE) {
 
 		// Balance the sub-tree of the current node if it is not balanced
 		currentNodeID = balanceSubTreeAtNode(currentNodeID);
-		assert(mNodes[nodeID].isLeaf());
+		assert(m_nodes[nodeID].isLeaf());
 
-		assert(!mNodes[currentNodeID].isLeaf());
-		int32_t leftChild = mNodes[currentNodeID].children[0];
-		int32_t rightChild = mNodes[currentNodeID].children[1];
+		assert(!m_nodes[currentNodeID].isLeaf());
+		int32_t leftChild = m_nodes[currentNodeID].children[0];
+		int32_t rightChild = m_nodes[currentNodeID].children[1];
 		assert(leftChild != TreeNode::NULL_TREE_NODE);
 		assert(rightChild != TreeNode::NULL_TREE_NODE);
 
 		// Recompute the height of the node in the tree
-		mNodes[currentNodeID].height = std::max(mNodes[leftChild].height,
-												mNodes[rightChild].height) + 1;
-		assert(mNodes[currentNodeID].height > 0);
+		m_nodes[currentNodeID].height = std::max(m_nodes[leftChild].height,
+												m_nodes[rightChild].height) + 1;
+		assert(m_nodes[currentNodeID].height > 0);
 
 		// Recompute the AABB of the node
-		mNodes[currentNodeID].aabb.mergeTwoAABBs(mNodes[leftChild].aabb, mNodes[rightChild].aabb);
+		m_nodes[currentNodeID].aabb.mergeTwoAABBs(m_nodes[leftChild].aabb, m_nodes[rightChild].aabb);
 
-		currentNodeID = mNodes[currentNodeID].parentID;
+		currentNodeID = m_nodes[currentNodeID].parentID;
 	}
 
-	assert(mNodes[nodeID].isLeaf());
+	assert(m_nodes[nodeID].isLeaf());
 }
 
 // Remove a leaf node from the tree
 void DynamicAABBTree::removeLeafNode(int32_t nodeID) {
 
-	assert(nodeID >= 0 && nodeID < mNbAllocatedNodes);
-	assert(mNodes[nodeID].isLeaf());
+	assert(nodeID >= 0 && nodeID < m_numberAllocatedNodes);
+	assert(m_nodes[nodeID].isLeaf());
 
 	// If we are removing the root node (root node is a leaf in this case)
 	if (m_rootNodeID == nodeID) {
@@ -344,28 +341,28 @@ void DynamicAABBTree::removeLeafNode(int32_t nodeID) {
 		return;
 	}
 
-	int32_t parentNodeID = mNodes[nodeID].parentID;
-	int32_t grandParentNodeID = mNodes[parentNodeID].parentID;
+	int32_t parentNodeID = m_nodes[nodeID].parentID;
+	int32_t grandParentNodeID = m_nodes[parentNodeID].parentID;
 	int32_t siblingNodeID;
-	if (mNodes[parentNodeID].children[0] == nodeID) {
-		siblingNodeID = mNodes[parentNodeID].children[1];
+	if (m_nodes[parentNodeID].children[0] == nodeID) {
+		siblingNodeID = m_nodes[parentNodeID].children[1];
 	}
 	else {
-		siblingNodeID = mNodes[parentNodeID].children[0];
+		siblingNodeID = m_nodes[parentNodeID].children[0];
 	}
 
 	// If the parent of the node to remove is not the root node
 	if (grandParentNodeID != TreeNode::NULL_TREE_NODE) {
 
 		// Destroy the parent node
-		if (mNodes[grandParentNodeID].children[0] == parentNodeID) {
-			mNodes[grandParentNodeID].children[0] = siblingNodeID;
+		if (m_nodes[grandParentNodeID].children[0] == parentNodeID) {
+			m_nodes[grandParentNodeID].children[0] = siblingNodeID;
 		}
 		else {
-			assert(mNodes[grandParentNodeID].children[1] == parentNodeID);
-			mNodes[grandParentNodeID].children[1] = siblingNodeID;
+			assert(m_nodes[grandParentNodeID].children[1] == parentNodeID);
+			m_nodes[grandParentNodeID].children[1] = siblingNodeID;
 		}
-		mNodes[siblingNodeID].parentID = grandParentNodeID;
+		m_nodes[siblingNodeID].parentID = grandParentNodeID;
 		releaseNode(parentNodeID);
 
 		// Now, we need to recompute the AABBs of the node on the path back to the root
@@ -376,27 +373,27 @@ void DynamicAABBTree::removeLeafNode(int32_t nodeID) {
 			// Balance the current sub-tree if necessary
 			currentNodeID = balanceSubTreeAtNode(currentNodeID);
 
-			assert(!mNodes[currentNodeID].isLeaf());
+			assert(!m_nodes[currentNodeID].isLeaf());
 
 			// Get the two children of the current node
-			int32_t leftChildID = mNodes[currentNodeID].children[0];
-			int32_t rightChildID = mNodes[currentNodeID].children[1];
+			int32_t leftChildID = m_nodes[currentNodeID].children[0];
+			int32_t rightChildID = m_nodes[currentNodeID].children[1];
 
 			// Recompute the AABB and the height of the current node
-			mNodes[currentNodeID].aabb.mergeTwoAABBs(mNodes[leftChildID].aabb,
-													 mNodes[rightChildID].aabb);
-			mNodes[currentNodeID].height = std::max(mNodes[leftChildID].height,
-													mNodes[rightChildID].height) + 1;
-			assert(mNodes[currentNodeID].height > 0);
+			m_nodes[currentNodeID].aabb.mergeTwoAABBs(m_nodes[leftChildID].aabb,
+													 m_nodes[rightChildID].aabb);
+			m_nodes[currentNodeID].height = std::max(m_nodes[leftChildID].height,
+													m_nodes[rightChildID].height) + 1;
+			assert(m_nodes[currentNodeID].height > 0);
 
-			currentNodeID = mNodes[currentNodeID].parentID;
+			currentNodeID = m_nodes[currentNodeID].parentID;
 		}
 	}
 	else { // If the parent of the node to remove is the root node
 
 		// The sibling node becomes the new root node
 		m_rootNodeID = siblingNodeID;
-		mNodes[siblingNodeID].parentID = TreeNode::NULL_TREE_NODE;
+		m_nodes[siblingNodeID].parentID = TreeNode::NULL_TREE_NODE;
 		releaseNode(parentNodeID);
 	}
 }
@@ -408,7 +405,7 @@ int32_t DynamicAABBTree::balanceSubTreeAtNode(int32_t nodeID) {
 
 	assert(nodeID != TreeNode::NULL_TREE_NODE);
 
-	TreeNode* nodeA = mNodes + nodeID;
+	TreeNode* nodeA = m_nodes + nodeID;
 
 	// If the node is a leaf or the height of A's sub-tree is less than 2
 	if (nodeA->isLeaf() || nodeA->height < 2) {
@@ -420,10 +417,10 @@ int32_t DynamicAABBTree::balanceSubTreeAtNode(int32_t nodeID) {
 	// Get the two children nodes
 	int32_t nodeBID = nodeA->children[0];
 	int32_t nodeCID = nodeA->children[1];
-	assert(nodeBID >= 0 && nodeBID < mNbAllocatedNodes);
-	assert(nodeCID >= 0 && nodeCID < mNbAllocatedNodes);
-	TreeNode* nodeB = mNodes + nodeBID;
-	TreeNode* nodeC = mNodes + nodeCID;
+	assert(nodeBID >= 0 && nodeBID < m_numberAllocatedNodes);
+	assert(nodeCID >= 0 && nodeCID < m_numberAllocatedNodes);
+	TreeNode* nodeB = m_nodes + nodeBID;
+	TreeNode* nodeC = m_nodes + nodeCID;
 
 	// Compute the factor of the left and right sub-trees
 	int32_t balanceFactor = nodeC->height - nodeB->height;
@@ -435,10 +432,10 @@ int32_t DynamicAABBTree::balanceSubTreeAtNode(int32_t nodeID) {
 
 		int32_t nodeFID = nodeC->children[0];
 		int32_t nodeGID = nodeC->children[1];
-		assert(nodeFID >= 0 && nodeFID < mNbAllocatedNodes);
-		assert(nodeGID >= 0 && nodeGID < mNbAllocatedNodes);
-		TreeNode* nodeF = mNodes + nodeFID;
-		TreeNode* nodeG = mNodes + nodeGID;
+		assert(nodeFID >= 0 && nodeFID < m_numberAllocatedNodes);
+		assert(nodeGID >= 0 && nodeGID < m_numberAllocatedNodes);
+		TreeNode* nodeF = m_nodes + nodeFID;
+		TreeNode* nodeG = m_nodes + nodeGID;
 
 		nodeC->children[0] = nodeID;
 		nodeC->parentID = nodeA->parentID;
@@ -446,12 +443,12 @@ int32_t DynamicAABBTree::balanceSubTreeAtNode(int32_t nodeID) {
 
 		if (nodeC->parentID != TreeNode::NULL_TREE_NODE) {
 
-			if (mNodes[nodeC->parentID].children[0] == nodeID) {
-				mNodes[nodeC->parentID].children[0] = nodeCID;
+			if (m_nodes[nodeC->parentID].children[0] == nodeID) {
+				m_nodes[nodeC->parentID].children[0] = nodeCID;
 			}
 			else {
-				assert(mNodes[nodeC->parentID].children[1] == nodeID);
-				mNodes[nodeC->parentID].children[1] = nodeCID;
+				assert(m_nodes[nodeC->parentID].children[1] == nodeID);
+				m_nodes[nodeC->parentID].children[1] = nodeCID;
 			}
 		}
 		else {
@@ -505,10 +502,10 @@ int32_t DynamicAABBTree::balanceSubTreeAtNode(int32_t nodeID) {
 
 		int32_t nodeFID = nodeB->children[0];
 		int32_t nodeGID = nodeB->children[1];
-		assert(nodeFID >= 0 && nodeFID < mNbAllocatedNodes);
-		assert(nodeGID >= 0 && nodeGID < mNbAllocatedNodes);
-		TreeNode* nodeF = mNodes + nodeFID;
-		TreeNode* nodeG = mNodes + nodeGID;
+		assert(nodeFID >= 0 && nodeFID < m_numberAllocatedNodes);
+		assert(nodeGID >= 0 && nodeGID < m_numberAllocatedNodes);
+		TreeNode* nodeF = m_nodes + nodeFID;
+		TreeNode* nodeG = m_nodes + nodeGID;
 
 		nodeB->children[0] = nodeID;
 		nodeB->parentID = nodeA->parentID;
@@ -516,12 +513,12 @@ int32_t DynamicAABBTree::balanceSubTreeAtNode(int32_t nodeID) {
 
 		if (nodeB->parentID != TreeNode::NULL_TREE_NODE) {
 
-			if (mNodes[nodeB->parentID].children[0] == nodeID) {
-				mNodes[nodeB->parentID].children[0] = nodeBID;
+			if (m_nodes[nodeB->parentID].children[0] == nodeID) {
+				m_nodes[nodeB->parentID].children[0] = nodeBID;
 			}
 			else {
-				assert(mNodes[nodeB->parentID].children[1] == nodeID);
-				mNodes[nodeB->parentID].children[1] = nodeBID;
+				assert(m_nodes[nodeB->parentID].children[1] == nodeID);
+				m_nodes[nodeB->parentID].children[1] = nodeBID;
 			}
 		}
 		else {
@@ -590,7 +587,7 @@ void DynamicAABBTree::reportAllShapesOverlappingWithAABB(const AABB& aabb,
 		if (nodeIDToVisit == TreeNode::NULL_TREE_NODE) continue;
 
 		// Get the corresponding node
-		const TreeNode* nodeToVisit = mNodes + nodeIDToVisit;
+		const TreeNode* nodeToVisit = m_nodes + nodeIDToVisit;
 
 		// If the AABB in parameter overlaps with the AABB of the node to visit
 		if (aabb.testCollision(nodeToVisit->aabb)) {
@@ -632,7 +629,7 @@ void DynamicAABBTree::raycast(const Ray& ray, DynamicAABBTreeRaycastCallback &ca
 		if (nodeID == TreeNode::NULL_TREE_NODE) continue;
 
 		// Get the corresponding node
-		const TreeNode* node = mNodes + nodeID;
+		const TreeNode* node = m_nodes + nodeID;
 
 		Ray rayTemp(ray.point1, ray.point2, maxFraction);
 
@@ -647,12 +644,12 @@ void DynamicAABBTree::raycast(const Ray& ray, DynamicAABBTreeRaycastCallback &ca
 
 			// If the user returned a hitFraction of zero, it means that
 			// the raycasting should stop here
-			if (hitFraction == float(0.0)) {
+			if (hitFraction == 0.0f) {
 				return;
 			}
 
 			// If the user returned a positive fraction
-			if (hitFraction > float(0.0)) {
+			if (hitFraction > 0.0f) {
 
 				// We update the maxFraction value and the ray
 				// AABB using the new maximum fraction
@@ -682,16 +679,16 @@ void DynamicAABBTree::check() const {
 	checkNode(m_rootNodeID);
 
 	int32_t nbFreeNodes = 0;
-	int32_t freeNodeID = mFreeNodeID;
+	int32_t freeNodeID = m_freeNodeID;
 
 	// Check the free nodes
 	while(freeNodeID != TreeNode::NULL_TREE_NODE) {
-		assert(0 <= freeNodeID && freeNodeID < mNbAllocatedNodes);
-		freeNodeID = mNodes[freeNodeID].nextNodeID;
+		assert(0 <= freeNodeID && freeNodeID < m_numberAllocatedNodes);
+		freeNodeID = m_nodes[freeNodeID].nextNodeID;
 		nbFreeNodes++;
 	}
 
-	assert(mNbNodes + nbFreeNodes == mNbAllocatedNodes);
+	assert(m_numberNodes + nbFreeNodes == m_numberAllocatedNodes);
 }
 
 // Check if the node structure is valid (for debugging purpose)
@@ -701,11 +698,11 @@ void DynamicAABBTree::checkNode(int32_t nodeID) const {
 
 	// If it is the root
 	if (nodeID == m_rootNodeID) {
-		assert(mNodes[nodeID].parentID == TreeNode::NULL_TREE_NODE);
+		assert(m_nodes[nodeID].parentID == TreeNode::NULL_TREE_NODE);
 	}
 
 	// Get the children nodes
-	TreeNode* pNode = mNodes + nodeID;
+	TreeNode* pNode = m_nodes + nodeID;
 	assert(!pNode->isLeaf());
 	int32_t leftChild = pNode->children[0];
 	int32_t rightChild = pNode->children[1];
@@ -724,22 +721,22 @@ void DynamicAABBTree::checkNode(int32_t nodeID) const {
 	else {
 
 		// Check that the children node IDs are valid
-		assert(0 <= leftChild && leftChild < mNbAllocatedNodes);
-		assert(0 <= rightChild && rightChild < mNbAllocatedNodes);
+		assert(0 <= leftChild && leftChild < m_numberAllocatedNodes);
+		assert(0 <= rightChild && rightChild < m_numberAllocatedNodes);
 
 		// Check that the children nodes have the correct parent node
-		assert(mNodes[leftChild].parentID == nodeID);
-		assert(mNodes[rightChild].parentID == nodeID);
+		assert(m_nodes[leftChild].parentID == nodeID);
+		assert(m_nodes[rightChild].parentID == nodeID);
 
 		// Check the height of node
-		int32_t height = 1 + std::max(mNodes[leftChild].height, mNodes[rightChild].height);
-		assert(mNodes[nodeID].height == height);
+		int32_t height = 1 + std::max(m_nodes[leftChild].height, m_nodes[rightChild].height);
+		assert(m_nodes[nodeID].height == height);
 
 		// Check the AABB of the node
 		AABB aabb;
-		aabb.mergeTwoAABBs(mNodes[leftChild].aabb, mNodes[rightChild].aabb);
-		assert(aabb.getMin() == mNodes[nodeID].aabb.getMin());
-		assert(aabb.getMax() == mNodes[nodeID].aabb.getMax());
+		aabb.mergeTwoAABBs(m_nodes[leftChild].aabb, m_nodes[rightChild].aabb);
+		assert(aabb.getMin() == m_nodes[nodeID].aabb.getMin());
+		assert(aabb.getMax() == m_nodes[nodeID].aabb.getMax());
 
 		// Recursively check the children nodes
 		checkNode(leftChild);
@@ -754,8 +751,8 @@ int32_t DynamicAABBTree::computeHeight() {
 
 // Compute the height of a given node in the tree
 int32_t DynamicAABBTree::computeHeight(int32_t nodeID) {
-	assert(nodeID >= 0 && nodeID < mNbAllocatedNodes);
-	TreeNode* node = mNodes + nodeID;
+	assert(nodeID >= 0 && nodeID < m_numberAllocatedNodes);
+	TreeNode* node = m_nodes + nodeID;
 
 	// If the node is a leaf, its height is zero
 	if (node->isLeaf()) {

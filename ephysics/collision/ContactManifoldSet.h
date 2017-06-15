@@ -59,7 +59,7 @@ class ContactManifoldSet {
 		// Map the normal vector int32_to a cubemap face bucket (a face contains 4x4 buckets)
 		// Each face of the cube is divided int32_to 4x4 buckets. This method maps the
 		// normal vector int32_to of the of the bucket and returns a unique Id for the bucket
-		int16_t computeCubemapNormalId(const Vector3& normal) const;
+		int16_t computeCubemapNormalId(const vec3& normal) const;
 
 	public:
 

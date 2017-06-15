@@ -39,7 +39,7 @@ class ConvexMesh : public openglframework::Mesh, public PhysicsObject {
 		// -------------------- Attributes -------------------- //
 
 		/// Previous transform (for int32_terpolation)
-		rp3d::Transform mPreviousTransform;
+		rp3d::etk::Transform3D mPreviousTransform;
 
 		rp3d::TriangleVertexArray* mPhysicsTriangleVertexArray;
 
@@ -48,7 +48,7 @@ class ConvexMesh : public openglframework::Mesh, public PhysicsObject {
 		rp3d::ProxyShape* m_proxyShape;
 
 		/// Scaling matrix
-		openglframework::Matrix4 mScalingMatrix;
+		openglframework::Matrix4 m_scalingMatrix;
 
 		/// Vertex Buffer Object for the vertices data
 		openglframework::VertexBufferObject mVBOVertices;
@@ -75,11 +75,11 @@ class ConvexMesh : public openglframework::Mesh, public PhysicsObject {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		ConvexMesh(const openglframework::Vector3& position,
+		ConvexMesh(const openglframework::vec3& position,
 				   rp3d::CollisionWorld* world, const std::string& meshPath);
 
 		/// Constructor
-		ConvexMesh(const openglframework::Vector3& position, float mass,
+		ConvexMesh(const openglframework::vec3& position, float mass,
 				   rp3d::DynamicsWorld* dynamicsWorld, const std::string& meshPath);
 
 		/// Destructor
@@ -93,15 +93,15 @@ class ConvexMesh : public openglframework::Mesh, public PhysicsObject {
 		void resetTransform(const rp3d::Transform& transform);
 
 		/// Update the transform matrix of the object
-		virtual void updateTransform(float int32_terpolationFactor);
+		virtual void updateetk::Transform3D(float int32_terpolationFactor);
 
 		/// Set the scaling of the object
-		void setScaling(const openglframework::Vector3& scaling);
+		void setScaling(const openglframework::vec3& scaling);
 };
 
 // Update the transform matrix of the object
-inline void ConvexMesh::updateTransform(float int32_terpolationFactor) {
-	m_transformMatrix = computeTransform(int32_terpolationFactor, mScalingMatrix);
+inline void ConvexMesh::updateetk::Transform3D(float int32_terpolationFactor) {
+	m_transformMatrix = computeetk::Transform3D(int32_terpolationFactor, m_scalingMatrix);
 }
 
 #endif

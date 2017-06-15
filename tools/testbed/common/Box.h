@@ -45,7 +45,7 @@ class Box : public openglframework::Object3D, public PhysicsObject {
 		rp3d::ProxyShape* m_proxyShape;
 
 		/// Scaling matrix (applied to a cube to obtain the correct box dimensions)
-		openglframework::Matrix4 mScalingMatrix;
+		openglframework::Matrix4 m_scalingMatrix;
 
 		/// Vertex Buffer Object for the vertices data used to render the box with OpenGL
 		static openglframework::VertexBufferObject mVBOVertices;
@@ -75,11 +75,11 @@ class Box : public openglframework::Object3D, public PhysicsObject {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		Box(const openglframework::Vector3& size, const openglframework::Vector3& position,
+		Box(const openglframework::vec3& size, const openglframework::vec3& position,
 				reactphysics3d::CollisionWorld* world);
 
 		/// Constructor
-		Box(const openglframework::Vector3& size, const openglframework::Vector3& position,
+		Box(const openglframework::vec3& size, const openglframework::vec3& position,
 				float mass, reactphysics3d::DynamicsWorld *world);
 
 		/// Destructor
@@ -92,15 +92,15 @@ class Box : public openglframework::Object3D, public PhysicsObject {
 		void resetTransform(const rp3d::Transform& transform);
 
 		/// Update the transform matrix of the object
-		virtual void updateTransform(float int32_terpolationFactor);
+		virtual void updateetk::Transform3D(float int32_terpolationFactor);
 
 		/// Set the scaling of the object
-		void setScaling(const openglframework::Vector3& scaling);
+		void setScaling(const openglframework::vec3& scaling);
 };
 
 // Update the transform matrix of the object
-inline void Box::updateTransform(float int32_terpolationFactor) {
-	m_transformMatrix = computeTransform(int32_terpolationFactor, mScalingMatrix);
+inline void Box::updateetk::Transform3D(float int32_terpolationFactor) {
+	m_transformMatrix = computeetk::Transform3D(int32_terpolationFactor, m_scalingMatrix);
 }
 
 

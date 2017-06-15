@@ -31,7 +31,7 @@ class Simplex {
 		// -------------------- Attributes -------------------- //
 
 		/// Current points
-		Vector3 mPoints[4];
+		vec3 mPoints[4];
 
 		/// pointsLengthSquare[i] = (points[i].length)^2
 		float mPointsLengthSquare[4];
@@ -40,13 +40,13 @@ class Simplex {
 		float mMaxLengthSquare;
 
 		/// Support points of object A in local coordinates
-		Vector3 mSuppPointsA[4];
+		vec3 mSuppPointsA[4];
 
 		/// Support points of object B in local coordinates
-		Vector3 mSuppPointsB[4];
+		vec3 mSuppPointsB[4];
 
 		/// diff[i][j] contains points[i] - points[j]
-		Vector3 mDiffLength[4][4];
+		vec3 mDiffLength[4][4];
 
 		/// Cached determinant values
 		float mDet[16][4];
@@ -94,7 +94,7 @@ class Simplex {
 		void computeDeterminants();
 
 		/// Return the closest point "v" in the convex hull of a subset of points
-		Vector3 computeClosestPointForSubset(Bits subset);
+		vec3 computeClosestPointForSubset(Bits subset);
 
 	public:
 
@@ -113,29 +113,29 @@ class Simplex {
 		bool isEmpty() const;
 
 		/// Return the points of the simplex
-		uint32_t getSimplex(Vector3* mSuppPointsA, Vector3* mSuppPointsB,
-								Vector3* mPoints) const;
+		uint32_t getSimplex(vec3* mSuppPointsA, vec3* mSuppPointsB,
+								vec3* mPoints) const;
 
 		/// Return the maximum squared length of a point
 		float getMaxLengthSquareOfAPoint() const;
 
 		/// Add a new support point of (A-B) int32_to the simplex.
-		void addPoint(const Vector3& point, const Vector3& suppPointA, const Vector3& suppPointB);
+		void addPoint(const vec3& point, const vec3& suppPointA, const vec3& suppPointB);
 
 		/// Return true if the point is in the simplex
-		bool isPointInSimplex(const Vector3& point) const;
+		bool isPointInSimplex(const vec3& point) const;
 
 		/// Return true if the set is affinely dependent
 		bool isAffinelyDependent() const;
 
 		/// Backup the closest point
-		void backupClosestPointInSimplex(Vector3& point);
+		void backupClosestPointInSimplex(vec3& point);
 
 		/// Compute the closest points "pA" and "pB" of object A and B.
-		void computeClosestPointsOfAandB(Vector3& pA, Vector3& pB) const;
+		void computeClosestPointsOfAandB(vec3& pA, vec3& pB) const;
 
 		/// Compute the closest point to the origin of the current simplex.
-		bool computeClosestPoint(Vector3& v);
+		bool computeClosestPoint(vec3& v);
 };
 
 // Return true if some bits of "a" overlap with bits of "b"

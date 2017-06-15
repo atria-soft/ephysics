@@ -117,7 +117,7 @@ class ConcaveMeshShape : public ConcaveShape {
 		/// Return the three vertices coordinates (in the array outTriangleVertices) of a triangle
 		/// given the start vertex index pointer of the triangle.
 		void getTriangleVerticesWithIndexPointer(int32_t subPart, int32_t triangleIndex,
-												 Vector3* outTriangleVertices) const;
+												 vec3* outTriangleVertices) const;
 
 	public:
 
@@ -128,13 +128,13 @@ class ConcaveMeshShape : public ConcaveShape {
 		~ConcaveMeshShape();
 
 		/// Return the local bounds of the shape in x, y and z directions.
-		virtual void getLocalBounds(Vector3& min, Vector3& max) const;
+		virtual void getLocalBounds(vec3& min, vec3& max) const;
 
 		/// Set the local scaling vector of the collision shape
-		virtual void setLocalScaling(const Vector3& scaling);
+		virtual void setLocalScaling(const vec3& scaling);
 
 		/// Return the local inertia tensor of the collision shape
-		virtual void computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const;
+		virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const;
 
 		/// Use a callback method on all triangles of the concave shape inside a given AABB
 		virtual void testAllTriangles(TriangleCallback& callback, const AABB& localAABB) const;
@@ -156,7 +156,7 @@ inline size_t ConcaveMeshShape::getSizeInBytes() const {
  * @param min The minimum bounds of the shape in local-space coordinates
  * @param max The maximum bounds of the shape in local-space coordinates
  */
-inline void ConcaveMeshShape::getLocalBounds(Vector3& min, Vector3& max) const {
+inline void ConcaveMeshShape::getLocalBounds(vec3& min, vec3& max) const {
 
 	// Get the AABB of the whole tree
 	AABB treeAABB = m_dynamicAABBTree.getRootAABB();
@@ -166,7 +166,7 @@ inline void ConcaveMeshShape::getLocalBounds(Vector3& min, Vector3& max) const {
 }
 
 // Set the local scaling vector of the collision shape
-inline void ConcaveMeshShape::setLocalScaling(const Vector3& scaling) {
+inline void ConcaveMeshShape::setLocalScaling(const vec3& scaling) {
 
 	CollisionShape::setLocalScaling(scaling);
 
@@ -183,13 +183,13 @@ inline void ConcaveMeshShape::setLocalScaling(const Vector3& scaling) {
  *					coordinates
  * @param mass Mass to use to compute the inertia tensor of the collision shape
  */
-inline void ConcaveMeshShape::computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const {
+inline void ConcaveMeshShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
 
 	// Default inertia tensor
 	// Note that this is not very realistic for a concave triangle mesh.
 	// However, in most cases, it will only be used static bodies and therefore,
 	// the inertia tensor is not used.
-	tensor.setAllValues(mass, 0, 0,
+	tensor.setValue(mass, 0, 0,
 						0, mass, 0,
 						0, 0, mass);
 }
@@ -202,7 +202,7 @@ inline void ConvexTriangleAABBOverlapCallback::notifyOverlappingNode(int32_t nod
 	int32_t* data = m_dynamicAABBTree.getNodeDataInt(nodeId);
 
 	// Get the triangle vertices for this node from the concave mesh shape
-	Vector3 trianglePoints[3];
+	vec3 trianglePoints[3];
 	m_concaveMeshShape.getTriangleVerticesWithIndexPointer(data[0], data[1], trianglePoints);
 
 	// Call the callback to test narrow-phase collision with this triangle

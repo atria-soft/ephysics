@@ -34,21 +34,21 @@ PhysicsObject::PhysicsObject() {
 }
 
 // Compute the new transform matrix
-openglframework::Matrix4 PhysicsObject::computeTransform(float int32_terpolationFactor,
+openglframework::Matrix4 PhysicsObject::computeetk::Transform3D(float int32_terpolationFactor,
 														const openglframework::Matrix4& scalingMatrix) {
 
 	// Get the transform of the rigid body
-	rp3d::Transform transform = m_body->getTransform();
+	rp3d::etk::Transform3D transform = m_body->getTransform();
 
 	// Interpolate the transform between the previous one and the new one
-	rp3d::Transform int32_terpolatedTransform = rp3d::Transform::int32_terpolateTransforms(mPreviousTransform,
+	rp3d::etk::Transform3D int32_terpolatedTransform = rp3d::Transform::int32_terpolateTransforms(mPreviousTransform,
 																				  transform,
 																				  int32_terpolationFactor);
-	mPreviousTransform = transform;
+	mPreviousetk::Transform3D = transform;
 
 	// Compute the transform used for rendering the box
 	rp3d::float matrix[16];
-	int32_terpolatedTransform.getOpenGLMatrix(matrix);
+	int32_terpolatedetk::Transform3D.getOpenGLMatrix(matrix);
 	openglframework::Matrix4 newMatrix(matrix[0], matrix[4], matrix[8], matrix[12],
 									   matrix[1], matrix[5], matrix[9], matrix[13],
 									   matrix[2], matrix[6], matrix[10], matrix[14],

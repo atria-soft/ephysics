@@ -104,10 +104,10 @@ class TestMathematicsFunctions : public Test {
 			test(!sameSign(-4, 53));
 
 			// Test computeBarycentricCoordinatesInTriangle()
-			Vector3 a(0, 0, 0);
-			Vector3 b(5, 0, 0);
-			Vector3 c(0, 0, 5);
-			Vector3 testPoint(4, 0, 1);
+			vec3 a(0, 0, 0);
+			vec3 b(5, 0, 0);
+			vec3 c(0, 0, 5);
+			vec3 testPoint(4, 0, 1);
 			float u,v,w;
 			computeBarycentricCoordinatesInTriangle(a, b, c, a, u, v, w);
 			test(approxEqual(u, 1.0, 0.000001));

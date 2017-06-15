@@ -23,10 +23,10 @@ struct SliderJointInfo : public JointInfo {
 		// -------------------- Attributes -------------------- //
 
 		/// Anchor point (in world-space coordinates)
-		Vector3 m_anchorPointWorldSpace;
+		vec3 m_anchorPointWorldSpace;
 
 		/// Slider axis (in world-space coordinates)
-		Vector3 sliderAxisWorldSpace;
+		vec3 sliderAxisWorldSpace;
 
 		/// True if the slider limits are enabled
 		bool isLimitEnabled;
@@ -54,8 +54,8 @@ struct SliderJointInfo : public JointInfo {
 		 * @param initSliderAxisWorldSpace The initial slider axis in world-space
 		 */
 		SliderJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
-						const Vector3& initAnchorPointWorldSpace,
-						const Vector3& initSliderAxisWorldSpace)
+						const vec3& initAnchorPointWorldSpace,
+						const vec3& initSliderAxisWorldSpace)
 					   : JointInfo(rigidBody1, rigidBody2, SLIDERJOINT),
 						 m_anchorPointWorldSpace(initAnchorPointWorldSpace),
 						 sliderAxisWorldSpace(initSliderAxisWorldSpace),
@@ -72,8 +72,8 @@ struct SliderJointInfo : public JointInfo {
 		 * @param initMaxTranslationLimit The initial maximum translation limit (in meters)
 		 */
 		SliderJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
-						const Vector3& initAnchorPointWorldSpace,
-						const Vector3& initSliderAxisWorldSpace,
+						const vec3& initAnchorPointWorldSpace,
+						const vec3& initSliderAxisWorldSpace,
 						float initMinTranslationLimit, float initMaxTranslationLimit)
 					   : JointInfo(rigidBody1, rigidBody2, SLIDERJOINT),
 						 m_anchorPointWorldSpace(initAnchorPointWorldSpace),
@@ -95,8 +95,8 @@ struct SliderJointInfo : public JointInfo {
 		 * @param initMaxMotorForce The initial maximum motor force of the joint (in Newtons x meters)
 		 */
 		SliderJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
-						const Vector3& initAnchorPointWorldSpace,
-						const Vector3& initSliderAxisWorldSpace,
+						const vec3& initAnchorPointWorldSpace,
+						const vec3& initSliderAxisWorldSpace,
 						float initMinTranslationLimit, float initMaxTranslationLimit,
 						float initMotorSpeed, float initMaxMotorForce)
 					   : JointInfo(rigidBody1, rigidBody2, SLIDERJOINT),
@@ -126,58 +126,58 @@ class SliderJoint : public Joint {
 		// -------------------- Attributes -------------------- //
 
 		/// Anchor point of body 1 (in local-space coordinates of body 1)
-		Vector3 m_localAnchorPointBody1;
+		vec3 m_localAnchorPointBody1;
 
 		/// Anchor point of body 2 (in local-space coordinates of body 2)
-		Vector3 m_localAnchorPointBody2;
+		vec3 m_localAnchorPointBody2;
 
 		/// Slider axis (in local-space coordinates of body 1)
-		Vector3 mSliderAxisBody1;
+		vec3 mSliderAxisBody1;
 
 		/// Inertia tensor of body 1 (in world-space coordinates)
-		Matrix3x3 m_i1;
+		etk::Matrix3x3 m_i1;
 
 		/// Inertia tensor of body 2 (in world-space coordinates)
-		Matrix3x3 m_i2;
+		etk::Matrix3x3 m_i2;
 
 		/// Inverse of the initial orientation difference between the two bodies
-		Quaternion m_initOrientationDifferenceInv;
+		etk::Quaternion m_initOrientationDifferenceInv;
 
 		/// First vector orthogonal to the slider axis local-space of body 1
-		Vector3 mN1;
+		vec3 mN1;
 
 		/// Second vector orthogonal to the slider axis and mN1 in local-space of body 1
-		Vector3 mN2;
+		vec3 mN2;
 
 		/// Vector r1 in world-space coordinates
-		Vector3 mR1;
+		vec3 mR1;
 
 		/// Vector r2 in world-space coordinates
-		Vector3 mR2;
+		vec3 mR2;
 
 		/// Cross product of r2 and n1
-		Vector3 mR2CrossN1;
+		vec3 mR2CrossN1;
 
 		/// Cross product of r2 and n2
-		Vector3 mR2CrossN2;
+		vec3 mR2CrossN2;
 
 		/// Cross product of r2 and the slider axis
-		Vector3 mR2CrossSliderAxis;
+		vec3 mR2CrossSliderAxis;
 
 		/// Cross product of vector (r1 + u) and n1
-		Vector3 mR1PlusUCrossN1;
+		vec3 mR1PlusUCrossN1;
 
 		/// Cross product of vector (r1 + u) and n2
-		Vector3 mR1PlusUCrossN2;
+		vec3 mR1PlusUCrossN2;
 
 		/// Cross product of vector (r1 + u) and the slider axis
-		Vector3 mR1PlusUCrossSliderAxis;
+		vec3 mR1PlusUCrossSliderAxis;
 
 		/// Bias of the 2 translation constraints
-		Vector2 mBTranslation;
+		vec2 mBTranslation;
 
 		/// Bias of the 3 rotation constraints
-		Vector3 mBRotation;
+		vec3 mBRotation;
 
 		/// Bias of the lower limit constraint
 		float mBLowerLimit;
@@ -186,10 +186,10 @@ class SliderJoint : public Joint {
 		float mBUpperLimit;
 
 		/// Inverse of mass matrix K=JM^-1J^t for the translation constraint (2x2 matrix)
-		Matrix2x2 m_inverseMassMatrixTranslationConstraint;
+		etk::Matrix2x2 m_inverseMassMatrixTranslationConstraint;
 
 		/// Inverse of mass matrix K=JM^-1J^t for the rotation constraint (3x3 matrix)
-		Matrix3x3 m_inverseMassMatrixRotationConstraint;
+		etk::Matrix3x3 m_inverseMassMatrixRotationConstraint;
 
 		/// Inverse of mass matrix K=JM^-1J^t for the upper and lower limit constraints (1x1 matrix)
 		float m_inverseMassMatrixLimit;
@@ -198,10 +198,10 @@ class SliderJoint : public Joint {
 		float m_inverseMassMatrixMotor;
 
 		/// Accumulated impulse for the 2 translation constraints
-		Vector2 m_impulseTranslation;
+		vec2 m_impulseTranslation;
 
 		/// Accumulated impulse for the 3 rotation constraints
-		Vector3 m_impulseRotation;
+		vec3 m_impulseRotation;
 
 		/// Accumulated impulse for the lower limit constraint
 		float m_impulseLowerLimit;
@@ -219,7 +219,7 @@ class SliderJoint : public Joint {
 		bool mIsMotorEnabled;
 
 		/// Slider axis in world-space coordinates
-		Vector3 mSliderAxisWorld;
+		vec3 mSliderAxisWorld;
 
 		/// Lower limit (minimum translation distance)
 		float mLowerLimit;

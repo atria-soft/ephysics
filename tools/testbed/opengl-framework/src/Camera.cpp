@@ -40,7 +40,7 @@ Camera::Camera() : Object3D() {
 	mSceneRadius = 1.0f;
 	mNearPlane = 0.1f;
 	mFarPlane = 10.0f;
-	mWidth = 1;
+	m_width = 1;
 	mHeight = 1;
 
 	// Update the projection matrix
@@ -56,7 +56,7 @@ Camera::~Camera() {
 void Camera::updateProjectionMatrix() {
 
 	// Compute the aspect ratio
-	float aspect = float(mWidth) / float(mHeight);
+	float aspect = float(m_width) / float(mHeight);
 
 	float top = mNearPlane * tan((mFieldOfView / 2.0f) * (float(PI) / 180.0f));
 	float bottom = -top;
@@ -76,22 +76,22 @@ void Camera::updateProjectionMatrix() {
 }
 
 // Translate the camera go a given point using the dx, dy fraction
-void Camera::translateCamera(float dx, float dy, const Vector3& worldPoint) {
+void Camera::translateCamera(float dx, float dy, const vec3& worldPoint) {
 
-	// Transform the world point int32_to camera coordinates
-	Vector3 pointCamera = m_transformMatrix.getInverse() * worldPoint;
+	// etk::Transform3D the world point int32_to camera coordinates
+	vec3 pointCamera = m_transformMatrix.getInverse() * worldPoint;
 
 	// Get the depth
-	float z = -pointCamera.z;
+	float z = -pointCamera.z();
 
 	// Find the scaling of dx and dy from windows coordinates to near plane coordinates
 	// and from there to camera coordinates at the object's depth
-	float aspect = float(mWidth) / float(mHeight);
+	float aspect = float(m_width) / float(mHeight);
 	float top = mNearPlane * tan(mFieldOfView * PI / 360.0f);
 	float right = top * aspect;
 
 	// Translate the camera
-	translateLocal(Vector3(2.0f * dx * right / mNearPlane * z,
+	translateLocal(vec3(2.0f * dx * right / mNearPlane * z,
 						   -2.0f * dy * top / mNearPlane * z,
 						   0.0f));
 }

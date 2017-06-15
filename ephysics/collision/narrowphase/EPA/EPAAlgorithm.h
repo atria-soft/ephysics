@@ -85,8 +85,8 @@ class EPAAlgorithm {
 							  float upperBoundSquarePenDepth);
 
 		/// Decide if the origin is in the tetrahedron.
-		int32_t isOriginInTetrahedron(const Vector3& p1, const Vector3& p2,
-								  const Vector3& p3, const Vector3& p4) const;
+		int32_t isOriginInTetrahedron(const vec3& p1, const vec3& p2,
+								  const vec3& p3, const vec3& p4) const;
 
 	public:
 
@@ -104,10 +104,10 @@ class EPAAlgorithm {
 		/// Compute the penetration depth with EPA algorithm.
 		void computePenetrationDepthAndContactPoints(const Simplex& simplex,
 													 CollisionShapeInfo shape1Info,
-													 const Transform& transform1,
+													 const etk::Transform3D& transform1,
 													 CollisionShapeInfo shape2Info,
-													 const Transform& transform2,
-													 Vector3& v,
+													 const etk::Transform3D& transform2,
+													 vec3& v,
 													NarrowPhaseCallback* narrowPhaseCallback);
 };
 

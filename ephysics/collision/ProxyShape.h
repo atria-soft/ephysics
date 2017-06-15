@@ -34,7 +34,7 @@ class ProxyShape {
 		CollisionShape* m_collisionShape;
 
 		/// Local-space to parent body-space transform (does not change over time)
-		Transform m_localToBodyTransform;
+		etk::Transform3D m_localToBodyTransform;
 
 		/// Mass (in kilogramms) of the corresponding collision shape
 		float m_mass;
@@ -78,7 +78,7 @@ class ProxyShape {
 
 		/// Constructor
 		ProxyShape(CollisionBody* body, CollisionShape* shape,
-				   const Transform& transform, float mass);
+				   const etk::Transform3D& transform, float mass);
 
 		/// Destructor
 		virtual ~ProxyShape();
@@ -99,16 +99,16 @@ class ProxyShape {
 		void setUserData(void* userData);
 
 		/// Return the local to parent body transform
-		const Transform& getLocalToBodyTransform() const;
+		const etk::Transform3D& getLocalToBodyTransform() const;
 
 		/// Set the local to parent body transform
-		void setLocalToBodyTransform(const Transform& transform);
+		void setLocalToBodyTransform(const etk::Transform3D& transform);
 
 		/// Return the local to world transform
-		const Transform getLocalToWorldTransform() const;
+		const etk::Transform3D getLocalToWorldTransform() const;
 
 		/// Return true if a point is inside the collision shape
-		bool testPointInside(const Vector3& worldPoint);
+		bool testPointInside(const vec3& worldPoint);
 
 		/// Raycast method with feedback information
 		bool raycast(const Ray& ray, RaycastInfo& raycastInfo);
@@ -135,10 +135,10 @@ class ProxyShape {
 		void** getCachedCollisionData();
 
 		/// Return the local scaling vector of the collision shape
-		Vector3 getLocalScaling() const;
+		vec3 getLocalScaling() const;
 
 		/// Set the local scaling vector of the collision shape
-		virtual void setLocalScaling(const Vector3& scaling);
+		virtual void setLocalScaling(const vec3& scaling);
 
 		// -------------------- Friendship -------------------- //
 
@@ -206,12 +206,12 @@ inline void ProxyShape::setUserData(void* userData) {
  * @return The transformation that transforms the local-space of the collision shape
  *		 to the local-space of the parent body
  */
-inline const Transform& ProxyShape::getLocalToBodyTransform() const {
+inline const etk::Transform3D& ProxyShape::getLocalToBodyTransform() const {
 	return m_localToBodyTransform;
 }
 
 // Set the local to parent body transform
-inline void ProxyShape::setLocalToBodyTransform(const Transform& transform) {
+inline void ProxyShape::setLocalToBodyTransform(const etk::Transform3D& transform) {
 
 	m_localToBodyTransform = transform;
 
@@ -226,7 +226,7 @@ inline void ProxyShape::setLocalToBodyTransform(const Transform& transform) {
  * @return The transformation that transforms the local-space of the collision
  *		 shape to the world-space
  */
-inline const Transform ProxyShape::getLocalToWorldTransform() const {
+inline const etk::Transform3D ProxyShape::getLocalToWorldTransform() const {
 	return m_body->m_transform * m_localToBodyTransform;
 }
 
@@ -282,7 +282,7 @@ inline void ProxyShape::setCollideWithMaskBits(unsigned short collideWithMaskBit
 /**
  * @return The local scaling vector
  */
-inline Vector3 ProxyShape::getLocalScaling() const {
+inline vec3 ProxyShape::getLocalScaling() const {
 	return m_collisionShape->getScaling();
 }
 
@@ -290,7 +290,7 @@ inline Vector3 ProxyShape::getLocalScaling() const {
 /**
  * @param scaling The new local scaling vector
  */
-inline void ProxyShape::setLocalScaling(const Vector3& scaling) {
+inline void ProxyShape::setLocalScaling(const vec3& scaling) {
 
 	// Set the local scaling of the collision shape
 	m_collisionShape->setLocalScaling(scaling);

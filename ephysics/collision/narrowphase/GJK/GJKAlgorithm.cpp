@@ -43,11 +43,11 @@ void GJKAlgorithm::testCollision(const CollisionShapeInfo& shape1Info,
 
 	PROFILE("GJKAlgorithm::testCollision()");
 	
-	Vector3 suppA;			 // Support point of object A
-	Vector3 suppB;			 // Support point of object B
-	Vector3 w;				 // Support point of Minkowski difference A-B
-	Vector3 pA;				// Closest point of object A
-	Vector3 pB;				// Closest point of object B
+	vec3 suppA;			 // Support point of object A
+	vec3 suppB;			 // Support point of object B
+	vec3 w;				 // Support point of Minkowski difference A-B
+	vec3 pA;				// Closest point of object A
+	vec3 pB;				// Closest point of object B
 	float vDotw;
 	float prevDistSquare;
 
@@ -61,16 +61,16 @@ void GJKAlgorithm::testCollision(const CollisionShapeInfo& shape1Info,
 	void** shape2CachedCollisionData = shape2Info.cachedCollisionData;
 
 	// Get the local-space to world-space transforms
-	const Transform transform1 = shape1Info.shapeToWorldTransform;
-	const Transform transform2 = shape2Info.shapeToWorldTransform;
+	const etk::Transform3D transform1 = shape1Info.shapeToWorldTransform;
+	const etk::Transform3D transform2 = shape2Info.shapeToWorldTransform;
 
-	// Transform a point from local space of body 2 to local
+	// etk::Transform3D a point from local space of body 2 to local
 	// space of body 1 (the GJK algorithm is done in local space of body 1)
-	Transform body2Tobody1 = transform1.getInverse() * transform2;
+	etk::Transform3D body2Tobody1 = transform1.getInverse() * transform2;
 
 	// Matrix that transform a direction from local
 	// space of body 1 int32_to local space of body 2
-	Matrix3x3 rotateToBody2 = transform2.getOrientation().getMatrix().getTranspose() *
+	etk::Matrix3x3 rotateToBody2 = transform2.getOrientation().getMatrix().getTranspose() *
 							  transform1.getOrientation().getMatrix();
 
 	// Initialize the margin (sum of margins of both objects)
@@ -82,7 +82,7 @@ void GJKAlgorithm::testCollision(const CollisionShapeInfo& shape1Info,
 	Simplex simplex;
 
 	// Get the previous point V (last cached separating axis)
-	Vector3 v = mCurrentOverlappingPair->getCachedSeparatingAxis();
+	vec3 v = mCurrentOverlappingPair->getCachedSeparatingAxis();
 
 	// Initialize the upper bound for the square distance
 	float distSquare = DECIMAL_LARGEST;
@@ -123,7 +123,7 @@ void GJKAlgorithm::testCollision(const CollisionShapeInfo& shape1Info,
 			pB = body2Tobody1.getInverse() * (pB + (shape2->getMargin() / dist) * v);
 
 			// Compute the contact info
-			Vector3 normal = transform1.getOrientation() * (-v.getUnit());
+			vec3 normal = transform1.getOrientation() * (-v.safeNormalized());
 			float penetrationDepth = margin - dist;
 			
 			// Reject the contact if the penetration depth is negative (due too numerical errors)
@@ -156,7 +156,7 @@ void GJKAlgorithm::testCollision(const CollisionShapeInfo& shape1Info,
 			pB = body2Tobody1.getInverse() * (pB + (shape2->getMargin() / dist) * v);
 
 			// Compute the contact info
-			Vector3 normal = transform1.getOrientation() * (-v.getUnit());
+			vec3 normal = transform1.getOrientation() * (-v.safeNormalized());
 			float penetrationDepth = margin - dist;
 			
 			// Reject the contact if the penetration depth is negative (due too numerical errors)
@@ -187,7 +187,7 @@ void GJKAlgorithm::testCollision(const CollisionShapeInfo& shape1Info,
 			pB = body2Tobody1.getInverse() * (pB + (shape2->getMargin() / dist) * v);
 
 			// Compute the contact info
-			Vector3 normal = transform1.getOrientation() * (-v.getUnit());
+			vec3 normal = transform1.getOrientation() * (-v.safeNormalized());
 			float penetrationDepth = margin - dist;
 			
 			// Reject the contact if the penetration depth is negative (due too numerical errors)
@@ -205,14 +205,14 @@ void GJKAlgorithm::testCollision(const CollisionShapeInfo& shape1Info,
 
 		// Store and update the squared distance of the closest point
 		prevDistSquare = distSquare;
-		distSquare = v.lengthSquare();
+		distSquare = v.length2();
 
 		// If the distance to the closest point doesn't improve a lot
 		if (prevDistSquare - distSquare <= MACHINE_EPSILON * prevDistSquare) {
 			simplex.backupClosestPointInSimplex(v);
 			
 			// Get the new squared distance
-			distSquare = v.lengthSquare();
+			distSquare = v.length2();
 
 			// Compute the closet points of both objects (without the margins)
 			simplex.computeClosestPointsOfAandB(pA, pB);
@@ -225,7 +225,7 @@ void GJKAlgorithm::testCollision(const CollisionShapeInfo& shape1Info,
 			pB = body2Tobody1.getInverse() * (pB + (shape2->getMargin() / dist) * v);
 
 			// Compute the contact info
-			Vector3 normal = transform1.getOrientation() * (-v.getUnit());
+			vec3 normal = transform1.getOrientation() * (-v.safeNormalized());
 			float penetrationDepth = margin - dist;
 			
 			// Reject the contact if the penetration depth is negative (due too numerical errors)
@@ -257,17 +257,17 @@ void GJKAlgorithm::testCollision(const CollisionShapeInfo& shape1Info,
 /// a polytope must exist. Then, we give that polytope to the EPA algorithm to
 /// compute the correct penetration depth and contact points of the enlarged objects.
 void GJKAlgorithm::computePenetrationDepthForEnlargedObjects(const CollisionShapeInfo& shape1Info,
-															 const Transform& transform1,
+															 const etk::Transform3D& transform1,
 															 const CollisionShapeInfo& shape2Info,
-															 const Transform& transform2,
+															 const etk::Transform3D& transform2,
 															 NarrowPhaseCallback* narrowPhaseCallback,
-															 Vector3& v) {
+															 vec3& v) {
 	PROFILE("GJKAlgorithm::computePenetrationDepthForEnlargedObjects()");
 
 	Simplex simplex;
-	Vector3 suppA;
-	Vector3 suppB;
-	Vector3 w;
+	vec3 suppA;
+	vec3 suppB;
+	vec3 w;
 	float vDotw;
 	float distSquare = DECIMAL_LARGEST;
 	float prevDistSquare;
@@ -281,12 +281,12 @@ void GJKAlgorithm::computePenetrationDepthForEnlargedObjects(const CollisionShap
 	void** shape1CachedCollisionData = shape1Info.cachedCollisionData;
 	void** shape2CachedCollisionData = shape2Info.cachedCollisionData;
 
-	// Transform a point from local space of body 2 to local space
+	// etk::Transform3D a point from local space of body 2 to local space
 	// of body 1 (the GJK algorithm is done in local space of body 1)
-	Transform body2ToBody1 = transform1.getInverse() * transform2;
+	etk::Transform3D body2ToBody1 = transform1.getInverse() * transform2;
 
 	// Matrix that transform a direction from local space of body 1 int32_to local space of body 2
-	Matrix3x3 rotateToBody2 = transform2.getOrientation().getMatrix().getTranspose() *
+	etk::Matrix3x3 rotateToBody2 = transform2.getOrientation().getMatrix().getTranspose() *
 							  transform1.getOrientation().getMatrix();
 	
 	do {
@@ -319,7 +319,7 @@ void GJKAlgorithm::computePenetrationDepthForEnlargedObjects(const CollisionShap
 
 		// Store and update the square distance
 		prevDistSquare = distSquare;
-		distSquare = v.lengthSquare();
+		distSquare = v.length2();
 
 		if (prevDistSquare - distSquare <= MACHINE_EPSILON * prevDistSquare) {
 			return;
@@ -337,10 +337,10 @@ void GJKAlgorithm::computePenetrationDepthForEnlargedObjects(const CollisionShap
 }
 
 // Use the GJK Algorithm to find if a point is inside a convex collision shape
-bool GJKAlgorithm::testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) {
+bool GJKAlgorithm::testPointInside(const vec3& localPoint, ProxyShape* proxyShape) {
 
-	Vector3 suppA;			 // Support point of object A
-	Vector3 w;				 // Support point of Minkowski difference A-B
+	vec3 suppA;			 // Support point of object A
+	vec3 w;				 // Support point of Minkowski difference A-B
 	float prevDistSquare;
 
 	assert(proxyShape->getCollisionShape()->isConvex());
@@ -350,13 +350,13 @@ bool GJKAlgorithm::testPointInside(const Vector3& localPoint, ProxyShape* proxyS
 	void** shapeCachedCollisionData = proxyShape->getCachedCollisionData();
 
 	// Support point of object B (object B is a single point)
-	const Vector3 suppB(localPoint);
+	const vec3 suppB(localPoint);
 
 	// Create a simplex set
 	Simplex simplex;
 
 	// Initial supporting direction
-	Vector3 v(1, 1, 1);
+	vec3 v(1, 1, 1);
 
 	// Initialize the upper bound for the square distance
 	float distSquare = DECIMAL_LARGEST;
@@ -387,7 +387,7 @@ bool GJKAlgorithm::testPointInside(const Vector3& localPoint, ProxyShape* proxyS
 
 		// Store and update the squared distance of the closest point
 		prevDistSquare = distSquare;
-		distSquare = v.lengthSquare();
+		distSquare = v.length2();
 
 		// If the distance to the closest point doesn't improve a lot
 		if (prevDistSquare - distSquare <= MACHINE_EPSILON * prevDistSquare) {
@@ -413,29 +413,29 @@ bool GJKAlgorithm::raycast(const Ray& ray, ProxyShape* proxyShape, RaycastInfo& 
 
 	void** shapeCachedCollisionData = proxyShape->getCachedCollisionData();
 
-	Vector3 suppA;	  // Current lower bound point on the ray (starting at ray's origin)
-	Vector3 suppB;	  // Support point on the collision shape
+	vec3 suppA;	  // Current lower bound point on the ray (starting at ray's origin)
+	vec3 suppB;	  // Support point on the collision shape
 	const float machineEpsilonSquare = MACHINE_EPSILON * MACHINE_EPSILON;
 	const float epsilon = float(0.0001);
 
 	// Convert the ray origin and direction int32_to the local-space of the collision shape
-	Vector3 rayDirection = ray.point2 - ray.point1;
+	vec3 rayDirection = ray.point2 - ray.point1;
 
 	// If the points of the segment are two close, return no hit
-	if (rayDirection.lengthSquare() < machineEpsilonSquare) return false;
+	if (rayDirection.length2() < machineEpsilonSquare) return false;
 
-	Vector3 w;
+	vec3 w;
 
 	// Create a simplex set
 	Simplex simplex;
 
-	Vector3 n(float(0.0), float(0.0), float(0.0));
-	float lambda = float(0.0);
+	vec3 n(0.0f, float(0.0), float(0.0));
+	float lambda = 0.0f;
 	suppA = ray.point1;	// Current lower bound point on the ray (starting at ray's origin)
 	suppB = shape->getLocalSupportPointWithoutMargin(rayDirection, shapeCachedCollisionData);
-	Vector3 v = suppA - suppB;
+	vec3 v = suppA - suppB;
 	float vDotW, vDotR;
-	float distSquare = v.lengthSquare();
+	float distSquare = v.length2();
 	int32_t nbIterations = 0;
 
 	// GJK Algorithm loop
@@ -472,10 +472,10 @@ bool GJKAlgorithm::raycast(const Ray& ray, ProxyShape* proxyShape, RaycastInfo& 
 		// Compute the closest point
 		if (simplex.computeClosestPoint(v)) {
 
-			distSquare = v.lengthSquare();
+			distSquare = v.length2();
 		}
 		else {
-			distSquare = float(0.0);
+			distSquare = 0.0f;
 		}
 
 		// If the current lower bound distance is larger than the maximum raycasting distance
@@ -488,8 +488,8 @@ bool GJKAlgorithm::raycast(const Ray& ray, ProxyShape* proxyShape, RaycastInfo& 
 	if (lambda < MACHINE_EPSILON) return false;
 
 	// Compute the closet points of both objects (without the margins)
-	Vector3 pointA;
-	Vector3 pointB;
+	vec3 pointA;
+	vec3 pointB;
 	simplex.computeClosestPointsOfAandB(pointA, pointB);
 
 	// A raycast hit has been found, we fill in the raycast info
@@ -498,11 +498,11 @@ bool GJKAlgorithm::raycast(const Ray& ray, ProxyShape* proxyShape, RaycastInfo& 
 	raycastInfo.body = proxyShape->getBody();
 	raycastInfo.proxyShape = proxyShape;
 
-	if (n.lengthSquare() >= machineEpsilonSquare) { // The normal vector is valid
+	if (n.length2() >= machineEpsilonSquare) { // The normal vector is valid
 		raycastInfo.worldNormal = n;
 	}
 	else {  // Degenerated normal vector, we return a zero normal vector
-		raycastInfo.worldNormal = Vector3(float(0), float(0), float(0));
+		raycastInfo.worldNormal = vec3(float(0), float(0), float(0));
 	}
 
 	return true;

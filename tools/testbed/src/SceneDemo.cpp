@@ -51,18 +51,18 @@ SceneDemo::SceneDemo(const std::string& name, float sceneRadius, bool isShadowMa
 	shadowMapTextureLevel++;
 
 	// Move the light0
-	mLight0.translateWorld(Vector3(-2, 35, 40));
+	mLight0.translateWorld(vec3(-2, 35, 40));
 
 	// Camera at light0 postion for the shadow map
 	mShadowMapLightCamera.translateWorld(mLight0.getOrigin());
-	mShadowMapLightCamera.rotateLocal(Vector3(1, 0, 0), -PI / 4.0f);
-	mShadowMapLightCamera.rotateWorld(Vector3(0, 1, 0), PI / 8.0f);
+	mShadowMapLightCamera.rotateLocal(vec3(1, 0, 0), -PI / 4.0f);
+	mShadowMapLightCamera.rotateWorld(vec3(0, 1, 0), PI / 8.0f);
 
 	mShadowMapLightCamera.setDimensions(SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT);
 	mShadowMapLightCamera.setFieldOfView(80.0f);
 	mShadowMapLightCamera.setSceneRadius(100);
 
-	mShadowMapBiasMatrix.setAllValues(0.5, 0.0, 0.0, 0.5,
+	mShadowMapBiasMatrix.setValue(0.5, 0.0, 0.0, 0.5,
 									  0.0, 0.5, 0.0, 0.5,
 									  0.0, 0.0, 0.5, 0.5,
 									  0.0, 0.0, 0.0, 1.0);
@@ -160,12 +160,12 @@ void SceneDemo::render() {
 	mPhongShader.setMatrix4x4Uniform("projectionMatrix", mCamera.getProjectionMatrix());
 	mPhongShader.setMatrix4x4Uniform("shadowMapProjectionMatrix", mShadowMapBiasMatrix * shadowMapProjMatrix);
 	mPhongShader.setMatrix4x4Uniform("worldToLight0CameraMatrix", worldToLightCameraMatrix);
-	mPhongShader.setVector3Uniform("light0PosCameraSpace", worldToCameraMatrix * mLight0.getOrigin());
-	mPhongShader.setVector3Uniform("lightAmbientColor", Vector3(0.4f, 0.4f, 0.4f));
-	mPhongShader.setVector3Uniform("light0DiffuseColor", Vector3(diffCol.r, diffCol.g, diffCol.b));
+	mPhongShader.setvec3Uniform("light0PosCameraSpace", worldToCameraMatrix * mLight0.getOrigin());
+	mPhongShader.setvec3Uniform("lightAmbientColor", vec3(0.4f, 0.4f, 0.4f));
+	mPhongShader.setvec3Uniform("light0DiffuseColor", vec3(diffCol.r, diffCol.g, diffCol.b));
 	mPhongShader.setIntUniform("shadowMapSampler", textureUnit);
 	mPhongShader.setIntUniform("isShadowEnabled", mIsShadowMappingEnabled);
-	mPhongShader.setVector2Uniform("shadowMapDimension", Vector2(SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT));
+	mPhongShader.setvec2Uniform("shadowMapDimension", vec2(SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT));
 
 	// Set the viewport to render the scene
 	glViewport(mViewportX, mViewportY, mViewportWidth, mViewportHeight);
@@ -334,8 +334,8 @@ std::vector<ContactPoint> SceneDemo::computeContactPointsOfWorld(const rp3d::Dyn
 		for (uint32_t i=0; i<manifold->getNbContactPoints(); i++) {
 
 			rp3d::ContactPoint* contactPoint = manifold->getContactPoint(i);
-			rp3d::Vector3 point = contactPoint->getWorldPointOnBody1();
-			ContactPoint contact(openglframework::Vector3(point.x, point.y, point.z));
+			rp3d::vec3 point = contactPoint->getWorldPointOnBody1();
+			ContactPoint contact(openglframework::vec3(point.x(), point.y(), point.z()));
 			contactPoints.push_back(contact);
 		}
 

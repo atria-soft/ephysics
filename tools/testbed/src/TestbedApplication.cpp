@@ -49,24 +49,24 @@ const float TestbedApplication::SCROLL_SENSITIVITY = 0.08f;
 
 // Constructor
 TestbedApplication::TestbedApplication(bool isFullscreen)
-				   : Screen(Vector2i(1280, 800), "Testbed ReactPhysics3D", true, isFullscreen),
+				   : Screen(vec2i(1280, 800), "Testbed ReactPhysics3D", true, isFullscreen),
 					 mIsInitialized(false), mGui(this), mFPS(0), mNbFrames(0), mPreviousTime(0),
 					 mLastTimeComputedFPS(0), mFrameTime(0), mPhysicsTime(0) {
 
 	mCurrentScene = NULL;
 	mIsMultisamplingActive = true;
-	mWidth = 1280;
+	m_width = 1280;
 	mHeight = 720;
 	mSinglePhysicsStepEnabled = false;
 	mSinglePhysicsStepDone = false;
-	mWindowToFramebufferRatio = Vector2(1, 1);
+	mWindowToFramebufferRatio = vec2(1, 1);
 	mIsShadowMappingEnabled = true;
 	mIsVSyncEnabled = false;
 	mIsContactPointsDisplayed = false;
 
 	init();
 
-	resizeEvent(Vector2i(0, 0));
+	resizeEvent(vec2i(0, 0));
 }
 
 // Destructor
@@ -223,7 +223,7 @@ void TestbedApplication::drawContents() {
 }
 
 /// Window resize event handler
-bool TestbedApplication::resizeEvent(const Vector2i& size) {
+bool TestbedApplication::resizeEvent(const vec2i& size) {
 
 	if (!mIsInitialized) return false;
 
@@ -257,7 +257,7 @@ void TestbedApplication::switchScene(Scene* newScene) {
 	// Reset the scene
 	mCurrentScene->reset();
 
-	resizeEvent(Vector2i(0, 0));
+	resizeEvent(vec2i(0, 0));
 }
 
 // Check the OpenGL errors
@@ -339,7 +339,7 @@ bool TestbedApplication::keyboardEvent(int32_t key, int32_t scancode, int32_t ac
 }
 
 // Handle a mouse button event (default implementation: propagate to children)
-bool TestbedApplication::mouseButtonEvent(const Vector2i &p, int32_t button, bool down, int32_t modifiers) {
+bool TestbedApplication::mouseButtonEvent(const vec2i &p, int32_t button, bool down, int32_t modifiers) {
 
 	if (Screen::mouseButtonEvent(p, button, down, modifiers)) {
 		return true;
@@ -353,7 +353,7 @@ bool TestbedApplication::mouseButtonEvent(const Vector2i &p, int32_t button, boo
 }
 
 // Handle a mouse motion event (default implementation: propagate to children)
-bool TestbedApplication::mouseMotionEvent(const Vector2i &p, const Vector2i &rel, int32_t button, int32_t modifiers) {
+bool TestbedApplication::mouseMotionEvent(const vec2i &p, const vec2i &rel, int32_t button, int32_t modifiers) {
 
 	if (Screen::mouseMotionEvent(p, rel, button, modifiers)) {
 		return true;
@@ -369,7 +369,7 @@ bool TestbedApplication::mouseMotionEvent(const Vector2i &p, const Vector2i &rel
 }
 
 // Handle a mouse scroll event (default implementation: propagate to children)
-bool TestbedApplication::scrollEvent(const Vector2i &p, const Vector2f &rel) {
+bool TestbedApplication::scrollEvent(const vec2i &p, const vec2f &rel) {
 
 	if (Screen::scrollEvent(p, rel)) {
 		return true;

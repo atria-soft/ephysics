@@ -124,7 +124,7 @@ void BroadPhaseAlgorithm::removeProxyCollisionShape(ProxyShape* proxyShape) {
 
 // Notify the broad-phase that a collision shape has moved and need to be updated
 void BroadPhaseAlgorithm::updateProxyCollisionShape(ProxyShape* proxyShape, const AABB& aabb,
-													const Vector3& displacement, bool forceReinsert) {
+													const vec3& displacement, bool forceReinsert) {
 
 	int32_t broadPhaseID = proxyShape->m_broadPhaseID;
 

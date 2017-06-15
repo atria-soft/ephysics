@@ -17,7 +17,7 @@ using namespace reactphysics3d;
  * @param radius Radius of the sphere (in meters)
  */
 SphereShape::SphereShape(float radius) : ConvexShape(SPHERE, radius) {
-	assert(radius > float(0.0));
+	assert(radius > 0.0f);
 }
 
 // Destructor
@@ -28,31 +28,31 @@ SphereShape::~SphereShape() {
 // Raycast method with feedback information
 bool SphereShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const {
 
-	const Vector3 m = ray.point1;
-	float c = m.dot(m) - mMargin * mMargin;
+	const vec3 m = ray.point1;
+	float c = m.dot(m) - m_margin * m_margin;
 
 	// If the origin of the ray is inside the sphere, we return no int32_tersection
-	if (c < float(0.0)) return false;
+	if (c < 0.0f) return false;
 
-	const Vector3 rayDirection = ray.point2 - ray.point1;
+	const vec3 rayDirection = ray.point2 - ray.point1;
 	float b = m.dot(rayDirection);
 
 	// If the origin of the ray is outside the sphere and the ray
 	// is pointing away from the sphere, there is no int32_tersection
-	if (b > float(0.0)) return false;
+	if (b > 0.0f) return false;
 
-	float raySquareLength = rayDirection.lengthSquare();
+	float raySquareLength = rayDirection.length2();
 
 	// Compute the discriminant of the quadratic equation
 	float discriminant = b * b - raySquareLength * c;
 
 	// If the discriminant is negative or the ray length is very small, there is no int32_tersection
-	if (discriminant < float(0.0) || raySquareLength < MACHINE_EPSILON) return false;
+	if (discriminant < 0.0f || raySquareLength < MACHINE_EPSILON) return false;
 
 	// Compute the solution "t" closest to the origin
 	float t = -b - std::sqrt(discriminant);
 
-	assert(t >= float(0.0));
+	assert(t >= 0.0f);
 
 	// If the hit point is withing the segment ray fraction
 	if (t < ray.maxFraction * raySquareLength) {

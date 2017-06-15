@@ -33,13 +33,13 @@
 using namespace openglframework;
 
 // Constructor
-Texture2D::Texture2D() : m_id(0), mUnit(0), mWidth(0), mHeight(0) {
+Texture2D::Texture2D() : m_id(0), mUnit(0), m_width(0), mHeight(0) {
 
 }
 
 // Constructor
 Texture2D::Texture2D(uint32_t width, uint32_t height, uint32_t int32_ternalFormat, uint32_t format, uint32_t type)
-		  : m_id(0), mUnit(0), mWidth(0), mHeight(0) {
+		  : m_id(0), mUnit(0), m_width(0), mHeight(0) {
 
 	// Create the texture
 	create(width, height, int32_ternalFormat, format, type);
@@ -57,7 +57,7 @@ void Texture2D::create(uint32_t width, uint32_t height, uint32_t int32_ternalFor
 	// Destroy the current texture
 	destroy();
 
-	mWidth = width;
+	m_width = width;
 	mHeight = height;
 
 	// Create the OpenGL texture
@@ -68,7 +68,7 @@ void Texture2D::create(uint32_t width, uint32_t height, uint32_t int32_ternalFor
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, int32_ternalFormat, mWidth, mHeight, 0, format, type, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, int32_ternalFormat, m_width, mHeight, 0, format, type, data);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -79,7 +79,7 @@ void Texture2D::create(uint32_t width, uint32_t height, uint32_t int32_ternalFor
 	// Destroy the current texture
 	destroy();
 
-	mWidth = width;
+	m_width = width;
 	mHeight = height;
 
 	// Create the OpenGL texture
@@ -90,7 +90,7 @@ void Texture2D::create(uint32_t width, uint32_t height, uint32_t int32_ternalFor
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, maxFilter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
-	glTexImage2D(GL_TEXTURE_2D, 0, int32_ternalFormat, mWidth, mHeight, 0, format, type, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, int32_ternalFormat, m_width, mHeight, 0, format, type, data);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -100,7 +100,7 @@ void Texture2D::destroy() {
 		glDeleteTextures(1, &m_id);
 		m_id = 0;
 		mUnit = 0;
-		mWidth = 0;
+		m_width = 0;
 		mHeight = 0;
 	}
 }

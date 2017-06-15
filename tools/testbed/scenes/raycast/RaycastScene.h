@@ -48,7 +48,7 @@ namespace raycastscene {
 
 // Constants
 const float SCENE_RADIUS = 30.0f;
-const openglframework::Vector3 BOX_SIZE(4, 2, 1);
+const openglframework::vec3 BOX_SIZE(4, 2, 1);
 const float SPHERE_RADIUS = 3.0f;
 const float CONE_RADIUS = 3.0f;
 const float CONE_HEIGHT = 5.0f;
@@ -84,13 +84,13 @@ class RaycastManager : public rp3d::RaycastCallback {
 		}
 
 		virtual rp3d::float notifyRaycastHit(const rp3d::RaycastInfo& raycastInfo) {
-			rp3d::Vector3 hitPos = raycastInfo.worldPoint;
-			openglframework::Vector3 position(hitPos.x, hitPos.y, hitPos.z);
+			rp3d::vec3 hitPos = raycastInfo.worldPoint;
+			openglframework::vec3 position(hitPos.x(), hitPos.y(), hitPos.z());
 			mHitPoints.push_back(ContactPoint(position));
 
 			// Create a line to display the normal at hit point
-			rp3d::Vector3 n = raycastInfo.worldNormal;
-			openglframework::Vector3 normal(n.x, n.y, n.z);
+			rp3d::vec3 n = raycastInfo.worldNormal;
+			openglframework::vec3 normal(n.x(), n.y(), n.z());
 			Line* normalLine = new Line(position, position + normal);
 			mNormals.push_back(normalLine);
 
@@ -153,7 +153,7 @@ class RaycastScene : public SceneDemo {
 		rp3d::CollisionWorld* mCollisionWorld;
 
 		/// All the points to render the lines
-		std::vector<openglframework::Vector3> mLinePoints;
+		std::vector<openglframework::vec3> mLinePoints;
 
 		/// Vertex Buffer Object for the vertices data
 		openglframework::VertexBufferObject mVBOVertices;

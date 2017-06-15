@@ -34,7 +34,7 @@ class OverlappingPair {
 		ContactManifoldSet m_contactManifoldSet;
 
 		/// Cached previous separating axis
-		Vector3 m_cachedSeparatingAxis;
+		vec3 m_cachedSeparatingAxis;
 		
 		// -------------------- Methods -------------------- //
 
@@ -68,10 +68,10 @@ class OverlappingPair {
 		void update();
 
 		/// Return the cached separating axis
-		Vector3 getCachedSeparatingAxis() const;
+		vec3 getCachedSeparatingAxis() const;
 
 		/// Set the cached separating axis
-		void setCachedSeparatingAxis(const Vector3& axis);
+		void setCachedSeparatingAxis(const vec3& axis);
 
 		/// Return the number of contacts in the cache
 		uint32_t getNbContactPoints() const;
@@ -114,12 +114,12 @@ inline void OverlappingPair::update() {
 }
 
 // Return the cached separating axis
-inline Vector3 OverlappingPair::getCachedSeparatingAxis() const {
+inline vec3 OverlappingPair::getCachedSeparatingAxis() const {
 	return m_cachedSeparatingAxis;
 }
 
 // Set the cached separating axis
-inline void OverlappingPair::setCachedSeparatingAxis(const Vector3& axis) {
+inline void OverlappingPair::setCachedSeparatingAxis(const vec3& axis) {
 	m_cachedSeparatingAxis = axis;
 }
 

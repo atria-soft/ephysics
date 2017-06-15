@@ -26,29 +26,29 @@ EPAAlgorithm::~EPAAlgorithm() {
 // Decide if the origin is in the tetrahedron.
 /// Return 0 if the origin is in the tetrahedron and return the number (1,2,3 or 4) of
 /// the vertex that is wrong if the origin is not in the tetrahedron
-int32_t EPAAlgorithm::isOriginInTetrahedron(const Vector3& p1, const Vector3& p2,
-										const Vector3& p3, const Vector3& p4) const {
+int32_t EPAAlgorithm::isOriginInTetrahedron(const vec3& p1, const vec3& p2,
+										const vec3& p3, const vec3& p4) const {
 
 	// Check vertex 1
-	Vector3 normal1 = (p2-p1).cross(p3-p1);
+	vec3 normal1 = (p2-p1).cross(p3-p1);
 	if ((normal1.dot(p1) > 0.0) == (normal1.dot(p4) > 0.0)) {
 		return 4;
 	}
 
 	// Check vertex 2
-	Vector3 normal2 = (p4-p2).cross(p3-p2);
+	vec3 normal2 = (p4-p2).cross(p3-p2);
 	if ((normal2.dot(p2) > 0.0) == (normal2.dot(p1) > 0.0)) {
 		return 1;
 	}
 
 	// Check vertex 3
-	Vector3 normal3 = (p4-p3).cross(p1-p3);
+	vec3 normal3 = (p4-p3).cross(p1-p3);
 	if ((normal3.dot(p3) > 0.0) == (normal3.dot(p2) > 0.0)) {
 		return 2;
 	}
 
 	// Check vertex 4
-	Vector3 normal4 = (p2-p4).cross(p1-p4);
+	vec3 normal4 = (p2-p4).cross(p1-p4);
 	if ((normal4.dot(p4) > 0.0) == (normal4.dot(p3) > 0.0)) {
 		return 3;
 	}
@@ -65,10 +65,10 @@ int32_t EPAAlgorithm::isOriginInTetrahedron(const Vector3& p1, const Vector3& p2
 /// the correct penetration depth
 void EPAAlgorithm::computePenetrationDepthAndContactPoints(const Simplex& simplex,
 														   CollisionShapeInfo shape1Info,
-														   const Transform& transform1,
+														   const etk::Transform3D& transform1,
 														   CollisionShapeInfo shape2Info,
-														   const Transform& transform2,
-														   Vector3& v,
+														   const etk::Transform3D& transform2,
+														   vec3& v,
 														   NarrowPhaseCallback* narrowPhaseCallback) {
 
 	PROFILE("EPAAlgorithm::computePenetrationDepthAndContactPoints()");
@@ -82,20 +82,20 @@ void EPAAlgorithm::computePenetrationDepthAndContactPoints(const Simplex& simple
 	void** shape1CachedCollisionData = shape1Info.cachedCollisionData;
 	void** shape2CachedCollisionData = shape2Info.cachedCollisionData;
 
-	Vector3 suppPointsA[MAX_SUPPORT_POINTS];  // Support points of object A in local coordinates
-	Vector3 suppPointsB[MAX_SUPPORT_POINTS];  // Support points of object B in local coordinates
-	Vector3 points[MAX_SUPPORT_POINTS];	   // Current points
+	vec3 suppPointsA[MAX_SUPPORT_POINTS];  // Support points of object A in local coordinates
+	vec3 suppPointsB[MAX_SUPPORT_POINTS];  // Support points of object B in local coordinates
+	vec3 points[MAX_SUPPORT_POINTS];	   // Current points
 	TrianglesStore triangleStore;			 // Store the triangles
 	TriangleEPA* triangleHeap[MAX_FACETS];	// Heap that contains the face
 											  // candidate of the EPA algorithm
 
-	// Transform a point from local space of body 2 to local
+	// etk::Transform3D a point from local space of body 2 to local
 	// space of body 1 (the GJK algorithm is done in local space of body 1)
-	Transform body2Tobody1 = transform1.getInverse() * transform2;
+	etk::Transform3D body2Tobody1 = transform1.getInverse() * transform2;
 
 	// Matrix that transform a direction from local
 	// space of body 1 int32_to local space of body 2
-	Quaternion rotateToBody2 = transform2.getOrientation().getInverse() *
+	etk::Quaternion rotateToBody2 = transform2.getOrientation().getInverse() *
 							  transform1.getOrientation();
 
 	// Get the simplex computed previously by the GJK algorithm
@@ -130,22 +130,22 @@ void EPAAlgorithm::computePenetrationDepthAndContactPoints(const Simplex& simple
 			// v1, v2 and v3.
 
 			// Direction of the segment
-			Vector3 d = (points[1] - points[0]).getUnit();
+			vec3 d = (points[1] - points[0]).safeNormalized();
 
 			// Choose the coordinate axis from the minimal absolute component of the vector d
-			int32_t minAxis = d.getAbsoluteVector().getMinAxis();
+			int32_t minAxis = d.absolute().getMinAxis();
 
 			// Compute sin(60)
-			const float sin60 = float(sqrt(3.0)) * float(0.5);
+			const float sin60 = float(sqrt(3.0)) * 0.5f;
 
 			// Create a rotation quaternion to rotate the vector v1 to get the vectors
 			// v2 and v3
-			Quaternion rotationQuat(d.x * sin60, d.y * sin60, d.z * sin60, 0.5);
+			etk::Quaternion rotationQuat(d.x() * sin60, d.y() * sin60, d.z() * sin60, 0.5);
 
 			// Compute the vector v1, v2, v3
-			Vector3 v1 = d.cross(Vector3(minAxis == 0, minAxis == 1, minAxis == 2));
-			Vector3 v2 = rotationQuat * v1;
-			Vector3 v3 = rotationQuat * v2;
+			vec3 v1 = d.cross(vec3(minAxis == 0, minAxis == 1, minAxis == 2));
+			vec3 v2 = rotationQuat * v1;
+			vec3 v3 = rotationQuat * v2;
 
 			// Compute the support point in the direction of v1
 			suppPointsA[2] = shape1->getLocalSupportPointWithMargin(v1, shape1CachedCollisionData);
@@ -256,9 +256,9 @@ void EPAAlgorithm::computePenetrationDepthAndContactPoints(const Simplex& simple
 			// tetrahedron that contains the origin.
 
 			// Compute the normal of the triangle
-			Vector3 v1 = points[1] - points[0];
-			Vector3 v2 = points[2] - points[0];
-			Vector3 n = v1.cross(v2);
+			vec3 v1 = points[1] - points[0];
+			vec3 v2 = points[2] - points[0];
+			vec3 n = v1.cross(v2);
 
 			// Compute the two new vertices to obtain a hexahedron
 			suppPointsA[3] = shape1->getLocalSupportPointWithMargin(n, shape1CachedCollisionData);
@@ -404,13 +404,13 @@ void EPAAlgorithm::computePenetrationDepthAndContactPoints(const Simplex& simple
 
 	// Compute the contact info
 	v = transform1.getOrientation() * triangle->getClosestPoint();
-	Vector3 pALocal = triangle->computeClosestPointOfObject(suppPointsA);
-	Vector3 pBLocal = body2Tobody1.getInverse() * triangle->computeClosestPointOfObject(suppPointsB);
-	Vector3 normal = v.getUnit();
+	vec3 pALocal = triangle->computeClosestPointOfObject(suppPointsA);
+	vec3 pBLocal = body2Tobody1.getInverse() * triangle->computeClosestPointOfObject(suppPointsB);
+	vec3 normal = v.safeNormalized();
 	float penetrationDepth = v.length();
 	assert(penetrationDepth > 0.0);
 
-	if (normal.lengthSquare() < MACHINE_EPSILON) return;
+	if (normal.length2() < MACHINE_EPSILON) return;
 	
 	// Create the contact info object
 	ContactPointInfo contactInfo(shape1Info.proxyShape, shape2Info.proxyShape, shape1Info.collisionShape,

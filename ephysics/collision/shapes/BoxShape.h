@@ -36,7 +36,7 @@ class BoxShape : public ConvexShape {
 		// -------------------- Attributes -------------------- //
 
 		/// Extent sizes of the box in the x, y and z direction
-		Vector3 m_extent;
+		vec3 m_extent;
 
 		// -------------------- Methods -------------------- //
 
@@ -47,11 +47,11 @@ class BoxShape : public ConvexShape {
 		BoxShape& operator=(const BoxShape& shape);
 
 		/// Return a local support point in a given direction without the object margin
-		virtual Vector3 getLocalSupportPointWithoutMargin(const Vector3& direction,
+		virtual vec3 getLocalSupportPointWithoutMargin(const vec3& direction,
 														  void** cachedCollisionData) const;
 
 		/// Return true if a point is inside the collision shape
-		virtual bool testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const;
+		virtual bool testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const;
 
 		/// Raycast method with feedback information
 		virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
@@ -64,36 +64,36 @@ class BoxShape : public ConvexShape {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		BoxShape(const Vector3& extent, float margin = OBJECT_MARGIN);
+		BoxShape(const vec3& extent, float margin = OBJECT_MARGIN);
 
 		/// Destructor
 		virtual ~BoxShape();
 
 		/// Return the extents of the box
-		Vector3 getExtent() const;
+		vec3 getExtent() const;
 
 		/// Set the scaling vector of the collision shape
-		virtual void setLocalScaling(const Vector3& scaling);
+		virtual void setLocalScaling(const vec3& scaling);
 
 		/// Return the local bounds of the shape in x, y and z directions
-		virtual void getLocalBounds(Vector3& min, Vector3& max) const;
+		virtual void getLocalBounds(vec3& min, vec3& max) const;
 
 		/// Return the local inertia tensor of the collision shape
-		virtual void computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const;
+		virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const;
 };
 
 // Return the extents of the box
 /**
  * @return The vector with the three extents of the box shape (in meters)
  */
-inline Vector3 BoxShape::getExtent() const {
-	return m_extent + Vector3(mMargin, mMargin, mMargin);
+inline vec3 BoxShape::getExtent() const {
+	return m_extent + vec3(m_margin, m_margin, m_margin);
 }
 
 // Set the scaling vector of the collision shape
-inline void BoxShape::setLocalScaling(const Vector3& scaling) {
+inline void BoxShape::setLocalScaling(const vec3& scaling) {
 
-	m_extent = (m_extent / mScaling) * scaling;
+	m_extent = (m_extent / m_scaling) * scaling;
 
 	CollisionShape::setLocalScaling(scaling);
 }
@@ -104,10 +104,10 @@ inline void BoxShape::setLocalScaling(const Vector3& scaling) {
  * @param min The minimum bounds of the shape in local-space coordinates
  * @param max The maximum bounds of the shape in local-space coordinates
  */
-inline void BoxShape::getLocalBounds(Vector3& min, Vector3& max) const {
+inline void BoxShape::getLocalBounds(vec3& min, vec3& max) const {
 
 	// Maximum bounds
-	max = m_extent + Vector3(mMargin, mMargin, mMargin);
+	max = m_extent + vec3(m_margin, m_margin, m_margin);
 
 	// Minimum bounds
 	min = -max;
@@ -119,19 +119,19 @@ inline size_t BoxShape::getSizeInBytes() const {
 }
 
 // Return a local support point in a given direction without the objec margin
-inline Vector3 BoxShape::getLocalSupportPointWithoutMargin(const Vector3& direction,
+inline vec3 BoxShape::getLocalSupportPointWithoutMargin(const vec3& direction,
 														   void** cachedCollisionData) const {
 
-	return Vector3(direction.x < 0.0 ? -m_extent.x : m_extent.x,
-				   direction.y < 0.0 ? -m_extent.y : m_extent.y,
-				   direction.z < 0.0 ? -m_extent.z : m_extent.z);
+	return vec3(direction.x() < 0.0 ? -m_extent.x() : m_extent.x(),
+				   direction.y() < 0.0 ? -m_extent.y() : m_extent.y(),
+				   direction.z() < 0.0 ? -m_extent.z() : m_extent.z());
 }
 
 // Return true if a point is inside the collision shape
-inline bool BoxShape::testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const {
-	return (localPoint.x < m_extent[0] && localPoint.x > -m_extent[0] &&
-			localPoint.y < m_extent[1] && localPoint.y > -m_extent[1] &&
-			localPoint.z < m_extent[2] && localPoint.z > -m_extent[2]);
+inline bool BoxShape::testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const {
+	return (localPoint.x() < m_extent[0] && localPoint.x() > -m_extent[0] &&
+			localPoint.y() < m_extent[1] && localPoint.y() > -m_extent[1] &&
+			localPoint.z() < m_extent[2] && localPoint.z() > -m_extent[2]);
 }
 
 }

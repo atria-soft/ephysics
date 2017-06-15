@@ -37,11 +37,11 @@ class SphereShape : public ConvexShape {
 		SphereShape& operator=(const SphereShape& shape);
 
 		/// Return a local support point in a given direction without the object margin
-		virtual Vector3 getLocalSupportPointWithoutMargin(const Vector3& direction,
+		virtual vec3 getLocalSupportPointWithoutMargin(const vec3& direction,
 														  void** cachedCollisionData) const;
 
 		/// Return true if a point is inside the collision shape
-		virtual bool testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const;
+		virtual bool testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const;
 
 		/// Raycast method with feedback information
 		virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
@@ -63,16 +63,16 @@ class SphereShape : public ConvexShape {
 		float getRadius() const;
 
 		/// Set the scaling vector of the collision shape
-		virtual void setLocalScaling(const Vector3& scaling);
+		virtual void setLocalScaling(const vec3& scaling);
 
 		/// Return the local bounds of the shape in x, y and z directions.
-		virtual void getLocalBounds(Vector3& min, Vector3& max) const;
+		virtual void getLocalBounds(vec3& min, vec3& max) const;
 
 		/// Return the local inertia tensor of the collision shape
-		virtual void computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const;
+		virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const;
 
 		/// Update the AABB of a body using its collision shape
-		virtual void computeAABB(AABB& aabb, const Transform& transform) const;
+		virtual void computeAABB(AABB& aabb, const etk::Transform3D& transform) const;
 };
 
 // Get the radius of the sphere
@@ -80,13 +80,13 @@ class SphereShape : public ConvexShape {
  * @return Radius of the sphere (in meters)
  */
 inline float SphereShape::getRadius() const {
-	return mMargin;
+	return m_margin;
 }
 
 // Set the scaling vector of the collision shape
-inline void SphereShape::setLocalScaling(const Vector3& scaling) {
+inline void SphereShape::setLocalScaling(const vec3& scaling) {
 
-	mMargin = (mMargin / mScaling.x) * scaling.x;
+	m_margin = (m_margin / m_scaling.x()) * scaling.x();
 
 	CollisionShape::setLocalScaling(scaling);
 }
@@ -97,11 +97,11 @@ inline size_t SphereShape::getSizeInBytes() const {
 }
 
 // Return a local support point in a given direction without the object margin
-inline Vector3 SphereShape::getLocalSupportPointWithoutMargin(const Vector3& direction,
+inline vec3 SphereShape::getLocalSupportPointWithoutMargin(const vec3& direction,
 															  void** cachedCollisionData) const {
 
 	// Return the center of the sphere (the radius is taken int32_to account in the object margin)
-	return Vector3(0.0, 0.0, 0.0);
+	return vec3(0.0, 0.0, 0.0);
 }
 
 // Return the local bounds of the shape in x, y and z directions.
@@ -110,17 +110,15 @@ inline Vector3 SphereShape::getLocalSupportPointWithoutMargin(const Vector3& dir
  * @param min The minimum bounds of the shape in local-space coordinates
  * @param max The maximum bounds of the shape in local-space coordinates
  */
-inline void SphereShape::getLocalBounds(Vector3& min, Vector3& max) const {
-
+inline void SphereShape::getLocalBounds(vec3& min, vec3& max) const {
 	// Maximum bounds
-	max.x = mMargin;
-	max.y = mMargin;
-	max.z = mMargin;
-
+	max.setX(m_margin);
+	max.setY(m_margin);
+	max.setZ(m_margin);
 	// Minimum bounds
-	min.x = -mMargin;
-	min.y = min.x;
-	min.z = min.x;
+	min.setX(-m_margin);
+	min.setY(min.x());
+	min.setZ(min.x());
 }
 
 // Return the local inertia tensor of the sphere
@@ -129,23 +127,23 @@ inline void SphereShape::getLocalBounds(Vector3& min, Vector3& max) const {
  *					coordinates
  * @param mass Mass to use to compute the inertia tensor of the collision shape
  */
-inline void SphereShape::computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const {
-	float diag = float(0.4) * mass * mMargin * mMargin;
-	tensor.setAllValues(diag, 0.0, 0.0,
-						0.0, diag, 0.0,
-						0.0, 0.0, diag);
+inline void SphereShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
+	float diag = float(0.4) * mass * m_margin * m_margin;
+	tensor.setValue(diag, 0.0, 0.0,
+	                    0.0, diag, 0.0,
+	                    0.0, 0.0, diag);
 }
 
 // Update the AABB of a body using its collision shape
 /**
  * @param[out] aabb The axis-aligned bounding box (AABB) of the collision shape
  *				  computed in world-space coordinates
- * @param transform Transform used to compute the AABB of the collision shape
+ * @param transform etk::Transform3D used to compute the AABB of the collision shape
  */
-inline void SphereShape::computeAABB(AABB& aabb, const Transform& transform) const {
+inline void SphereShape::computeAABB(AABB& aabb, const etk::Transform3D& transform) const {
 
 	// Get the local extents in x,y and z direction
-	Vector3 extents(mMargin, mMargin, mMargin);
+	vec3 extents(m_margin, m_margin, m_margin);
 
 	// Update the AABB with the new minimum and maximum coordinates
 	aabb.setMin(transform.getPosition() - extents);
@@ -153,8 +151,8 @@ inline void SphereShape::computeAABB(AABB& aabb, const Transform& transform) con
 }
 
 // Return true if a point is inside the collision shape
-inline bool SphereShape::testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const {
-	return (localPoint.lengthSquare() < mMargin * mMargin);
+inline bool SphereShape::testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const {
+	return (localPoint.length2() < m_margin * m_margin);
 }
 
 }

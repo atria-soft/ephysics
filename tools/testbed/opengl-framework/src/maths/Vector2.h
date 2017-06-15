@@ -32,9 +32,9 @@
 
 namespace openglframework {
 
-// Class Vector2
+// Class vec2
 // This class represents a 2D vector.
-class Vector2 {
+class vec2 {
 
 	public:
 
@@ -47,67 +47,67 @@ class Vector2 {
 		// -------------------- Methods -------------------- //
 
 		// Constructor
-		Vector2(float x=0, float y=0) : x(x), y(y) {}
+		vec2(float x=0, float y=0) : x(x), y(y) {}
 
 		// Constructor
-		Vector2(const Vector2& vector) : x(vector.x), y(vector.y) {}
+		vec2(const vec2& vector) : x(vector.x()), y(vector.y()) {}
 
 		// + operator
-		Vector2 operator+(const Vector2 &v) const {
-			return Vector2(x + v.x, y + v.y);
+		vec2 operator+(const vec2 &v) const {
+			return vec2(x + v.x(), y + v.y());
 		}
 
 		// += operator
-		Vector2& operator+=(const Vector2 &v) {
-			x += v.x; y += v.y;
+		vec2& operator+=(const vec2 &v) {
+			x += v.x(); y += v.y();
 			return *this;
 		}
 
 		// - operator
-		Vector2 operator-(const Vector2 &v) const {
-			return Vector2(x - v.x, y - v.y);
+		vec2 operator-(const vec2 &v) const {
+			return vec2(x - v.x(), y - v.y());
 		}
 
 		// -= operator
-		Vector2& operator-=(const Vector2 &v) {
-			x -= v.x; y -= v.y;
+		vec2& operator-=(const vec2 &v) {
+			x -= v.x(); y -= v.y();
 			return *this;
 		}
 
 		// = operator
-		Vector2& operator=(const Vector2& vector) {
+		vec2& operator=(const vec2& vector) {
 			if (&vector != this) {
-				x = vector.x;
-				y = vector.y;
+				x = vector.x();
+				y = vector.y();
 			}
 			return *this;
 		}
 
 		// == operator
-		bool operator==(const Vector2 &v) const {
-			return x == v.x && y == v.y;
+		bool operator==(const vec2 &v) const {
+			return x == v.x() && y == v.y();
 		}
 
 		// * operator
-		Vector2 operator*(float f) const {
-			return Vector2(f*x, f*y);
+		vec2 operator*(float f) const {
+			return vec2(f*x, f*y);
 		}
 
 		// *= operator
-		Vector2 &operator*=(float f) {
+		vec2 &operator*=(float f) {
 			x *= f; y *= f;
 			return *this;
 		}
 
 		// / operator
-		Vector2 operator/(float f) const {
+		vec2 operator/(float f) const {
 			assert(f!=0);
 			float inv = 1.f / f;
-			return Vector2(x * inv, y * inv);
+			return vec2(x * inv, y * inv);
 		}
 
 		// /= operator
-		Vector2 &operator/=(float f) {
+		vec2 &operator/=(float f) {
 			assert(f!=0);
 			float inv = 1.f / f;
 			x *= inv; y *= inv;
@@ -115,8 +115,8 @@ class Vector2 {
 		}
 
 		// - operator
-		Vector2 operator-() const {
-			return Vector2(-x, -y);
+		vec2 operator-() const {
+			return vec2(-x, -y);
 		}
 
 		// [] operator
@@ -130,7 +130,7 @@ class Vector2 {
 		}
 
 		// Normalize the vector and return it
-		Vector2 normalize() {
+		vec2 normalize() {
 			float l = length();
 			assert(l > 0);
 			x /= l;
@@ -139,7 +139,7 @@ class Vector2 {
 		}
 
 		// Clamp the vector values between 0 and 1
-		Vector2 clamp01() {
+		vec2 clamp01() {
 			if (x>1.f) x=1.f;
 			else if (x<0.f) x=0.f;
 			if (y>1.f) y=1.f;
@@ -148,10 +148,10 @@ class Vector2 {
 		}
 
 		// Return the squared length of the vector
-		float lengthSquared() const { return x*x + y*y; }
+		float length2d() const { return x*x + y*y; }
 
 		// Return the length of the vector
-		float length() const { return sqrt(lengthSquared()); }
+		float length() const { return sqrt(length2d()); }
 };
 
 }

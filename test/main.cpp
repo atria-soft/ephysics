@@ -25,12 +25,12 @@
 
 // Libraries
 #include <test/TestSuite.h>
-#include <test/tests/mathematics/TestVector2.h>
-#include <test/tests/mathematics/TestVector3.h>
-#include <test/tests/mathematics/TestTransform.h>
-#include <test/tests/mathematics/TestQuaternion.h>
-#include <test/tests/mathematics/TestMatrix2x2.h>
-#include <test/tests/mathematics/TestMatrix3x3.h>
+#include <test/tests/mathematics/Testvec2.h>
+#include <test/tests/mathematics/Testvec3.h>
+#include <test/tests/mathematics/Testetk::Transform3D.h>
+#include <test/tests/mathematics/Testetk::Quaternion.h>
+#include <test/tests/mathematics/Testetk::Matrix2x2.h>
+#include <test/tests/mathematics/Testetk::Matrix3x3.h>
 #include <test/tests/mathematics/TestMathematicsFunctions.h>
 #include <test/tests/collision/TestPointInside.h>
 #include <test/tests/collision/TestRaycast.h>
@@ -46,12 +46,12 @@ int32_t main() {
 
 	// ---------- Mathematics tests ---------- //
 
-	testSuite.addTest(new TestVector2("Vector2"));
-	testSuite.addTest(new TestVector3("Vector3"));
-	testSuite.addTest(new TestTransform("Transform"));
-	testSuite.addTest(new TestQuaternion("Quaternion"));
-	testSuite.addTest(new TestMatrix3x3("Matrix3x3"));
-	testSuite.addTest(new TestMatrix2x2("Matrix2x2"));
+	testSuite.addTest(new Testvec2("vec2"));
+	testSuite.addTest(new Testvec3("vec3"));
+	testSuite.addTest(new Testetk::Transform3D("Transform"));
+	testSuite.addTest(new Testetk::Quaternion("Quaternion"));
+	testSuite.addTest(new Testetk::Matrix3x3("Matrix3x3"));
+	testSuite.addTest(new Testetk::Matrix2x2("Matrix2x2"));
 	testSuite.addTest(new TestMathematicsFunctions("Maths Functions"));
 
 	// ---------- Collision Detection tests ---------- //

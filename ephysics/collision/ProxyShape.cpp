@@ -13,10 +13,10 @@ using namespace reactphysics3d;
 /**
  * @param body Pointer to the parent body
  * @param shape Pointer to the collision shape
- * @param transform Transformation from collision shape local-space to body local-space
+ * @param transform etk::Transform3Dation from collision shape local-space to body local-space
  * @param mass Mass of the collision shape (in kilograms)
  */
-ProxyShape::ProxyShape(CollisionBody* body, CollisionShape* shape, const Transform& transform, float mass)
+ProxyShape::ProxyShape(CollisionBody* body, CollisionShape* shape, const etk::Transform3D& transform, float mass)
 		   :m_body(body), m_collisionShape(shape), m_localToBodyTransform(transform), m_mass(mass),
 			m_next(NULL), m_broadPhaseID(-1), m_cachedCollisionData(NULL), m_userData(NULL),
 			m_collisionCategoryBits(0x0001), m_collideWithMaskBits(0xFFFF) {
@@ -37,9 +37,9 @@ ProxyShape::~ProxyShape() {
  * @param worldPoint Point to test in world-space coordinates
  * @return True if the point is inside the collision shape
  */
-bool ProxyShape::testPointInside(const Vector3& worldPoint) {
-	const Transform localToWorld = m_body->getTransform() * m_localToBodyTransform;
-	const Vector3 localPoint = localToWorld.getInverse() * worldPoint;
+bool ProxyShape::testPointInside(const vec3& worldPoint) {
+	const etk::Transform3D localToWorld = m_body->getTransform() * m_localToBodyTransform;
+	const vec3 localPoint = localToWorld.getInverse() * worldPoint;
 	return m_collisionShape->testPointInside(localPoint, this);
 }
 
@@ -56,8 +56,8 @@ bool ProxyShape::raycast(const Ray& ray, RaycastInfo& raycastInfo) {
 	if (!m_body->isActive()) return false;
 
 	// Convert the ray int32_to the local-space of the collision shape
-	const Transform localToWorldTransform = getLocalToWorldTransform();
-	const Transform worldToLocalTransform = localToWorldTransform.getInverse();
+	const etk::Transform3D localToWorldTransform = getLocalToWorldTransform();
+	const etk::Transform3D worldToLocalTransform = localToWorldTransform.getInverse();
 	Ray rayLocal(worldToLocalTransform * ray.point1,
 				 worldToLocalTransform * ray.point2,
 				 ray.maxFraction);

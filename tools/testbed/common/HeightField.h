@@ -46,14 +46,14 @@ class HeightField : public openglframework::Mesh, public PhysicsObject {
 		float mHeightData[NB_POINTS_WIDTH * NB_POINTS_LENGTH];
 
 		/// Previous transform (for int32_terpolation)
-		rp3d::Transform mPreviousTransform;
+		rp3d::etk::Transform3D mPreviousTransform;
 
 		/// Collision shape
 		rp3d::HeightFieldShape* mHeightFieldShape;
 		rp3d::ProxyShape* m_proxyShape;
 
 		/// Scaling matrix
-		openglframework::Matrix4 mScalingMatrix;
+		openglframework::Matrix4 m_scalingMatrix;
 
 		/// Vertex Buffer Object for the vertices data
 		openglframework::VertexBufferObject mVBOVertices;
@@ -71,7 +71,7 @@ class HeightField : public openglframework::Mesh, public PhysicsObject {
 		openglframework::VertexArrayObject mVAO;
 
 		/// Min/Max height of the height field values
-		float mMinHeight, mMaxHeight;
+		float m_minHeight, m_maxHeight;
 
 		// -------------------- Methods -------------------- //
 
@@ -89,11 +89,11 @@ class HeightField : public openglframework::Mesh, public PhysicsObject {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		HeightField(const openglframework::Vector3& position,
+		HeightField(const openglframework::vec3& position,
 				   rp3d::CollisionWorld* world);
 
 		/// Constructor
-		HeightField(const openglframework::Vector3& position, float mass,
+		HeightField(const openglframework::vec3& position, float mass,
 				   rp3d::DynamicsWorld* dynamicsWorld);
 
 		/// Destructor
@@ -107,15 +107,15 @@ class HeightField : public openglframework::Mesh, public PhysicsObject {
 		void resetTransform(const rp3d::Transform& transform);
 
 		/// Update the transform matrix of the object
-		virtual void updateTransform(float int32_terpolationFactor);
+		virtual void updateetk::Transform3D(float int32_terpolationFactor);
 
 		/// Set the scaling of the object
-		void setScaling(const openglframework::Vector3& scaling);
+		void setScaling(const openglframework::vec3& scaling);
 };
 
 // Update the transform matrix of the object
-inline void HeightField::updateTransform(float int32_terpolationFactor) {
-	m_transformMatrix = computeTransform(int32_terpolationFactor, mScalingMatrix);
+inline void HeightField::updateetk::Transform3D(float int32_terpolationFactor) {
+	m_transformMatrix = computeetk::Transform3D(int32_terpolationFactor, m_scalingMatrix);
 }
 
 #endif

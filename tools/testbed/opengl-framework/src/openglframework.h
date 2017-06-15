@@ -39,8 +39,8 @@
 #include <ephysics/VertexArrayObject.h>
 #include <ephysics/Shader.h>
 #include <ephysics/maths/Color.h>
-#include <ephysics/maths/Vector2.h>
-#include <ephysics/maths/Vector3.h>
+#include <ephysics/maths/vec2.h>
+#include <ephysics/maths/vec3.h>
 #include <ephysics/maths/Vector4.h>
 #include <ephysics/maths/Matrix4.h>
 #include <ephysics/maths/Matrix3.h>

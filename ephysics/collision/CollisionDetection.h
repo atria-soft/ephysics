@@ -145,7 +145,7 @@ class CollisionDetection : public NarrowPhaseCallback {
 
 		/// Update a proxy collision shape (that has moved for instance)
 		void updateProxyCollisionShape(ProxyShape* shape, const AABB& aabb,
-									   const Vector3& displacement = Vector3(0, 0, 0), bool forceReinsert = false);
+									   const vec3& displacement = vec3(0, 0, 0), bool forceReinsert = false);
 
 		/// Add a pair of bodies that cannot collide with each other
 		void addNoCollisionPair(CollisionBody* body1, CollisionBody* body2);
@@ -257,7 +257,7 @@ inline void CollisionDetection::askForBroadPhaseCollisionCheck(ProxyShape* shape
 
 // Update a proxy collision shape (that has moved for instance)
 inline void CollisionDetection::updateProxyCollisionShape(ProxyShape* shape, const AABB& aabb,
-														  const Vector3& displacement, bool forceReinsert) {
+														  const vec3& displacement, bool forceReinsert) {
 	m_broadPhaseAlgorithm.updateProxyCollisionShape(shape, aabb, displacement);
 }
 

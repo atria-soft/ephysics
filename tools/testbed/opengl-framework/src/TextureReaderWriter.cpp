@@ -191,8 +191,8 @@ void TextureReaderWriter::writeTGAPicture(const std::string& filename, const Tex
 	header.colourmapstart = 0;				  // first colour map entry in palette
 	header.colourmaplength = 0;				 // number of colours in palette
 	header.colourmapbits=0;					 // number of bits per palette entry 15,16,24,32
-	header.xstart = 0;						  // image x origin
-	header.ystart = 0;						  // image y origin
+	header.x()start = 0;						  // image x origin
+	header.y()start = 0;						  // image y origin
 	header.width = (short)texture.getWidth();   // image width in pixels
 	header.height = (short)texture.getHeight(); // image height in pixels
 	header.bits = 24;						   // image bits per pixel 8,16,24,32

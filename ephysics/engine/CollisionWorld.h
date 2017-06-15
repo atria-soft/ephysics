@@ -88,7 +88,7 @@ class CollisionWorld {
 		std::set<CollisionBody*>::iterator getBodiesEndIterator();
 
 		/// Create a collision body
-		CollisionBody* createCollisionBody(const Transform& transform);
+		CollisionBody* createCollisionBody(const etk::Transform3D& transform);
 
 		/// Destroy a collision body
 		void destroyCollisionBody(CollisionBody* collisionBody);

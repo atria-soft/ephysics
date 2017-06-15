@@ -31,8 +31,8 @@
 #include <vector>
 #include <map>
 #include <ephysics/definitions.h>
-#include <ephysics/maths/Vector2.h>
-#include <ephysics/maths/Vector3.h>
+#include <ephysics/maths/vec2.h>
+#include <ephysics/maths/vec3.h>
 #include <ephysics/maths/Color.h>
 #include <ephysics/Texture2D.h>
 #include <ephysics/Object3D.h>
@@ -52,19 +52,19 @@ class Mesh : public Object3D {
 		std::vector<std::vector<uint32_t> > mIndices;
 
 		// Vertices coordinates (local space)
-		std::vector<Vector3> m_vertices;
+		std::vector<vec3> m_vertices;
 
 		// Normals coordinates
-		std::vector<Vector3> mNormals;
+		std::vector<vec3> mNormals;
 
 		// Tangents coordinates
-		std::vector<Vector3> mTangents;
+		std::vector<vec3> mTangents;
 
 		// Color for each vertex
 		std::vector<Color> mColors;
 
 		// UV texture coordinates
-		std::vector<Vector2> mUVs;
+		std::vector<vec2> mUVs;
 
 		// Textures of the mesh (one for each part of the mesh)
 		std::map<uint32_t, Texture2D> mTextures;
@@ -89,7 +89,7 @@ class Mesh : public Object3D {
 		void calculateTangents();
 
 		// Calculate the bounding box of the mesh
-		void calculateBoundingBox(Vector3& min, Vector3& max) const;
+		void calculateBoundingBox(vec3& min, vec3& max) const;
 
 		// Scale of vertices of the mesh using a given factor
 		void scaleVertices(float factor);
@@ -104,22 +104,22 @@ class Mesh : public Object3D {
 		uint32_t getNbParts() const;
 
 		// Return a reference to the vertices
-		const std::vector<Vector3>& getVertices() const;
+		const std::vector<vec3>& getVertices() const;
 
 		// Set the vertices of the mesh
-		void setVertices(std::vector<Vector3>& vertices);
+		void setVertices(std::vector<vec3>& vertices);
 
 		// Return a reference to the normals
-		const std::vector<Vector3>& getNormals() const;
+		const std::vector<vec3>& getNormals() const;
 
 		// set the normals of the mesh
-		void setNormals(std::vector<Vector3>& normals);
+		void setNormals(std::vector<vec3>& normals);
 
 		// Return a reference to the UVs
-		const std::vector<Vector2>& getUVs() const;
+		const std::vector<vec2>& getUVs() const;
 
 		// Set the UV texture coordinates of the mesh
-		void setUVs(std::vector<Vector2>& uvs);
+		void setUVs(std::vector<vec2>& uvs);
 
 		// Return a reference to the vertex indices
 		const std::vector<uint32_t>& getIndices(uint32_t part = 0) const;
@@ -128,16 +128,16 @@ class Mesh : public Object3D {
 		void setIndices(std::vector<std::vector<uint32_t> >& indices);
 
 		// Return the coordinates of a given vertex
-		const Vector3& getVertex(uint32_t i) const;
+		const vec3& getVertex(uint32_t i) const;
 
 		// Set the coordinates of a given vertex
-		void setVertex(uint32_t i, const Vector3& vertex);
+		void setVertex(uint32_t i, const vec3& vertex);
 
 		// Return the coordinates of a given normal
-		const Vector3& getNormal(uint32_t i) const;
+		const vec3& getNormal(uint32_t i) const;
 
 		// Set the coordinates of a given normal
-		void setNormal(uint32_t i, const Vector3& normal);
+		void setNormal(uint32_t i, const vec3& normal);
 
 		// Return the color of a given vertex
 		const Color& getVertexColor(uint32_t i) const;
@@ -149,10 +149,10 @@ class Mesh : public Object3D {
 		void setColorToAllVertices(const Color& color);
 
 		// Return the UV of a given vertex
-		const Vector2& getUV(uint32_t i) const;
+		const vec2& getUV(uint32_t i) const;
 
 		// Set the UV of a given vertex
-		void setUV(uint32_t i, const Vector2& uv);
+		void setUV(uint32_t i, const vec2& uv);
 
 		// Return the vertex index of the ith (i=0,1,2) vertex of a given face
 		uint32_t getVertexIndexInFace(uint32_t faceIndex, uint32_t i, uint32_t part = 0) const;
@@ -218,32 +218,32 @@ inline uint32_t Mesh::getNbParts() const {
 }
 
 // Return a reference to the vertices
-inline const std::vector<Vector3>& Mesh::getVertices() const {
+inline const std::vector<vec3>& Mesh::getVertices() const {
 	return m_vertices;
 }
 
 // Set the vertices of the mesh
-inline void Mesh::setVertices(std::vector<Vector3>& vertices) {
+inline void Mesh::setVertices(std::vector<vec3>& vertices) {
 	m_vertices = vertices;
 }
 
 // Return a reference to the normals
-inline const std::vector<Vector3>& Mesh::getNormals() const {
+inline const std::vector<vec3>& Mesh::getNormals() const {
 	return mNormals;
 }
 
 // set the normals of the mesh
-inline void Mesh::setNormals(std::vector<Vector3>& normals) {
+inline void Mesh::setNormals(std::vector<vec3>& normals) {
 	mNormals = normals;
 }
 
 // Return a reference to the UVs
-inline const std::vector<Vector2>& Mesh::getUVs() const {
+inline const std::vector<vec2>& Mesh::getUVs() const {
 	return mUVs;
 }
 
 // Set the UV texture coordinates of the mesh
-inline void Mesh::setUVs(std::vector<Vector2>& uvs) {
+inline void Mesh::setUVs(std::vector<vec2>& uvs) {
 	mUVs = uvs;
 }
 
@@ -258,25 +258,25 @@ inline void Mesh::setIndices(std::vector<std::vector<uint32_t> >& indices) {
 }
 
 // Return the coordinates of a given vertex
-inline const Vector3& Mesh::getVertex(uint32_t i) const {
+inline const vec3& Mesh::getVertex(uint32_t i) const {
 	assert(i < getNbVertices());
 	return m_vertices[i];
 }
 
 // Set the coordinates of a given vertex
-inline void Mesh::setVertex(uint32_t i, const Vector3& vertex) {
+inline void Mesh::setVertex(uint32_t i, const vec3& vertex) {
 	assert(i < getNbVertices());
 	m_vertices[i] = vertex;
 }
 
 // Return the coordinates of a given normal
-inline const Vector3& Mesh::getNormal(uint32_t i) const {
+inline const vec3& Mesh::getNormal(uint32_t i) const {
 	assert(i < getNbVertices());
 	return mNormals[i];
 }
 
 // Set the coordinates of a given normal
-inline void Mesh::setNormal(uint32_t i, const Vector3& normal) {
+inline void Mesh::setNormal(uint32_t i, const vec3& normal) {
 	assert(i < getNbVertices());
 	mNormals[i] = normal;
 }
@@ -318,13 +318,13 @@ inline void Mesh::setColorToAllVertices(const Color& color) {
 }
 
 // Return the UV of a given vertex
-inline const Vector2& Mesh::getUV(uint32_t i) const {
+inline const vec2& Mesh::getUV(uint32_t i) const {
 	assert(i < getNbVertices());
 	return mUVs[i];
 }
 
 // Set the UV of a given vertex
-inline void Mesh::setUV(uint32_t i, const Vector2& uv) {
+inline void Mesh::setUV(uint32_t i, const vec2& uv) {
 	assert(i < getNbVertices());
 	mUVs[i] = uv;
 }

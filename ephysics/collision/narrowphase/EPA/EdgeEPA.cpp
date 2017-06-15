@@ -47,7 +47,7 @@ uint32_t EdgeEPA::getTargetVertexIndex() const {
 }
 
 // Execute the recursive silhouette algorithm from this edge
-bool EdgeEPA::computeSilhouette(const Vector3* vertices, uint32_t indexNewVertex,
+bool EdgeEPA::computeSilhouette(const vec3* vertices, uint32_t indexNewVertex,
 								TrianglesStore& triangleStore) {
 	// If the edge has not already been visited
 	if (!mOwnerTriangle->getIsObsolete()) {

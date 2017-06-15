@@ -49,36 +49,36 @@ class Vector4 {
 		Vector4(float x=0, float y=0, float z=0, float w=0) : x(x), y(y), z(z), w(w) {}
 
 		// Constructor
-		Vector4(const Vector4& vector) : x(vector.x), y(vector.y), z(vector.z), w(vector.w) {}
+		Vector4(const Vector4& vector) : x(vector.x()), y(vector.y()), z(vector.z()), w(vector.w) {}
 
 		// + operator
 		Vector4 operator+(const Vector4 &v) const {
-			return Vector4(x + v.x, y + v.y, z + v.z, w + v.w);
+			return Vector4(x + v.x(), y + v.y(), z + v.z(), w + v.w);
 		}
 
 		// += operator
 		Vector4& operator+=(const Vector4 &v) {
-			x += v.x; y += v.y; z += v.z; w += v.w;
+			x += v.x(); y += v.y(); z += v.z(); w += v.w;
 			return *this;
 		}
 
 		// - operator
 		Vector4 operator-(const Vector4 &v) const {
-			return Vector4(x - v.x, y - v.y, z - v.z, w - v.w);
+			return Vector4(x - v.x(), y - v.y(), z - v.z(), w - v.w);
 		}
 
 		// -= operator
 		Vector4& operator-=(const Vector4 &v) {
-			x -= v.x; y -= v.y; z -= v.z, w -=v.w;
+			x -= v.x(); y -= v.y(); z -= v.z(), w -=v.w;
 			return *this;
 		}
 
 		// = operator
 		Vector4& operator=(const Vector4& vector) {
 			if (&vector != this) {
-				x = vector.x;
-				y = vector.y;
-				z = vector.z;
+				x = vector.x();
+				y = vector.y();
+				z = vector.z();
 				w = vector.w;
 			}
 			return *this;
@@ -86,7 +86,7 @@ class Vector4 {
 
 		// == operator
 		bool operator==(const Vector4 &v) const {
-			return x == v.x && y == v.y && z == v.z && w == v.w;
+			return x == v.x() && y == v.y() && z == v.z() && w == v.w;
 		}
 
 		// * operator
@@ -134,12 +134,12 @@ class Vector4 {
 
 		// Dot product operator
 		float dot(const Vector4 &v) const {
-			return x * v.x + y * v.y + z * v.z + w * v.w;
+			return x * v.x() + y * v.y() + z * v.z() + w * v.w;
 		}
 
 		// Multiply two vectors by their components
 		Vector4 componentMul(const Vector4 &v) const {
-			return Vector4(x * v.x, y * v.y, z * v.z, w * v.w);
+			return Vector4(x * v.x(), y * v.y(), z * v.z(), w * v.w);
 		}
 
 		// Clamp the values between 0 and 1
@@ -156,10 +156,10 @@ class Vector4 {
 		}
 
 		// Return the squared length of the vector
-		float lengthSquared() const { return x * x + y * y + z * z + w * w; }
+		float length2d() const { return x * x + y * y + z * z + w * w; }
 
 		// Return the length of the vector
-		float length() const { return sqrt(lengthSquared()); }
+		float length() const { return sqrt(length2d()); }
 };
 
 }

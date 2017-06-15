@@ -23,7 +23,7 @@ class ConvexShape : public CollisionShape {
 		// -------------------- Attributes -------------------- //
 
 		/// Margin used for the GJK collision detection algorithm
-		float mMargin;
+		float m_margin;
 
 		// -------------------- Methods -------------------- //
 
@@ -34,15 +34,15 @@ class ConvexShape : public CollisionShape {
 		ConvexShape& operator=(const ConvexShape& shape);
 
 		// Return a local support point in a given direction with the object margin
-		Vector3 getLocalSupportPointWithMargin(const Vector3& direction,
+		vec3 getLocalSupportPointWithMargin(const vec3& direction,
 											   void** cachedCollisionData) const;
 
 		/// Return a local support point in a given direction without the object margin
-		virtual Vector3 getLocalSupportPointWithoutMargin(const Vector3& direction,
+		virtual vec3 getLocalSupportPointWithoutMargin(const vec3& direction,
 														  void** cachedCollisionData) const=0;
 
 		/// Return true if a point is inside the collision shape
-		virtual bool testPointInside(const Vector3& worldPoint, ProxyShape* proxyShape) const=0;
+		virtual bool testPointInside(const vec3& worldPoint, ProxyShape* proxyShape) const=0;
 
 	public :
 
@@ -76,7 +76,7 @@ inline bool ConvexShape::isConvex() const {
  * @return The margin (in meters) around the collision shape
  */
 inline float ConvexShape::getMargin() const {
-	return mMargin;
+	return m_margin;
 }
 
 }

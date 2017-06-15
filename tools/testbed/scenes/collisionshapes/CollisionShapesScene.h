@@ -51,7 +51,7 @@ const int32_t NB_CYLINDERS = 5;
 const int32_t NB_CAPSULES = 5;
 const int32_t NB_MESHES = 3;
 const int32_t NB_COMPOUND_SHAPES = 3;
-const openglframework::Vector3 BOX_SIZE(2, 2, 2);
+const openglframework::vec3 BOX_SIZE(2, 2, 2);
 const float SPHERE_RADIUS = 1.5f;
 const float CONE_RADIUS = 2.0f;
 const float CONE_HEIGHT = 3.0f;
@@ -60,7 +60,7 @@ const float CYLINDER_HEIGHT = 5.0f;
 const float CAPSULE_RADIUS = 1.0f;
 const float CAPSULE_HEIGHT = 1.0f;
 const float DUMBBELL_HEIGHT = 1.0f;
-const openglframework::Vector3 FLOOR_SIZE(50, 0.5f, 50);		// Floor dimensions in meters
+const openglframework::vec3 FLOOR_SIZE(50, 0.5f, 50);		// Floor dimensions in meters
 const float BOX_MASS = 1.0f;
 const float CONE_MASS = 1.0f;
 const float CYLINDER_MASS = 1.0f;

@@ -27,8 +27,8 @@ HingeJoint::HingeJoint(const HingeJointInfo& jointInfo)
 	assert(mUpperLimit >= 0 && mUpperLimit <= 2.0 * PI);
 
 	// Compute the local-space anchor point for each body
-	Transform transform1 = m_body1->getTransform();
-	Transform transform2 = m_body2->getTransform();
+	etk::Transform3D transform1 = m_body1->getTransform();
+	etk::Transform3D transform2 = m_body2->getTransform();
 	m_localAnchorPointBody1 = transform1.getInverse() * jointInfo.m_anchorPointWorldSpace;
 	m_localAnchorPointBody2 = transform2.getInverse() * jointInfo.m_anchorPointWorldSpace;
 
@@ -58,10 +58,10 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 	m_indexBody2 = constraintSolverData.mapBodyToConstrainedVelocityIndex.find(m_body2)->second;
 
 	// Get the bodies positions and orientations
-	const Vector3& x1 = m_body1->m_centerOfMassWorld;
-	const Vector3& x2 = m_body2->m_centerOfMassWorld;
-	const Quaternion& orientationBody1 = m_body1->getTransform().getOrientation();
-	const Quaternion& orientationBody2 = m_body2->getTransform().getOrientation();
+	const vec3& x1 = m_body1->m_centerOfMassWorld;
+	const vec3& x2 = m_body2->m_centerOfMassWorld;
+	const etk::Quaternion& orientationBody1 = m_body1->getTransform().getOrientation();
+	const etk::Quaternion& orientationBody2 = m_body2->getTransform().getOrientation();
 
 	// Get the inertia tensor of bodies
 	m_i1 = m_body1->getInertiaTensorInverseWorld();
@@ -90,42 +90,42 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 
 	// Compute vectors needed in the Jacobian
 	mA1 = orientationBody1 * mHingeLocalAxisBody1;
-	Vector3 a2 = orientationBody2 * mHingeLocalAxisBody2;
+	vec3 a2 = orientationBody2 * mHingeLocalAxisBody2;
 	mA1.normalize();
 	a2.normalize();
-	const Vector3 b2 = a2.getOneUnitOrthogonalVector();
-	const Vector3 c2 = a2.cross(b2);
+	const vec3 b2 = a2.getOneUnitOrthogonalVector();
+	const vec3 c2 = a2.cross(b2);
 	mB2CrossA1 = b2.cross(mA1);
 	mC2CrossA1 = c2.cross(mA1);
 
 	// Compute the corresponding skew-symmetric matrices
-	Matrix3x3 skewSymmetricMatrixU1= Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r1World);
-	Matrix3x3 skewSymmetricMatrixU2= Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r2World);
+	etk::Matrix3x3 skewSymmetricMatrixU1= etk::Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r1World);
+	etk::Matrix3x3 skewSymmetricMatrixU2= etk::Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r2World);
 
 	// Compute the inverse mass matrix K=JM^-1J^t for the 3 translation constraints (3x3 matrix)
 	float inverseMassBodies = m_body1->m_massInverse + m_body2->m_massInverse;
-	Matrix3x3 massMatrix = Matrix3x3(inverseMassBodies, 0, 0,
+	etk::Matrix3x3 massMatrix = Matrix3x3(inverseMassBodies, 0, 0,
 									0, inverseMassBodies, 0,
 									0, 0, inverseMassBodies) +
 						   skewSymmetricMatrixU1 * m_i1 * skewSymmetricMatrixU1.getTranspose() +
 						   skewSymmetricMatrixU2 * m_i2 * skewSymmetricMatrixU2.getTranspose();
-	m_inverseMassMatrixTranslation.setToZero();
+	m_inverseMassMatrixTranslation.setZero();
 	if (m_body1->getType() == DYNAMIC || m_body2->getType() == DYNAMIC) {
 		m_inverseMassMatrixTranslation = massMatrix.getInverse();
 	}
 
 	// Compute the bias "b" of the translation constraints
-	mBTranslation.setToZero();
+	mBTranslation.setZero();
 	float biasFactor = (BETA / constraintSolverData.timeStep);
 	if (m_positionCorrectionTechnique == BAUMGARTE_JOINTS) {
 		mBTranslation = biasFactor * (x2 + m_r2World - x1 - m_r1World);
 	}
 
 	// Compute the inverse mass matrix K=JM^-1J^t for the 2 rotation constraints (2x2 matrix)
-	Vector3 I1B2CrossA1 = m_i1 * mB2CrossA1;
-	Vector3 I1C2CrossA1 = m_i1 * mC2CrossA1;
-	Vector3 I2B2CrossA1 = m_i2 * mB2CrossA1;
-	Vector3 I2C2CrossA1 = m_i2 * mC2CrossA1;
+	vec3 I1B2CrossA1 = m_i1 * mB2CrossA1;
+	vec3 I1C2CrossA1 = m_i1 * mC2CrossA1;
+	vec3 I2B2CrossA1 = m_i2 * mB2CrossA1;
+	vec3 I2C2CrossA1 = m_i2 * mC2CrossA1;
 	const float el11 = mB2CrossA1.dot(I1B2CrossA1) +
 						 mB2CrossA1.dot(I2B2CrossA1);
 	const float el12 = mB2CrossA1.dot(I1C2CrossA1) +
@@ -134,24 +134,24 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 						 mC2CrossA1.dot(I2B2CrossA1);
 	const float el22 = mC2CrossA1.dot(I1C2CrossA1) +
 						 mC2CrossA1.dot(I2C2CrossA1);
-	const Matrix2x2 matrixKRotation(el11, el12, el21, el22);
-	m_inverseMassMatrixRotation.setToZero();
+	const etk::Matrix2x2 matrixKRotation(el11, el12, el21, el22);
+	m_inverseMassMatrixRotation.setZero();
 	if (m_body1->getType() == DYNAMIC || m_body2->getType() == DYNAMIC) {
 		m_inverseMassMatrixRotation = matrixKRotation.getInverse();
 	}
 
 	// Compute the bias "b" of the rotation constraints
-	mBRotation.setToZero();
+	mBRotation.setZero();
 	if (m_positionCorrectionTechnique == BAUMGARTE_JOINTS) {
-		mBRotation = biasFactor * Vector2(mA1.dot(b2), mA1.dot(c2));
+		mBRotation = biasFactor * vec2(mA1.dot(b2), mA1.dot(c2));
 	}
 
 	// If warm-starting is not enabled
 	if (!constraintSolverData.isWarmStartingActive) {
 
 		// Reset all the accumulated impulses
-		m_impulseTranslation.setToZero();
-		m_impulseRotation.setToZero();
+		m_impulseTranslation.setZero();
+		m_impulseRotation.setZero();
 		m_impulseLowerLimit = 0.0;
 		m_impulseUpperLimit = 0.0;
 		m_impulseMotor = 0.0;
@@ -163,7 +163,7 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 		// Compute the inverse of the mass matrix K=JM^-1J^t for the limits and motor (1x1 matrix)
 		m_inverseMassMatrixLimitMotor = mA1.dot(m_i1 * mA1) + mA1.dot(m_i2 * mA1);
 		m_inverseMassMatrixLimitMotor = (m_inverseMassMatrixLimitMotor > 0.0) ?
-								  float(1.0) / m_inverseMassMatrixLimitMotor : float(0.0);
+								  1.0f / m_inverseMassMatrixLimitMotor : 0.0f;
 
 		if (mIsLimitEnabled) {
 
@@ -186,27 +186,27 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 void HingeJoint::warmstart(const ConstraintSolverData& constraintSolverData) {
 
 	// Get the velocities
-	Vector3& v1 = constraintSolverData.linearVelocities[m_indexBody1];
-	Vector3& v2 = constraintSolverData.linearVelocities[m_indexBody2];
-	Vector3& w1 = constraintSolverData.angularVelocities[m_indexBody1];
-	Vector3& w2 = constraintSolverData.angularVelocities[m_indexBody2];
+	vec3& v1 = constraintSolverData.linearVelocities[m_indexBody1];
+	vec3& v2 = constraintSolverData.linearVelocities[m_indexBody2];
+	vec3& w1 = constraintSolverData.angularVelocities[m_indexBody1];
+	vec3& w2 = constraintSolverData.angularVelocities[m_indexBody2];
 
 	// Get the inverse mass and inverse inertia tensors of the bodies
 	const float inverseMassBody1 = m_body1->m_massInverse;
 	const float inverseMassBody2 = m_body2->m_massInverse;
 
 	// Compute the impulse P=J^T * lambda for the 2 rotation constraints
-	Vector3 rotationImpulse = -mB2CrossA1 * m_impulseRotation.x - mC2CrossA1 * m_impulseRotation.y;
+	vec3 rotationImpulse = -mB2CrossA1 * m_impulseRotation.x() - mC2CrossA1 * m_impulseRotation.y();
 
 	// Compute the impulse P=J^T * lambda for the lower and upper limits constraints
-	const Vector3 limitsImpulse = (m_impulseUpperLimit - m_impulseLowerLimit) * mA1;
+	const vec3 limitsImpulse = (m_impulseUpperLimit - m_impulseLowerLimit) * mA1;
 
 	// Compute the impulse P=J^T * lambda for the motor constraint
-	const Vector3 motorImpulse = -m_impulseMotor * mA1;
+	const vec3 motorImpulse = -m_impulseMotor * mA1;
 
 	// Compute the impulse P=J^T * lambda for the 3 translation constraints of body 1
-	Vector3 linearImpulseBody1 = -m_impulseTranslation;
-	Vector3 angularImpulseBody1 = m_impulseTranslation.cross(m_r1World);
+	vec3 linearImpulseBody1 = -m_impulseTranslation;
+	vec3 angularImpulseBody1 = m_impulseTranslation.cross(m_r1World);
 
 	// Compute the impulse P=J^T * lambda for the 2 rotation constraints of body 1
 	angularImpulseBody1 += rotationImpulse;
@@ -222,7 +222,7 @@ void HingeJoint::warmstart(const ConstraintSolverData& constraintSolverData) {
 	w1 += m_i1 * angularImpulseBody1;
 
 	// Compute the impulse P=J^T * lambda for the 3 translation constraints of body 2
-	Vector3 angularImpulseBody2 = -m_impulseTranslation.cross(m_r2World);
+	vec3 angularImpulseBody2 = -m_impulseTranslation.cross(m_r2World);
 
 	// Compute the impulse P=J^T * lambda for the 2 rotation constraints of body 2
 	angularImpulseBody2 += -rotationImpulse;
@@ -242,10 +242,10 @@ void HingeJoint::warmstart(const ConstraintSolverData& constraintSolverData) {
 void HingeJoint::solveVelocityConstraint(const ConstraintSolverData& constraintSolverData) {
 
 	// Get the velocities
-	Vector3& v1 = constraintSolverData.linearVelocities[m_indexBody1];
-	Vector3& v2 = constraintSolverData.linearVelocities[m_indexBody2];
-	Vector3& w1 = constraintSolverData.angularVelocities[m_indexBody1];
-	Vector3& w2 = constraintSolverData.angularVelocities[m_indexBody2];
+	vec3& v1 = constraintSolverData.linearVelocities[m_indexBody1];
+	vec3& v2 = constraintSolverData.linearVelocities[m_indexBody2];
+	vec3& w1 = constraintSolverData.angularVelocities[m_indexBody1];
+	vec3& w2 = constraintSolverData.angularVelocities[m_indexBody2];
 
 	// Get the inverse mass and inverse inertia tensors of the bodies
 	float inverseMassBody1 = m_body1->m_massInverse;
@@ -254,23 +254,23 @@ void HingeJoint::solveVelocityConstraint(const ConstraintSolverData& constraintS
 	// --------------- Translation Constraints --------------- //
 
 	// Compute J*v
-	const Vector3 JvTranslation = v2 + w2.cross(m_r2World) - v1 - w1.cross(m_r1World);
+	const vec3 JvTranslation = v2 + w2.cross(m_r2World) - v1 - w1.cross(m_r1World);
 
 	// Compute the Lagrange multiplier lambda
-	const Vector3 deltaLambdaTranslation = m_inverseMassMatrixTranslation *
+	const vec3 deltaLambdaTranslation = m_inverseMassMatrixTranslation *
 										  (-JvTranslation - mBTranslation);
 	m_impulseTranslation += deltaLambdaTranslation;
 
 	// Compute the impulse P=J^T * lambda of body 1
-	const Vector3 linearImpulseBody1 = -deltaLambdaTranslation;
-	Vector3 angularImpulseBody1 = deltaLambdaTranslation.cross(m_r1World);
+	const vec3 linearImpulseBody1 = -deltaLambdaTranslation;
+	vec3 angularImpulseBody1 = deltaLambdaTranslation.cross(m_r1World);
 
 	// Apply the impulse to the body 1
 	v1 += inverseMassBody1 * linearImpulseBody1;
 	w1 += m_i1 * angularImpulseBody1;
 
 	// Compute the impulse P=J^T * lambda of body 2
-	Vector3 angularImpulseBody2 = -deltaLambdaTranslation.cross(m_r2World);
+	vec3 angularImpulseBody2 = -deltaLambdaTranslation.cross(m_r2World);
 
 	// Apply the impulse to the body 2
 	v2 += inverseMassBody2 * deltaLambdaTranslation;
@@ -279,23 +279,23 @@ void HingeJoint::solveVelocityConstraint(const ConstraintSolverData& constraintS
 	// --------------- Rotation Constraints --------------- //
 
 	// Compute J*v for the 2 rotation constraints
-	const Vector2 JvRotation(-mB2CrossA1.dot(w1) + mB2CrossA1.dot(w2),
+	const vec2 JvRotation(-mB2CrossA1.dot(w1) + mB2CrossA1.dot(w2),
 							 -mC2CrossA1.dot(w1) + mC2CrossA1.dot(w2));
 
 	// Compute the Lagrange multiplier lambda for the 2 rotation constraints
-	Vector2 deltaLambdaRotation = m_inverseMassMatrixRotation * (-JvRotation - mBRotation);
+	vec2 deltaLambdaRotation = m_inverseMassMatrixRotation * (-JvRotation - mBRotation);
 	m_impulseRotation += deltaLambdaRotation;
 
 	// Compute the impulse P=J^T * lambda for the 2 rotation constraints of body 1
-	angularImpulseBody1 = -mB2CrossA1 * deltaLambdaRotation.x -
-										mC2CrossA1 * deltaLambdaRotation.y;
+	angularImpulseBody1 = -mB2CrossA1 * deltaLambdaRotation.x() -
+										mC2CrossA1 * deltaLambdaRotation.y();
 
 	// Apply the impulse to the body 1
 	w1 += m_i1 * angularImpulseBody1;
 
 	// Compute the impulse P=J^T * lambda for the 2 rotation constraints of body 2
-	angularImpulseBody2 = mB2CrossA1 * deltaLambdaRotation.x +
-			mC2CrossA1 * deltaLambdaRotation.y;
+	angularImpulseBody2 = mB2CrossA1 * deltaLambdaRotation.x() +
+			mC2CrossA1 * deltaLambdaRotation.y();
 
 	// Apply the impulse to the body 2
 	w2 += m_i2 * angularImpulseBody2;
@@ -313,17 +313,17 @@ void HingeJoint::solveVelocityConstraint(const ConstraintSolverData& constraintS
 			// Compute the Lagrange multiplier lambda for the lower limit constraint
 			float deltaLambdaLower = m_inverseMassMatrixLimitMotor * (-JvLowerLimit -mBLowerLimit);
 			float lambdaTemp = m_impulseLowerLimit;
-			m_impulseLowerLimit = std::max(m_impulseLowerLimit + deltaLambdaLower, float(0.0));
+			m_impulseLowerLimit = std::max(m_impulseLowerLimit + deltaLambdaLower, 0.0f);
 			deltaLambdaLower = m_impulseLowerLimit - lambdaTemp;
 
 			// Compute the impulse P=J^T * lambda for the lower limit constraint of body 1
-			const Vector3 angularImpulseBody1 = -deltaLambdaLower * mA1;
+			const vec3 angularImpulseBody1 = -deltaLambdaLower * mA1;
 
 			// Apply the impulse to the body 1
 			w1 += m_i1 * angularImpulseBody1;
 
 			// Compute the impulse P=J^T * lambda for the lower limit constraint of body 2
-			const Vector3 angularImpulseBody2 = deltaLambdaLower * mA1;
+			const vec3 angularImpulseBody2 = deltaLambdaLower * mA1;
 
 			// Apply the impulse to the body 2
 			w2 += m_i2 * angularImpulseBody2;
@@ -338,17 +338,17 @@ void HingeJoint::solveVelocityConstraint(const ConstraintSolverData& constraintS
 			// Compute the Lagrange multiplier lambda for the upper limit constraint
 			float deltaLambdaUpper = m_inverseMassMatrixLimitMotor * (-JvUpperLimit -mBUpperLimit);
 			float lambdaTemp = m_impulseUpperLimit;
-			m_impulseUpperLimit = std::max(m_impulseUpperLimit + deltaLambdaUpper, float(0.0));
+			m_impulseUpperLimit = std::max(m_impulseUpperLimit + deltaLambdaUpper, 0.0f);
 			deltaLambdaUpper = m_impulseUpperLimit - lambdaTemp;
 
 			// Compute the impulse P=J^T * lambda for the upper limit constraint of body 1
-			const Vector3 angularImpulseBody1 = deltaLambdaUpper * mA1;
+			const vec3 angularImpulseBody1 = deltaLambdaUpper * mA1;
 
 			// Apply the impulse to the body 1
 			w1 += m_i1 * angularImpulseBody1;
 
 			// Compute the impulse P=J^T * lambda for the upper limit constraint of body 2
-			const Vector3 angularImpulseBody2 = -deltaLambdaUpper * mA1;
+			const vec3 angularImpulseBody2 = -deltaLambdaUpper * mA1;
 
 			// Apply the impulse to the body 2
 			w2 += m_i2 * angularImpulseBody2;
@@ -371,13 +371,13 @@ void HingeJoint::solveVelocityConstraint(const ConstraintSolverData& constraintS
 		deltaLambdaMotor = m_impulseMotor - lambdaTemp;
 
 		// Compute the impulse P=J^T * lambda for the motor of body 1
-		const Vector3 angularImpulseBody1 = -deltaLambdaMotor * mA1;
+		const vec3 angularImpulseBody1 = -deltaLambdaMotor * mA1;
 
 		// Apply the impulse to the body 1
 		w1 += m_i1 * angularImpulseBody1;
 
 		// Compute the impulse P=J^T * lambda for the motor of body 2
-		const Vector3 angularImpulseBody2 = deltaLambdaMotor * mA1;
+		const vec3 angularImpulseBody2 = deltaLambdaMotor * mA1;
 
 		// Apply the impulse to the body 2
 		w2 += m_i2 * angularImpulseBody2;
@@ -392,10 +392,10 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 	if (m_positionCorrectionTechnique != NON_LINEAR_GAUSS_SEIDEL) return;
 
 	// Get the bodies positions and orientations
-	Vector3& x1 = constraintSolverData.positions[m_indexBody1];
-	Vector3& x2 = constraintSolverData.positions[m_indexBody2];
-	Quaternion& q1 = constraintSolverData.orientations[m_indexBody1];
-	Quaternion& q2 = constraintSolverData.orientations[m_indexBody2];
+	vec3& x1 = constraintSolverData.positions[m_indexBody1];
+	vec3& x2 = constraintSolverData.positions[m_indexBody2];
+	etk::Quaternion& q1 = constraintSolverData.orientations[m_indexBody1];
+	etk::Quaternion& q2 = constraintSolverData.orientations[m_indexBody2];
 
 	// Get the inverse mass and inverse inertia tensors of the bodies
 	float inverseMassBody1 = m_body1->m_massInverse;
@@ -420,70 +420,70 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 
 	// Compute vectors needed in the Jacobian
 	mA1 = q1 * mHingeLocalAxisBody1;
-	Vector3 a2 = q2 * mHingeLocalAxisBody2;
+	vec3 a2 = q2 * mHingeLocalAxisBody2;
 	mA1.normalize();
 	a2.normalize();
-	const Vector3 b2 = a2.getOneUnitOrthogonalVector();
-	const Vector3 c2 = a2.cross(b2);
+	const vec3 b2 = a2.getOneUnitOrthogonalVector();
+	const vec3 c2 = a2.cross(b2);
 	mB2CrossA1 = b2.cross(mA1);
 	mC2CrossA1 = c2.cross(mA1);
 
 	// Compute the corresponding skew-symmetric matrices
-	Matrix3x3 skewSymmetricMatrixU1= Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r1World);
-	Matrix3x3 skewSymmetricMatrixU2= Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r2World);
+	etk::Matrix3x3 skewSymmetricMatrixU1= etk::Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r1World);
+	etk::Matrix3x3 skewSymmetricMatrixU2= etk::Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r2World);
 
 	// --------------- Translation Constraints --------------- //
 
 	// Compute the matrix K=JM^-1J^t (3x3 matrix) for the 3 translation constraints
 	float inverseMassBodies = m_body1->m_massInverse + m_body2->m_massInverse;
-	Matrix3x3 massMatrix = Matrix3x3(inverseMassBodies, 0, 0,
+	etk::Matrix3x3 massMatrix = Matrix3x3(inverseMassBodies, 0, 0,
 									0, inverseMassBodies, 0,
 									0, 0, inverseMassBodies) +
 						   skewSymmetricMatrixU1 * m_i1 * skewSymmetricMatrixU1.getTranspose() +
 						   skewSymmetricMatrixU2 * m_i2 * skewSymmetricMatrixU2.getTranspose();
-	m_inverseMassMatrixTranslation.setToZero();
+	m_inverseMassMatrixTranslation.setZero();
 	if (m_body1->getType() == DYNAMIC || m_body2->getType() == DYNAMIC) {
 		m_inverseMassMatrixTranslation = massMatrix.getInverse();
 	}
 
 	// Compute position error for the 3 translation constraints
-	const Vector3 errorTranslation = x2 + m_r2World - x1 - m_r1World;
+	const vec3 errorTranslation = x2 + m_r2World - x1 - m_r1World;
 
 	// Compute the Lagrange multiplier lambda
-	const Vector3 lambdaTranslation = m_inverseMassMatrixTranslation * (-errorTranslation);
+	const vec3 lambdaTranslation = m_inverseMassMatrixTranslation * (-errorTranslation);
 
 	// Compute the impulse of body 1
-	Vector3 linearImpulseBody1 = -lambdaTranslation;
-	Vector3 angularImpulseBody1 = lambdaTranslation.cross(m_r1World);
+	vec3 linearImpulseBody1 = -lambdaTranslation;
+	vec3 angularImpulseBody1 = lambdaTranslation.cross(m_r1World);
 
 	// Compute the pseudo velocity of body 1
-	const Vector3 v1 = inverseMassBody1 * linearImpulseBody1;
-	Vector3 w1 = m_i1 * angularImpulseBody1;
+	const vec3 v1 = inverseMassBody1 * linearImpulseBody1;
+	vec3 w1 = m_i1 * angularImpulseBody1;
 
 	// Update the body position/orientation of body 1
 	x1 += v1;
-	q1 += Quaternion(0, w1) * q1 * float(0.5);
+	q1 += etk::Quaternion(0, w1) * q1 * 0.5f;
 	q1.normalize();
 
 	// Compute the impulse of body 2
-	Vector3 angularImpulseBody2 = -lambdaTranslation.cross(m_r2World);
+	vec3 angularImpulseBody2 = -lambdaTranslation.cross(m_r2World);
 
 	// Compute the pseudo velocity of body 2
-	const Vector3 v2 = inverseMassBody2 * lambdaTranslation;
-	Vector3 w2 = m_i2 * angularImpulseBody2;
+	const vec3 v2 = inverseMassBody2 * lambdaTranslation;
+	vec3 w2 = m_i2 * angularImpulseBody2;
 
 	// Update the body position/orientation of body 2
 	x2 += v2;
-	q2 += Quaternion(0, w2) * q2 * float(0.5);
+	q2 += etk::Quaternion(0, w2) * q2 * 0.5f;
 	q2.normalize();
 
 	// --------------- Rotation Constraints --------------- //
 
 	// Compute the inverse mass matrix K=JM^-1J^t for the 2 rotation constraints (2x2 matrix)
-	Vector3 I1B2CrossA1 = m_i1 * mB2CrossA1;
-	Vector3 I1C2CrossA1 = m_i1 * mC2CrossA1;
-	Vector3 I2B2CrossA1 = m_i2 * mB2CrossA1;
-	Vector3 I2C2CrossA1 = m_i2 * mC2CrossA1;
+	vec3 I1B2CrossA1 = m_i1 * mB2CrossA1;
+	vec3 I1C2CrossA1 = m_i1 * mC2CrossA1;
+	vec3 I2B2CrossA1 = m_i2 * mB2CrossA1;
+	vec3 I2C2CrossA1 = m_i2 * mC2CrossA1;
 	const float el11 = mB2CrossA1.dot(I1B2CrossA1) +
 						 mB2CrossA1.dot(I2B2CrossA1);
 	const float el12 = mB2CrossA1.dot(I1C2CrossA1) +
@@ -492,36 +492,36 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 						 mC2CrossA1.dot(I2B2CrossA1);
 	const float el22 = mC2CrossA1.dot(I1C2CrossA1) +
 						 mC2CrossA1.dot(I2C2CrossA1);
-	const Matrix2x2 matrixKRotation(el11, el12, el21, el22);
-	m_inverseMassMatrixRotation.setToZero();
+	const etk::Matrix2x2 matrixKRotation(el11, el12, el21, el22);
+	m_inverseMassMatrixRotation.setZero();
 	if (m_body1->getType() == DYNAMIC || m_body2->getType() == DYNAMIC) {
 		m_inverseMassMatrixRotation = matrixKRotation.getInverse();
 	}
 
 	// Compute the position error for the 3 rotation constraints
-	const Vector2 errorRotation = Vector2(mA1.dot(b2), mA1.dot(c2));
+	const vec2 errorRotation = vec2(mA1.dot(b2), mA1.dot(c2));
 
 	// Compute the Lagrange multiplier lambda for the 3 rotation constraints
-	Vector2 lambdaRotation = m_inverseMassMatrixRotation * (-errorRotation);
+	vec2 lambdaRotation = m_inverseMassMatrixRotation * (-errorRotation);
 
 	// Compute the impulse P=J^T * lambda for the 3 rotation constraints of body 1
-	angularImpulseBody1 = -mB2CrossA1 * lambdaRotation.x - mC2CrossA1 * lambdaRotation.y;
+	angularImpulseBody1 = -mB2CrossA1 * lambdaRotation.x() - mC2CrossA1 * lambdaRotation.y();
 
 	// Compute the pseudo velocity of body 1
 	w1 = m_i1 * angularImpulseBody1;
 
 	// Update the body position/orientation of body 1
-	q1 += Quaternion(0, w1) * q1 * float(0.5);
+	q1 += etk::Quaternion(0, w1) * q1 * 0.5f;
 	q1.normalize();
 
 	// Compute the impulse of body 2
-	angularImpulseBody2 = mB2CrossA1 * lambdaRotation.x + mC2CrossA1 * lambdaRotation.y;
+	angularImpulseBody2 = mB2CrossA1 * lambdaRotation.x() + mC2CrossA1 * lambdaRotation.y();
 
 	// Compute the pseudo velocity of body 2
 	w2 = m_i2 * angularImpulseBody2;
 
 	// Update the body position/orientation of body 2
-	q2 += Quaternion(0, w2) * q2 * float(0.5);
+	q2 += etk::Quaternion(0, w2) * q2 * 0.5f;
 	q2.normalize();
 
 	// --------------- Limits Constraints --------------- //
@@ -533,7 +533,7 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 			// Compute the inverse of the mass matrix K=JM^-1J^t for the limits (1x1 matrix)
 			m_inverseMassMatrixLimitMotor = mA1.dot(m_i1 * mA1) + mA1.dot(m_i2 * mA1);
 			m_inverseMassMatrixLimitMotor = (m_inverseMassMatrixLimitMotor > 0.0) ?
-									  float(1.0) / m_inverseMassMatrixLimitMotor : float(0.0);
+									  1.0f / m_inverseMassMatrixLimitMotor : 0.0f;
 		}
 
 		// If the lower limit is violated
@@ -543,23 +543,23 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 			float lambdaLowerLimit = m_inverseMassMatrixLimitMotor * (-lowerLimitError );
 
 			// Compute the impulse P=J^T * lambda of body 1
-			const Vector3 angularImpulseBody1 = -lambdaLowerLimit * mA1;
+			const vec3 angularImpulseBody1 = -lambdaLowerLimit * mA1;
 
 			// Compute the pseudo velocity of body 1
-			const Vector3 w1 = m_i1 * angularImpulseBody1;
+			const vec3 w1 = m_i1 * angularImpulseBody1;
 
 			// Update the body position/orientation of body 1
-			q1 += Quaternion(0, w1) * q1 * float(0.5);
+			q1 += etk::Quaternion(0, w1) * q1 * 0.5f;
 			q1.normalize();
 
 			// Compute the impulse P=J^T * lambda of body 2
-			const Vector3 angularImpulseBody2 = lambdaLowerLimit * mA1;
+			const vec3 angularImpulseBody2 = lambdaLowerLimit * mA1;
 
 			// Compute the pseudo velocity of body 2
-			const Vector3 w2 = m_i2 * angularImpulseBody2;
+			const vec3 w2 = m_i2 * angularImpulseBody2;
 
 			// Update the body position/orientation of body 2
-			q2 += Quaternion(0, w2) * q2 * float(0.5);
+			q2 += etk::Quaternion(0, w2) * q2 * 0.5f;
 			q2.normalize();
 		}
 
@@ -570,23 +570,23 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 			float lambdaUpperLimit = m_inverseMassMatrixLimitMotor * (-upperLimitError);
 
 			// Compute the impulse P=J^T * lambda of body 1
-			const Vector3 angularImpulseBody1 = lambdaUpperLimit * mA1;
+			const vec3 angularImpulseBody1 = lambdaUpperLimit * mA1;
 
 			// Compute the pseudo velocity of body 1
-			const Vector3 w1 = m_i1 * angularImpulseBody1;
+			const vec3 w1 = m_i1 * angularImpulseBody1;
 
 			// Update the body position/orientation of body 1
-			q1 += Quaternion(0, w1) * q1 * float(0.5);
+			q1 += etk::Quaternion(0, w1) * q1 * 0.5f;
 			q1.normalize();
 
 			// Compute the impulse P=J^T * lambda of body 2
-			const Vector3 angularImpulseBody2 = -lambdaUpperLimit * mA1;
+			const vec3 angularImpulseBody2 = -lambdaUpperLimit * mA1;
 
 			// Compute the pseudo velocity of body 2
-			const Vector3 w2 = m_i2 * angularImpulseBody2;
+			const vec3 w2 = m_i2 * angularImpulseBody2;
 
 			// Update the body position/orientation of body 2
-			q2 += Quaternion(0, w2) * q2 * float(0.5);
+			q2 += etk::Quaternion(0, w2) * q2 * 0.5f;
 			q2.normalize();
 		}
 	}
@@ -742,17 +742,17 @@ float HingeJoint::computeCorrespondingAngleNearLimits(float inputAngle, float lo
 }
 
 // Compute the current angle around the hinge axis
-float HingeJoint::computeCurrentHingeAngle(const Quaternion& orientationBody1,
-											 const Quaternion& orientationBody2) {
+float HingeJoint::computeCurrentHingeAngle(const etk::Quaternion& orientationBody1,
+											 const etk::Quaternion& orientationBody2) {
 
 	float hingeAngle;
 
 	// Compute the current orientation difference between the two bodies
-	Quaternion currentOrientationDiff = orientationBody2 * orientationBody1.getInverse();
+	etk::Quaternion currentOrientationDiff = orientationBody2 * orientationBody1.getInverse();
 	currentOrientationDiff.normalize();
 
 	// Compute the relative rotation considering the initial orientation difference
-	Quaternion relativeRotation = currentOrientationDiff * m_initOrientationDifferenceInv;
+	etk::Quaternion relativeRotation = currentOrientationDiff * m_initOrientationDifferenceInv;
 	relativeRotation.normalize();
 
 	// A quaternion q = [cos(theta/2); sin(theta/2) * rotAxis] where rotAxis is a unit
@@ -769,7 +769,7 @@ float HingeJoint::computeCurrentHingeAngle(const Quaternion& orientationBody1,
 	float dotProduct = relativeRotation.getVectorV().dot(mA1);
 
 	// If the relative rotation axis and the hinge axis are pointing the same direction
-	if (dotProduct >= float(0.0)) {
+	if (dotProduct >= 0.0f) {
 		hingeAngle = float(2.0) * std::atan2(sinHalfAngleAbs, cosHalfAngle);
 	}
 	else {

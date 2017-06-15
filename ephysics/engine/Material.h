@@ -82,7 +82,7 @@ inline float Material::getBounciness() const {
  * @param bounciness Bounciness factor (between 0 and 1) where 1 is very bouncy
  */
 inline void Material::setBounciness(float bounciness) {
-	assert(bounciness >= float(0.0) && bounciness <= float(1.0));
+	assert(bounciness >= 0.0f && bounciness <= 1.0f);
 	m_bounciness = bounciness;
 }
 
@@ -101,7 +101,7 @@ inline float Material::getFrictionCoefficient() const {
  * @param frictionCoefficient Friction coefficient (positive value)
  */
 inline void Material::setFrictionCoefficient(float frictionCoefficient) {
-	assert(frictionCoefficient >= float(0.0));
+	assert(frictionCoefficient >= 0.0f);
 	m_frictionCoefficient = frictionCoefficient;
 }
 

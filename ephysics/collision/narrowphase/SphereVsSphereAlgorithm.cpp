@@ -29,26 +29,26 @@ void SphereVsSphereAlgorithm::testCollision(const CollisionShapeInfo& shape1Info
 	const SphereShape* sphereShape1 = static_cast<const SphereShape*>(shape1Info.collisionShape);
 	const SphereShape* sphereShape2 = static_cast<const SphereShape*>(shape2Info.collisionShape);
 	// Get the local-space to world-space transforms
-	const Transform& transform1 = shape1Info.shapeToWorldTransform;
-	const Transform& transform2 = shape2Info.shapeToWorldTransform;
+	const etk::Transform3D& transform1 = shape1Info.shapeToWorldTransform;
+	const etk::Transform3D& transform2 = shape2Info.shapeToWorldTransform;
 	// Compute the distance between the centers
-	Vector3 vectorBetweenCenters = transform2.getPosition() - transform1.getPosition();
-	float squaredDistanceBetweenCenters = vectorBetweenCenters.lengthSquare();
+	vec3 vectorBetweenCenters = transform2.getPosition() - transform1.getPosition();
+	float squaredDistanceBetweenCenters = vectorBetweenCenters.length2();
 	// Compute the sum of the radius
 	float sumRadius = sphereShape1->getRadius() + sphereShape2->getRadius();
 	// If the sphere collision shapes int32_tersect
 	if (squaredDistanceBetweenCenters <= sumRadius * sumRadius) {
-		Vector3 centerSphere2InBody1LocalSpace = transform1.getInverse() * transform2.getPosition();
-		Vector3 centerSphere1InBody2LocalSpace = transform2.getInverse() * transform1.getPosition();
-		Vector3 int32_tersectionOnBody1 = sphereShape1->getRadius() *
-									  centerSphere2InBody1LocalSpace.getUnit();
-		Vector3 int32_tersectionOnBody2 = sphereShape2->getRadius() *
-									  centerSphere1InBody2LocalSpace.getUnit();
+		vec3 centerSphere2InBody1LocalSpace = transform1.getInverse() * transform2.getPosition();
+		vec3 centerSphere1InBody2LocalSpace = transform2.getInverse() * transform1.getPosition();
+		vec3 int32_tersectionOnBody1 = sphereShape1->getRadius() *
+									  centerSphere2InBody1LocalSpace.safeNormalized();
+		vec3 int32_tersectionOnBody2 = sphereShape2->getRadius() *
+									  centerSphere1InBody2LocalSpace.safeNormalized();
 		float penetrationDepth = sumRadius - std::sqrt(squaredDistanceBetweenCenters);
 		
 		// Create the contact info object
 		ContactPointInfo contactInfo(shape1Info.proxyShape, shape2Info.proxyShape, shape1Info.collisionShape,
-									 shape2Info.collisionShape, vectorBetweenCenters.getUnit(), penetrationDepth,
+									 shape2Info.collisionShape, vectorBetweenCenters.safeNormalized(), penetrationDepth,
 									 int32_tersectionOnBody1, int32_tersectionOnBody2);
 		// Notify about the new contact
 		narrowPhaseCallback->notifyContact(shape1Info.overlappingPair, contactInfo);

@@ -35,10 +35,10 @@ CollisionWorld::~CollisionWorld() {
 
 // Create a collision body and add it to the world
 /**
- * @param transform Transformation mapping the local-space of the body to world-space
+ * @param transform etk::Transform3Dation mapping the local-space of the body to world-space
  * @return A pointer to the body that has been created in the world
  */
-CollisionBody* CollisionWorld::createCollisionBody(const Transform& transform) {
+CollisionBody* CollisionWorld::createCollisionBody(const etk::Transform3D& transform) {
 
 	// Get the next available body ID
 	bodyindex bodyID = computeNextAvailableBodyID();

@@ -6,7 +6,7 @@
 #pragma once
 
 // Libraries
-#include <ephysics/mathematics/Vector3.h>
+#include <etk/math/Vector3D.hpp>
 #include <ephysics/mathematics/Ray.h>
 
 /// ReactPhysics3D namespace
@@ -38,10 +38,10 @@ struct RaycastInfo {
 		// -------------------- Attributes -------------------- //
 
 		/// Hit point in world-space coordinates
-		Vector3 worldPoint;
+		vec3 worldPoint;
 
 		/// Surface normal at hit point in world-space coordinates
-		Vector3 worldNormal;
+		vec3 worldNormal;
 
 		/// Fraction distance of the hit point between point1 and point2 of the ray
 		/// The hit point "p" is such that p = point1 + hitFraction * (point2 - point1)

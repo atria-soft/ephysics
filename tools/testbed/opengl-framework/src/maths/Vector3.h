@@ -33,9 +33,9 @@
 
 namespace openglframework {
 
-// Class Vector3
+// Class vec3
 // This class represents a 3D vector.
-class Vector3 {
+class vec3 {
 
 	public:
 
@@ -47,76 +47,76 @@ class Vector3 {
 		// -------------------- Methods -------------------- //
 
 		// Constructor
-		Vector3(float x=0, float y=0, float z=0) : x(x), y(y), z(z) {}
+		vec3(float x=0, float y=0, float z=0) : x(x), y(y), z(z) {}
 
 		// Constructor
-		Vector3(const Vector3& vector) : x(vector.x), y(vector.y), z(vector.z) {}
+		vec3(const vec3& vector) : x(vector.x()), y(vector.y()), z(vector.z()) {}
 
 		// Constructor
-		~Vector3() {}
+		~vec3() {}
 
 		// = operator
-		Vector3& operator=(const Vector3& vector) {
+		vec3& operator=(const vec3& vector) {
 			if (&vector != this) {
-				x = vector.x;
-				y = vector.y;
-				z = vector.z;
+				x = vector.x();
+				y = vector.y();
+				z = vector.z();
 			}
 			return *this;
 		}
 
 		// + operator
-		Vector3 operator+(const Vector3 &v) const {
-			return Vector3(x + v.x, y + v.y, z + v.z);
+		vec3 operator+(const vec3 &v) const {
+			return vec3(x + v.x(), y + v.y(), z + v.z());
 		}
 
 		// += operator
-		Vector3& operator+=(const Vector3 &v) {
-			x += v.x; y += v.y; z += v.z;
+		vec3& operator+=(const vec3 &v) {
+			x += v.x(); y += v.y(); z += v.z();
 			return *this;
 		}
 
 		// - operator
-		Vector3 operator-(const Vector3 &v) const {
-			return Vector3(x - v.x, y - v.y, z - v.z);
+		vec3 operator-(const vec3 &v) const {
+			return vec3(x - v.x(), y - v.y(), z - v.z());
 		}
 
 		// -= operator
-		Vector3& operator-=(const Vector3 &v) {
-			x -= v.x; y -= v.y; z -= v.z;
+		vec3& operator-=(const vec3 &v) {
+			x -= v.x(); y -= v.y(); z -= v.z();
 			return *this;
 		}
 
 		// == operator
-		bool operator==(const Vector3 &v) const {
-			return x == v.x && y == v.y && z == v.z;
+		bool operator==(const vec3 &v) const {
+			return x == v.x() && y == v.y() && z == v.z();
 		}
 
 		// != operator
-		bool operator!=(const Vector3 &v) const {
+		bool operator!=(const vec3 &v) const {
 		  return !( *this == v );
 		}
 
 		// * operator
-		Vector3 operator*(float f) const {
-			return Vector3(f*x, f*y, f*z);
+		vec3 operator*(float f) const {
+			return vec3(f*x, f*y, f*z);
 		}
 
 		// *= operator
-		Vector3 &operator*=(float f) {
+		vec3 &operator*=(float f) {
 			x *= f; y *= f; z *= f;
 			return *this;
 		}
 
 		// / operator
-		Vector3 operator/(float f) const {
+		vec3 operator/(float f) const {
 			assert(f > std::numeric_limits<float>::epsilon() );
 			float inv = 1.f / f;
-			return Vector3(x * inv, y * inv, z * inv);
+			return vec3(x * inv, y * inv, z * inv);
 		}
 
 		// /= operator
-		Vector3 &operator/=(float f) {
+		vec3 &operator/=(float f) {
 			assert(f > std::numeric_limits<float>::epsilon());
 			float inv = 1.f / f;
 			x *= inv; y *= inv; z *= inv;
@@ -124,8 +124,8 @@ class Vector3 {
 		}
 
 		// - operator
-		Vector3 operator-() const {
-			return Vector3(-x, -y, -z);
+		vec3 operator-() const {
+			return vec3(-x, -y, -z);
 		}
 
 		// [] operator
@@ -151,17 +151,17 @@ class Vector3 {
 		}
 
 		// Cross product operator
-		Vector3 cross(const Vector3 &v) const{
-			return Vector3(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x);
+		vec3 cross(const vec3 &v) const{
+			return vec3(y * v.z() - z * v.y(), z * v.x() - x * v.z, x * v.y - y * v.x);
 		}
 
 		// Dot product operator
-		float dot(const Vector3 &v) const{
-			return x * v.x + y * v.y + z * v.z;
+		float dot(const vec3 &v) const{
+			return x * v.x() + y * v.y() + z * v.z();
 		}
 
 		// Normalize the vector and return it
-		Vector3 normalize() {
+		vec3 normalize() {
 			float l = length();
 			if(l < std::numeric_limits<float>::epsilon() ) {
 			  return *this;
@@ -177,7 +177,7 @@ class Vector3 {
 		}
 
 		// Clamp the values between 0 and 1
-		Vector3 clamp01() {
+		vec3 clamp01() {
 			if (x>1.f) x=1.f;
 			else if (x<0.f) x=0.f;
 			if (y>1.f) y=1.f;
@@ -188,13 +188,13 @@ class Vector3 {
 		}
 
 		// Return the squared length of the vector
-		float lengthSquared() const { return x*x + y*y + z*z; }
+		float length2d() const { return x*x + y*y + z*z; }
 
 		// Return the length of the vector
-		float length() const { return sqrt(lengthSquared()); }
+		float length() const { return sqrt(length2d()); }
 };
 
-inline Vector3 operator*(float f, const Vector3 & o) {
+inline vec3 operator*(float f, const vec3 & o) {
   return o*f;
 }
 

@@ -111,17 +111,17 @@ GLfloat Box::mCubeNormals[108] = {
 	0.0f, 0.0f, 1.0f//
 };
 // Constructor
-Box::Box(const openglframework::Vector3& size, const openglframework::Vector3 &position,
+Box::Box(const openglframework::vec3& size, const openglframework::vec3 &position,
 		 reactphysics3d::CollisionWorld* world)
 	: openglframework::Object3D() {
 
 	// Initialize the size of the box
-	mSize[0] = size.x * 0.5f;
-	mSize[1] = size.y * 0.5f;
-	mSize[2] = size.z * 0.5f;
+	mSize[0] = size.x() * 0.5f;
+	mSize[1] = size.y() * 0.5f;
+	mSize[2] = size.z() * 0.5f;
 
 	// Compute the scaling matrix
-	mScalingMatrix = openglframework::Matrix4(mSize[0], 0, 0, 0,
+	m_scalingMatrix = openglframework::Matrix4(mSize[0], 0, 0, 0,
 											  0, mSize[1], 0, 0,
 											  0, 0, mSize[2], 0,
 											  0, 0, 0, 1);
@@ -132,20 +132,20 @@ Box::Box(const openglframework::Vector3& size, const openglframework::Vector3 &p
 	// Create the collision shape for the rigid body (box shape)
 	// ReactPhysics3D will clone this object to create an int32_ternal one. Therefore,
 	// it is OK if this object is destroyed right after calling RigidBody::addCollisionShape()
-	mBoxShape = new rp3d::BoxShape(rp3d::Vector3(mSize[0], mSize[1], mSize[2]));
+	mBoxShape = new rp3d::BoxShape(rp3d::vec3(mSize[0], mSize[1], mSize[2]));
 
 	// Initial position and orientation of the rigid body
-	rp3d::Vector3 initPosition(position.x, position.y, position.z);
-	rp3d::Quaternion initOrientation = rp3d::Quaternion::identity();
-	rp3d::Transform transform(initPosition, initOrientation);
+	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
+	rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
+	rp3d::etk::Transform3D transform(initPosition, initOrientation);
 
-	mPreviousTransform = transform;
+	mPreviousetk::Transform3D = transform;
 
 	// Create a rigid body in the dynamics world
 	m_body = world->createCollisionBody(transform);
 
 	// Add the collision shape to the body
-	m_proxyShape = m_body->addCollisionShape(mBoxShape, rp3d::Transform::identity());
+	m_proxyShape = m_body->addCollisionShape(mBoxShape, rp3d::etk::Transform3D::identity());
 
 	// If the Vertex Buffer object has not been created yet
 	if (totalNbBoxes == 0) {
@@ -156,21 +156,21 @@ Box::Box(const openglframework::Vector3& size, const openglframework::Vector3 &p
 
 	totalNbBoxes++;
 
-	m_transformMatrix = m_transformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * m_scalingMatrix;
 }
 
 // Constructor
-Box::Box(const openglframework::Vector3& size, const openglframework::Vector3& position,
+Box::Box(const openglframework::vec3& size, const openglframework::vec3& position,
 		 float mass, reactphysics3d::DynamicsWorld* world)
 	: openglframework::Object3D() {
 
 	// Initialize the size of the box
-	mSize[0] = size.x * 0.5f;
-	mSize[1] = size.y * 0.5f;
-	mSize[2] = size.z * 0.5f;
+	mSize[0] = size.x() * 0.5f;
+	mSize[1] = size.y() * 0.5f;
+	mSize[2] = size.z() * 0.5f;
 
 	// Compute the scaling matrix
-	mScalingMatrix = openglframework::Matrix4(mSize[0], 0, 0, 0,
+	m_scalingMatrix = openglframework::Matrix4(mSize[0], 0, 0, 0,
 											  0, mSize[1], 0, 0,
 											  0, 0, mSize[2], 0,
 											  0, 0, 0, 1);
@@ -181,20 +181,20 @@ Box::Box(const openglframework::Vector3& size, const openglframework::Vector3& p
 	// Create the collision shape for the rigid body (box shape)
 	// ReactPhysics3D will clone this object to create an int32_ternal one. Therefore,
 	// it is OK if this object is destroyed right after calling RigidBody::addCollisionShape()
-	mBoxShape = new rp3d::BoxShape(rp3d::Vector3(mSize[0], mSize[1], mSize[2]));
+	mBoxShape = new rp3d::BoxShape(rp3d::vec3(mSize[0], mSize[1], mSize[2]));
 
 	// Initial position and orientation of the rigid body
-	rp3d::Vector3 initPosition(position.x, position.y, position.z);
-	rp3d::Quaternion initOrientation = rp3d::Quaternion::identity();
-	rp3d::Transform transform(initPosition, initOrientation);
+	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
+	rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
+	rp3d::etk::Transform3D transform(initPosition, initOrientation);
 
-	mPreviousTransform = transform;
+	mPreviousetk::Transform3D = transform;
 
 	// Create a rigid body in the dynamics world
 	rp3d::RigidBody* body = world->createRigidBody(transform);
 
 	// Add the collision shape to the body
-	m_proxyShape = body->addCollisionShape(mBoxShape, rp3d::Transform::identity(), mass);
+	m_proxyShape = body->addCollisionShape(mBoxShape, rp3d::etk::Transform3D::identity(), mass);
 
 	m_body = body;
 
@@ -207,7 +207,7 @@ Box::Box(const openglframework::Vector3& size, const openglframework::Vector3& p
 
 	totalNbBoxes++;
 
-	m_transformMatrix = m_transformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * m_scalingMatrix;
 }
 
 // Destructor
@@ -245,7 +245,7 @@ void Box::render(openglframework::Shader& shader,
 	const openglframework::Matrix4 localToCameraMatrix = worldToCameraMatrix * m_transformMatrix;
 	const openglframework::Matrix3 normalMatrix =
 					   localToCameraMatrix.getUpperLeft3x3Matrix().getInverse().getTranspose();
-	shader.setMatrix3x3Uniform("normalMatrix", normalMatrix, false);
+	shader.setetk::Matrix3x3Uniform("normalMatrix", normalMatrix, false);
 
 	// Set the vertex color
 	openglframework::Color currentColor = m_body->isSleeping() ? mSleepingColor : mColor;
@@ -322,22 +322,22 @@ void Box::resetTransform(const rp3d::Transform& transform) {
 	// Reset the velocity of the rigid body
 	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(m_body);
 	if (rigidBody != NULL) {
-		rigidBody->setLinearVelocity(rp3d::Vector3(0, 0, 0));
-		rigidBody->setAngularVelocity(rp3d::Vector3(0, 0, 0));
+		rigidBody->setLinearVelocity(rp3d::vec3(0, 0, 0));
+		rigidBody->setAngularVelocity(rp3d::vec3(0, 0, 0));
 	}
 
-	updateTransform(1.0f);
+	updateetk::Transform3D(1.0f);
 }
 
 // Set the scaling of the object
-void Box::setScaling(const openglframework::Vector3& scaling) {
+void Box::setScaling(const openglframework::vec3& scaling) {
 
 	// Scale the collision shape
-	m_proxyShape->setLocalScaling(rp3d::Vector3(scaling.x, scaling.y, scaling.z));
+	m_proxyShape->setLocalScaling(rp3d::vec3(scaling.x(), scaling.y(), scaling.z()));
 
 	// Scale the graphics object
-	mScalingMatrix = openglframework::Matrix4(mSize[0] * scaling.x, 0, 0, 0,
-											  0, mSize[1] * scaling.y, 0, 0,
-											  0, 0, mSize[2] * scaling.z, 0,
+	m_scalingMatrix = openglframework::Matrix4(mSize[0] * scaling.x(), 0, 0, 0,
+											  0, mSize[1] * scaling.y(), 0, 0,
+											  0, 0, mSize[2] * scaling.z(), 0,
 											  0, 0, 0, 1);
 }

@@ -28,16 +28,16 @@ struct ConstraintSolverData {
 		float timeStep;
 
 		/// Array with the bodies linear velocities
-		Vector3* linearVelocities;
+		vec3* linearVelocities;
 
 		/// Array with the bodies angular velocities
-		Vector3* angularVelocities;
+		vec3* angularVelocities;
 
 		/// Reference to the bodies positions
-		Vector3* positions;
+		vec3* positions;
 
 		/// Reference to the bodies orientations
-		Quaternion* orientations;
+		etk::Quaternion* orientations;
 
 		/// Reference to the map that associates rigid body to their index
 		/// in the constrained velocities array
@@ -170,17 +170,17 @@ class ConstraintSolver {
 		void setIsNonLinearGaussSeidelPositionCorrectionActive(bool isActive);
 
 		/// Set the constrained velocities arrays
-		void setConstrainedVelocitiesArrays(Vector3* constrainedLinearVelocities,
-											Vector3* constrainedAngularVelocities);
+		void setConstrainedVelocitiesArrays(vec3* constrainedLinearVelocities,
+											vec3* constrainedAngularVelocities);
 
 		/// Set the constrained positions/orientations arrays
-		void setConstrainedPositionsArrays(Vector3* constrainedPositions,
-										   Quaternion* constrainedOrientations);
+		void setConstrainedPositionsArrays(vec3* constrainedPositions,
+										   etk::Quaternion* constrainedOrientations);
 };
 
 // Set the constrained velocities arrays
-inline void ConstraintSolver::setConstrainedVelocitiesArrays(Vector3* constrainedLinearVelocities,
-															Vector3* constrainedAngularVelocities) {
+inline void ConstraintSolver::setConstrainedVelocitiesArrays(vec3* constrainedLinearVelocities,
+															vec3* constrainedAngularVelocities) {
 	assert(constrainedLinearVelocities != NULL);
 	assert(constrainedAngularVelocities != NULL);
 	m_constraintSolverData.linearVelocities = constrainedLinearVelocities;
@@ -188,8 +188,8 @@ inline void ConstraintSolver::setConstrainedVelocitiesArrays(Vector3* constraine
 }
 
 // Set the constrained positions/orientations arrays
-inline void ConstraintSolver::setConstrainedPositionsArrays(Vector3* constrainedPositions,
-														   Quaternion* constrainedOrientations) {
+inline void ConstraintSolver::setConstrainedPositionsArrays(vec3* constrainedPositions,
+														   etk::Quaternion* constrainedOrientations) {
 	assert(constrainedPositions != NULL);
 	assert(constrainedOrientations != NULL);
 	m_constraintSolverData.positions = constrainedPositions;

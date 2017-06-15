@@ -55,11 +55,11 @@ class GJKAlgorithm : public NarrowPhaseAlgorithm {
 
 		/// Compute the penetration depth for enlarged objects.
 		void computePenetrationDepthForEnlargedObjects(const CollisionShapeInfo& shape1Info,
-													   const Transform& transform1,
+													   const etk::Transform3D& transform1,
 													   const CollisionShapeInfo& shape2Info,
-													   const Transform& transform2,
+													   const etk::Transform3D& transform2,
 													   NarrowPhaseCallback* narrowPhaseCallback,
-													   Vector3& v);
+													   vec3& v);
 
 	public :
 
@@ -81,7 +81,7 @@ class GJKAlgorithm : public NarrowPhaseAlgorithm {
 								   NarrowPhaseCallback* narrowPhaseCallback);
 
 		/// Use the GJK Algorithm to find if a point is inside a convex collision shape
-		bool testPointInside(const Vector3& localPoint, ProxyShape* proxyShape);
+		bool testPointInside(const vec3& localPoint, ProxyShape* proxyShape);
 
 		/// Ray casting algorithm agains a convex collision shape using the GJK Algorithm
 		bool raycast(const Ray& ray, ProxyShape* proxyShape, RaycastInfo& raycastInfo);

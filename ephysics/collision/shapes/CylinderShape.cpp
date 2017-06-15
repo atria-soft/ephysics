@@ -19,9 +19,9 @@ using namespace reactphysics3d;
  */
 CylinderShape::CylinderShape(float radius, float height, float margin)
 			  : ConvexShape(CYLINDER, margin), mRadius(radius),
-				mHalfHeight(height/float(2.0)) {
-	assert(radius > float(0.0));
-	assert(height > float(0.0));
+				m_halfHeight(height/float(2.0)) {
+	assert(radius > 0.0f);
+	assert(height > 0.0f);
 }
 
 // Destructor
@@ -30,24 +30,25 @@ CylinderShape::~CylinderShape() {
 }
 
 // Return a local support point in a given direction without the object margin
-Vector3 CylinderShape::getLocalSupportPointWithoutMargin(const Vector3& direction,
-														 void** cachedCollisionData) const {
-
-	Vector3 supportPoint(0.0, 0.0, 0.0);
-	float uDotv = direction.y;
-	Vector3 w(direction.x, 0.0, direction.z);
-	float lengthW = sqrt(direction.x * direction.x + direction.z * direction.z);
-
+vec3 CylinderShape::getLocalSupportPointWithoutMargin(const vec3& _direction, void** _cachedCollisionData) const {
+	vec3 supportPoint(0.0, 0.0, 0.0);
+	float uDotv = _direction.y();
+	vec3 w(_direction.x(), 0.0, _direction.z());
+	float lengthW = sqrt(_direction.x() * _direction.x() + _direction.z() * _direction.z());
 	if (lengthW > MACHINE_EPSILON) {
-		if (uDotv < 0.0) supportPoint.y = -mHalfHeight;
-		else supportPoint.y = mHalfHeight;
+		if (uDotv < 0.0) {
+			supportPoint.setY(-m_halfHeight);
+		} else {
+			supportPoint.setY(m_halfHeight);
+		}
 		supportPoint += (mRadius / lengthW) * w;
+	} else {
+		if (uDotv < 0.0) {
+			supportPoint.setY(-m_halfHeight);
+		} else {
+			supportPoint.setY(m_halfHeight);
+		}
 	}
-	else {
-		 if (uDotv < 0.0) supportPoint.y = -mHalfHeight;
-		 else supportPoint.y = mHalfHeight;
-	}
-
 	return supportPoint;
 }
 
@@ -56,13 +57,13 @@ Vector3 CylinderShape::getLocalSupportPointWithoutMargin(const Vector3& directio
 /// Morgan Kaufmann.
 bool CylinderShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const {
 
-	const Vector3 n = ray.point2 - ray.point1;
+	const vec3 n = ray.point2 - ray.point1;
 
 	const float epsilon = float(0.01);
-	Vector3 p(float(0), -mHalfHeight, float(0));
-	Vector3 q(float(0), mHalfHeight, float(0));
-	Vector3 d = q - p;
-	Vector3 m = ray.point1 - p;
+	vec3 p(float(0), -m_halfHeight, float(0));
+	vec3 q(float(0), m_halfHeight, float(0));
+	vec3 d = q - p;
+	vec3 m = ray.point1 - p;
 	float t;
 
 	float mDotD = m.dot(d);
@@ -70,7 +71,7 @@ bool CylinderShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape
 	float dDotD = d.dot(d);
 
 	// Test if the segment is outside the cylinder
-	if (mDotD < float(0.0) && mDotD + nDotD < float(0.0)) return false;
+	if (mDotD < 0.0f && mDotD + nDotD < float(0.0)) return false;
 	if (mDotD > dDotD && mDotD + nDotD > dDotD) return false;
 
 	float nDotN = n.dot(n);
@@ -84,26 +85,26 @@ bool CylinderShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape
 	if (std::abs(a) < epsilon) {
 
 		// If the origin is outside the surface of the cylinder, we return no hit
-		if (c > float(0.0)) return false;
+		if (c > 0.0f) return false;
 
 		// Here we know that the segment int32_tersect an endcap of the cylinder
 
 		// If the ray int32_tersects with the "p" endcap of the cylinder
-		if (mDotD < float(0.0)) {
+		if (mDotD < 0.0f) {
 
 			t = -mDotN / nDotN;
 
 			// If the int32_tersection is behind the origin of the ray or beyond the maximum
 			// raycasting distance, we return no hit
-			if (t < float(0.0) || t > ray.maxFraction) return false;
+			if (t < 0.0f || t > ray.maxFraction) return false;
 
 			// Compute the hit information
-			Vector3 localHitPoint = ray.point1 + t * n;
+			vec3 localHitPoint = ray.point1 + t * n;
 			raycastInfo.body = proxyShape->getBody();
 			raycastInfo.proxyShape = proxyShape;
 			raycastInfo.hitFraction = t;
 			raycastInfo.worldPoint = localHitPoint;
-			Vector3 normalDirection(0, float(-1), 0);
+			vec3 normalDirection(0, float(-1), 0);
 			raycastInfo.worldNormal = normalDirection;
 
 			return true;
@@ -114,15 +115,15 @@ bool CylinderShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape
 
 			// If the int32_tersection is behind the origin of the ray or beyond the maximum
 			// raycasting distance, we return no hit
-			if (t < float(0.0) || t > ray.maxFraction) return false;
+			if (t < 0.0f || t > ray.maxFraction) return false;
 
 			// Compute the hit information
-			Vector3 localHitPoint = ray.point1 + t * n;
+			vec3 localHitPoint = ray.point1 + t * n;
 			raycastInfo.body = proxyShape->getBody();
 			raycastInfo.proxyShape = proxyShape;
 			raycastInfo.hitFraction = t;
 			raycastInfo.worldPoint = localHitPoint;
-			Vector3 normalDirection(0, float(1.0), 0);
+			vec3 normalDirection(0, 1.0f, 0);
 			raycastInfo.worldNormal = normalDirection;
 
 			return true;
@@ -135,35 +136,35 @@ bool CylinderShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape
 	float discriminant = b * b - a * c;
 
 	// If the discriminant is negative, no real roots and therfore, no hit
-	if (discriminant < float(0.0)) return false;
+	if (discriminant < 0.0f) return false;
 
 	// Compute the smallest root (first int32_tersection along the ray)
 	float t0 = t = (-b - std::sqrt(discriminant)) / a;
 
 	// If the int32_tersection is outside the cylinder on "p" endcap side
 	float value = mDotD + t * nDotD;
-	if (value < float(0.0)) {
+	if (value < 0.0f) {
 
 		// If the ray is pointing away from the "p" endcap, we return no hit
-		if (nDotD <= float(0.0)) return false;
+		if (nDotD <= 0.0f) return false;
 
 		// Compute the int32_tersection against the "p" endcap (int32_tersection agains whole plane)
 		t = -mDotD / nDotD;
 
 		// Keep the int32_tersection if the it is inside the cylinder radius
-		if (k + t * (float(2.0) * mDotN + t) > float(0.0)) return false;
+		if (k + t * (float(2.0) * mDotN + t) > 0.0f) return false;
 
 		// If the int32_tersection is behind the origin of the ray or beyond the maximum
 		// raycasting distance, we return no hit
-		if (t < float(0.0) || t > ray.maxFraction) return false;
+		if (t < 0.0f || t > ray.maxFraction) return false;
 
 		// Compute the hit information
-		Vector3 localHitPoint = ray.point1 + t * n;
+		vec3 localHitPoint = ray.point1 + t * n;
 		raycastInfo.body = proxyShape->getBody();
 		raycastInfo.proxyShape = proxyShape;
 		raycastInfo.hitFraction = t;
 		raycastInfo.worldPoint = localHitPoint;
-		Vector3 normalDirection(0, float(-1.0), 0);
+		vec3 normalDirection(0, float(-1.0), 0);
 		raycastInfo.worldNormal = normalDirection;
 
 		return true;
@@ -171,26 +172,26 @@ bool CylinderShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape
 	else if (value > dDotD) {   // If the int32_tersection is outside the cylinder on the "q" side
 
 		// If the ray is pointing away from the "q" endcap, we return no hit
-		if (nDotD >= float(0.0)) return false;
+		if (nDotD >= 0.0f) return false;
 
 		// Compute the int32_tersection against the "q" endcap (int32_tersection against whole plane)
 		t = (dDotD - mDotD) / nDotD;
 
 		// Keep the int32_tersection if it is inside the cylinder radius
 		if (k + dDotD - float(2.0) * mDotD + t * (float(2.0) * (mDotN - nDotD) + t) >
-			float(0.0)) return false;
+			0.0f) return false;
 
 		// If the int32_tersection is behind the origin of the ray or beyond the maximum
 		// raycasting distance, we return no hit
-		if (t < float(0.0) || t > ray.maxFraction) return false;
+		if (t < 0.0f || t > ray.maxFraction) return false;
 
 		// Compute the hit information
-		Vector3 localHitPoint = ray.point1 + t * n;
+		vec3 localHitPoint = ray.point1 + t * n;
 		raycastInfo.body = proxyShape->getBody();
 		raycastInfo.proxyShape = proxyShape;
 		raycastInfo.hitFraction = t;
 		raycastInfo.worldPoint = localHitPoint;
-		Vector3 normalDirection(0, float(1.0), 0);
+		vec3 normalDirection(0, 1.0f, 0);
 		raycastInfo.worldNormal = normalDirection;
 
 		return true;
@@ -200,17 +201,17 @@ bool CylinderShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape
 
 	// If the int32_tersection is behind the origin of the ray or beyond the maximum
 	// raycasting distance, we return no hit
-	if (t < float(0.0) || t > ray.maxFraction) return false;
+	if (t < 0.0f || t > ray.maxFraction) return false;
 
 	// Compute the hit information
-	Vector3 localHitPoint = ray.point1 + t * n;
+	vec3 localHitPoint = ray.point1 + t * n;
 	raycastInfo.body = proxyShape->getBody();
 	raycastInfo.proxyShape = proxyShape;
 	raycastInfo.hitFraction = t;
 	raycastInfo.worldPoint = localHitPoint;
-	Vector3 v = localHitPoint - p;
-	Vector3 w = (v.dot(d) / d.lengthSquare()) * d;
-	Vector3 normalDirection = (localHitPoint - (p + w));
+	vec3 v = localHitPoint - p;
+	vec3 w = (v.dot(d) / d.length2()) * d;
+	vec3 normalDirection = (localHitPoint - (p + w));
 	raycastInfo.worldNormal = normalDirection;
 
 	return true;

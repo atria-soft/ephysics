@@ -55,7 +55,7 @@ void Mesh::destroy() {
 // Compute the normals of the mesh
 void Mesh::calculateNormals() {
 
-	mNormals = vector<Vector3>(getNbVertices(), Vector3(0, 0, 0));
+	mNormals = vector<vec3>(getNbVertices(), vec3(0, 0, 0));
 
 	// For each triangular face
 	for (uint32_t i=0; i<getNbFaces(); i++) {
@@ -70,10 +70,10 @@ void Mesh::calculateNormals() {
 		assert(v3 < getNbVertices());
 
 		// Compute the normal of the face
-		Vector3 p = getVertex(v1);
-		Vector3 q = getVertex(v2);
-		Vector3 r = getVertex(v3);
-		Vector3 normal = (q-p).cross(r-p).normalize();
+		vec3 p = getVertex(v1);
+		vec3 q = getVertex(v2);
+		vec3 r = getVertex(v3);
+		vec3 normal = (q-p).cross(r-p).normalize();
 
 		// Add the face surface normal to the sum of normals at
 		// each vertex of the face
@@ -91,7 +91,7 @@ void Mesh::calculateNormals() {
 // Compute the tangents of the mesh
 void Mesh::calculateTangents() {
 
-	mTangents = std::vector<Vector3>(getNbVertices(), Vector3(0, 0, 0));
+	mTangents = std::vector<vec3>(getNbVertices(), vec3(0, 0, 0));
 
 	// For each face
 	for (uint32_t i=0; i<getNbFaces(); i++) {
@@ -106,27 +106,27 @@ void Mesh::calculateTangents() {
 		assert(v3 < getNbVertices());
 
 		// Get the vertices positions
-		Vector3 p = getVertex(v1);
-		Vector3 q = getVertex(v2);
-		Vector3 r = getVertex(v3);
+		vec3 p = getVertex(v1);
+		vec3 q = getVertex(v2);
+		vec3 r = getVertex(v3);
 
 		// Get the texture coordinates of each vertex
-		Vector2 uvP = getUV(v1);
-		Vector2 uvQ = getUV(v2);
-		Vector2 uvR = getUV(v3);
+		vec2 uvP = getUV(v1);
+		vec2 uvQ = getUV(v2);
+		vec2 uvR = getUV(v3);
 
 		// Get the three edges
-		Vector3 edge1 = q - p;
-		Vector3 edge2 = r - p;
-		Vector2 edge1UV = uvQ - uvP;
-		Vector2 edge2UV = uvR - uvP;
+		vec3 edge1 = q - p;
+		vec3 edge2 = r - p;
+		vec2 edge1UV = uvQ - uvP;
+		vec2 edge2UV = uvR - uvP;
 
-		float cp = edge1UV.y * edge2UV.x - edge1UV.x * edge2UV.y;
+		float cp = edge1UV.y() * edge2UV.x() - edge1UV.x * edge2UV.y;
 
 		// Compute the tangent
 		if (cp != 0.0f) {
 			float factor = 1.0f / cp;
-			Vector3 tangent = (edge1 * -edge2UV.y + edge2 * edge1UV.y) * factor;
+			vec3 tangent = (edge1 * -edge2UV.y() + edge2 * edge1UV.y) * factor;
 			tangent.normalize();
 			mTangents[v1] = tangent;
 			mTangents[v2] = tangent;
@@ -136,7 +136,7 @@ void Mesh::calculateTangents() {
 }
 
 // Calculate the bounding box of the mesh
-void Mesh::calculateBoundingBox(Vector3& min, Vector3& max) const {
+void Mesh::calculateBoundingBox(vec3& min, vec3& max) const {
 
 	// If the mesh contains vertices
 	if (!m_vertices.empty())  {
@@ -144,19 +144,19 @@ void Mesh::calculateBoundingBox(Vector3& min, Vector3& max) const {
 		min = m_vertices[0];
 		max = m_vertices[0];
 
-		std::vector<Vector3>::const_iterator  it(m_vertices.begin());
+		std::vector<vec3>::const_iterator  it(m_vertices.begin());
 
 		// For each vertex of the mesh
 		for (; it != m_vertices.end(); ++it) {
 
-			if( (*it).x < min.x ) min.x = (*it).x;
-			else if ( (*it).x > max.x ) max.x = (*it).x;
+			if( (*it).x() < min.x ) min.x = (*it).x;
+			else if ( (*it).x() > max.x ) max.x = (*it).x;
 
-			if( (*it).y < min.y ) min.y = (*it).y;
-			else if ( (*it).y > max.y ) max.y = (*it).y;
+			if( (*it).y() < min.y ) min.y = (*it).y;
+			else if ( (*it).y() > max.y ) max.y = (*it).y;
 
-			if( (*it).z < min.z ) min.z = (*it).z;
-			else if ( (*it).z > max.z ) max.z = (*it).z;
+			if( (*it).z() < min.z ) min.z = (*it).z;
+			else if ( (*it).z() > max.z ) max.z = (*it).z;
 		}
 	}
 	else {

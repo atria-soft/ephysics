@@ -49,7 +49,7 @@ class Texture2D {
 		GLuint32_t mUnit;
 
 		// Width
-		uint32_t mWidth;
+		uint32_t m_width;
 
 		// Height
 		uint32_t mHeight;
@@ -88,7 +88,7 @@ class Texture2D {
 		uint32_t getID() const;
 
 		// Get the unit of the texture
-		uint32_t getUnit() const;
+		uint32_t safeNormalized() const;
 
 		// Set the unit of the texture
 		void setUnit(uint32_t unit);
@@ -120,7 +120,7 @@ inline uint32_t Texture2D::getID() const {
 }
 
 // Get the unit of the texture
-inline uint32_t Texture2D::getUnit() const {
+inline uint32_t Texture2D::safeNormalized() const {
 	return mUnit;
 }
 
@@ -131,7 +131,7 @@ inline void Texture2D::setUnit(uint32_t unit) {
 
 // Get the width
 inline uint32_t Texture2D::getWidth() const {
-	return mWidth;
+	return m_width;
 }
 
 // Get the height

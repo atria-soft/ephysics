@@ -85,7 +85,7 @@ void ConcaveVsConvexAlgorithm::testCollision(const CollisionShapeInfo& shape1Inf
 }
 
 // Test collision between a triangle and the convex mesh shape
-void ConvexVsTriangleCallback::testTriangle(const Vector3* trianglePoints) {
+void ConvexVsTriangleCallback::testTriangle(const vec3* trianglePoints) {
 
 	// Create a triangle collision shape
 	float margin = mConcaveShape->getTriangleMargin();
@@ -120,7 +120,7 @@ void ConcaveVsConvexAlgorithm::processSmoothMeshCollision(OverlappingPair* overl
 														  NarrowPhaseCallback* narrowPhaseCallback) {
 
 	// Set with the triangle vertices already processed to void further contacts with same triangle
-	std::unordered_multimap<int32_t, Vector3> processTriangleVertices;
+	std::unordered_multimap<int32_t, vec3> processTriangleVertices;
 
 	// Sort the list of narrow-phase contacts according to their penetration depth
 	std::sort(contactPoints.begin(), contactPoints.end(), ContactsDepthCompare());
@@ -130,7 +130,7 @@ void ConcaveVsConvexAlgorithm::processSmoothMeshCollision(OverlappingPair* overl
 	for (it = contactPoints.begin(); it != contactPoints.end(); ++it) {
 
 		const SmoothMeshContactInfo info = *it;
-		const Vector3& contactPoint = info.isFirstShapeTriangle ? info.contactInfo.localPoint1 : info.contactInfo.localPoint2;
+		const vec3& contactPoint = info.isFirstShapeTriangle ? info.contactInfo.localPoint1 : info.contactInfo.localPoint2;
 
 		// Compute the barycentric coordinates of the point in the triangle
 		float u, v, w;
@@ -149,7 +149,7 @@ void ConcaveVsConvexAlgorithm::processSmoothMeshCollision(OverlappingPair* overl
 		// If it is a vertex contact
 		if (nbZeros == 2) {
 
-			Vector3 contactVertex = !isUZero ? info.triangleVertices[0] : (!isVZero ? info.triangleVertices[1] : info.triangleVertices[2]);
+			vec3 contactVertex = !isUZero ? info.triangleVertices[0] : (!isVZero ? info.triangleVertices[1] : info.triangleVertices[2]);
 
 			// Check that this triangle vertex has not been processed yet
 			if (!hasVertexBeenProcessed(processTriangleVertices, contactVertex)) {
@@ -160,8 +160,8 @@ void ConcaveVsConvexAlgorithm::processSmoothMeshCollision(OverlappingPair* overl
 		}
 		else if (nbZeros == 1) {  // If it is an edge contact
 
-			Vector3 contactVertex1 = isUZero ? info.triangleVertices[1] : (isVZero ? info.triangleVertices[0] : info.triangleVertices[0]);
-			Vector3 contactVertex2 = isUZero ? info.triangleVertices[2] : (isVZero ? info.triangleVertices[2] : info.triangleVertices[1]);
+			vec3 contactVertex1 = isUZero ? info.triangleVertices[1] : (isVZero ? info.triangleVertices[0] : info.triangleVertices[0]);
+			vec3 contactVertex2 = isUZero ? info.triangleVertices[2] : (isVZero ? info.triangleVertices[2] : info.triangleVertices[1]);
 
 			// Check that this triangle edge has not been processed yet
 			if (!hasVertexBeenProcessed(processTriangleVertices, contactVertex1) &&
@@ -188,12 +188,12 @@ void ConcaveVsConvexAlgorithm::processSmoothMeshCollision(OverlappingPair* overl
 			}
 
 			// We use the triangle normal as the contact normal
-			Vector3 a = info.triangleVertices[1] - info.triangleVertices[0];
-			Vector3 b = info.triangleVertices[2] - info.triangleVertices[0];
-			Vector3 localNormal = a.cross(b);
+			vec3 a = info.triangleVertices[1] - info.triangleVertices[0];
+			vec3 b = info.triangleVertices[2] - info.triangleVertices[0];
+			vec3 localNormal = a.cross(b);
 			newContactInfo.normal = firstShape->getLocalToWorldTransform().getOrientation() * localNormal;
-			Vector3 firstLocalPoint = info.isFirstShapeTriangle ? info.contactInfo.localPoint1 : info.contactInfo.localPoint2;
-			Vector3 firstWorldPoint = firstShape->getLocalToWorldTransform() * firstLocalPoint;
+			vec3 firstLocalPoint = info.isFirstShapeTriangle ? info.contactInfo.localPoint1 : info.contactInfo.localPoint2;
+			vec3 firstWorldPoint = firstShape->getLocalToWorldTransform() * firstLocalPoint;
 			newContactInfo.normal.normalize();
 			if (newContactInfo.normal.dot(info.contactInfo.normal) < 0) {
 				newContactInfo.normal = -newContactInfo.normal;
@@ -202,13 +202,13 @@ void ConcaveVsConvexAlgorithm::processSmoothMeshCollision(OverlappingPair* overl
 			// We recompute the contact point on the second body with the new normal as described in
 			// the Smooth Mesh Contacts with GJK of the Game Physics Pearls book (from Gino van Den Bergen and
 			// Dirk Gregorius) to avoid adding torque
-			Transform worldToLocalSecondPoint = secondShape->getLocalToWorldTransform().getInverse();
+			etk::Transform3D worldToLocalSecondPoint = secondShape->getLocalToWorldTransform().getInverse();
 			if (info.isFirstShapeTriangle) {
-				Vector3 newSecondWorldPoint = firstWorldPoint + newContactInfo.normal;
+				vec3 newSecondWorldPoint = firstWorldPoint + newContactInfo.normal;
 				newContactInfo.localPoint2 = worldToLocalSecondPoint * newSecondWorldPoint;
 			}
 			else {
-				Vector3 newSecondWorldPoint = firstWorldPoint - newContactInfo.normal;
+				vec3 newSecondWorldPoint = firstWorldPoint - newContactInfo.normal;
 				newContactInfo.localPoint1 = worldToLocalSecondPoint * newSecondWorldPoint;
 			}
 
@@ -225,13 +225,13 @@ void ConcaveVsConvexAlgorithm::processSmoothMeshCollision(OverlappingPair* overl
 }
 
 // Return true if the vertex is in the set of already processed vertices
-bool ConcaveVsConvexAlgorithm::hasVertexBeenProcessed(const std::unordered_multimap<int32_t, Vector3>& processTriangleVertices, const Vector3& vertex) const {
+bool ConcaveVsConvexAlgorithm::hasVertexBeenProcessed(const std::unordered_multimap<int32_t, vec3>& processTriangleVertices, const vec3& vertex) const {
 
-	int32_t key = int32_t(vertex.x * vertex.y * vertex.z);
+	int32_t key = int32_t(vertex.x() * vertex.y() * vertex.z());
 
 	auto range = processTriangleVertices.equal_range(key);
 	for (auto it = range.first; it != range.second; ++it) {
-		if (vertex.x == it->second.x && vertex.y == it->second.y && vertex.z == it->second.z) return true;
+		if (vertex.x() == it->second.x() && vertex.y() == it->second.y() && vertex.z() == it->second.z()) return true;
 	}
 
 	return false;
@@ -240,7 +240,7 @@ bool ConcaveVsConvexAlgorithm::hasVertexBeenProcessed(const std::unordered_multi
 // Called by a narrow-phase collision algorithm when a new contact has been found
 void SmoothCollisionNarrowPhaseCallback::notifyContact(OverlappingPair* overlappingPair,
 													   const ContactPointInfo& contactInfo) {
-	Vector3 triangleVertices[3];
+	vec3 triangleVertices[3];
 	bool isFirstShapeTriangle;
 
 	// If the collision shape 1 is the triangle

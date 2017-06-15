@@ -53,10 +53,10 @@ namespace reactphysics3d {
 	const float DEFAULT_FRICTION_COEFFICIENT = float(0.3);
 	
 	/// Default bounciness factor for a rigid body
-	const float DEFAULT_BOUNCINESS = float(0.5);
+	const float DEFAULT_BOUNCINESS = 0.5f;
 	
 	/// Default rolling resistance
-	const float DEFAULT_ROLLING_RESISTANCE = float(0.0);
+	const float DEFAULT_ROLLING_RESISTANCE = 0.0f;
 	
 	/// True if the spleeping technique is enabled
 	const bool SPLEEPING_ENABLED = true;
@@ -68,7 +68,7 @@ namespace reactphysics3d {
 	const float PERSISTENT_CONTACT_DIST_THRESHOLD = float(0.03);
 	
 	/// Velocity threshold for contact velocity restitution
-	const float RESTITUTION_VELOCITY_THRESHOLD = float(1.0);
+	const float RESTITUTION_VELOCITY_THRESHOLD = 1.0f;
 	
 	/// Number of iterations when solving the velocity constraints of the Sequential Impulse technique
 	const uint32_t DEFAULT_VELOCITY_SOLVER_NB_ITERATIONS = 10;

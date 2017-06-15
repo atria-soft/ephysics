@@ -51,7 +51,7 @@ class DynamicsWorld : public CollisionWorld {
 		std::set<Joint*> m_joints;
 
 		/// Gravity vector of the world
-		Vector3 m_gravity;
+		vec3 m_gravity;
 
 		/// Current frame time step (in seconds)
 		float m_timeStep;
@@ -61,23 +61,23 @@ class DynamicsWorld : public CollisionWorld {
 
 		/// Array of constrained linear velocities (state of the linear velocities
 		/// after solving the constraints)
-		Vector3* m_constrainedLinearVelocities;
+		vec3* m_constrainedLinearVelocities;
 
 		/// Array of constrained angular velocities (state of the angular velocities
 		/// after solving the constraints)
-		Vector3* m_constrainedAngularVelocities;
+		vec3* m_constrainedAngularVelocities;
 
 		/// Split linear velocities for the position contact solver (split impulse)
-		Vector3* m_splitLinearVelocities;
+		vec3* m_splitLinearVelocities;
 
 		/// Split angular velocities for the position contact solver (split impulse)
-		Vector3* m_splitAngularVelocities;
+		vec3* m_splitAngularVelocities;
 
 		/// Array of constrained rigid bodies position (for position error correction)
-		Vector3* m_constrainedPositions;
+		vec3* m_constrainedPositions;
 
 		/// Array of constrained rigid bodies orientation (for position error correction)
-		Quaternion* m_constrainedOrientations;
+		etk::Quaternion* m_constrainedOrientations;
 
 		/// Map body to their index in the constrained velocities array
 		std::map<RigidBody*, uint32_t> m_mapBodyToConstrainedVelocityIndex;
@@ -122,8 +122,8 @@ class DynamicsWorld : public CollisionWorld {
 		void resetBodiesForceAndTorque();
 
 		/// Update the position and orientation of a body
-		void updatePositionAndOrientationOfBody(RigidBody* body, Vector3 newLinVelocity,
-												Vector3 newAngVelocity);
+		void updatePositionAndOrientationOfBody(RigidBody* body, vec3 newLinVelocity,
+												vec3 newAngVelocity);
 
 		/// Compute and set the int32_terpolation factor to all bodies
 		void setInterpolationFactorToAllBodies();
@@ -160,7 +160,7 @@ class DynamicsWorld : public CollisionWorld {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		DynamicsWorld(const Vector3& m_gravity);
+		DynamicsWorld(const vec3& m_gravity);
 
 		/// Destructor
 		virtual ~DynamicsWorld();
@@ -191,7 +191,7 @@ class DynamicsWorld : public CollisionWorld {
 		void setIsSolveFrictionAtContactManifoldCenterActive(bool isActive);
 
 		/// Create a rigid body int32_to the physics world.
-		RigidBody* createRigidBody(const Transform& transform);
+		RigidBody* createRigidBody(const etk::Transform3D& transform);
 
 		/// Destroy a rigid body and all the joints which it belongs
 		void destroyRigidBody(RigidBody* rigidBody);
@@ -203,10 +203,10 @@ class DynamicsWorld : public CollisionWorld {
 		void destroyJoint(Joint* joint);
 
 		/// Return the gravity vector of the world
-		Vector3 getGravity() const;
+		vec3 getGravity() const;
 
 		/// Set the gravity vector of the world
-		void setGravity(Vector3& gravity);
+		void setGravity(vec3& gravity);
 
 		/// Return if the gravity is on
 		bool isGravityEnabled() const;
@@ -290,8 +290,8 @@ inline void DynamicsWorld::resetBodiesForceAndTorque() {
 	// For each body of the world
 	std::set<RigidBody*>::iterator it;
 	for (it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
-		(*it)->m_externalForce.setToZero();
-		(*it)->m_externalTorque.setToZero();
+		(*it)->m_externalForce.setZero();
+		(*it)->m_externalTorque.setZero();
 	}
 }
 
@@ -363,7 +363,7 @@ inline void DynamicsWorld::setIsSolveFrictionAtContactManifoldCenterActive(bool 
 /**
  * @return The current gravity vector (in meter per seconds squared)
  */
-inline Vector3 DynamicsWorld::getGravity() const {
+inline vec3 DynamicsWorld::getGravity() const {
 	return m_gravity;
 }
 
@@ -371,7 +371,7 @@ inline Vector3 DynamicsWorld::getGravity() const {
 /**
  * @param gravity The gravity vector (in meter per seconds squared)
  */
-inline void DynamicsWorld::setGravity(Vector3& gravity) {
+inline void DynamicsWorld::setGravity(vec3& gravity) {
 	m_gravity = gravity;
 }
 
@@ -448,7 +448,7 @@ inline float DynamicsWorld::getSleepLinearVelocity() const {
  * @param sleepLinearVelocity The sleep linear velocity (in meters per second)
  */
 inline void DynamicsWorld::setSleepLinearVelocity(float sleepLinearVelocity) {
-	assert(sleepLinearVelocity >= float(0.0));
+	assert(sleepLinearVelocity >= 0.0f);
 	m_sleepLinearVelocity = sleepLinearVelocity;
 }
 
@@ -468,7 +468,7 @@ inline float DynamicsWorld::getSleepAngularVelocity() const {
  * @param sleepAngularVelocity The sleep angular velocity (in radian per second)
  */
 inline void DynamicsWorld::setSleepAngularVelocity(float sleepAngularVelocity) {
-	assert(sleepAngularVelocity >= float(0.0));
+	assert(sleepAngularVelocity >= 0.0f);
 	m_sleepAngularVelocity = sleepAngularVelocity;
 }
 
@@ -486,7 +486,7 @@ inline float DynamicsWorld::getTimeBeforeSleep() const {
  * @param timeBeforeSleep Time a body is required to stay still before sleeping (in seconds)
  */
 inline void DynamicsWorld::setTimeBeforeSleep(float timeBeforeSleep) {
-	assert(timeBeforeSleep >= float(0.0));
+	assert(timeBeforeSleep >= 0.0f);
 	m_timeBeforeSleep = timeBeforeSleep;
 }
 

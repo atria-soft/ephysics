@@ -23,10 +23,10 @@ struct HingeJointInfo : public JointInfo {
 		// -------------------- Attributes -------------------- //
 
 		/// Anchor point (in world-space coordinates)
-		Vector3 m_anchorPointWorldSpace;
+		vec3 m_anchorPointWorldSpace;
 
 		/// Hinge rotation axis (in world-space coordinates)
-		Vector3 rotationAxisWorld;
+		vec3 rotationAxisWorld;
 
 		/// True if the hinge joint limits are enabled
 		bool isLimitEnabled;
@@ -59,8 +59,8 @@ struct HingeJointInfo : public JointInfo {
 		 *							  coordinates
 		 */
 		HingeJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
-							   const Vector3& initAnchorPointWorldSpace,
-							   const Vector3& initRotationAxisWorld)
+							   const vec3& initAnchorPointWorldSpace,
+							   const vec3& initRotationAxisWorld)
 							  : JointInfo(rigidBody1, rigidBody2, HINGEJOINT),
 								m_anchorPointWorldSpace(initAnchorPointWorldSpace),
 								rotationAxisWorld(initRotationAxisWorld), isLimitEnabled(false),
@@ -77,8 +77,8 @@ struct HingeJointInfo : public JointInfo {
 		 * @param initMaxAngleLimit The initial maximum limit angle (in radian)
 		 */
 		HingeJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
-							   const Vector3& initAnchorPointWorldSpace,
-							   const Vector3& initRotationAxisWorld,
+							   const vec3& initAnchorPointWorldSpace,
+							   const vec3& initRotationAxisWorld,
 							   float initMinAngleLimit, float initMaxAngleLimit)
 							  : JointInfo(rigidBody1, rigidBody2, HINGEJOINT),
 								m_anchorPointWorldSpace(initAnchorPointWorldSpace),
@@ -99,8 +99,8 @@ struct HingeJointInfo : public JointInfo {
 		 * @param initMaxMotorTorque The initial maximum motor torque (in Newtons)
 		 */
 		HingeJointInfo(RigidBody* rigidBody1, RigidBody* rigidBody2,
-							   const Vector3& initAnchorPointWorldSpace,
-							   const Vector3& initRotationAxisWorld,
+							   const vec3& initAnchorPointWorldSpace,
+							   const vec3& initRotationAxisWorld,
 							   float initMinAngleLimit, float initMaxAngleLimit,
 							   float initMotorSpeed, float initMaxMotorTorque)
 							  : JointInfo(rigidBody1, rigidBody2, HINGEJOINT),
@@ -129,43 +129,43 @@ class HingeJoint : public Joint {
 		// -------------------- Attributes -------------------- //
 
 		/// Anchor point of body 1 (in local-space coordinates of body 1)
-		Vector3 m_localAnchorPointBody1;
+		vec3 m_localAnchorPointBody1;
 
 		/// Anchor point of body 2 (in local-space coordinates of body 2)
-		Vector3 m_localAnchorPointBody2;
+		vec3 m_localAnchorPointBody2;
 
 		/// Hinge rotation axis (in local-space coordinates of body 1)
-		Vector3 mHingeLocalAxisBody1;
+		vec3 mHingeLocalAxisBody1;
 
 		/// Hinge rotation axis (in local-space coordiantes of body 2)
-		Vector3 mHingeLocalAxisBody2;
+		vec3 mHingeLocalAxisBody2;
 
 		/// Inertia tensor of body 1 (in world-space coordinates)
-		Matrix3x3 m_i1;
+		etk::Matrix3x3 m_i1;
 
 		/// Inertia tensor of body 2 (in world-space coordinates)
-		Matrix3x3 m_i2;
+		etk::Matrix3x3 m_i2;
 
 		/// Hinge rotation axis (in world-space coordinates) computed from body 1
-		Vector3 mA1;
+		vec3 mA1;
 
 		/// Vector from center of body 2 to anchor point in world-space
-		Vector3 m_r1World;
+		vec3 m_r1World;
 
 		/// Vector from center of body 2 to anchor point in world-space
-		Vector3 m_r2World;
+		vec3 m_r2World;
 
 		/// Cross product of vector b2 and a1
-		Vector3 mB2CrossA1;
+		vec3 mB2CrossA1;
 
 		/// Cross product of vector c2 and a1;
-		Vector3 mC2CrossA1;
+		vec3 mC2CrossA1;
 
 		/// Impulse for the 3 translation constraints
-		Vector3 m_impulseTranslation;
+		vec3 m_impulseTranslation;
 
 		/// Impulse for the 2 rotation constraints
-		Vector2 m_impulseRotation;
+		vec2 m_impulseRotation;
 
 		/// Accumulated impulse for the lower limit constraint
 		float m_impulseLowerLimit;
@@ -177,10 +177,10 @@ class HingeJoint : public Joint {
 		float m_impulseMotor;
 
 		/// Inverse mass matrix K=JM^-1J^t for the 3 translation constraints
-		Matrix3x3 m_inverseMassMatrixTranslation;
+		etk::Matrix3x3 m_inverseMassMatrixTranslation;
 
 		/// Inverse mass matrix K=JM^-1J^t for the 2 rotation constraints
-		Matrix2x2 m_inverseMassMatrixRotation;
+		etk::Matrix2x2 m_inverseMassMatrixRotation;
 
 		/// Inverse of mass matrix K=JM^-1J^t for the limits and motor constraints (1x1 matrix)
 		float m_inverseMassMatrixLimitMotor;
@@ -189,10 +189,10 @@ class HingeJoint : public Joint {
 		float m_inverseMassMatrixMotor;
 
 		/// Bias vector for the error correction for the translation constraints
-		Vector3 mBTranslation;
+		vec3 mBTranslation;
 
 		/// Bias vector for the error correction for the rotation constraints
-		Vector2 mBRotation;
+		vec2 mBRotation;
 
 		/// Bias of the lower limit constraint
 		float mBLowerLimit;
@@ -201,7 +201,7 @@ class HingeJoint : public Joint {
 		float mBUpperLimit;
 
 		/// Inverse of the initial orientation difference between the bodies
-		Quaternion m_initOrientationDifferenceInv;
+		etk::Quaternion m_initOrientationDifferenceInv;
 
 		/// True if the joint limits are enabled
 		bool mIsLimitEnabled;
@@ -249,8 +249,8 @@ class HingeJoint : public Joint {
 													float upperLimitAngle) const;
 
 		/// Compute the current angle around the hinge axis
-		float computeCurrentHingeAngle(const Quaternion& orientationBody1,
-										 const Quaternion& orientationBody2);
+		float computeCurrentHingeAngle(const etk::Quaternion& orientationBody1,
+										 const etk::Quaternion& orientationBody2);
 
 		/// Return the number of bytes used by the joint
 		virtual size_t getSizeInBytes() const;

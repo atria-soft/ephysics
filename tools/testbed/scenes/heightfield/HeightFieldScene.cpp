@@ -34,13 +34,13 @@ using namespace heightfieldscene;
 HeightFieldScene::HeightFieldScene(const std::string& name) : SceneDemo(name, SCENE_RADIUS) {
 
 	// Compute the radius and the center of the scene
-	openglframework::Vector3 center(0, 5, 0);
+	openglframework::vec3 center(0, 5, 0);
 
 	// Set the center of the scene
 	setScenePosition(center, SCENE_RADIUS);
 
 	// Gravity vector in the dynamics world
-	rp3d::Vector3 gravity(0, rp3d::float(-9.81), 0);
+	rp3d::vec3 gravity(0, rp3d::float(-9.81), 0);
 
 	// Create the dynamics world for the physics simulation
 	mDynamicsWorld = new rp3d::DynamicsWorld(gravity);
@@ -54,10 +54,10 @@ HeightFieldScene::HeightFieldScene(const std::string& name) : SceneDemo(name, SC
 	for (int32_t i=0; i<NB_BOXES; i++) {
 
 		// Position
-		openglframework::Vector3 position(15, 10 + 6 * i, 0);
+		openglframework::vec3 position(15, 10 + 6 * i, 0);
 
 		// Create a box and a corresponding rigid in the dynamics world
-		mBoxes[i] = new Box(Vector3(3, 3, 3), position, 80.1, mDynamicsWorld);
+		mBoxes[i] = new Box(vec3(3, 3, 3), position, 80.1, mDynamicsWorld);
 
 		// Set the box color
 		mBoxes[i]->setColor(mDemoColors[2]);
@@ -71,7 +71,7 @@ HeightFieldScene::HeightFieldScene(const std::string& name) : SceneDemo(name, SC
 	// ---------- Create the height field ---------- //
 
 	// Position
-	openglframework::Vector3 position(0, 0, 0);
+	openglframework::vec3 position(0, 0, 0);
 	rp3d::float mass = 1.0;
 
 	// Create a convex mesh and a corresponding rigid in the dynamics world
@@ -91,8 +91,8 @@ HeightFieldScene::HeightFieldScene(const std::string& name) : SceneDemo(name, SC
 
 	// Get the physics engine parameters
 	mEngineSettings.isGravityEnabled = mDynamicsWorld->isGravityEnabled();
-	rp3d::Vector3 gravityVector = mDynamicsWorld->getGravity();
-	mEngineSettings.gravity = openglframework::Vector3(gravityVector.x, gravityVector.y, gravityVector.z);
+	rp3d::vec3 gravityVector = mDynamicsWorld->getGravity();
+	mEngineSettings.gravity = openglframework::vec3(gravityVector.x(), gravityVector.y(), gravityVector.z());
 	mEngineSettings.isSleepingEnabled = mDynamicsWorld->isSleepingEnabled();
 	mEngineSettings.sleepLinearVelocity = mDynamicsWorld->getSleepLinearVelocity();
 	mEngineSettings.sleepAngularVelocity = mDynamicsWorld->getSleepAngularVelocity();
@@ -126,8 +126,8 @@ void HeightFieldScene::updatePhysics() {
 
 	// Update the physics engine parameters
 	mDynamicsWorld->setIsGratityEnabled(mEngineSettings.isGravityEnabled);
-	rp3d::Vector3 gravity(mEngineSettings.gravity.x, mEngineSettings.gravity.y,
-									 mEngineSettings.gravity.z);
+	rp3d::vec3 gravity(mEngineSettings.gravity.x(), mEngineSettings.gravity.y(),
+									 mEngineSettings.gravity.z());
 	mDynamicsWorld->setGravity(gravity);
 	mDynamicsWorld->enableSleeping(mEngineSettings.isSleepingEnabled);
 	mDynamicsWorld->setSleepLinearVelocity(mEngineSettings.sleepLinearVelocity);
@@ -146,10 +146,10 @@ void HeightFieldScene::update() {
 	SceneDemo::update();
 
 	// Update the transform used for the rendering
-	mHeightField->updateTransform(mInterpolationFactor);
+	mHeightField->updateetk::Transform3D(mInterpolationFactor);
 
 	for (int32_t i=0; i<NB_BOXES; i++) {
-	   mBoxes[i]->updateTransform(mInterpolationFactor);
+	   mBoxes[i]->updateetk::Transform3D(mInterpolationFactor);
 	}
 }
 
@@ -173,14 +173,14 @@ void HeightFieldScene::renderSinglePass(Shader& shader, const openglframework::M
 void HeightFieldScene::reset() {
 
 	// Reset the transform
-	rp3d::Transform transform(rp3d::Vector3(0, 0, 0), rp3d::Quaternion::identity());
+	rp3d::etk::Transform3D transform(rp3d::vec3(0, 0, 0), rp3d::etk::Quaternion::identity());
 	mHeightField->resetTransform(transform);
 
 	float heightFieldWidth = 10.0f;
 	float stepDist = heightFieldWidth / (NB_BOXES + 1);
 	for (int32_t i=0; i<NB_BOXES; i++) {
-		rp3d::Vector3 boxPosition(-heightFieldWidth * 0.5f + i * stepDist , 14 + 6.0f * i, -heightFieldWidth * 0.5f + i * stepDist);
-		rp3d::Transform boxTransform(boxPosition, rp3d::Quaternion::identity());
+		rp3d::vec3 boxPosition(-heightFieldWidth * 0.5f + i * stepDist , 14 + 6.0f * i, -heightFieldWidth * 0.5f + i * stepDist);
+		rp3d::etk::Transform3D boxTransform(boxPosition, rp3d::etk::Quaternion::identity());
 		mBoxes[i]->resetTransform(boxTransform);
 	}
 }

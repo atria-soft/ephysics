@@ -34,7 +34,7 @@ openglframework::VertexArrayObject Cone::mVAO;
 int32_t Cone::totalNbCones = 0;
 
 // Constructor
-Cone::Cone(float radius, float height, const openglframework::Vector3 &position,
+Cone::Cone(float radius, float height, const openglframework::vec3 &position,
 		   reactphysics3d::CollisionWorld* world,
 		   const std::string& meshFolderPath)
 	 : openglframework::Mesh(), mRadius(radius), mHeight(height) {
@@ -46,7 +46,7 @@ Cone::Cone(float radius, float height, const openglframework::Vector3 &position,
 	calculateNormals();
 
 	// Compute the scaling matrix
-	mScalingMatrix = openglframework::Matrix4(mRadius, 0, 0, 0,
+	m_scalingMatrix = openglframework::Matrix4(mRadius, 0, 0, 0,
 											  0, mHeight, 0, 0,
 											  0, 0, mRadius, 0,
 											  0, 0, 0, 1);
@@ -59,19 +59,19 @@ Cone::Cone(float radius, float height, const openglframework::Vector3 &position,
 	mConeShape = new rp3d::ConeShape(mRadius, mHeight);
 
 	// Initial position and orientation of the rigid body
-	rp3d::Vector3 initPosition(position.x, position.y, position.z);
-	rp3d::Quaternion initOrientation = rp3d::Quaternion::identity();
-	rp3d::Transform transform(initPosition, initOrientation);
+	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
+	rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
+	rp3d::etk::Transform3D transform(initPosition, initOrientation);
 
-	mPreviousTransform = transform;
+	mPreviousetk::Transform3D = transform;
 
 	// Create a rigid body corresponding to the cone in the dynamics world
 	m_body = world->createCollisionBody(transform);
 
 	// Add a collision shape to the body and specify the mass of the shape
-	m_proxyShape = m_body->addCollisionShape(mConeShape, rp3d::Transform::identity());
+	m_proxyShape = m_body->addCollisionShape(mConeShape, rp3d::etk::Transform3D::identity());
 
-	m_transformMatrix = m_transformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * m_scalingMatrix;
 
 	// Create the VBOs and VAO
 	if (totalNbCones == 0) {
@@ -82,7 +82,7 @@ Cone::Cone(float radius, float height, const openglframework::Vector3 &position,
 }
 
 // Constructor
-Cone::Cone(float radius, float height, const openglframework::Vector3 &position,
+Cone::Cone(float radius, float height, const openglframework::vec3 &position,
 		   float mass, reactphysics3d::DynamicsWorld* dynamicsWorld,
 		   const std::string& meshFolderPath)
 	 : openglframework::Mesh(), mRadius(radius), mHeight(height) {
@@ -94,7 +94,7 @@ Cone::Cone(float radius, float height, const openglframework::Vector3 &position,
 	calculateNormals();
 
 	// Compute the scaling matrix
-	mScalingMatrix = openglframework::Matrix4(mRadius, 0, 0, 0,
+	m_scalingMatrix = openglframework::Matrix4(mRadius, 0, 0, 0,
 											  0, mHeight, 0, 0,
 											  0, 0, mRadius, 0,
 											  0, 0, 0, 1);
@@ -107,19 +107,19 @@ Cone::Cone(float radius, float height, const openglframework::Vector3 &position,
 	mConeShape = new rp3d::ConeShape(mRadius, mHeight);
 
 	// Initial position and orientation of the rigid body
-	rp3d::Vector3 initPosition(position.x, position.y, position.z);
-	rp3d::Quaternion initOrientation = rp3d::Quaternion::identity();
-	rp3d::Transform transform(initPosition, initOrientation);
+	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
+	rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
+	rp3d::etk::Transform3D transform(initPosition, initOrientation);
 
 	// Create a rigid body corresponding to the cone in the dynamics world
 	rp3d::RigidBody* body = dynamicsWorld->createRigidBody(transform);
 
 	// Add a collision shape to the body and specify the mass of the shape
-	m_proxyShape = body->addCollisionShape(mConeShape, rp3d::Transform::identity(), mass);
+	m_proxyShape = body->addCollisionShape(mConeShape, rp3d::etk::Transform3D::identity(), mass);
 
 	m_body = body;
 
-	m_transformMatrix = m_transformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * m_scalingMatrix;
 
 	// Create the VBOs and VAO
 	if (totalNbCones == 0) {
@@ -163,7 +163,7 @@ void Cone::render(openglframework::Shader& shader,
 	const openglframework::Matrix4 localToCameraMatrix = worldToCameraMatrix * m_transformMatrix;
 	const openglframework::Matrix3 normalMatrix =
 					   localToCameraMatrix.getUpperLeft3x3Matrix().getInverse().getTranspose();
-	shader.setMatrix3x3Uniform("normalMatrix", normalMatrix, false);
+	shader.setetk::Matrix3x3Uniform("normalMatrix", normalMatrix, false);
 
 	// Set the vertex color
 	openglframework::Color currentColor = m_body->isSleeping() ? mSleepingColor : mColor;
@@ -212,14 +212,14 @@ void Cone::createVBOAndVAO() {
 	// Create the VBO for the vertices data
 	mVBOVertices.create();
 	mVBOVertices.bind();
-	size_t sizeVertices = m_vertices.size() * sizeof(openglframework::Vector3);
+	size_t sizeVertices = m_vertices.size() * sizeof(openglframework::vec3);
 	mVBOVertices.copyDataIntoVBO(sizeVertices, getVerticesPointer(), GL_STATIC_DRAW);
 	mVBOVertices.unbind();
 
 	// Create the VBO for the normals data
 	mVBONormals.create();
 	mVBONormals.bind();
-	size_t sizeNormals = mNormals.size() * sizeof(openglframework::Vector3);
+	size_t sizeNormals = mNormals.size() * sizeof(openglframework::vec3);
 	mVBONormals.copyDataIntoVBO(sizeNormals, getNormalsPointer(), GL_STATIC_DRAW);
 	mVBONormals.unbind();
 
@@ -227,7 +227,7 @@ void Cone::createVBOAndVAO() {
 		// Create the VBO for the texture co data
 		mVBOTextureCoords.create();
 		mVBOTextureCoords.bind();
-		size_t sizeTextureCoords = mUVs.size() * sizeof(openglframework::Vector2);
+		size_t sizeTextureCoords = mUVs.size() * sizeof(openglframework::vec2);
 		mVBOTextureCoords.copyDataIntoVBO(sizeTextureCoords, getUVTextureCoordinatesPointer(), GL_STATIC_DRAW);
 		mVBOTextureCoords.unbind();
 	}
@@ -272,23 +272,23 @@ void Cone::resetTransform(const rp3d::Transform& transform) {
 	// Reset the velocity of the rigid body
 	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(m_body);
 	if (rigidBody != NULL) {
-		rigidBody->setLinearVelocity(rp3d::Vector3(0, 0, 0));
-		rigidBody->setAngularVelocity(rp3d::Vector3(0, 0, 0));
+		rigidBody->setLinearVelocity(rp3d::vec3(0, 0, 0));
+		rigidBody->setAngularVelocity(rp3d::vec3(0, 0, 0));
 	}
 
-	updateTransform(1.0f);
+	updateetk::Transform3D(1.0f);
 }
 
 // Set the scaling of the object
-void Cone::setScaling(const openglframework::Vector3& scaling) {
+void Cone::setScaling(const openglframework::vec3& scaling) {
 
 	// Scale the collision shape
-	m_proxyShape->setLocalScaling(rp3d::Vector3(scaling.x, scaling.y, scaling.z));
+	m_proxyShape->setLocalScaling(rp3d::vec3(scaling.x(), scaling.y(), scaling.z()));
 
 	// Scale the graphics object
-	mScalingMatrix = openglframework::Matrix4(mRadius * scaling.x, 0, 0, 0,
-											  0, mHeight * scaling.y, 0, 0,
-											  0, 0, mRadius * scaling.z, 0,
+	m_scalingMatrix = openglframework::Matrix4(mRadius * scaling.x(), 0, 0, 0,
+											  0, mHeight * scaling.y(), 0, 0,
+											  0, 0, mRadius * scaling.z(), 0,
 											  0, 0, 0, 1);
 }
 

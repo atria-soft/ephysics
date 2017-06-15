@@ -35,7 +35,7 @@ void ContactManifold::addContactPoint(ContactPoint* contact) {
 		// Check if the new point point does not correspond to a same contact point
 		// already in the manifold.
 		float distance = (m_contactPoints[i]->getWorldPointOnBody1() -
-							contact->getWorldPointOnBody1()).lengthSquare();
+							contact->getWorldPointOnBody1()).length2();
 		if (distance <= PERSISTENT_CONTACT_DIST_THRESHOLD*PERSISTENT_CONTACT_DIST_THRESHOLD) {
 
 			// Delete the new contact
@@ -86,7 +86,7 @@ void ContactManifold::removeContactPoint(uint32_t index) {
 /// with a negative penetration depth (meaning that the bodies are not penetrating anymore) and also
 /// the contacts with a too large distance between the contact points in the plane orthogonal to the
 /// contact normal.
-void ContactManifold::update(const Transform& transform1, const Transform& transform2) {
+void ContactManifold::update(const etk::Transform3D& transform1, const etk::Transform3D& transform2) {
 
 	if (m_nbContactPoints == 0) return;
 
@@ -117,13 +117,13 @@ void ContactManifold::update(const Transform& transform1, const Transform& trans
 		else {
 			// Compute the distance of the two contact points in the plane
 			// orthogonal to the contact normal
-			Vector3 projOfPoint1 = m_contactPoints[i]->getWorldPointOnBody1() +
+			vec3 projOfPoint1 = m_contactPoints[i]->getWorldPointOnBody1() +
 								   m_contactPoints[i]->getNormal() * distanceNormal;
-			Vector3 projDifference = m_contactPoints[i]->getWorldPointOnBody2() - projOfPoint1;
+			vec3 projDifference = m_contactPoints[i]->getWorldPointOnBody2() - projOfPoint1;
 
 			// If the orthogonal distance is larger than the valid distance
 			// threshold, we remove the contact
-			if (projDifference.lengthSquare() > squarePersistentContactThreshold) {
+			if (projDifference.length2() > squarePersistentContactThreshold) {
 				removeContactPoint(i);
 			}
 		}
@@ -162,7 +162,7 @@ int32_t ContactManifold::getIndexOfDeepestPenetration(ContactPoint* newContact) 
 /// only estimate it because we do not compute the actual diagonals of the quadrialteral. Therefore,
 /// this is only a guess that is faster to compute. This idea comes from the Bullet Physics library
 /// by Erwin Coumans (http://wwww.bulletphysics.org).
-int32_t ContactManifold::getIndexToRemove(int32_t indexMaxPenetration, const Vector3& newPoint) const {
+int32_t ContactManifold::getIndexToRemove(int32_t indexMaxPenetration, const vec3& newPoint) const {
 
 	assert(m_nbContactPoints == MAX_CONTACT_POINTS_IN_MANIFOLD);
 
@@ -173,35 +173,35 @@ int32_t ContactManifold::getIndexToRemove(int32_t indexMaxPenetration, const Vec
 
 	if (indexMaxPenetration != 0) {
 		// Compute the area
-		Vector3 vector1 = newPoint - m_contactPoints[1]->getLocalPointOnBody1();
-		Vector3 vector2 = m_contactPoints[3]->getLocalPointOnBody1() -
+		vec3 vector1 = newPoint - m_contactPoints[1]->getLocalPointOnBody1();
+		vec3 vector2 = m_contactPoints[3]->getLocalPointOnBody1() -
 						  m_contactPoints[2]->getLocalPointOnBody1();
-		Vector3 crossProduct = vector1.cross(vector2);
-		area0 = crossProduct.lengthSquare();
+		vec3 crossProduct = vector1.cross(vector2);
+		area0 = crossProduct.length2();
 	}
 	if (indexMaxPenetration != 1) {
 		// Compute the area
-		Vector3 vector1 = newPoint - m_contactPoints[0]->getLocalPointOnBody1();
-		Vector3 vector2 = m_contactPoints[3]->getLocalPointOnBody1() -
+		vec3 vector1 = newPoint - m_contactPoints[0]->getLocalPointOnBody1();
+		vec3 vector2 = m_contactPoints[3]->getLocalPointOnBody1() -
 						  m_contactPoints[2]->getLocalPointOnBody1();
-		Vector3 crossProduct = vector1.cross(vector2);
-		area1 = crossProduct.lengthSquare();
+		vec3 crossProduct = vector1.cross(vector2);
+		area1 = crossProduct.length2();
 	}
 	if (indexMaxPenetration != 2) {
 		// Compute the area
-		Vector3 vector1 = newPoint - m_contactPoints[0]->getLocalPointOnBody1();
-		Vector3 vector2 = m_contactPoints[3]->getLocalPointOnBody1() -
+		vec3 vector1 = newPoint - m_contactPoints[0]->getLocalPointOnBody1();
+		vec3 vector2 = m_contactPoints[3]->getLocalPointOnBody1() -
 						  m_contactPoints[1]->getLocalPointOnBody1();
-		Vector3 crossProduct = vector1.cross(vector2);
-		area2 = crossProduct.lengthSquare();
+		vec3 crossProduct = vector1.cross(vector2);
+		area2 = crossProduct.length2();
 	}
 	if (indexMaxPenetration != 3) {
 		// Compute the area
-		Vector3 vector1 = newPoint - m_contactPoints[0]->getLocalPointOnBody1();
-		Vector3 vector2 = m_contactPoints[2]->getLocalPointOnBody1() -
+		vec3 vector1 = newPoint - m_contactPoints[0]->getLocalPointOnBody1();
+		vec3 vector2 = m_contactPoints[2]->getLocalPointOnBody1() -
 						  m_contactPoints[1]->getLocalPointOnBody1();
-		Vector3 crossProduct = vector1.cross(vector2);
-		area3 = crossProduct.lengthSquare();
+		vec3 crossProduct = vector1.cross(vector2);
+		area3 = crossProduct.length2();
 	}
 	
 	// Return the index of the contact to remove

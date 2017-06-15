@@ -129,29 +129,29 @@ int32_t ContactManifoldSet::selectManifoldWithSimilarNormal(int16_t normalDirect
 // Map the normal vector int32_to a cubemap face bucket (a face contains 4x4 buckets)
 // Each face of the cube is divided int32_to 4x4 buckets. This method maps the
 // normal vector int32_to of the of the bucket and returns a unique Id for the bucket
-int16_t ContactManifoldSet::computeCubemapNormalId(const Vector3& normal) const {
+int16_t ContactManifoldSet::computeCubemapNormalId(const vec3& normal) const {
 
-	assert(normal.lengthSquare() > MACHINE_EPSILON);
+	assert(normal.length2() > MACHINE_EPSILON);
 
 	int32_t faceNo;
 	float u, v;
-	float max = max3(fabs(normal.x), fabs(normal.y), fabs(normal.z));
-	Vector3 normalScaled = normal / max;
+	float max = max3(fabs(normal.x()), fabs(normal.y()), fabs(normal.z()));
+	vec3 normalScaled = normal / max;
 
-	if (normalScaled.x >= normalScaled.y && normalScaled.x >= normalScaled.z) {
-		faceNo = normalScaled.x > 0 ? 0 : 1;
-		u = normalScaled.y;
-		v = normalScaled.z;
+	if (normalScaled.x() >= normalScaled.y() && normalScaled.x() >= normalScaled.z()) {
+		faceNo = normalScaled.x() > 0 ? 0 : 1;
+		u = normalScaled.y();
+		v = normalScaled.z();
 	}
-	else if (normalScaled.y >= normalScaled.x && normalScaled.y >= normalScaled.z) {
-		faceNo = normalScaled.y > 0 ? 2 : 3;
-		u = normalScaled.x;
-		v = normalScaled.z;
+	else if (normalScaled.y() >= normalScaled.x() && normalScaled.y() >= normalScaled.z()) {
+		faceNo = normalScaled.y() > 0 ? 2 : 3;
+		u = normalScaled.x();
+		v = normalScaled.z();
 	}
 	else {
-		faceNo = normalScaled.z > 0 ? 4 : 5;
-		u = normalScaled.x;
-		v = normalScaled.y;
+		faceNo = normalScaled.z() > 0 ? 4 : 5;
+		u = normalScaled.x();
+		v = normalScaled.y();
 	}
 
 	int32_t indexU = floor(((u + 1)/2) * CONTACT_CUBEMAP_FACE_NB_SUBDIVISIONS);

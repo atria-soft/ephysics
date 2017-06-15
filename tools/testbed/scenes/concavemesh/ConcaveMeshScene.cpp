@@ -37,13 +37,13 @@ ConcaveMeshScene::ConcaveMeshScene(const std::string& name)
 	std::string meshFolderPath("meshes/");
 
 	// Compute the radius and the center of the scene
-	openglframework::Vector3 center(0, 5, 0);
+	openglframework::vec3 center(0, 5, 0);
 
 	// Set the center of the scene
 	setScenePosition(center, SCENE_RADIUS);
 
 	// Gravity vector in the dynamics world
-	rp3d::Vector3 gravity(0, rp3d::float(-9.81), 0);
+	rp3d::vec3 gravity(0, rp3d::float(-9.81), 0);
 
 	// Create the dynamics world for the physics simulation
 	mDynamicsWorld = new rp3d::DynamicsWorld(gravity);
@@ -58,10 +58,10 @@ ConcaveMeshScene::ConcaveMeshScene(const std::string& name)
 		for (int32_t j=0; j<NB_BOXES_Z; j++) {
 
 			// Position
-			openglframework::Vector3 boxPosition(-NB_BOXES_X * BOX_SIZE * BOXES_SPACE / 2 + i * BOX_SIZE * BOXES_SPACE, 30, -NB_BOXES_Z * BOX_SIZE * BOXES_SPACE / 2 + j * BOX_SIZE * BOXES_SPACE);
+			openglframework::vec3 boxPosition(-NB_BOXES_X * BOX_SIZE * BOXES_SPACE / 2 + i * BOX_SIZE * BOXES_SPACE, 30, -NB_BOXES_Z * BOX_SIZE * BOXES_SPACE / 2 + j * BOX_SIZE * BOXES_SPACE);
 
 			// Create a sphere and a corresponding rigid in the dynamics world
-			mBoxes[i * NB_BOXES_Z + j] = new Box(Vector3(BOX_SIZE, BOX_SIZE, BOX_SIZE) * 0.5f, boxPosition, 80.1, mDynamicsWorld);
+			mBoxes[i * NB_BOXES_Z + j] = new Box(vec3(BOX_SIZE, BOX_SIZE, BOX_SIZE) * 0.5f, boxPosition, 80.1, mDynamicsWorld);
 
 			// Set the sphere color
 			mBoxes[i * NB_BOXES_Z + j]->setColor(mDemoColors[0]);
@@ -76,7 +76,7 @@ ConcaveMeshScene::ConcaveMeshScene(const std::string& name)
 	// ---------- Create the triangular mesh ---------- //
 
 	// Position
-	openglframework::Vector3 position(0, 0, 0);
+	openglframework::vec3 position(0, 0, 0);
 	rp3d::float mass = 1.0;
 
 	// Create a convex mesh and a corresponding rigid in the dynamics world
@@ -96,8 +96,8 @@ ConcaveMeshScene::ConcaveMeshScene(const std::string& name)
 
 	// Get the physics engine parameters
 	mEngineSettings.isGravityEnabled = mDynamicsWorld->isGravityEnabled();
-	rp3d::Vector3 gravityVector = mDynamicsWorld->getGravity();
-	mEngineSettings.gravity = openglframework::Vector3(gravityVector.x, gravityVector.y, gravityVector.z);
+	rp3d::vec3 gravityVector = mDynamicsWorld->getGravity();
+	mEngineSettings.gravity = openglframework::vec3(gravityVector.x(), gravityVector.y(), gravityVector.z());
 	mEngineSettings.isSleepingEnabled = mDynamicsWorld->isSleepingEnabled();
 	mEngineSettings.sleepLinearVelocity = mDynamicsWorld->getSleepLinearVelocity();
 	mEngineSettings.sleepAngularVelocity = mDynamicsWorld->getSleepAngularVelocity();
@@ -130,8 +130,8 @@ void ConcaveMeshScene::updatePhysics() {
 
 	// Update the physics engine parameters
 	mDynamicsWorld->setIsGratityEnabled(mEngineSettings.isGravityEnabled);
-	rp3d::Vector3 gravity(mEngineSettings.gravity.x, mEngineSettings.gravity.y,
-									 mEngineSettings.gravity.z);
+	rp3d::vec3 gravity(mEngineSettings.gravity.x(), mEngineSettings.gravity.y(),
+									 mEngineSettings.gravity.z());
 	mDynamicsWorld->setGravity(gravity);
 	mDynamicsWorld->enableSleeping(mEngineSettings.isSleepingEnabled);
 	mDynamicsWorld->setSleepLinearVelocity(mEngineSettings.sleepLinearVelocity);
@@ -150,10 +150,10 @@ void ConcaveMeshScene::update() {
 	SceneDemo::update();
 
 	// Update the transform used for the rendering
-	mConcaveMesh->updateTransform(mInterpolationFactor);
+	mConcaveMesh->updateetk::Transform3D(mInterpolationFactor);
 
 	for (int32_t i=0; i<NB_BOXES_X * NB_BOXES_Z; i++) {
-		mBoxes[i]->updateTransform(mInterpolationFactor);
+		mBoxes[i]->updateetk::Transform3D(mInterpolationFactor);
 	}
 }
 
@@ -177,16 +177,16 @@ void ConcaveMeshScene::renderSinglePass(Shader& shader, const openglframework::M
 void ConcaveMeshScene::reset() {
 
 	// Reset the transform
-	rp3d::Transform transform(rp3d::Vector3::zero(), rp3d::Quaternion::identity());
+	rp3d::etk::Transform3D transform(rp3d::vec3::zero(), rp3d::etk::Quaternion::identity());
 	mConcaveMesh->resetTransform(transform);
 
 	for (int32_t i=0; i<NB_BOXES_X; i++) {
 		for (int32_t j=0; j<NB_BOXES_Z; j++) {
 
 			// Position
-			rp3d::Vector3 boxPosition(-NB_BOXES_X * BOX_SIZE * BOXES_SPACE / 2 + i * BOX_SIZE * BOXES_SPACE, 30, -NB_BOXES_Z * BOX_SIZE * BOXES_SPACE / 2 + j * BOX_SIZE * BOXES_SPACE);
+			rp3d::vec3 boxPosition(-NB_BOXES_X * BOX_SIZE * BOXES_SPACE / 2 + i * BOX_SIZE * BOXES_SPACE, 30, -NB_BOXES_Z * BOX_SIZE * BOXES_SPACE / 2 + j * BOX_SIZE * BOXES_SPACE);
 
-			rp3d::Transform boxTransform(boxPosition, rp3d::Quaternion::identity());
+			rp3d::etk::Transform3D boxTransform(boxPosition, rp3d::etk::Quaternion::identity());
 			mBoxes[i * NB_BOXES_Z + j]->resetTransform(boxTransform);
 		}
 	}

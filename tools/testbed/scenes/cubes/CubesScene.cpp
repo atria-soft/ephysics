@@ -35,13 +35,13 @@ CubesScene::CubesScene(const std::string& name)
 	  : SceneDemo(name, SCENE_RADIUS) {
 
 	// Compute the radius and the center of the scene
-	openglframework::Vector3 center(0, 5, 0);
+	openglframework::vec3 center(0, 5, 0);
 
 	// Set the center of the scene
 	setScenePosition(center, SCENE_RADIUS);
 
 	// Gravity vector in the dynamics world
-	rp3d::Vector3 gravity(0, rp3d::float(-9.81), 0);
+	rp3d::vec3 gravity(0, rp3d::float(-9.81), 0);
 
 	// Create the dynamics world for the physics simulation
 	m_dynamicsWorld = new rp3d::DynamicsWorld(gravity);
@@ -56,8 +56,8 @@ CubesScene::CubesScene(const std::string& name)
 
 		// Position of the cubes
 		float angle = i * 30.0f;
-		openglframework::Vector3 position(radius * cos(angle),
-										  30 + i * (BOX_SIZE.y + 0.3f),
+		openglframework::vec3 position(radius * cos(angle),
+										  30 + i * (BOX_SIZE.y() + 0.3f),
 										  0);
 
 		// Create a cube and a corresponding rigid in the dynamics world
@@ -76,7 +76,7 @@ CubesScene::CubesScene(const std::string& name)
 	}
 
 	// Create the floor
-	openglframework::Vector3 floorPosition(0, 0, 0);
+	openglframework::vec3 floorPosition(0, 0, 0);
 	mFloor = new Box(FLOOR_SIZE, floorPosition, FLOOR_MASS, m_dynamicsWorld);
 	mFloor->setColor(mGreyColorDemo);
 	mFloor->setSleepingColor(mGreyColorDemo);
@@ -90,8 +90,8 @@ CubesScene::CubesScene(const std::string& name)
 
 	// Get the physics engine parameters
 	mEngineSettings.isGravityEnabled = m_dynamicsWorld->isGravityEnabled();
-	rp3d::Vector3 gravityVector = m_dynamicsWorld->getGravity();
-	mEngineSettings.gravity = openglframework::Vector3(gravityVector.x, gravityVector.y, gravityVector.z);
+	rp3d::vec3 gravityVector = m_dynamicsWorld->getGravity();
+	mEngineSettings.gravity = openglframework::vec3(gravityVector.x(), gravityVector.y(), gravityVector.z());
 	mEngineSettings.isSleepingEnabled = m_dynamicsWorld->isSleepingEnabled();
 	mEngineSettings.sleepLinearVelocity = m_dynamicsWorld->getSleepLinearVelocity();
 	mEngineSettings.sleepAngularVelocity = m_dynamicsWorld->getSleepAngularVelocity();
@@ -128,8 +128,8 @@ void CubesScene::updatePhysics() {
 
 	// Update the physics engine parameters
 	m_dynamicsWorld->setIsGratityEnabled(mEngineSettings.isGravityEnabled);
-	rp3d::Vector3 gravity(mEngineSettings.gravity.x, mEngineSettings.gravity.y,
-									 mEngineSettings.gravity.z);
+	rp3d::vec3 gravity(mEngineSettings.gravity.x(), mEngineSettings.gravity.y(),
+									 mEngineSettings.gravity.z());
 	m_dynamicsWorld->setGravity(gravity);
 	m_dynamicsWorld->enableSleeping(mEngineSettings.isSleepingEnabled);
 	m_dynamicsWorld->setSleepLinearVelocity(mEngineSettings.sleepLinearVelocity);
@@ -151,10 +151,10 @@ void CubesScene::update() {
 	for (std::vector<Box*>::iterator it = mBoxes.begin(); it != mBoxes.end(); ++it) {
 
 		// Update the transform used for the rendering
-		(*it)->updateTransform(mInterpolationFactor);
+		(*it)->updateetk::Transform3D(mInterpolationFactor);
 	}
 
-	mFloor->updateTransform(mInterpolationFactor);
+	mFloor->updateetk::Transform3D(mInterpolationFactor);
 }
 
 // Render the scene in a single pass
@@ -184,14 +184,14 @@ void CubesScene::reset() {
 
 		// Position of the cubes
 		float angle = i * 30.0f;
-		openglframework::Vector3 position(radius * cos(angle),
-										  10 + i * (BOX_SIZE.y + 0.3f),
+		openglframework::vec3 position(radius * cos(angle),
+										  10 + i * (BOX_SIZE.y() + 0.3f),
 										  0);
 
 		// Initial position and orientation of the rigid body
-		rp3d::Vector3 initPosition(position.x, position.y, position.z);
-		rp3d::Quaternion initOrientation = rp3d::Quaternion::identity();
-		rp3d::Transform transform(initPosition, initOrientation);
+		rp3d::vec3 initPosition(position.x(), position.y(), position.z());
+		rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
+		rp3d::etk::Transform3D transform(initPosition, initOrientation);
 
 		mBoxes[i]->resetTransform(transform);
 	}

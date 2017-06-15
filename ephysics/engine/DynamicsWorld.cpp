@@ -19,7 +19,7 @@ using namespace std;
 /**
  * @param gravity Gravity vector in the world (in meters per second squared)
  */
-DynamicsWorld::DynamicsWorld(const Vector3 &gravity)
+DynamicsWorld::DynamicsWorld(const vec3 &gravity)
 			  : CollisionWorld(),
 				m_contactSolver(m_mapBodyToConstrainedVelocityIndex),
 				m_constraintSolver(m_mapBodyToConstrainedVelocityIndex),
@@ -168,8 +168,8 @@ void DynamicsWorld::int32_tegrateRigidBodiesPositions() {
 
 			// Get the constrained velocity
 			uint32_t indexArray = m_mapBodyToConstrainedVelocityIndex.find(bodies[b])->second;
-			Vector3 newLinVelocity = m_constrainedLinearVelocities[indexArray];
-			Vector3 newAngVelocity = m_constrainedAngularVelocities[indexArray];
+			vec3 newLinVelocity = m_constrainedLinearVelocities[indexArray];
+			vec3 newAngVelocity = m_constrainedAngularVelocities[indexArray];
 
 			// Add the split impulse velocity from Contact Solver (only used
 			// to update the position)
@@ -180,14 +180,14 @@ void DynamicsWorld::int32_tegrateRigidBodiesPositions() {
 			}
 
 			// Get current position and orientation of the body
-			const Vector3& currentPosition = bodies[b]->m_centerOfMassWorld;
-			const Quaternion& currentOrientation = bodies[b]->getTransform().getOrientation();
+			const vec3& currentPosition = bodies[b]->m_centerOfMassWorld;
+			const etk::Quaternion& currentOrientation = bodies[b]->getTransform().getOrientation();
 
 			// Update the new constrained position and orientation of the body
 			m_constrainedPositions[indexArray] = currentPosition + newLinVelocity * m_timeStep;
 			m_constrainedOrientations[indexArray] = currentOrientation +
-												   Quaternion(0, newAngVelocity) *
-												   currentOrientation * float(0.5) * m_timeStep;
+												   etk::Quaternion(0, newAngVelocity) *
+												   currentOrientation * 0.5f * m_timeStep;
 		}
 	}
 }
@@ -215,7 +215,7 @@ void DynamicsWorld::updateBodiesState() {
 			bodies[b]->m_centerOfMassWorld = m_constrainedPositions[index];
 
 			// Update the orientation of the body
-			bodies[b]->m_transform.setOrientation(m_constrainedOrientations[index].getUnit());
+			bodies[b]->m_transform.setOrientation(m_constrainedOrientations[index].safeNormalized());
 
 			// Update the transform of the body (using the new center of mass and new orientation)
 			bodies[b]->updateTransformWithCenterOfMass();
@@ -238,12 +238,12 @@ void DynamicsWorld::initVelocityArrays() {
 		}
 		m_numberBodiesCapacity = nbBodies;
 		// TODO : Use better memory allocation here
-		m_splitLinearVelocities = new Vector3[m_numberBodiesCapacity];
-		m_splitAngularVelocities = new Vector3[m_numberBodiesCapacity];
-		m_constrainedLinearVelocities = new Vector3[m_numberBodiesCapacity];
-		m_constrainedAngularVelocities = new Vector3[m_numberBodiesCapacity];
-		m_constrainedPositions = new Vector3[m_numberBodiesCapacity];
-		m_constrainedOrientations = new Quaternion[m_numberBodiesCapacity];
+		m_splitLinearVelocities = new vec3[m_numberBodiesCapacity];
+		m_splitAngularVelocities = new vec3[m_numberBodiesCapacity];
+		m_constrainedLinearVelocities = new vec3[m_numberBodiesCapacity];
+		m_constrainedAngularVelocities = new vec3[m_numberBodiesCapacity];
+		m_constrainedPositions = new vec3[m_numberBodiesCapacity];
+		m_constrainedOrientations = new etk::Quaternion[m_numberBodiesCapacity];
 		assert(m_splitLinearVelocities != NULL);
 		assert(m_splitAngularVelocities != NULL);
 		assert(m_constrainedLinearVelocities != NULL);
@@ -254,8 +254,8 @@ void DynamicsWorld::initVelocityArrays() {
 
 	// Reset the velocities arrays
 	for (uint32_t i=0; i<m_numberBodiesCapacity; i++) {
-		m_splitLinearVelocities[i].setToZero();
-		m_splitAngularVelocities[i].setToZero();
+		m_splitLinearVelocities[i].setZero();
+		m_splitAngularVelocities[i].setZero();
 	}
 
 	// Initialize the map of body indexes in the velocity arrays
@@ -293,8 +293,8 @@ void DynamicsWorld::int32_tegrateRigidBodiesVelocities() {
 			// Insert the body int32_to the map of constrained velocities
 			uint32_t indexBody = m_mapBodyToConstrainedVelocityIndex.find(bodies[b])->second;
 
-			assert(m_splitLinearVelocities[indexBody] == Vector3(0, 0, 0));
-			assert(m_splitAngularVelocities[indexBody] == Vector3(0, 0, 0));
+			assert(m_splitLinearVelocities[indexBody] == vec3(0, 0, 0));
+			assert(m_splitAngularVelocities[indexBody] == vec3(0, 0, 0));
 
 			// Integrate the external force to get the new velocity of the body
 			m_constrainedLinearVelocities[indexBody] = bodies[b]->getLinearVelocity() +
@@ -326,8 +326,8 @@ void DynamicsWorld::int32_tegrateRigidBodiesVelocities() {
 			//				 => v2 = v1 * (1 - c * dt)
 			float linDampingFactor = bodies[b]->getLinearDamping();
 			float angDampingFactor = bodies[b]->getAngularDamping();
-			float linearDamping = pow(float(1.0) - linDampingFactor, m_timeStep);
-			float angularDamping = pow(float(1.0) - angDampingFactor, m_timeStep);
+			float linearDamping = pow(1.0f - linDampingFactor, m_timeStep);
+			float angularDamping = pow(1.0f - angDampingFactor, m_timeStep);
 			m_constrainedLinearVelocities[indexBody] *= linearDamping;
 			m_constrainedAngularVelocities[indexBody] *= angularDamping;
 
@@ -422,10 +422,10 @@ void DynamicsWorld::solvePositionCorrection() {
 
 // Create a rigid body int32_to the physics world
 /**
- * @param transform Transformation from body local-space to world-space
+ * @param transform etk::Transform3Dation from body local-space to world-space
  * @return A pointer to the body that has been created in the world
  */
-RigidBody* DynamicsWorld::createRigidBody(const Transform& transform) {
+RigidBody* DynamicsWorld::createRigidBody(const etk::Transform3D& transform) {
 
 	// Compute the body ID
 	bodyindex bodyID = computeNextAvailableBodyID();
@@ -794,13 +794,13 @@ void DynamicsWorld::updateSleepingBodies() {
 			if (bodies[b]->getType() == STATIC) continue;
 
 			// If the body is velocity is large enough to stay awake
-			if (bodies[b]->getLinearVelocity().lengthSquare() > sleepLinearVelocitySquare ||
-				bodies[b]->getAngularVelocity().lengthSquare() > sleepAngularVelocitySquare ||
+			if (bodies[b]->getLinearVelocity().length2() > sleepLinearVelocitySquare ||
+				bodies[b]->getAngularVelocity().length2() > sleepAngularVelocitySquare ||
 				!bodies[b]->isAllowedToSleep()) {
 
 				// Reset the sleep time of the body
-				bodies[b]->m_sleepTime = float(0.0);
-				minSleepTime = float(0.0);
+				bodies[b]->m_sleepTime = 0.0f;
+				minSleepTime = 0.0f;
 			}
 			else {  // If the body velocity is bellow the sleeping velocity threshold
 

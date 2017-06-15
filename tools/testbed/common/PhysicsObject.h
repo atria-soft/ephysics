@@ -39,7 +39,7 @@ class PhysicsObject {
 		rp3d::CollisionBody* m_body;
 
 		/// Previous transform of the body (for int32_terpolation)
-		rp3d::Transform mPreviousTransform;
+		rp3d::etk::Transform3D mPreviousTransform;
 
 		/// Main color of the box
 		openglframework::Color mColor;
@@ -48,7 +48,7 @@ class PhysicsObject {
 		openglframework::Color mSleepingColor;
 
 		// Compute the new transform matrix
-		openglframework::Matrix4 computeTransform(float int32_terpolationFactor,
+		openglframework::Matrix4 computeetk::Transform3D(float int32_terpolationFactor,
 												 const openglframework::Matrix4 &scalingMatrix);
 
 	public:
@@ -57,7 +57,7 @@ class PhysicsObject {
 		PhysicsObject();
 
 		/// Update the transform matrix of the object
-		virtual void updateTransform(float int32_terpolationFactor)=0;
+		virtual void updateetk::Transform3D(float int32_terpolationFactor)=0;
 
 		/// Set the color of the box
 		void setColor(const openglframework::Color& color);
@@ -72,7 +72,7 @@ class PhysicsObject {
 		reactphysics3d::RigidBody* getRigidBody();
 
 		/// Set the scaling of the object
-		virtual void setScaling(const openglframework::Vector3& scaling)=0;
+		virtual void setScaling(const openglframework::vec3& scaling)=0;
 };
 
 // Set the color of the box

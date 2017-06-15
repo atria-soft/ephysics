@@ -91,7 +91,7 @@ void Gui::update() {
 void Gui::createSimulationPanel() {
 
 	mSimulationPanel = new Window(mApp, "Simulation");
-	mSimulationPanel->setPosition(Vector2i(15, 15));
+	mSimulationPanel->setPosition(vec2i(15, 15));
 	mSimulationPanel->setLayout(new GroupLayout(10, 5, 10 , 20));
 	mSimulationPanel->setId("SimulationPanel");
 	mSimulationPanel->setFixedWidth(220);
@@ -137,7 +137,7 @@ void Gui::createSimulationPanel() {
 void Gui::createSettingsPanel() {
 
 	mSettingsPanel = new Window(mApp, "Settings");
-	mSettingsPanel->setPosition(Vector2i(15, 180));
+	mSettingsPanel->setPosition(vec2i(15, 180));
 	mSettingsPanel->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Middle, 10, 5));
 	mSettingsPanel->setId("SettingsPanel");
 	mSettingsPanel->setFixedWidth(220);
@@ -185,7 +185,7 @@ void Gui::createSettingsPanel() {
 	Label* labelTimeStep = new Label(panelTimeStep, "Time step","sans-bold");
 	labelTimeStep->setFixedWidth(120);
 	TextBox* textboxTimeStep = new TextBox(panelTimeStep);
-	textboxTimeStep->setFixedSize(Vector2i(70, 25));
+	textboxTimeStep->setFixedSize(vec2i(70, 25));
 	textboxTimeStep->setEditable(true);
 	std::ostringstream out;
 	out << std::setprecision(1) << std::fixed << (mApp->mEngineSettings.timeStep * 1000);
@@ -219,7 +219,7 @@ void Gui::createSettingsPanel() {
 	Label* labelVelocityIterations = new Label(panelVelocityIterations, "Velocity solver","sans-bold");
 	labelVelocityIterations->setFixedWidth(120);
 	TextBox* textboxVelocityIterations = new TextBox(panelVelocityIterations);
-	textboxVelocityIterations->setFixedSize(Vector2i(70, 25));
+	textboxVelocityIterations->setFixedSize(vec2i(70, 25));
 	textboxVelocityIterations->setEditable(true);
 	textboxVelocityIterations->setValue(std::to_string(mApp->mEngineSettings.nbVelocitySolverIterations));
 	textboxVelocityIterations->setUnits("iter");
@@ -250,7 +250,7 @@ void Gui::createSettingsPanel() {
 	Label* labelPositionIterations = new Label(panelPositionIterations, "Position solver","sans-bold");
 	labelPositionIterations->setFixedWidth(120);
 	TextBox* textboxPositionIterations = new TextBox(panelPositionIterations);
-	textboxPositionIterations->setFixedSize(Vector2i(70, 25));
+	textboxPositionIterations->setFixedSize(vec2i(70, 25));
 	textboxPositionIterations->setEditable(true);
 	textboxPositionIterations->setValue(std::to_string(mApp->mEngineSettings.nbPositionSolverIterations));
 	textboxPositionIterations->setUnits("iter");
@@ -283,7 +283,7 @@ void Gui::createSettingsPanel() {
 	out.str("");
 	out << std::setprecision(0) << std::fixed << (mApp->mEngineSettings.timeBeforeSleep * 1000);
 	TextBox* textboxTimeSleep = new TextBox(panelTimeSleep);
-	textboxTimeSleep->setFixedSize(Vector2i(70, 25));
+	textboxTimeSleep->setFixedSize(vec2i(70, 25));
 	textboxTimeSleep->setEditable(true);
 	textboxTimeSleep->setValue(out.str());
 	textboxTimeSleep->setUnits("ms");
@@ -317,7 +317,7 @@ void Gui::createSettingsPanel() {
 	out.str("");
 	out << std::setprecision(2) << std::fixed << (mApp->mEngineSettings.sleepLinearVelocity);
 	TextBox* textboxSleepLinearVel = new TextBox(panelSleepLinearVel);
-	textboxSleepLinearVel->setFixedSize(Vector2i(70, 25));
+	textboxSleepLinearVel->setFixedSize(vec2i(70, 25));
 	textboxSleepLinearVel->setEditable(true);
 	textboxSleepLinearVel->setValue(out.str());
 	textboxSleepLinearVel->setUnits("m/s");
@@ -351,7 +351,7 @@ void Gui::createSettingsPanel() {
 	out.str("");
 	out << std::setprecision(2) << std::fixed << (mApp->mEngineSettings.sleepAngularVelocity);
 	TextBox* textboxSleepAngularVel = new TextBox(panelSleepAngularVel);
-	textboxSleepAngularVel->setFixedSize(Vector2i(70, 25));
+	textboxSleepAngularVel->setFixedSize(vec2i(70, 25));
 	textboxSleepAngularVel->setEditable(true);
 	textboxSleepAngularVel->setValue(out.str());
 	textboxSleepAngularVel->setUnits("rad/s");
@@ -409,7 +409,7 @@ void Gui::createSettingsPanel() {
 void Gui::createProfilingPanel() {
 
 	Widget* profilingPanel = new Window(mApp, "Profiling");
-	profilingPanel->setPosition(Vector2i(15, 525));
+	profilingPanel->setPosition(vec2i(15, 525));
 	profilingPanel->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Fill, 10, 5));
 	profilingPanel->setId("SettingsPanel");
 	profilingPanel->setFixedWidth(220);

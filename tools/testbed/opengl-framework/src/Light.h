@@ -28,7 +28,7 @@
 
 // Libraries
 #include <ephysics/maths/Color.h>
-#include <ephysics/maths/Vector3.h>
+#include <ephysics/maths/vec3.h>
 #include <ephysics/Object3D.h>
 #include <ephysics/Texture2D.h>
 #include <ephysics/Shader.h>

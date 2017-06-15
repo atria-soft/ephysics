@@ -19,9 +19,9 @@ using namespace reactphysics3d;
  * @param margin Collision margin (in meters) around the collision shape
  */
 ConeShape::ConeShape(float radius, float height, float margin)
-		  : ConvexShape(CONE, margin), mRadius(radius), mHalfHeight(height * float(0.5)) {
-	assert(mRadius > float(0.0));
-	assert(mHalfHeight > float(0.0));
+		  : ConvexShape(CONE, margin), mRadius(radius), m_halfHeight(height * 0.5f) {
+	assert(mRadius > 0.0f);
+	assert(m_halfHeight > 0.0f);
 	
 	// Compute the sine of the semi-angle at the apex point
 	mSinTheta = mRadius / (sqrt(mRadius * mRadius + height * height));
@@ -33,24 +33,24 @@ ConeShape::~ConeShape() {
 }
 
 // Return a local support point in a given direction without the object margin
-Vector3 ConeShape::getLocalSupportPointWithoutMargin(const Vector3& direction,
+vec3 ConeShape::getLocalSupportPointWithoutMargin(const vec3& direction,
 													 void** cachedCollisionData) const {
 
-	const Vector3& v = direction;
+	const vec3& v = direction;
 	float sinThetaTimesLengthV = mSinTheta * v.length();
-	Vector3 supportPoint;
+	vec3 supportPoint;
 
-	if (v.y > sinThetaTimesLengthV) {
-		supportPoint = Vector3(0.0, mHalfHeight, 0.0);
+	if (v.y() > sinThetaTimesLengthV) {
+		supportPoint = vec3(0.0, m_halfHeight, 0.0);
 	}
 	else {
-		float projectedLength = sqrt(v.x * v.x + v.z * v.z);
+		float projectedLength = sqrt(v.x() * v.x() + v.z() * v.z());
 		if (projectedLength > MACHINE_EPSILON) {
 			float d = mRadius / projectedLength;
-			supportPoint = Vector3(v.x * d, -mHalfHeight, v.z * d);
+			supportPoint = vec3(v.x() * d, -m_halfHeight, v.z() * d);
 		}
 		else {
-			supportPoint = Vector3(0.0, -mHalfHeight, 0.0);
+			supportPoint = vec3(0.0, -m_halfHeight, 0.0);
 		}
 	}
 
@@ -63,33 +63,33 @@ Vector3 ConeShape::getLocalSupportPointWithoutMargin(const Vector3& direction,
 // http://www.geometrictools.com/Documentation/IntersectionLineCone.pdf
 bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const {
 
-	const Vector3 r = ray.point2 - ray.point1;
+	const vec3 r = ray.point2 - ray.point1;
 
 	const float epsilon = float(0.00001);
-	Vector3 V(0, mHalfHeight, 0);
-	Vector3 centerBase(0, -mHalfHeight, 0);
-	Vector3 axis(0, float(-1.0), 0);
-	float heightSquare = float(4.0) * mHalfHeight * mHalfHeight;
+	vec3 V(0, m_halfHeight, 0);
+	vec3 centerBase(0, -m_halfHeight, 0);
+	vec3 axis(0, float(-1.0), 0);
+	float heightSquare = float(4.0) * m_halfHeight * m_halfHeight;
 	float cosThetaSquare = heightSquare / (heightSquare + mRadius * mRadius);
-	float factor = float(1.0) - cosThetaSquare;
-	Vector3 delta = ray.point1 - V;
-	float c0 = -cosThetaSquare * delta.x * delta.x  + factor * delta.y * delta.y -
-				  cosThetaSquare * delta.z * delta.z;
-	float c1 = -cosThetaSquare * delta.x * r.x + factor * delta.y * r.y - cosThetaSquare * delta.z * r.z;
-	float c2 = -cosThetaSquare * r.x * r.x  + factor * r.y * r.y - cosThetaSquare * r.z * r.z;
+	float factor = 1.0f - cosThetaSquare;
+	vec3 delta = ray.point1 - V;
+	float c0 = -cosThetaSquare * delta.x() * delta.x()  + factor * delta.y() * delta.y() -
+				  cosThetaSquare * delta.z() * delta.z();
+	float c1 = -cosThetaSquare * delta.x() * r.x() + factor * delta.y() * r.y() - cosThetaSquare * delta.z() * r.z();
+	float c2 = -cosThetaSquare * r.x() * r.x()  + factor * r.y() * r.y() - cosThetaSquare * r.z() * r.z();
 	float tHit[] = {float(-1.0), float(-1.0), float(-1.0)};
-	Vector3 localHitPoint[3];
-	Vector3 localNormal[3];
+	vec3 localHitPoint[3];
+	vec3 localNormal[3];
 
 	// If c2 is different from zero
 	if (std::abs(c2) > MACHINE_EPSILON) {
 		float gamma = c1 * c1 - c0 * c2;
 
 		// If there is no real roots in the quadratic equation
-		if (gamma < float(0.0)) {
+		if (gamma < 0.0f) {
 			return false;
 		}
-		else if (gamma > float(0.0)) {	// The equation has two real roots
+		else if (gamma > 0.0f) {	// The equation has two real roots
 
 			// Compute two int32_tersections
 			float sqrRoot = std::sqrt(gamma);
@@ -124,31 +124,31 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 	localHitPoint[1] = ray.point1 + tHit[1] * r;
 
 	// Only keep hit points in one side of the double cone (the cone we are int32_terested in)
-	if (axis.dot(localHitPoint[0] - V) < float(0.0)) {
+	if (axis.dot(localHitPoint[0] - V) < 0.0f) {
 		tHit[0] = float(-1.0);
 	}
-	if (axis.dot(localHitPoint[1] - V) < float(0.0)) {
+	if (axis.dot(localHitPoint[1] - V) < 0.0f) {
 		tHit[1] = float(-1.0);
 	}
 
 	// Only keep hit points that are within the correct height of the cone
-	if (localHitPoint[0].y < float(-mHalfHeight)) {
+	if (localHitPoint[0].y() < float(-m_halfHeight)) {
 		tHit[0] = float(-1.0);
 	}
-	if (localHitPoint[1].y < float(-mHalfHeight)) {
+	if (localHitPoint[1].y() < float(-m_halfHeight)) {
 		tHit[1] = float(-1.0);
 	}
 
 	// If the ray is in direction of the base plane of the cone
-	if (r.y > epsilon) {
+	if (r.y() > epsilon) {
 
 		// Compute the int32_tersection with the base plane of the cone
-		tHit[2] = (-ray.point1.y - mHalfHeight) / (r.y);
+		tHit[2] = (-ray.point1.y() - m_halfHeight) / (r.y());
 
 		// Only keep this int32_tersection if it is inside the cone radius
 		localHitPoint[2] = ray.point1 + tHit[2] * r;
 
-		if ((localHitPoint[2] - centerBase).lengthSquare() > mRadius * mRadius) {
+		if ((localHitPoint[2] - centerBase).length2() > mRadius * mRadius) {
 			tHit[2] = float(-1.0);
 		}
 
@@ -160,7 +160,7 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 	int32_t hitIndex = -1;
 	float t = DECIMAL_LARGEST;
 	for (int32_t i=0; i<3; i++) {
-		if (tHit[i] < float(0.0)) continue;
+		if (tHit[i] < 0.0f) continue;
 		if (tHit[i] < t) {
 			hitIndex = i;
 			t = tHit[hitIndex];
@@ -172,17 +172,17 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 
 	// Compute the normal direction for hit against side of the cone
 	if (hitIndex != 2) {
-		float h = float(2.0) * mHalfHeight;
-		float value1 = (localHitPoint[hitIndex].x * localHitPoint[hitIndex].x +
-						  localHitPoint[hitIndex].z * localHitPoint[hitIndex].z);
+		float h = float(2.0) * m_halfHeight;
+		float value1 = (localHitPoint[hitIndex].x() * localHitPoint[hitIndex].x() +
+						  localHitPoint[hitIndex].z() * localHitPoint[hitIndex].z());
 		float rOverH = mRadius / h;
-		float value2 = float(1.0) + rOverH * rOverH;
-		float factor = float(1.0) / std::sqrt(value1 * value2);
-		float x = localHitPoint[hitIndex].x * factor;
-		float z = localHitPoint[hitIndex].z * factor;
-		localNormal[hitIndex].x = x;
-		localNormal[hitIndex].y = std::sqrt(x * x + z * z) * rOverH;
-		localNormal[hitIndex].z = z;
+		float value2 = 1.0f + rOverH * rOverH;
+		float factor = 1.0f / std::sqrt(value1 * value2);
+		float x = localHitPoint[hitIndex].x() * factor;
+		float z = localHitPoint[hitIndex].z() * factor;
+		localNormal[hitIndex].setX(x);
+		localNormal[hitIndex].setY(std::sqrt(x * x + z * z) * rOverH);
+		localNormal[hitIndex].setZ(z);
 	}
 
 	raycastInfo.body = proxyShape->getBody();

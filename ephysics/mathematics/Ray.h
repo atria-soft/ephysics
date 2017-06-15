@@ -6,7 +6,7 @@
 #pragma once
 
 // Libraries
-#include <ephysics/mathematics/Vector3.h>
+#include <etk/math/Vector3D.hpp>
 
 /// ReactPhysics3D namespace
 namespace reactphysics3d {
@@ -24,10 +24,10 @@ struct Ray {
 		// -------------------- Attributes -------------------- //
 
 		/// First point of the ray (origin)
-		Vector3 point1;
+		vec3 point1;
 
 		/// Second point of the ray
-		Vector3 point2;
+		vec3 point2;
 
 		/// Maximum fraction value
 		float maxFraction;
@@ -35,7 +35,7 @@ struct Ray {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor with arguments
-		Ray(const Vector3& p1, const Vector3& p2, float maxFrac = float(1.0))
+		Ray(const vec3& p1, const vec3& p2, float maxFrac = 1.0f)
 		   : point1(p1), point2(p2), maxFraction(maxFrac) {
 
 		}

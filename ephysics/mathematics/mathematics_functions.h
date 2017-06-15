@@ -15,8 +15,6 @@
 /// ReactPhysics3D namespace
 namespace reactphysics3d {
 
-struct Vector3;
-
 // ---------- Mathematics functions ---------- //
 
 /// Function to test if two real numbers are (almost) equal
@@ -51,14 +49,14 @@ inline float max3(float a, float b, float c) {
 
 /// Return true if two values have the same sign
 inline bool sameSign(float a, float b) {
-	return a * b >= float(0.0);
+	return a * b >= 0.0f;
 }
 
 /// Clamp a vector such that it is no longer than a given maximum length
-Vector3 clamp(const Vector3& vector, float maxLength);
+vec3 clamp(const vec3& vector, float maxLength);
 
 /// Compute the barycentric coordinates u, v, w of a point p inside the triangle (a, b, c)
-void computeBarycentricCoordinatesInTriangle(const Vector3& a, const Vector3& b, const Vector3& c,
-											 const Vector3& p, float& u, float& v, float& w);
+void computeBarycentricCoordinatesInTriangle(const vec3& a, const vec3& b, const vec3& c,
+											 const vec3& p, float& u, float& v, float& w);
 
 }

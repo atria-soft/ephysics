@@ -113,23 +113,23 @@ class DynamicAABBTree {
 		// -------------------- Attributes -------------------- //
 
 		/// Pointer to the memory location of the nodes of the tree
-		TreeNode* mNodes;
+		TreeNode* m_nodes;
 
 		/// ID of the root node of the tree
 		int32_t m_rootNodeID;
 
 		/// ID of the first node of the list of free (allocated) nodes in the tree that we can use
-		int32_t mFreeNodeID;
+		int32_t m_freeNodeID;
 
 		/// Number of allocated nodes in the tree
-		int32_t mNbAllocatedNodes;
+		int32_t m_numberAllocatedNodes;
 
 		/// Number of nodes in the tree
-		int32_t mNbNodes;
+		int32_t m_numberNodes;
 
 		/// Extra AABB Gap used to allow the collision shape to move a little bit
 		/// without triggering a large modification of the tree which can be costly
-		float mExtraAABBGap;
+		float m_extraAABBGap;
 
 		// -------------------- Methods -------------------- //
 
@@ -172,7 +172,7 @@ class DynamicAABBTree {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		DynamicAABBTree(float extraAABBGap = float(0.0));
+		DynamicAABBTree(float extraAABBGap = 0.0f);
 
 		/// Destructor
 		virtual ~DynamicAABBTree();
@@ -187,7 +187,7 @@ class DynamicAABBTree {
 		void removeObject(int32_t nodeID);
 
 		/// Update the dynamic tree after an object has moved.
-		bool updateObject(int32_t nodeID, const AABB& newAABB, const Vector3& displacement, bool forceReinsert = false);
+		bool updateObject(int32_t nodeID, const AABB& newAABB, const vec3& displacement, bool forceReinsert = false);
 
 		/// Return the fat AABB corresponding to a given node ID
 		const AABB& getFatAABB(int32_t nodeID) const;
@@ -222,22 +222,22 @@ inline bool TreeNode::isLeaf() const {
 
 // Return the fat AABB corresponding to a given node ID
 inline const AABB& DynamicAABBTree::getFatAABB(int32_t nodeID) const {
-	assert(nodeID >= 0 && nodeID < mNbAllocatedNodes);
-	return mNodes[nodeID].aabb;
+	assert(nodeID >= 0 && nodeID < m_numberAllocatedNodes);
+	return m_nodes[nodeID].aabb;
 }
 
 // Return the pointer to the data array of a given leaf node of the tree
 inline int32_t* DynamicAABBTree::getNodeDataInt(int32_t nodeID) const {
-	assert(nodeID >= 0 && nodeID < mNbAllocatedNodes);
-	assert(mNodes[nodeID].isLeaf());
-	return mNodes[nodeID].dataInt;
+	assert(nodeID >= 0 && nodeID < m_numberAllocatedNodes);
+	assert(m_nodes[nodeID].isLeaf());
+	return m_nodes[nodeID].dataInt;
 }
 
 // Return the pointer to the data pointer of a given leaf node of the tree
 inline void* DynamicAABBTree::getNodeDataPointer(int32_t nodeID) const {
-	assert(nodeID >= 0 && nodeID < mNbAllocatedNodes);
-	assert(mNodes[nodeID].isLeaf());
-	return mNodes[nodeID].dataPointer;
+	assert(nodeID >= 0 && nodeID < m_numberAllocatedNodes);
+	assert(m_nodes[nodeID].isLeaf());
+	return m_nodes[nodeID].dataPointer;
 }
 
 // Return the root AABB of the tree
@@ -251,8 +251,8 @@ inline int32_t DynamicAABBTree::addObject(const AABB& aabb, int32_t data1, int32
 
 	int32_t nodeId = addObjectInternal(aabb);
 
-	mNodes[nodeId].dataInt[0] = data1;
-	mNodes[nodeId].dataInt[1] = data2;
+	m_nodes[nodeId].dataInt[0] = data1;
+	m_nodes[nodeId].dataInt[1] = data2;
 
 	return nodeId;
 }
@@ -263,7 +263,7 @@ inline int32_t DynamicAABBTree::addObject(const AABB& aabb, void* data) {
 
 	int32_t nodeId = addObjectInternal(aabb);
 
-	mNodes[nodeId].dataPointer = data;
+	m_nodes[nodeId].dataPointer = data;
 
 	return nodeId;
 }

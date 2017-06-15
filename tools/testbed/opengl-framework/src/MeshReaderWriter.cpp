@@ -105,9 +105,9 @@ void MeshReaderWriter::loadOBJFile(const string &filename, Mesh& meshToCreate) {
 	float v1, v2, v3;
 	size_t found1, found2;
 	std::vector<bool> isQuad;
-	std::vector<Vector3> vertices;
-	std::vector<Vector3> normals;
-	std::vector<Vector2> uvs;
+	std::vector<vec3> vertices;
+	std::vector<vec3> normals;
+	std::vector<vec2> uvs;
 	std::vector<uint32_t> verticesIndices;
 	std::vector<uint32_t> normalsIndices;
 	std::vector<uint32_t> uvsIndices;
@@ -128,15 +128,15 @@ void MeshReaderWriter::loadOBJFile(const string &filename, Mesh& meshToCreate) {
 		}
 		else if(word == "v") {  // Vertex position
 			sscanf(buffer.c_str(), "%*s %f %f %f", &v1, &v2, &v3);
-			vertices.push_back(Vector3(v1, v2, v3));
+			vertices.push_back(vec3(v1, v2, v3));
 		}
 		else if(word == "vt") { // Vertex texture coordinate
 			sscanf(buffer.c_str(), "%*s %f %f", &v1, &v2);
-			uvs.push_back(Vector2(v1,v2));
+			uvs.push_back(vec2(v1,v2));
 		}
 		else if(word == "vn") { // Vertex normal
 			sscanf(buffer.c_str(), "%*s %f %f %f", &v1, &v2, &v3);
-			normals.push_back(Vector3(v1 ,v2, v3));
+			normals.push_back(vec3(v1 ,v2, v3));
 		}
 		else if (word == "f") { // Face
 			line = buffer;
@@ -215,10 +215,10 @@ void MeshReaderWriter::loadOBJFile(const string &filename, Mesh& meshToCreate) {
 
 	// Mesh data
 	vector<std::vector<uint32_t> > meshIndices;
-	vector<Vector3> meshNormals;
-	if (!normals.empty()) meshNormals = vector<Vector3>(vertices.size(), Vector3(0, 0, 0));
-	vector<Vector2> meshUVs;
-	if (!uvs.empty()) meshUVs = vector<Vector2>(vertices.size(), Vector2(0, 0));
+	vector<vec3> meshNormals;
+	if (!normals.empty()) meshNormals = vector<vec3>(vertices.size(), vec3(0, 0, 0));
+	vector<vec2> meshUVs;
+	if (!uvs.empty()) meshUVs = vector<vec2>(vertices.size(), vec2(0, 0));
 
 	// We cannot load mesh with several parts for the moment
 	uint32_t meshPart = 0;
@@ -259,15 +259,15 @@ void MeshReaderWriter::loadOBJFile(const string &filename, Mesh& meshToCreate) {
 		}
 		else {  // If the current vertex is in a quad
 
-			Vector3 v1 = vertices[i1];
-			Vector3 v2 = vertices[i2];
-			Vector3 v3 = vertices[i3];
+			vec3 v1 = vertices[i1];
+			vec3 v2 = vertices[i2];
+			vec3 v3 = vertices[i3];
 			uint32_t i4 = verticesIndices[i+3];
-			Vector3 v4 = vertices[i4];
+			vec3 v4 = vertices[i4];
 
-			Vector3 v13 = v3-v1;
-			Vector3 v12 = v2-v1;
-			Vector3 v14 = v4-v1;
+			vec3 v13 = v3-v1;
+			vec3 v12 = v2-v1;
+			vec3 v14 = v4-v1;
 
 			float a1 = v13.dot(v12);
 			float a2 = v13.dot(v14);
@@ -317,9 +317,9 @@ void MeshReaderWriter::writeOBJFile(const std::string& filename, const Mesh& mes
 	std::ofstream file(filename.c_str());
 
 	// Geth the mesh data
-	const std::vector<Vector3>& vertices = meshToWrite.getVertices();
-	const std::vector<Vector3>& normals = meshToWrite.getNormals();
-	const std::vector<Vector2>& uvs = meshToWrite.getUVs();
+	const std::vector<vec3>& vertices = meshToWrite.getVertices();
+	const std::vector<vec3>& normals = meshToWrite.getNormals();
+	const std::vector<vec2>& uvs = meshToWrite.getUVs();
 
 	// If we can open the file
 	if (file.is_open()) {
@@ -329,7 +329,7 @@ void MeshReaderWriter::writeOBJFile(const std::string& filename, const Mesh& mes
 		// Write the vertices
 		for (uint32_t v=0; v<vertices.size(); v++) {
 
-			file << "v " << vertices[v].x << " " << vertices[v].y << " " << vertices[v].z <<
+			file << "v " << vertices[v].x() << " " << vertices[v].y() << " " << vertices[v].z() <<
 					std::endl;
 		}
 
@@ -341,7 +341,7 @@ void MeshReaderWriter::writeOBJFile(const std::string& filename, const Mesh& mes
 
 			for (uint32_t v=0; v<normals.size(); v++) {
 
-				file << "vn " << normals[v].x << " " << normals[v].y << " " << normals[v].z <<
+				file << "vn " << normals[v].x() << " " << normals[v].y() << " " << normals[v].z() <<
 						std::endl;
 			}
 		}
@@ -354,7 +354,7 @@ void MeshReaderWriter::writeOBJFile(const std::string& filename, const Mesh& mes
 
 			for (uint32_t v=0; v<uvs.size(); v++) {
 
-				file << "vt " << uvs[v].x << " " << uvs[v].y << std::endl;
+				file << "vt " << uvs[v].x() << " " << uvs[v].y() << std::endl;
 			}
 		}
 

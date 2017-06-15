@@ -52,7 +52,7 @@ class Camera : public Object3D {
 		float mFarPlane;
 
 		// Width of the camera
-		uint32_t mWidth;
+		uint32_t m_width;
 
 		// Height of the camera
 		uint32_t mHeight;
@@ -98,7 +98,7 @@ class Camera : public Object3D {
 		void setZoom(float fraction);
 
 		// Translate the camera go a given point using the dx, dy fraction
-		void translateCamera(float dx, float dy, const Vector3& worldPoint);
+		void translateCamera(float dx, float dy, const vec3& worldPoint);
 
 		// Get the near clipping plane
 		float getNearClippingPlane() const;
@@ -120,7 +120,7 @@ inline const Matrix4& Camera::getProjectionMatrix() const {
 
 // Set the dimensions of the camera
 inline void Camera::setDimensions(uint32_t width, uint32_t height) {
-	mWidth = width;
+	m_width = width;
 	mHeight = height;
 	updateProjectionMatrix();
 }
@@ -152,7 +152,7 @@ inline void Camera::setFieldOfView(float fov) {
 
 // Set the zoom of the camera (a fraction between 0 and 1)
 inline void Camera::setZoom(float fraction) {
-	Vector3 zoomVector(0, 0, mSceneRadius * fraction);
+	vec3 zoomVector(0, 0, mSceneRadius * fraction);
 	translateLocal(zoomVector);
 }
 
@@ -168,7 +168,7 @@ inline float Camera::getFarClippingPlane() const {
 
 // Get the width
 inline uint32_t Camera::getWidth() const {
-	return mWidth;
+	return m_width;
 }
 
 // Get the height

@@ -18,7 +18,7 @@ using namespace reactphysics3d;
  * @param world The physics world where the body is created
  * @param id ID of the body
  */
-CollisionBody::CollisionBody(const Transform& transform, CollisionWorld& world, bodyindex id)
+CollisionBody::CollisionBody(const etk::Transform3D& transform, CollisionWorld& world, bodyindex id)
 			  : Body(id), m_type(DYNAMIC), m_transform(transform), m_proxyCollisionShapes(NULL),
 				m_numberCollisionShapes(0), m_contactManifoldsList(NULL), m_world(world) {
 
@@ -31,6 +31,15 @@ CollisionBody::~CollisionBody() {
 	// Remove all the proxy collision shapes of the body
 	removeAllCollisionShapes();
 }
+
+inline void CollisionBody::setType(BodyType _type) {
+	m_type = _type;
+	if (m_type == STATIC) {
+		// Update the broad-phase state of the body
+		updateBroadPhaseState();
+	}
+}
+
 
 // Add a collision shape to the body. Note that you can share a collision
 // shape between several bodies using the same collision shape instance to
@@ -48,7 +57,7 @@ CollisionBody::~CollisionBody() {
  *		 the new collision shape you have added.
  */
 ProxyShape* CollisionBody::addCollisionShape(CollisionShape* collisionShape,
-											 const Transform& transform) {
+											 const etk::Transform3D& transform) {
 
 	// Create a new proxy collision shape to attach the collision shape to the body
 	ProxyShape* proxyShape = new (m_world.m_memoryAllocator.allocate(
@@ -188,7 +197,7 @@ void CollisionBody::updateProxyShapeInBroadPhase(ProxyShape* proxyShape, bool fo
 	proxyShape->getCollisionShape()->computeAABB(aabb, m_transform * proxyShape->getLocalToBodyTransform());
 
 	// Update the broad-phase state for the proxy collision shape
-	m_world.m_collisionDetection.updateProxyCollisionShape(proxyShape, aabb, Vector3(0, 0, 0), forceReinsert);
+	m_world.m_collisionDetection.updateProxyCollisionShape(proxyShape, aabb, vec3(0, 0, 0), forceReinsert);
 }
 
 // Set whether or not the body is active
@@ -267,7 +276,7 @@ int32_t CollisionBody::resetIsAlreadyInIslandAndCountManifolds() {
  * @param worldPoint The point to test (in world-space coordinates)
  * @return True if the point is inside the body
  */
-bool CollisionBody::testPointInside(const Vector3& worldPoint) const {
+bool CollisionBody::testPointInside(const vec3& worldPoint) const {
 
 	// For each collision shape of the body
 	for (ProxyShape* shape = m_proxyCollisionShapes; shape != NULL; shape = shape->m_next) {

@@ -123,31 +123,31 @@ class TestDynamicAABBTree : public Test {
 			int32_t object4Data = 7;
 
 			// First object
-			AABB aabb1 = AABB(Vector3(-6, 4, -3), Vector3(4, 8, 3));
+			AABB aabb1 = AABB(vec3(-6, 4, -3), vec3(4, 8, 3));
 			int32_t object1Id = tree.addObject(aabb1, &object1Data);
 
 			// Second object
-			AABB aabb2 = AABB(Vector3(5, 2, -3), Vector3(10, 7, 3));
+			AABB aabb2 = AABB(vec3(5, 2, -3), vec3(10, 7, 3));
 			int32_t object2Id = tree.addObject(aabb2, &object2Data);
 
 			// Third object
-			AABB aabb3 = AABB(Vector3(-5, 1, -3), Vector3(-2, 3, 3));
+			AABB aabb3 = AABB(vec3(-5, 1, -3), vec3(-2, 3, 3));
 			int32_t object3Id = tree.addObject(aabb3, &object3Data);
 
 			// Fourth object
-			AABB aabb4 = AABB(Vector3(0, -4, -3), Vector3(3, -2, 3));
+			AABB aabb4 = AABB(vec3(0, -4, -3), vec3(3, -2, 3));
 			int32_t object4Id = tree.addObject(aabb4, &object4Data);
 
 			// ----------- Tests ----------- //
 
 			// Test root AABB
 			AABB rootAABB = tree.getRootAABB();
-			test(rootAABB.getMin().x == -6);
-			test(rootAABB.getMin().y == -4);
-			test(rootAABB.getMin().z == -3);
-			test(rootAABB.getMax().x == 10);
-			test(rootAABB.getMax().y == 8);
-			test(rootAABB.getMax().z == 3);
+			test(rootAABB.getMin().x() == -6);
+			test(rootAABB.getMin().y() == -4);
+			test(rootAABB.getMin().z() == -3);
+			test(rootAABB.getMax().x() == 10);
+			test(rootAABB.getMax().y() == 8);
+			test(rootAABB.getMax().z() == 3);
 
 			// Test data stored at the nodes of the tree
 			test(*(int32_t*)(tree.getNodeDataPointer(object1Id)) == object1Data);
@@ -169,26 +169,26 @@ class TestDynamicAABBTree : public Test {
 			int32_t object4Data = 7;
 
 			// First object
-			AABB aabb1 = AABB(Vector3(-6, 4, -3), Vector3(4, 8, 3));
+			AABB aabb1 = AABB(vec3(-6, 4, -3), vec3(4, 8, 3));
 			int32_t object1Id = tree.addObject(aabb1, &object1Data);
 
 			// Second object
-			AABB aabb2 = AABB(Vector3(5, 2, -3), Vector3(10, 7, 3));
+			AABB aabb2 = AABB(vec3(5, 2, -3), vec3(10, 7, 3));
 			int32_t object2Id = tree.addObject(aabb2, &object2Data);
 
 			// Third object
-			AABB aabb3 = AABB(Vector3(-5, 1, -3), Vector3(-2, 3, 3));
+			AABB aabb3 = AABB(vec3(-5, 1, -3), vec3(-2, 3, 3));
 			int32_t object3Id = tree.addObject(aabb3, &object3Data);
 
 			// Fourth object
-			AABB aabb4 = AABB(Vector3(0, -4, -3), Vector3(3, -2, 3));
+			AABB aabb4 = AABB(vec3(0, -4, -3), vec3(3, -2, 3));
 			int32_t object4Id = tree.addObject(aabb4, &object4Data);
 
 			// ---------- Tests ---------- //
 
 			// AABB overlapping nothing
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(-10, 12, -4), Vector3(10, 50, 4)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(-10, 12, -4), vec3(10, 50, 4)), mOverlapCallback);
 			test(!mOverlapCallback.isOverlapping(object1Id));
 			test(!mOverlapCallback.isOverlapping(object2Id));
 			test(!mOverlapCallback.isOverlapping(object3Id));
@@ -196,7 +196,7 @@ class TestDynamicAABBTree : public Test {
 
 			// AABB overlapping everything
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(-15, -15, -4), Vector3(15, 15, 4)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(-15, -15, -4), vec3(15, 15, 4)), mOverlapCallback);
 			test(mOverlapCallback.isOverlapping(object1Id));
 			test(mOverlapCallback.isOverlapping(object2Id));
 			test(mOverlapCallback.isOverlapping(object3Id));
@@ -204,7 +204,7 @@ class TestDynamicAABBTree : public Test {
 
 			// AABB overlapping object 1 and 3
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(-4, 2, -4), Vector3(-1, 7, 4)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(-4, 2, -4), vec3(-1, 7, 4)), mOverlapCallback);
 			test(mOverlapCallback.isOverlapping(object1Id));
 			test(!mOverlapCallback.isOverlapping(object2Id));
 			test(mOverlapCallback.isOverlapping(object3Id));
@@ -212,7 +212,7 @@ class TestDynamicAABBTree : public Test {
 
 			// AABB overlapping object 3 and 4
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(-6, -5, -2), Vector3(2, 2, 0)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(-6, -5, -2), vec3(2, 2, 0)), mOverlapCallback);
 			test(!mOverlapCallback.isOverlapping(object1Id));
 			test(!mOverlapCallback.isOverlapping(object2Id));
 			test(mOverlapCallback.isOverlapping(object3Id));
@@ -220,7 +220,7 @@ class TestDynamicAABBTree : public Test {
 
 			// AABB overlapping object 2
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(5, -10, -2), Vector3(7, 10, 9)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(5, -10, -2), vec3(7, 10, 9)), mOverlapCallback);
 			test(!mOverlapCallback.isOverlapping(object1Id));
 			test(mOverlapCallback.isOverlapping(object2Id));
 			test(!mOverlapCallback.isOverlapping(object3Id));
@@ -228,14 +228,14 @@ class TestDynamicAABBTree : public Test {
 
 			// ---- Update the object AABBs with the initial AABBs (no reinsertion) ----- //
 
-			tree.updateObject(object1Id, aabb1, Vector3::zero(), false);
-			tree.updateObject(object2Id, aabb2, Vector3::zero(), false);
-			tree.updateObject(object3Id, aabb3, Vector3::zero(), false);
-			tree.updateObject(object4Id, aabb4, Vector3::zero(), false);
+			tree.updateObject(object1Id, aabb1, vec3::zero(), false);
+			tree.updateObject(object2Id, aabb2, vec3::zero(), false);
+			tree.updateObject(object3Id, aabb3, vec3::zero(), false);
+			tree.updateObject(object4Id, aabb4, vec3::zero(), false);
 
 			// AABB overlapping nothing
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(-10, 12, -4), Vector3(10, 50, 4)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(-10, 12, -4), vec3(10, 50, 4)), mOverlapCallback);
 			test(!mOverlapCallback.isOverlapping(object1Id));
 			test(!mOverlapCallback.isOverlapping(object2Id));
 			test(!mOverlapCallback.isOverlapping(object3Id));
@@ -243,7 +243,7 @@ class TestDynamicAABBTree : public Test {
 
 			// AABB overlapping everything
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(-15, -15, -4), Vector3(15, 15, 4)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(-15, -15, -4), vec3(15, 15, 4)), mOverlapCallback);
 			test(mOverlapCallback.isOverlapping(object1Id));
 			test(mOverlapCallback.isOverlapping(object2Id));
 			test(mOverlapCallback.isOverlapping(object3Id));
@@ -251,7 +251,7 @@ class TestDynamicAABBTree : public Test {
 
 			// AABB overlapping object 1 and 3
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(-4, 2, -4), Vector3(-1, 7, 4)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(-4, 2, -4), vec3(-1, 7, 4)), mOverlapCallback);
 			test(mOverlapCallback.isOverlapping(object1Id));
 			test(!mOverlapCallback.isOverlapping(object2Id));
 			test(mOverlapCallback.isOverlapping(object3Id));
@@ -259,7 +259,7 @@ class TestDynamicAABBTree : public Test {
 
 			// AABB overlapping object 3 and 4
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(-6, -5, -2), Vector3(2, 2, 0)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(-6, -5, -2), vec3(2, 2, 0)), mOverlapCallback);
 			test(!mOverlapCallback.isOverlapping(object1Id));
 			test(!mOverlapCallback.isOverlapping(object2Id));
 			test(mOverlapCallback.isOverlapping(object3Id));
@@ -267,7 +267,7 @@ class TestDynamicAABBTree : public Test {
 
 			// AABB overlapping object 2
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(5, -10, -2), Vector3(7, 10, 9)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(5, -10, -2), vec3(7, 10, 9)), mOverlapCallback);
 			test(!mOverlapCallback.isOverlapping(object1Id));
 			test(mOverlapCallback.isOverlapping(object2Id));
 			test(!mOverlapCallback.isOverlapping(object3Id));
@@ -275,14 +275,14 @@ class TestDynamicAABBTree : public Test {
 
 			// ---- Update the object AABBs with the initial AABBs (with reinsertion) ----- //
 
-			tree.updateObject(object1Id, aabb1, Vector3::zero(), true);
-			tree.updateObject(object2Id, aabb2, Vector3::zero(), true);
-			tree.updateObject(object3Id, aabb3, Vector3::zero(), true);
-			tree.updateObject(object4Id, aabb4, Vector3::zero(), true);
+			tree.updateObject(object1Id, aabb1, vec3::zero(), true);
+			tree.updateObject(object2Id, aabb2, vec3::zero(), true);
+			tree.updateObject(object3Id, aabb3, vec3::zero(), true);
+			tree.updateObject(object4Id, aabb4, vec3::zero(), true);
 
 			// AABB overlapping nothing
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(-10, 12, -4), Vector3(10, 50, 4)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(-10, 12, -4), vec3(10, 50, 4)), mOverlapCallback);
 			test(!mOverlapCallback.isOverlapping(object1Id));
 			test(!mOverlapCallback.isOverlapping(object2Id));
 			test(!mOverlapCallback.isOverlapping(object3Id));
@@ -290,7 +290,7 @@ class TestDynamicAABBTree : public Test {
 
 			// AABB overlapping everything
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(-15, -15, -4), Vector3(15, 15, 4)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(-15, -15, -4), vec3(15, 15, 4)), mOverlapCallback);
 			test(mOverlapCallback.isOverlapping(object1Id));
 			test(mOverlapCallback.isOverlapping(object2Id));
 			test(mOverlapCallback.isOverlapping(object3Id));
@@ -298,7 +298,7 @@ class TestDynamicAABBTree : public Test {
 
 			// AABB overlapping object 1 and 3
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(-4, 2, -4), Vector3(-1, 7, 4)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(-4, 2, -4), vec3(-1, 7, 4)), mOverlapCallback);
 			test(mOverlapCallback.isOverlapping(object1Id));
 			test(!mOverlapCallback.isOverlapping(object2Id));
 			test(mOverlapCallback.isOverlapping(object3Id));
@@ -306,7 +306,7 @@ class TestDynamicAABBTree : public Test {
 
 			// AABB overlapping object 3 and 4
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(-6, -5, -2), Vector3(2, 2, 0)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(-6, -5, -2), vec3(2, 2, 0)), mOverlapCallback);
 			test(!mOverlapCallback.isOverlapping(object1Id));
 			test(!mOverlapCallback.isOverlapping(object2Id));
 			test(mOverlapCallback.isOverlapping(object3Id));
@@ -314,7 +314,7 @@ class TestDynamicAABBTree : public Test {
 
 			// AABB overlapping object 2
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(5, -10, -2), Vector3(7, 10, 9)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(5, -10, -2), vec3(7, 10, 9)), mOverlapCallback);
 			test(!mOverlapCallback.isOverlapping(object1Id));
 			test(mOverlapCallback.isOverlapping(object2Id));
 			test(!mOverlapCallback.isOverlapping(object3Id));
@@ -322,15 +322,15 @@ class TestDynamicAABBTree : public Test {
 
 			// ---- Move objects 2 and 3 ----- //
 
-			AABB newAABB2(Vector3(-7, 10, -3), Vector3(1, 13, 3));
-			tree.updateObject(object2Id, newAABB2, Vector3::zero());
+			AABB newAABB2(vec3(-7, 10, -3), vec3(1, 13, 3));
+			tree.updateObject(object2Id, newAABB2, vec3::zero());
 
-			AABB newAABB3(Vector3(7, -6, -3), Vector3(9, 1, 3));
-			tree.updateObject(object3Id, newAABB3, Vector3::zero());
+			AABB newAABB3(vec3(7, -6, -3), vec3(9, 1, 3));
+			tree.updateObject(object3Id, newAABB3, vec3::zero());
 
 			// AABB overlapping object 3
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(6, -10, -2), Vector3(8, 5, 3)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(6, -10, -2), vec3(8, 5, 3)), mOverlapCallback);
 			test(!mOverlapCallback.isOverlapping(object1Id));
 			test(!mOverlapCallback.isOverlapping(object2Id));
 			test(mOverlapCallback.isOverlapping(object3Id));
@@ -338,7 +338,7 @@ class TestDynamicAABBTree : public Test {
 
 			// AABB overlapping objects 1, 2
 			mOverlapCallback.reset();
-			tree.reportAllShapesOverlappingWithAABB(AABB(Vector3(-8, 5, -3), Vector3(-2, 11, 3)), mOverlapCallback);
+			tree.reportAllShapesOverlappingWithAABB(AABB(vec3(-8, 5, -3), vec3(-2, 11, 3)), mOverlapCallback);
 			test(mOverlapCallback.isOverlapping(object1Id));
 			test(mOverlapCallback.isOverlapping(object2Id));
 			test(!mOverlapCallback.isOverlapping(object3Id));
@@ -359,26 +359,26 @@ class TestDynamicAABBTree : public Test {
 			int32_t object4Data = 7;
 
 			// First object
-			AABB aabb1 = AABB(Vector3(-6, 4, -3), Vector3(4, 8, 3));
+			AABB aabb1 = AABB(vec3(-6, 4, -3), vec3(4, 8, 3));
 			int32_t object1Id = tree.addObject(aabb1, &object1Data);
 
 			// Second object
-			AABB aabb2 = AABB(Vector3(5, 2, -3), Vector3(10, 7, 3));
+			AABB aabb2 = AABB(vec3(5, 2, -3), vec3(10, 7, 3));
 			int32_t object2Id = tree.addObject(aabb2, &object2Data);
 
 			// Third object
-			AABB aabb3 = AABB(Vector3(-5, 1, -3), Vector3(-2, 3, 3));
+			AABB aabb3 = AABB(vec3(-5, 1, -3), vec3(-2, 3, 3));
 			int32_t object3Id = tree.addObject(aabb3, &object3Data);
 
 			// Fourth object
-			AABB aabb4 = AABB(Vector3(0, -4, -3), Vector3(3, -2, 3));
+			AABB aabb4 = AABB(vec3(0, -4, -3), vec3(3, -2, 3));
 			int32_t object4Id = tree.addObject(aabb4, &object4Data);
 
 			// ---------- Tests ---------- //
 
 			// Ray with no hits
 			m_raycastCallback.reset();
-			Ray ray1(Vector3(4.5, -10, -5), Vector3(4.5, 10, -5));
+			Ray ray1(vec3(4.5, -10, -5), vec3(4.5, 10, -5));
 			tree.raycast(ray1, m_raycastCallback);
 			test(!m_raycastCallback.isHit(object1Id));
 			test(!m_raycastCallback.isHit(object2Id));
@@ -387,7 +387,7 @@ class TestDynamicAABBTree : public Test {
 
 			// Ray that hits object 1
 			m_raycastCallback.reset();
-			Ray ray2(Vector3(-1, -20, -2), Vector3(-1, 20, -2));
+			Ray ray2(vec3(-1, -20, -2), vec3(-1, 20, -2));
 			tree.raycast(ray2, m_raycastCallback);
 			test(m_raycastCallback.isHit(object1Id));
 			test(!m_raycastCallback.isHit(object2Id));
@@ -396,7 +396,7 @@ class TestDynamicAABBTree : public Test {
 
 			// Ray that hits object 1 and 2
 			m_raycastCallback.reset();
-			Ray ray3(Vector3(-7, 6, -2), Vector3(8, 6, -2));
+			Ray ray3(vec3(-7, 6, -2), vec3(8, 6, -2));
 			tree.raycast(ray3, m_raycastCallback);
 			test(m_raycastCallback.isHit(object1Id));
 			test(m_raycastCallback.isHit(object2Id));
@@ -405,7 +405,7 @@ class TestDynamicAABBTree : public Test {
 
 			// Ray that hits object 3
 			m_raycastCallback.reset();
-			Ray ray4(Vector3(-7, 2, 0), Vector3(-1, 2, 0));
+			Ray ray4(vec3(-7, 2, 0), vec3(-1, 2, 0));
 			tree.raycast(ray4, m_raycastCallback);
 			test(!m_raycastCallback.isHit(object1Id));
 			test(!m_raycastCallback.isHit(object2Id));
@@ -414,10 +414,10 @@ class TestDynamicAABBTree : public Test {
 
 			// ---- Update the object AABBs with the initial AABBs (no reinsertion) ----- //
 
-			tree.updateObject(object1Id, aabb1, Vector3::zero(), false);
-			tree.updateObject(object2Id, aabb2, Vector3::zero(), false);
-			tree.updateObject(object3Id, aabb3, Vector3::zero(), false);
-			tree.updateObject(object4Id, aabb4, Vector3::zero(), false);
+			tree.updateObject(object1Id, aabb1, vec3::zero(), false);
+			tree.updateObject(object2Id, aabb2, vec3::zero(), false);
+			tree.updateObject(object3Id, aabb3, vec3::zero(), false);
+			tree.updateObject(object4Id, aabb4, vec3::zero(), false);
 
 			// Ray with no hits
 			m_raycastCallback.reset();
@@ -453,10 +453,10 @@ class TestDynamicAABBTree : public Test {
 
 			// ---- Update the object AABBs with the initial AABBs (with reinsertion) ----- //
 
-			tree.updateObject(object1Id, aabb1, Vector3::zero(), true);
-			tree.updateObject(object2Id, aabb2, Vector3::zero(), true);
-			tree.updateObject(object3Id, aabb3, Vector3::zero(), true);
-			tree.updateObject(object4Id, aabb4, Vector3::zero(), true);
+			tree.updateObject(object1Id, aabb1, vec3::zero(), true);
+			tree.updateObject(object2Id, aabb2, vec3::zero(), true);
+			tree.updateObject(object3Id, aabb3, vec3::zero(), true);
+			tree.updateObject(object4Id, aabb4, vec3::zero(), true);
 
 			// Ray with no hits
 			m_raycastCallback.reset();
@@ -492,14 +492,14 @@ class TestDynamicAABBTree : public Test {
 
 			// ---- Move objects 2 and 3 ----- //
 
-			AABB newAABB2(Vector3(-7, 10, -3), Vector3(1, 13, 3));
-			tree.updateObject(object2Id, newAABB2, Vector3::zero());
+			AABB newAABB2(vec3(-7, 10, -3), vec3(1, 13, 3));
+			tree.updateObject(object2Id, newAABB2, vec3::zero());
 
-			AABB newAABB3(Vector3(7, -6, -3), Vector3(9, 1, 3));
-			tree.updateObject(object3Id, newAABB3, Vector3::zero());
+			AABB newAABB3(vec3(7, -6, -3), vec3(9, 1, 3));
+			tree.updateObject(object3Id, newAABB3, vec3::zero());
 
 			// Ray that hits object 1, 2
-			Ray ray5(Vector3(-4, -5, 0), Vector3(-4, 12, 0));
+			Ray ray5(vec3(-4, -5, 0), vec3(-4, 12, 0));
 			m_raycastCallback.reset();
 			tree.raycast(ray5, m_raycastCallback);
 			test(m_raycastCallback.isHit(object1Id));
@@ -508,7 +508,7 @@ class TestDynamicAABBTree : public Test {
 			test(!m_raycastCallback.isHit(object4Id));
 
 			// Ray that hits object 3 and 4
-			Ray ray6(Vector3(11, -3, 1), Vector3(-2, -3, 1));
+			Ray ray6(vec3(11, -3, 1), vec3(-2, -3, 1));
 			m_raycastCallback.reset();
 			tree.raycast(ray6, m_raycastCallback);
 			test(!m_raycastCallback.isHit(object1Id));

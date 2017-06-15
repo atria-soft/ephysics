@@ -28,22 +28,22 @@ struct Impulse {
 		// -------------------- Attributes -------------------- //
 
 		/// Linear impulse applied to the first body
-		const Vector3 linearImpulseBody1;
+		const vec3 linearImpulseBody1;
 
 		/// Angular impulse applied to the first body
-		const Vector3 angularImpulseBody1;
+		const vec3 angularImpulseBody1;
 
 		/// Linear impulse applied to the second body
-		const Vector3 linearImpulseBody2;
+		const vec3 linearImpulseBody2;
 
 		/// Angular impulse applied to the second body
-		const Vector3 angularImpulseBody2;
+		const vec3 angularImpulseBody2;
 
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		Impulse(const Vector3& initLinearImpulseBody1, const Vector3& initAngularImpulseBody1,
-				const Vector3& initLinearImpulseBody2, const Vector3& initAngularImpulseBody2)
+		Impulse(const vec3& initLinearImpulseBody1, const vec3& initAngularImpulseBody1,
+				const vec3& initLinearImpulseBody2, const vec3& initAngularImpulseBody2)
 			: linearImpulseBody1(initLinearImpulseBody1),
 			  angularImpulseBody1(initAngularImpulseBody1),
 			  linearImpulseBody2(initLinearImpulseBody2),

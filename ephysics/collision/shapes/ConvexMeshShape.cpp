@@ -30,7 +30,7 @@ ConvexMeshShape::ConvexMeshShape(const float* arrayVertices, uint32_t nbVertices
 	// Copy all the vertices int32_to the int32_ternal array
 	for (uint32_t i=0; i<m_numberVertices; i++) {
 		const float* newPoint = (const float*) vertexPointer;
-		m_vertices.push_back(Vector3(newPoint[0], newPoint[1], newPoint[2]));
+		m_vertices.push_back(vec3(newPoint[0], newPoint[1], newPoint[2]));
 		vertexPointer += stride;
 	}
 
@@ -63,15 +63,15 @@ ConvexMeshShape::ConvexMeshShape(TriangleVertexArray* triangleVertexArray, bool 
 		if (vertexType == TriangleVertexArray::VERTEX_FLOAT_TYPE) {
 			const float* vertices = (float*)(verticesStart + v * vertexStride);
 
-			Vector3 vertex(vertices[0], vertices[1], vertices[2] );
-			vertex = vertex * mScaling;
+			vec3 vertex(vertices[0], vertices[1], vertices[2] );
+			vertex = vertex * m_scaling;
 			m_vertices.push_back(vertex);
 		}
 		else if (vertexType == TriangleVertexArray::VERTEX_DOUBLE_TYPE) {
 			const double* vertices = (double*)(verticesStart + v * vertexStride);
 
-			Vector3 vertex(vertices[0], vertices[1], vertices[2] );
-			vertex = vertex * mScaling;
+			vec3 vertex(vertices[0], vertices[1], vertices[2] );
+			vertex = vertex * m_scaling;
 			m_vertices.push_back(vertex);
 		}
 	}
@@ -134,7 +134,7 @@ ConvexMeshShape::~ConvexMeshShape() {
 /// it as a start in a hill-climbing (local search) process to find the new support vertex which
 /// will be in most of the cases very close to the previous one. Using hill-climbing, this method
 /// runs in almost constant time.
-Vector3 ConvexMeshShape::getLocalSupportPointWithoutMargin(const Vector3& direction,
+vec3 ConvexMeshShape::getLocalSupportPointWithoutMargin(const vec3& direction,
 														   void** cachedCollisionData) const {
 
 	assert(m_numberVertices == m_vertices.size());
@@ -184,7 +184,7 @@ Vector3 ConvexMeshShape::getLocalSupportPointWithoutMargin(const Vector3& direct
 		*((int32_t*)(*cachedCollisionData)) = maxVertex;
 
 		// Return the support vertex
-		return m_vertices[maxVertex] * mScaling;
+		return m_vertices[maxVertex] * m_scaling;
 	}
 	else {  // If the edges information is not used
 
@@ -204,10 +204,10 @@ Vector3 ConvexMeshShape::getLocalSupportPointWithoutMargin(const Vector3& direct
 			}
 		}
 
-		assert(maxDotProduct >= float(0.0));
+		assert(maxDotProduct >= 0.0f);
 
 		// Return the vertex with the largest dot product in the support direction
-		return m_vertices[indexMaxDotProduct] * mScaling;
+		return m_vertices[indexMaxDotProduct] * m_scaling;
 	}
 }
 
@@ -217,33 +217,43 @@ void ConvexMeshShape::recalculateBounds() {
 	// TODO : Only works if the local origin is inside the mesh
 	//		=> Make it more robust (init with first vertex of mesh instead)
 
-	m_minBounds.setToZero();
-	m_maxBounds.setToZero();
+	m_minBounds.setZero();
+	m_maxBounds.setZero();
 
 	// For each vertex of the mesh
 	for (uint32_t i=0; i<m_numberVertices; i++) {
 
-		if (m_vertices[i].x > m_maxBounds.x) m_maxBounds.x = m_vertices[i].x;
-		if (m_vertices[i].x < m_minBounds.x) m_minBounds.x = m_vertices[i].x;
+		if (m_vertices[i].x() > m_maxBounds.x()) {
+			m_maxBounds.setX(m_vertices[i].x());
+		}
+		if (m_vertices[i].x() < m_minBounds.x()) {
+			m_minBounds.setX(m_vertices[i].x());
+		}
+		if (m_vertices[i].y() > m_maxBounds.y()) {
+			m_maxBounds.setY(m_vertices[i].y());
+		}
+		if (m_vertices[i].y() < m_minBounds.y()) {
+			m_minBounds.setY(m_vertices[i].y());
+		}
 
-		if (m_vertices[i].y > m_maxBounds.y) m_maxBounds.y = m_vertices[i].y;
-		if (m_vertices[i].y < m_minBounds.y) m_minBounds.y = m_vertices[i].y;
-
-		if (m_vertices[i].z > m_maxBounds.z) m_maxBounds.z = m_vertices[i].z;
-		if (m_vertices[i].z < m_minBounds.z) m_minBounds.z = m_vertices[i].z;
+		if (m_vertices[i].z() > m_maxBounds.z()) {
+			m_maxBounds.setZ(m_vertices[i].z());
+		}
+		if (m_vertices[i].z() < m_minBounds.z()) {
+			m_minBounds.setZ(m_vertices[i].z());
+		}
 	}
 
 	// Apply the local scaling factor
-	m_maxBounds = m_maxBounds * mScaling;
-	m_minBounds = m_minBounds * mScaling;
+	m_maxBounds = m_maxBounds * m_scaling;
+	m_minBounds = m_minBounds * m_scaling;
 
 	// Add the object margin to the bounds
-	m_maxBounds += Vector3(mMargin, mMargin, mMargin);
-	m_minBounds -= Vector3(mMargin, mMargin, mMargin);
+	m_maxBounds += vec3(m_margin, m_margin, m_margin);
+	m_minBounds -= vec3(m_margin, m_margin, m_margin);
 }
 
 // Raycast method with feedback information
 bool ConvexMeshShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const {
-	return proxyShape->m_body->m_world.m_collisionDetection.m_narrowPhaseGJKAlgorithm.raycast(
-									 ray, proxyShape, raycastInfo);
+	return proxyShape->m_body->m_world.m_collisionDetection.m_narrowPhaseGJKAlgorithm.raycast(ray, proxyShape, raycastInfo);
 }

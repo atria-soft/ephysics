@@ -49,10 +49,10 @@ class Cone : public openglframework::Mesh, public PhysicsObject {
 		rp3d::ProxyShape* m_proxyShape;
 
 		/// Scaling matrix (applied to a sphere to obtain the correct cone dimensions)
-		openglframework::Matrix4 mScalingMatrix;
+		openglframework::Matrix4 m_scalingMatrix;
 
 		/// Previous transform (for int32_terpolation)
-		rp3d::Transform mPreviousTransform;
+		rp3d::etk::Transform3D mPreviousTransform;
 
 		/// Vertex Buffer Object for the vertices data
 		static openglframework::VertexBufferObject mVBOVertices;
@@ -82,11 +82,11 @@ class Cone : public openglframework::Mesh, public PhysicsObject {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		Cone(float radius, float height, const openglframework::Vector3& position,
+		Cone(float radius, float height, const openglframework::vec3& position,
 			 rp3d::CollisionWorld* world, const std::string& meshFolderPath);
 
 		/// Constructor
-		Cone(float radius, float height, const openglframework::Vector3& position,
+		Cone(float radius, float height, const openglframework::vec3& position,
 			 float mass, rp3d::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath);
 
 		/// Destructor
@@ -100,14 +100,14 @@ class Cone : public openglframework::Mesh, public PhysicsObject {
 		void resetTransform(const rp3d::Transform& transform);
 
 		/// Update the transform matrix of the object
-		virtual void updateTransform(float int32_terpolationFactor);
+		virtual void updateetk::Transform3D(float int32_terpolationFactor);
 
 		/// Set the scaling of the object
-		void setScaling(const openglframework::Vector3& scaling);
+		void setScaling(const openglframework::vec3& scaling);
 };
 
-inline void Cone::updateTransform(float int32_terpolationFactor) {
-	m_transformMatrix = computeTransform(int32_terpolationFactor, mScalingMatrix);
+inline void Cone::updateetk::Transform3D(float int32_terpolationFactor) {
+	m_transformMatrix = computeetk::Transform3D(int32_terpolationFactor, m_scalingMatrix);
 }
 
 #endif

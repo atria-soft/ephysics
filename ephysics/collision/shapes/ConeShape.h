@@ -38,7 +38,7 @@ class ConeShape : public ConvexShape {
 		float mRadius;
 
 		/// Half height of the cone
-		float mHalfHeight;
+		float m_halfHeight;
 
 		/// sine of the semi angle at the apex point
 		float mSinTheta;
@@ -52,11 +52,11 @@ class ConeShape : public ConvexShape {
 		ConeShape& operator=(const ConeShape& shape);
 
 		/// Return a local support point in a given direction without the object margin
-		virtual Vector3 getLocalSupportPointWithoutMargin(const Vector3& direction,
+		virtual vec3 getLocalSupportPointWithoutMargin(const vec3& direction,
 														  void** cachedCollisionData) const;
 
 		/// Return true if a point is inside the collision shape
-		virtual bool testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const;
+		virtual bool testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const;
 
 		/// Raycast method with feedback information
 		virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
@@ -81,13 +81,13 @@ class ConeShape : public ConvexShape {
 		float getHeight() const;
 
 		/// Set the scaling vector of the collision shape
-		virtual void setLocalScaling(const Vector3& scaling);
+		virtual void setLocalScaling(const vec3& scaling);
 
 		/// Return the local bounds of the shape in x, y and z directions
-		virtual void getLocalBounds(Vector3& min, Vector3& max) const;
+		virtual void getLocalBounds(vec3& min, vec3& max) const;
 
 		/// Return the local inertia tensor of the collision shape
-		virtual void computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const;
+		virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const;
 };
 
 // Return the radius
@@ -103,14 +103,14 @@ inline float ConeShape::getRadius() const {
  * @return Height of the cone (in meters)
  */
 inline float ConeShape::getHeight() const {
-	return float(2.0) * mHalfHeight;
+	return float(2.0) * m_halfHeight;
 }
 
 // Set the scaling vector of the collision shape
-inline void ConeShape::setLocalScaling(const Vector3& scaling) {
+inline void ConeShape::setLocalScaling(const vec3& scaling) {
 
-	mHalfHeight = (mHalfHeight / mScaling.y) * scaling.y;
-	mRadius = (mRadius / mScaling.x) * scaling.x;
+	m_halfHeight = (m_halfHeight / m_scaling.y()) * scaling.y();
+	mRadius = (mRadius / m_scaling.x()) * scaling.x();
 
 	CollisionShape::setLocalScaling(scaling);
 }
@@ -125,17 +125,17 @@ inline size_t ConeShape::getSizeInBytes() const {
  * @param min The minimum bounds of the shape in local-space coordinates
  * @param max The maximum bounds of the shape in local-space coordinates
  */
-inline void ConeShape::getLocalBounds(Vector3& min, Vector3& max) const {
+inline void ConeShape::getLocalBounds(vec3& min, vec3& max) const {
 
 	// Maximum bounds
-	max.x = mRadius + mMargin;
-	max.y = mHalfHeight + mMargin;
-	max.z = max.x;
+	max.setX(mRadius + m_margin);
+	max.setY(m_halfHeight + m_margin);
+	max.setZ(max.x());
 
 	// Minimum bounds
-	min.x = -max.x;
-	min.y = -max.y;
-	min.z = min.x;
+	min.setX(-max.x());
+	min.setY(-max.y());
+	min.setZ(min.x());
 }
 
 // Return the local inertia tensor of the collision shape
@@ -144,20 +144,20 @@ inline void ConeShape::getLocalBounds(Vector3& min, Vector3& max) const {
  *					coordinates
  * @param mass Mass to use to compute the inertia tensor of the collision shape
  */
-inline void ConeShape::computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const {
+inline void ConeShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
 	float rSquare = mRadius * mRadius;
-	float diagXZ = float(0.15) * mass * (rSquare + mHalfHeight);
-	tensor.setAllValues(diagXZ, 0.0, 0.0,
+	float diagXZ = float(0.15) * mass * (rSquare + m_halfHeight);
+	tensor.setValue(diagXZ, 0.0, 0.0,
 						0.0, float(0.3) * mass * rSquare,
 						0.0, 0.0, 0.0, diagXZ);
 }
 
 // Return true if a point is inside the collision shape
-inline bool ConeShape::testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const {
-	const float radiusHeight = mRadius * (-localPoint.y + mHalfHeight) /
-										  (mHalfHeight * float(2.0));
-	return (localPoint.y < mHalfHeight && localPoint.y > -mHalfHeight) &&
-		   (localPoint.x * localPoint.x + localPoint.z * localPoint.z < radiusHeight *radiusHeight);
+inline bool ConeShape::testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const {
+	const float radiusHeight = mRadius * (-localPoint.y() + m_halfHeight) /
+										  (m_halfHeight * float(2.0));
+	return (localPoint.y() < m_halfHeight && localPoint.y() > -m_halfHeight) &&
+		   (localPoint.x() * localPoint.x() + localPoint.z() * localPoint.z() < radiusHeight *radiusHeight);
 }
 
 }

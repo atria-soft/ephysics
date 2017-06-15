@@ -44,16 +44,16 @@ class ConvexMeshShape : public ConvexShape {
 		// -------------------- Attributes -------------------- //
 
 		/// Array with the vertices of the mesh
-		std::vector<Vector3> m_vertices;
+		std::vector<vec3> m_vertices;
 
 		/// Number of vertices in the mesh
 		uint32_t m_numberVertices;
 
 		/// Mesh minimum bounds in the three local x, y and z directions
-		Vector3 m_minBounds;
+		vec3 m_minBounds;
 
 		/// Mesh maximum bounds in the three local x, y and z directions
-		Vector3 m_maxBounds;
+		vec3 m_maxBounds;
 
 		/// True if the shape contains the edges of the convex mesh in order to
 		/// make the collision detection faster
@@ -74,14 +74,14 @@ class ConvexMeshShape : public ConvexShape {
 		void recalculateBounds();
 
 		/// Set the scaling vector of the collision shape
-		virtual void setLocalScaling(const Vector3& scaling);
+		virtual void setLocalScaling(const vec3& scaling);
 
 		/// Return a local support point in a given direction without the object margin.
-		virtual Vector3 getLocalSupportPointWithoutMargin(const Vector3& direction,
+		virtual vec3 getLocalSupportPointWithoutMargin(const vec3& direction,
 														  void** cachedCollisionData) const;
 
 		/// Return true if a point is inside the collision shape
-		virtual bool testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const;
+		virtual bool testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const;
 
 		/// Raycast method with feedback information
 		virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
@@ -108,13 +108,13 @@ class ConvexMeshShape : public ConvexShape {
 		virtual ~ConvexMeshShape();
 
 		/// Return the local bounds of the shape in x, y and z directions
-		virtual void getLocalBounds(Vector3& min, Vector3& max) const;
+		virtual void getLocalBounds(vec3& min, vec3& max) const;
 
 		/// Return the local inertia tensor of the collision shape.
-		virtual void computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const;
+		virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const;
 
 		/// Add a vertex int32_to the convex mesh
-		void addVertex(const Vector3& vertex);
+		void addVertex(const vec3& vertex);
 
 		/// Add an edge int32_to the convex mesh by specifying the two vertex indices of the edge.
 		void addEdge(uint32_t v1, uint32_t v2);
@@ -128,7 +128,7 @@ class ConvexMeshShape : public ConvexShape {
 };
 
 /// Set the scaling vector of the collision shape
-inline void ConvexMeshShape::setLocalScaling(const Vector3& scaling) {
+inline void ConvexMeshShape::setLocalScaling(const vec3& scaling) {
 	ConvexShape::setLocalScaling(scaling);
 	recalculateBounds();
 }
@@ -143,7 +143,7 @@ inline size_t ConvexMeshShape::getSizeInBytes() const {
  * @param min The minimum bounds of the shape in local-space coordinates
  * @param max The maximum bounds of the shape in local-space coordinates
  */
-inline void ConvexMeshShape::getLocalBounds(Vector3& min, Vector3& max) const {
+inline void ConvexMeshShape::getLocalBounds(vec3& min, vec3& max) const {
 	min = m_minBounds;
 	max = m_maxBounds;
 }
@@ -156,14 +156,14 @@ inline void ConvexMeshShape::getLocalBounds(Vector3& min, Vector3& max) const {
 *					coordinates
 * @param mass Mass to use to compute the inertia tensor of the collision shape
 */
-inline void ConvexMeshShape::computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const {
-	float factor = (float(1.0) / float(3.0)) * mass;
-	Vector3 realExtent = float(0.5) * (m_maxBounds - m_minBounds);
-	assert(realExtent.x > 0 && realExtent.y > 0 && realExtent.z > 0);
-	float xSquare = realExtent.x * realExtent.x;
-	float ySquare = realExtent.y * realExtent.y;
-	float zSquare = realExtent.z * realExtent.z;
-	tensor.setAllValues(factor * (ySquare + zSquare), 0.0, 0.0,
+inline void ConvexMeshShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
+	float factor = (1.0f / float(3.0)) * mass;
+	vec3 realExtent = 0.5f * (m_maxBounds - m_minBounds);
+	assert(realExtent.x() > 0 && realExtent.y() > 0 && realExtent.z() > 0);
+	float xSquare = realExtent.x() * realExtent.x();
+	float ySquare = realExtent.y() * realExtent.y();
+	float zSquare = realExtent.z() * realExtent.z();
+	tensor.setValue(factor * (ySquare + zSquare), 0.0, 0.0,
 						0.0, factor * (xSquare + zSquare), 0.0,
 						0.0, 0.0, factor * (xSquare + ySquare));
 }
@@ -172,19 +172,31 @@ inline void ConvexMeshShape::computeLocalInertiaTensor(Matrix3x3& tensor, float 
 /**
  * @param vertex Vertex to be added
  */
-inline void ConvexMeshShape::addVertex(const Vector3& vertex) {
+inline void ConvexMeshShape::addVertex(const vec3& vertex) {
 
 	// Add the vertex in to vertices array
 	m_vertices.push_back(vertex);
 	m_numberVertices++;
 
 	// Update the bounds of the mesh
-	if (vertex.x * mScaling.x > m_maxBounds.x) m_maxBounds.x = vertex.x * mScaling.x;
-	if (vertex.x * mScaling.x < m_minBounds.x) m_minBounds.x = vertex.x * mScaling.x;
-	if (vertex.y * mScaling.y > m_maxBounds.y) m_maxBounds.y = vertex.y * mScaling.y;
-	if (vertex.y * mScaling.y < m_minBounds.y) m_minBounds.y = vertex.y * mScaling.y;
-	if (vertex.z * mScaling.z > m_maxBounds.z) m_maxBounds.z = vertex.z * mScaling.z;
-	if (vertex.z * mScaling.z < m_minBounds.z) m_minBounds.z = vertex.z * mScaling.z;
+	if (vertex.x() * m_scaling.x() > m_maxBounds.x()) {
+		m_maxBounds.setX(vertex.x() * m_scaling.x());
+	}
+	if (vertex.x() * m_scaling.x() < m_minBounds.x()) {
+		m_minBounds.setX(vertex.x() * m_scaling.x());
+	}
+	if (vertex.y() * m_scaling.y() > m_maxBounds.y()) {
+		m_maxBounds.setY(vertex.y() * m_scaling.y());
+	}
+	if (vertex.y() * m_scaling.y() < m_minBounds.y()) {
+		m_minBounds.setY(vertex.y() * m_scaling.y());
+	}
+	if (vertex.z() * m_scaling.z() > m_maxBounds.z()) {
+		m_maxBounds.setZ(vertex.z() * m_scaling.z());
+	}
+	if (vertex.z() * m_scaling.z() < m_minBounds.z()) {
+		m_minBounds.setZ(vertex.z() * m_scaling.z());
+	}
 }
 
 // Add an edge int32_to the convex mesh by specifying the two vertex indices of the edge.
@@ -231,7 +243,7 @@ inline void ConvexMeshShape::setIsEdgesInformationUsed(bool isEdgesUsed) {
 }
 
 // Return true if a point is inside the collision shape
-inline bool ConvexMeshShape::testPointInside(const Vector3& localPoint,
+inline bool ConvexMeshShape::testPointInside(const vec3& localPoint,
 											 ProxyShape* proxyShape) const {
 
 	// Use the GJK algorithm to test if the point is inside the convex mesh

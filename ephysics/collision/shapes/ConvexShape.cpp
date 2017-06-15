@@ -13,7 +13,7 @@ using namespace reactphysics3d;
 
 // Constructor
 ConvexShape::ConvexShape(CollisionShapeType type, float margin)
-			: CollisionShape(type), mMargin(margin) {
+			: CollisionShape(type), m_margin(margin) {
 
 }
 
@@ -23,20 +23,20 @@ ConvexShape::~ConvexShape() {
 }
 
 // Return a local support point in a given direction with the object margin
-Vector3 ConvexShape::getLocalSupportPointWithMargin(const Vector3& direction,
+vec3 ConvexShape::getLocalSupportPointWithMargin(const vec3& direction,
 													void** cachedCollisionData) const {
 
 	// Get the support point without margin
-	Vector3 supportPoint = getLocalSupportPointWithoutMargin(direction, cachedCollisionData);
+	vec3 supportPoint = getLocalSupportPointWithoutMargin(direction, cachedCollisionData);
 
-	if (mMargin != float(0.0)) {
+	if (m_margin != 0.0f) {
 
 		// Add the margin to the support point
-		Vector3 unitVec(0.0, -1.0, 0.0);
-		if (direction.lengthSquare() > MACHINE_EPSILON * MACHINE_EPSILON) {
-			unitVec = direction.getUnit();
+		vec3 unitVec(0.0, -1.0, 0.0);
+		if (direction.length2() > MACHINE_EPSILON * MACHINE_EPSILON) {
+			unitVec = direction.safeNormalized();
 		}
-		supportPoint += unitVec * mMargin;
+		supportPoint += unitVec * m_margin;
 	}
 
 	return supportPoint;

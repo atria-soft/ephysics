@@ -62,7 +62,7 @@ class EdgeEPA {
 		uint32_t getTargetVertexIndex() const;
 
 		/// Execute the recursive silhouette algorithm from this edge
-		bool computeSilhouette(const Vector3* vertices, uint32_t index, TrianglesStore& triangleStore);
+		bool computeSilhouette(const vec3* vertices, uint32_t index, TrianglesStore& triangleStore);
 
 		/// Assignment operator
 		EdgeEPA& operator=(const EdgeEPA& edge);

@@ -28,33 +28,33 @@
 
 // Libraries
 #include <test/Test.h>
-#include <ephysics/mathematics/Vector2.h>
+#include <etk/math/Vector2D.hpp>
 
 /// Reactphysics3D namespace
 namespace reactphysics3d {
 
-// Class TestVector2
+// Class Testvec2
 /**
- * Unit test for the Vector2 class
+ * Unit test for the vec2 class
  */
-class TestVector2 : public Test {
+class Testvec2 : public Test {
 
 	private :
 
 		// ---------- Atributes ---------- //
 
 		/// Zero vector
-		Vector2 mVectorZero;
+		vec2 mVectorZero;
 
 		// Vector (3, 4)
-		Vector2 mVector34;
+		vec2 mvec34;
 
 	public :
 
 		// ---------- Methods ---------- //
 
 		/// Constructor
-		TestVector2(const std::string& name) : Test(name), mVectorZero(0, 0), mVector34(3, 4) {}
+		Testvec2(const std::string& name) : Test(name), mVectorZero(0, 0), mvec34(3, 4) {}
 
 		/// Run the tests
 		void run() {
@@ -69,25 +69,25 @@ class TestVector2 : public Test {
 		void testConstructors() {
 
 			// Test constructor
-			test(mVectorZero.x == 0.0);
-			test(mVectorZero.y == 0.0);
-			test(mVector34.x == 3.0);
-			test(mVector34.y == 4.0);
+			test(mVectorZero.x() == 0.0);
+			test(mVectorZero.y() == 0.0);
+			test(mvec34.x() == 3.0);
+			test(mvec34.y() == 4.0);
 
 			// Test copy-constructor
-			Vector2 newVector(mVector34);
-			test(newVector.x == 3.0);
-			test(newVector.y == 4.0);
+			vec2 newVector(mvec34);
+			test(newVector.x() == 3.0);
+			test(newVector.y() == 4.0);
 
 			// Test method to set values
-			Vector2 newVector2;
-			newVector2.setAllValues(float(6.1), float(7.2));
-			test(approxEqual(newVector2.x, float(6.1)));
-			test(approxEqual(newVector2.y, float(7.2)));
+			vec2 newvec2;
+			newvec2.setValue(float(6.1), float(7.2));
+			test(approxEqual(newvec2.x(), float(6.1)));
+			test(approxEqual(newvec2.y(), float(7.2)));
 
 			// Test method to set to zero
-			newVector2.setToZero();
-			test(newVector2 == Vector2(0, 0));
+			newvec2.setZero();
+			test(newvec2 == vec2(0, 0));
 		}
 
 		/// Test the length, unit vector and normalize methods
@@ -95,124 +95,124 @@ class TestVector2 : public Test {
 
 			// Test length methods
 			test(mVectorZero.length() == 0.0);
-			test(mVectorZero.lengthSquare() == 0.0);
-			test(Vector2(1, 0).length() == 1.0);
-			test(Vector2(0, 1).length() == 1.0);
-			test(mVector34.lengthSquare() == 25.0);
+			test(mVectorZero.length2() == 0.0);
+			test(vec2(1, 0).length() == 1.0);
+			test(vec2(0, 1).length() == 1.0);
+			test(mvec34.length2() == 25.0);
 
 			// Test unit vector methods
-			test(Vector2(1, 0).isUnit());
-			test(Vector2(0, 1).isUnit());
-			test(!mVector34.isUnit());
-			test(Vector2(5, 0).getUnit() == Vector2(1, 0));
-			test(Vector2(0, 5).getUnit() == Vector2(0, 1));
+			test(vec2(1, 0).isUnit());
+			test(vec2(0, 1).isUnit());
+			test(!mvec34.isUnit());
+			test(vec2(5, 0).safeNormalized() == vec2(1, 0));
+			test(vec2(0, 5).safeNormalized() == vec2(0, 1));
 
-			test(!mVector34.isZero());
+			test(!mvec34.isZero());
 			test(mVectorZero.isZero());
 
 			// Test normalization method
-			Vector2 mVector10(1, 0);
-			Vector2 mVector01(0, 1);
-			Vector2 mVector50(5, 0);
-			Vector2 mVector05(0, 5);
+			vec2 mVector10(1, 0);
+			vec2 mVector01(0, 1);
+			vec2 mVector50(5, 0);
+			vec2 mVector05(0, 5);
 			mVector10.normalize();
 			mVector01.normalize();
 			mVector50.normalize();
 			mVector05.normalize();
-			test(mVector10 == Vector2(1, 0));
-			test(mVector01 == Vector2(0, 1));
-			test(mVector50 == Vector2(1, 0));
-			test(mVector05 == Vector2(0, 1));
+			test(mVector10 == vec2(1, 0));
+			test(mVector01 == vec2(0, 1));
+			test(mVector50 == vec2(1, 0));
+			test(mVector05 == vec2(0, 1));
 		}
 
 		/// Test the dot product
 		void testDotProduct() {
 
 			// Test the dot product
-			test(Vector2(5, 0).dot(Vector2(0, 8)) == 0);
-			test(Vector2(5, 8).dot(Vector2(0, 0)) == 0);
-			test(Vector2(12, 45).dot(Vector2(0, 0)) == 0);
-			test(Vector2(5, 7).dot(Vector2(5, 7)) == 74);
-			test(Vector2(3, 6).dot(Vector2(-3, -6)) == -45);
-			test(Vector2(2, 3).dot(Vector2(-7, 4)) == -2);
-			test(Vector2(4, 3).dot(Vector2(8, 9)) == 59);
+			test(vec2(5, 0).dot(vec2(0, 8)) == 0);
+			test(vec2(5, 8).dot(vec2(0, 0)) == 0);
+			test(vec2(12, 45).dot(vec2(0, 0)) == 0);
+			test(vec2(5, 7).dot(vec2(5, 7)) == 74);
+			test(vec2(3, 6).dot(vec2(-3, -6)) == -45);
+			test(vec2(2, 3).dot(vec2(-7, 4)) == -2);
+			test(vec2(4, 3).dot(vec2(8, 9)) == 59);
 		}
 
 		/// Test others methods
 		void testOthersMethods() {
 
 			// Test the method that returns the absolute vector
-			test(Vector2(4, 5).getAbsoluteVector() == Vector2(4, 5));
-			test(Vector2(-7, -24).getAbsoluteVector() == Vector2(7, 24));
+			test(vec2(4, 5).absolute() == vec2(4, 5));
+			test(vec2(-7, -24).absolute() == vec2(7, 24));
 
 			// Test the method that returns the minimal element
-			test(Vector2(6, 35).getMinAxis() == 0);
-			test(Vector2(564, 45).getMinAxis() == 1);
-			test(Vector2(98, 23).getMinAxis() == 1);
-			test(Vector2(-53, -25).getMinAxis() == 0);
+			test(vec2(6, 35).getMinAxis() == 0);
+			test(vec2(564, 45).getMinAxis() == 1);
+			test(vec2(98, 23).getMinAxis() == 1);
+			test(vec2(-53, -25).getMinAxis() == 0);
 
 			// Test the method that returns the maximal element
-			test(Vector2(6, 35).getMaxAxis() == 1);
-			test(Vector2(7, 537).getMaxAxis() == 1);
-			test(Vector2(98, 23).getMaxAxis() == 0);
-			test(Vector2(-53, -25).getMaxAxis() == 1);
+			test(vec2(6, 35).getMaxAxis() == 1);
+			test(vec2(7, 537).getMaxAxis() == 1);
+			test(vec2(98, 23).getMaxAxis() == 0);
+			test(vec2(-53, -25).getMaxAxis() == 1);
 
 			// Test the methot that return a max/min vector
-			Vector2 vec1(-5, 4);
-			Vector2 vec2(-8, 6);
-			test(Vector2::min(vec1, vec2) == Vector2(-8, 4));
-			test(Vector2::max(vec1, vec2) == Vector2(-5, 6));
+			vec2 vec1(-5, 4);
+			vec2 vec2(-8, 6);
+			test(vec2::min(vec1, vec2) == vec2(-8, 4));
+			test(vec2::max(vec1, vec2) == vec2(-5, 6));
 		}
 
 		/// Test the operators
 		void testOperators() {
 
 			// Test the [] operator
-			test(mVector34[0] == 3);
-			test(mVector34[1] == 4);
+			test(mvec34[0] == 3);
+			test(mvec34[1] == 4);
 
 			// Assignment operator
-			Vector2 newVector(6, 4);
-			newVector = Vector2(7, 8);
-			test(newVector == Vector2(7, 8));
+			vec2 newVector(6, 4);
+			newVector = vec2(7, 8);
+			test(newVector == vec2(7, 8));
 
 			// Equality, inequality operators
-			test(Vector2(5, 7) == Vector2(5, 7));
-			test(Vector2(63, 64) != Vector2(63, 84));
-			test(Vector2(63, 64) != Vector2(12, 64));
+			test(vec2(5, 7) == vec2(5, 7));
+			test(vec2(63, 64) != vec2(63, 84));
+			test(vec2(63, 64) != vec2(12, 64));
 
 			// Addition, substraction
-			Vector2 vector1(6, 33);
-			Vector2 vector2(7, 68);
-			test(Vector2(63, 24) + Vector2(3, 4) == Vector2(66, 28));
-			test(Vector2(63, 24) - Vector2(3, 4) == Vector2(60, 20));
-			vector1 += Vector2(5, 10);
-			vector2 -= Vector2(10, 21);
-			test(vector1 == Vector2(11, 43));
-			test(vector2 == Vector2(-3, 47));
+			vec2 vector1(6, 33);
+			vec2 vector2(7, 68);
+			test(vec2(63, 24) + vec2(3, 4) == vec2(66, 28));
+			test(vec2(63, 24) - vec2(3, 4) == vec2(60, 20));
+			vector1 += vec2(5, 10);
+			vector2 -= vec2(10, 21);
+			test(vector1 == vec2(11, 43));
+			test(vector2 == vec2(-3, 47));
 
 			// Multiplication, division
-			Vector2 vector3(6, 33);
-			Vector2 vector4(15, 60);
-			test(Vector2(63, 24) * 3 == Vector2(189, 72));
-			test(3 * Vector2(63, 24) == Vector2(189, 72));
-			test(Vector2(14, 8) / 2 == Vector2(7, 4));
+			vec2 vector3(6, 33);
+			vec2 vector4(15, 60);
+			test(vec2(63, 24) * 3 == vec2(189, 72));
+			test(3 * vec2(63, 24) == vec2(189, 72));
+			test(vec2(14, 8) / 2 == vec2(7, 4));
 			vector3 *= 10;
 			vector4 /= 3;
-			test(vector3 == Vector2(60, 330));
-			test(vector4 == Vector2(5, 20));
-			Vector2 vector5(21, 80);
-			Vector2 vector6(7, 10);
-			Vector2 vector7 = vector5 * vector6;
-			test(vector7 == Vector2(147, 800));
-			Vector2 vector8 = vector5 / vector6;
-			test(approxEqual(vector8.x, 3));
-			test(approxEqual(vector8.y, 8));
+			test(vector3 == vec2(60, 330));
+			test(vector4 == vec2(5, 20));
+			vec2 vector5(21, 80);
+			vec2 vector6(7, 10);
+			vec2 vector7 = vector5 * vector6;
+			test(vector7 == vec2(147, 800));
+			vec2 vector8 = vector5 / vector6;
+			test(approxEqual(vector8.x(), 3));
+			test(approxEqual(vector8.y(), 8));
 
 			// Negative operator
-			Vector2 vector9(-34, 5);
-			Vector2 negative = -vector9;
-			test(negative == Vector2(34, -5));
+			vec2 vector9(-34, 5);
+			vec2 negative = -vector9;
+			test(negative == vec2(34, -5));
 		}
  };
 

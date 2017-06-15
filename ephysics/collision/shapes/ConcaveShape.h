@@ -23,7 +23,7 @@ class TriangleCallback {
 		virtual ~TriangleCallback() = default;
 
 		/// Report a triangle
-		virtual void testTriangle(const Vector3* trianglePoints)=0;
+		virtual void testTriangle(const vec3* trianglePoints)=0;
 
 };
 
@@ -57,7 +57,7 @@ class ConcaveShape : public CollisionShape {
 		ConcaveShape& operator=(const ConcaveShape& shape);
 
 		/// Return true if a point is inside the collision shape
-		virtual bool testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const;
+		virtual bool testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const;
 
 	public :
 
@@ -102,7 +102,7 @@ inline bool ConcaveShape::isConvex() const {
 }
 
 // Return true if a point is inside the collision shape
-inline bool ConcaveShape::testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const {
+inline bool ConcaveShape::testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const {
 	return false;
 }
 

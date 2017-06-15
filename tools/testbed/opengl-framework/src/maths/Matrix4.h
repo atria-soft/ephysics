@@ -30,7 +30,7 @@
 #include <cmath>
 #include <assert.h>
 #include <iostream>
-#include <ephysics/Vector3.h>
+#include <ephysics/vec3.h>
 #include <ephysics/Vector4.h>
 #include <ephysics/Matrix3.h>
 #include <ephysics/definitions.h>
@@ -70,25 +70,25 @@ class Matrix4 {
 		}
 
 		// Constructor
-		Matrix4(const Vector3& a1, const Vector3& a2, const Vector3& a3) {
-			m[0][0] = a1.x; m[0][1] = a2.x; m[0][2] = a3.x;  m[0][3] = 0.f;
-			m[1][0] = a1.y; m[1][1] = a2.y; m[1][2] = a3.y;  m[1][3] = 0.f;
-			m[2][0] = a1.z; m[2][1] = a2.z; m[2][2] = a3.z;  m[2][3] = 0.f;
+		Matrix4(const vec3& a1, const vec3& a2, const vec3& a3) {
+			m[0][0] = a1.x(); m[0][1] = a2.x; m[0][2] = a3.x;  m[0][3] = 0.f;
+			m[1][0] = a1.y(); m[1][1] = a2.y; m[1][2] = a3.y;  m[1][3] = 0.f;
+			m[2][0] = a1.z(); m[2][1] = a2.z; m[2][2] = a3.z;  m[2][3] = 0.f;
 			m[3][0] = 0.f;  m[3][1] = 0.f;  m[3][2] = 0.f;   m[3][3] = 1.f;
 		}
 
 		// Constructor
 		Matrix4(const Vector4& a1, const Vector4& a2, const Vector4& a3) {
-			m[0][0] = a1.x; m[0][1] = a2.x; m[0][2] = a3.x;  m[0][3] = 0.f;
-			m[1][0] = a1.y; m[1][1] = a2.y; m[1][2] = a3.y;  m[1][3] = 0.f;
-			m[2][0] = a1.z; m[2][1] = a2.z; m[2][2] = a3.z;  m[2][3] = 0.f;
+			m[0][0] = a1.x(); m[0][1] = a2.x; m[0][2] = a3.x;  m[0][3] = 0.f;
+			m[1][0] = a1.y(); m[1][1] = a2.y; m[1][2] = a3.y;  m[1][3] = 0.f;
+			m[2][0] = a1.z(); m[2][1] = a2.z; m[2][2] = a3.z;  m[2][3] = 0.f;
 			m[3][0] = a1.w; m[3][1] = a2.w; m[3][2] = a3.w;  m[3][3] = 1.f;
 		}
 
 		// Constructor
 		Matrix4(const Matrix4& matrix) {
 
-			setAllValues(matrix.m[0][0], matrix.m[0][1], matrix.m[0][2], matrix.m[0][3],
+			setValue(matrix.m[0][0], matrix.m[0][1], matrix.m[0][2], matrix.m[0][3],
 						 matrix.m[1][0], matrix.m[1][1], matrix.m[1][2], matrix.m[1][3],
 						 matrix.m[2][0], matrix.m[2][1], matrix.m[2][2], matrix.m[2][3],
 						 matrix.m[3][0], matrix.m[3][1], matrix.m[3][2], matrix.m[3][3]);
@@ -131,7 +131,7 @@ class Matrix4 {
 		// = operator
 		Matrix4& operator=(const Matrix4& matrix) {
 			if (&matrix != this) {
-				setAllValues(matrix.m[0][0], matrix.m[0][1], matrix.m[0][2], matrix.m[0][3],
+				setValue(matrix.m[0][0], matrix.m[0][1], matrix.m[0][2], matrix.m[0][3],
 							 matrix.m[1][0], matrix.m[1][1], matrix.m[1][2], matrix.m[1][3],
 							 matrix.m[2][0], matrix.m[2][1], matrix.m[2][2], matrix.m[2][3],
 							 matrix.m[3][0], matrix.m[3][1], matrix.m[3][2], matrix.m[3][3]);
@@ -163,20 +163,20 @@ class Matrix4 {
 		}
 
 		// * operator
-		Vector3 operator*(const Vector3 &v) const {
-			Vector3 u =Vector3(m[0][0]*v.x + m[0][1]*v.y + m[0][2]*v.z + m[0][3],
-							   m[1][0]*v.x + m[1][1]*v.y + m[1][2]*v.z + m[1][3],
-							   m[2][0]*v.x + m[2][1]*v.y + m[2][2]*v.z + m[2][3]);
-			float w = m[3][0]*v.x + m[3][1]*v.y + m[3][2]*v.z + m[3][3];
+		vec3 operator*(const vec3 &v) const {
+			vec3 u =vec3(m[0][0]*v.x() + m[0][1]*v.y() + m[0][2]*v.z() + m[0][3],
+							   m[1][0]*v.x() + m[1][1]*v.y() + m[1][2]*v.z() + m[1][3],
+							   m[2][0]*v.x() + m[2][1]*v.y() + m[2][2]*v.z() + m[2][3]);
+			float w = m[3][0]*v.x() + m[3][1]*v.y() + m[3][2]*v.z() + m[3][3];
 			return u/w;
 		}
 
 		// * operator
 		Vector4 operator*(const Vector4 &v) const {
-			Vector4 u = Vector4(m[0][0]*v.x + m[0][1]*v.y + m[0][2]*v.z + v.w*m[0][3],
-								m[1][0]*v.x + m[1][1]*v.y + m[1][2]*v.z + v.w*m[1][3],
-								m[2][0]*v.x + m[2][1]*v.y + m[2][2]*v.z + v.w*m[2][3],
-								m[3][0]*v.x + m[3][1]*v.y + m[3][2]*v.z + v.w*m[3][3]);
+			Vector4 u = Vector4(m[0][0]*v.x() + m[0][1]*v.y() + m[0][2]*v.z() + v.w*m[0][3],
+								m[1][0]*v.x() + m[1][1]*v.y() + m[1][2]*v.z() + v.w*m[1][3],
+								m[2][0]*v.x() + m[2][1]*v.y() + m[2][2]*v.z() + v.w*m[2][3],
+								m[3][0]*v.x() + m[3][1]*v.y() + m[3][2]*v.z() + v.w*m[3][3]);
 			if(u.w != 0)
 				return u/u.w;
 			else
@@ -321,7 +321,7 @@ class Matrix4 {
 		}
 
 		// Method to set all the values in the matrix
-		void setAllValues(float a1, float a2, float a3, float a4,
+		void setValue(float a1, float a2, float a3, float a4,
 						  float b1, float b2, float b3, float b4,
 						  float c1, float c2, float c3, float c4,
 						  float d1, float d2, float d3, float d4) {
@@ -373,10 +373,10 @@ class Matrix4 {
 		}
 
 		// Return a 4x4 translation matrix
-		static Matrix4 translationMatrix(const Vector3& v);
+		static Matrix4 translationMatrix(const vec3& v);
 
 		// Return a 4x4 rotation matrix
-		static Matrix4 rotationMatrix(const Vector3& axis, float angle);
+		static Matrix4 rotationMatrix(const vec3& axis, float angle);
 
 		// Return a 4x4 perspective projection matrix
 		static Matrix4 perspectiveProjectionMatrix(float near, float far,
@@ -397,34 +397,34 @@ inline Matrix4 operator*(float f, const Matrix4 & m) {
 }
 
 // Return a 4x4 translation matrix
-inline Matrix4 Matrix4::translationMatrix(const Vector3& v) {
-	return Matrix4(1, 0, 0, v.x,
-				   0, 1, 0, v.y,
-				   0, 0, 1, v.z,
+inline Matrix4 Matrix4::translationMatrix(const vec3& v) {
+	return Matrix4(1, 0, 0, v.x(),
+				   0, 1, 0, v.y(),
+				   0, 0, 1, v.z(),
 				   0, 0, 0, 1);
 }
 
 // Return a 4x4 rotation matrix
-inline Matrix4 Matrix4::rotationMatrix(const Vector3& axis, float angle) {
+inline Matrix4 Matrix4::rotationMatrix(const vec3& axis, float angle) {
 
 	float cosA = cos(angle);
 	float sinA = sin(angle);
 	Matrix4 rotationMatrix;
 	rotationMatrix.setToIdentity();
 
-	rotationMatrix.m[0][0] = cosA + (1-cosA) * axis.x * axis.x;
-	rotationMatrix.m[0][1] = (1-cosA) * axis.x * axis.y - axis.z * sinA;
-	rotationMatrix.m[0][2] = (1-cosA) * axis.x * axis.z + axis.y * sinA;
+	rotationMatrix.m[0][0] = cosA + (1-cosA) * axis.x() * axis.x;
+	rotationMatrix.m[0][1] = (1-cosA) * axis.x() * axis.y() - axis.z() * sinA;
+	rotationMatrix.m[0][2] = (1-cosA) * axis.x() * axis.z() + axis.y() * sinA;
 	rotationMatrix.m[0][3] = 0.f;
 
-	rotationMatrix.m[1][0] = (1-cosA) * axis.x * axis.y + axis.z * sinA;
-	rotationMatrix.m[1][1] = cosA + (1-cosA) * axis.y * axis.y;
-	rotationMatrix.m[1][2] = (1-cosA) * axis.y * axis.z - axis.x * sinA;
+	rotationMatrix.m[1][0] = (1-cosA) * axis.x() * axis.y() + axis.z() * sinA;
+	rotationMatrix.m[1][1] = cosA + (1-cosA) * axis.y() * axis.y;
+	rotationMatrix.m[1][2] = (1-cosA) * axis.y() * axis.z() - axis.x() * sinA;
 	rotationMatrix.m[1][3] = 0.f;
 
-	rotationMatrix.m[2][0] = (1-cosA) * axis.x * axis.z - axis.y * sinA;
-	rotationMatrix.m[2][1] = (1-cosA) * axis.y * axis.z + axis.x * sinA;
-	rotationMatrix.m[2][2] = cosA + (1-cosA) * axis.z * axis.z;
+	rotationMatrix.m[2][0] = (1-cosA) * axis.x() * axis.z() - axis.y() * sinA;
+	rotationMatrix.m[2][1] = (1-cosA) * axis.y() * axis.z() + axis.x() * sinA;
+	rotationMatrix.m[2][2] = cosA + (1-cosA) * axis.z() * axis.z;
 	rotationMatrix.m[2][3] = 0.f;
 
 	rotationMatrix.m[3][0] = 0.f;

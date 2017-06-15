@@ -26,8 +26,8 @@ ContactPoint::ContactPoint(const ContactPointInfo& contactInfo)
 								  contactInfo.localPoint2),
 			   mIsRestingContact(false) {
 
-	m_frictionVectors[0] = Vector3(0, 0, 0);
-	m_frictionVectors[1] = Vector3(0, 0, 0);
+	m_frictionVectors[0] = vec3(0, 0, 0);
+	m_frictionVectors[1] = vec3(0, 0, 0);
 
 	assert(mPenetrationDepth > 0.0);
 

@@ -170,11 +170,11 @@ inline void Body::setIsActive(bool isActive) {
 inline void Body::setIsSleeping(bool isSleeping) {
 
 	if (isSleeping) {
-		m_sleepTime = float(0.0);
+		m_sleepTime = 0.0f;
 	}
 	else {
 		if (m_isSleeping) {
-			m_sleepTime = float(0.0);
+			m_sleepTime = 0.0f;
 		}
 	}
 

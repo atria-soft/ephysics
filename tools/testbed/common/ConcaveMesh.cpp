@@ -27,7 +27,7 @@
 #include <ephysics/ConcaveMesh.h>
 
 // Constructor
-ConcaveMesh::ConcaveMesh(const openglframework::Vector3 &position,
+ConcaveMesh::ConcaveMesh(const openglframework::vec3 &position,
 					   reactphysics3d::CollisionWorld* world,
 					   const std::string& meshPath)
 		   : openglframework::Mesh(), mVBOVertices(GL_ARRAY_BUFFER),
@@ -44,14 +44,14 @@ ConcaveMesh::ConcaveMesh(const openglframework::Vector3 &position,
 	translateWorld(position);
 
 	// Compute the scaling matrix
-	mScalingMatrix = openglframework::Matrix4::identity();
+	m_scalingMatrix = openglframework::Matrix4::identity();
 
 	// For each subpart of the mesh
 	for (uint32_t i=0; i<getNbParts(); i++) {
 
 		// Vertex and Indices array for the triangle mesh (data in shared and not copied)
 		rp3d::TriangleVertexArray* vertexArray =
-				new rp3d::TriangleVertexArray(getNbVertices(), &(m_vertices[0]), sizeof(openglframework::Vector3),
+				new rp3d::TriangleVertexArray(getNbVertices(), &(m_vertices[0]), sizeof(openglframework::vec3),
 											  getNbFaces(i), &(mIndices[i][0]), sizeof(int32_t),
 											  rp3d::TriangleVertexArray::VERTEX_FLOAT_TYPE,
 											  rp3d::TriangleVertexArray::INDEX_INTEGER_TYPE);
@@ -65,26 +65,26 @@ ConcaveMesh::ConcaveMesh(const openglframework::Vector3 &position,
 	mConcaveShape = new rp3d::ConcaveMeshShape(&mPhysicsTriangleMesh);
 
 	// Initial position and orientation of the rigid body
-	rp3d::Vector3 initPosition(position.x, position.y, position.z);
-	rp3d::Quaternion initOrientation = rp3d::Quaternion::identity();
-	rp3d::Transform transform(initPosition, initOrientation);
+	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
+	rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
+	rp3d::etk::Transform3D transform(initPosition, initOrientation);
 
-	mPreviousTransform = transform;
+	mPreviousetk::Transform3D = transform;
 
 	// Create a rigid body corresponding to the sphere in the dynamics world
 	m_body = world->createCollisionBody(transform);
 
 	// Add a collision shape to the body and specify the mass of the collision shape
-	m_proxyShape = m_body->addCollisionShape(mConcaveShape, rp3d::Transform::identity());
+	m_proxyShape = m_body->addCollisionShape(mConcaveShape, rp3d::etk::Transform3D::identity());
 
 	// Create the VBOs and VAO
 	createVBOAndVAO();
 
-	m_transformMatrix = m_transformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * m_scalingMatrix;
 }
 
 // Constructor
-ConcaveMesh::ConcaveMesh(const openglframework::Vector3 &position, float mass,
+ConcaveMesh::ConcaveMesh(const openglframework::vec3 &position, float mass,
 					   reactphysics3d::DynamicsWorld* dynamicsWorld,
 					   const std::string& meshPath)
 		   : openglframework::Mesh(), mVBOVertices(GL_ARRAY_BUFFER),
@@ -101,14 +101,14 @@ ConcaveMesh::ConcaveMesh(const openglframework::Vector3 &position, float mass,
 	translateWorld(position);
 
 	// Compute the scaling matrix
-	mScalingMatrix = openglframework::Matrix4::identity();
+	m_scalingMatrix = openglframework::Matrix4::identity();
 
 	// For each subpart of the mesh
 	for (uint32_t i=0; i<getNbParts(); i++) {
 
 		// Vertex and Indices array for the triangle mesh (data in shared and not copied)
 		rp3d::TriangleVertexArray* vertexArray =
-				new rp3d::TriangleVertexArray(getNbVertices(), &(m_vertices[0]), sizeof(openglframework::Vector3),
+				new rp3d::TriangleVertexArray(getNbVertices(), &(m_vertices[0]), sizeof(openglframework::vec3),
 											  getNbFaces(i), &(mIndices[i][0]), sizeof(int32_t),
 											  rp3d::TriangleVertexArray::VERTEX_FLOAT_TYPE,
 											  rp3d::TriangleVertexArray::INDEX_INTEGER_TYPE);
@@ -124,22 +124,22 @@ ConcaveMesh::ConcaveMesh(const openglframework::Vector3 &position, float mass,
 	mConcaveShape->setIsSmoothMeshCollisionEnabled(false);
 
 	// Initial position and orientation of the rigid body
-	rp3d::Vector3 initPosition(position.x, position.y, position.z);
-	rp3d::Quaternion initOrientation = rp3d::Quaternion::identity();
-	rp3d::Transform transform(initPosition, initOrientation);
+	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
+	rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
+	rp3d::etk::Transform3D transform(initPosition, initOrientation);
 
 	// Create a rigid body corresponding to the sphere in the dynamics world
 	rp3d::RigidBody* body = dynamicsWorld->createRigidBody(transform);
 
 	// Add a collision shape to the body and specify the mass of the collision shape
-	m_proxyShape = body->addCollisionShape(mConcaveShape, rp3d::Transform::identity(), mass);
+	m_proxyShape = body->addCollisionShape(mConcaveShape, rp3d::etk::Transform3D::identity(), mass);
 
 	m_body = body;
 
 	// Create the VBOs and VAO
 	createVBOAndVAO();
 
-	m_transformMatrix = m_transformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * m_scalingMatrix;
 }
 
 // Destructor
@@ -179,7 +179,7 @@ void ConcaveMesh::render(openglframework::Shader& shader,
 	const openglframework::Matrix4 localToCameraMatrix = worldToCameraMatrix * m_transformMatrix;
 	const openglframework::Matrix3 normalMatrix =
 					   localToCameraMatrix.getUpperLeft3x3Matrix().getInverse().getTranspose();
-	shader.setMatrix3x3Uniform("normalMatrix", normalMatrix, false);
+	shader.setetk::Matrix3x3Uniform("normalMatrix", normalMatrix, false);
 
 	// Set the vertex color
 	openglframework::Color currentColor = m_body->isSleeping() ? mSleepingColor : mColor;
@@ -228,14 +228,14 @@ void ConcaveMesh::createVBOAndVAO() {
 	// Create the VBO for the vertices data
 	mVBOVertices.create();
 	mVBOVertices.bind();
-	size_t sizeVertices = m_vertices.size() * sizeof(openglframework::Vector3);
+	size_t sizeVertices = m_vertices.size() * sizeof(openglframework::vec3);
 	mVBOVertices.copyDataIntoVBO(sizeVertices, getVerticesPointer(), GL_STATIC_DRAW);
 	mVBOVertices.unbind();
 
 	// Create the VBO for the normals data
 	mVBONormals.create();
 	mVBONormals.bind();
-	size_t sizeNormals = mNormals.size() * sizeof(openglframework::Vector3);
+	size_t sizeNormals = mNormals.size() * sizeof(openglframework::vec3);
 	mVBONormals.copyDataIntoVBO(sizeNormals, getNormalsPointer(), GL_STATIC_DRAW);
 	mVBONormals.unbind();
 
@@ -243,7 +243,7 @@ void ConcaveMesh::createVBOAndVAO() {
 		// Create the VBO for the texture co data
 		mVBOTextureCoords.create();
 		mVBOTextureCoords.bind();
-		size_t sizeTextureCoords = mUVs.size() * sizeof(openglframework::Vector2);
+		size_t sizeTextureCoords = mUVs.size() * sizeof(openglframework::vec2);
 		mVBOTextureCoords.copyDataIntoVBO(sizeTextureCoords, getUVTextureCoordinatesPointer(), GL_STATIC_DRAW);
 		mVBOTextureCoords.unbind();
 	}
@@ -288,23 +288,23 @@ void ConcaveMesh::resetTransform(const rp3d::Transform& transform) {
 	// Reset the velocity of the rigid body
 	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(m_body);
 	if (rigidBody != NULL) {
-		rigidBody->setLinearVelocity(rp3d::Vector3(0, 0, 0));
-		rigidBody->setAngularVelocity(rp3d::Vector3(0, 0, 0));
+		rigidBody->setLinearVelocity(rp3d::vec3(0, 0, 0));
+		rigidBody->setAngularVelocity(rp3d::vec3(0, 0, 0));
 	}
 
-	updateTransform(1.0f);
+	updateetk::Transform3D(1.0f);
 }
 
 // Set the scaling of the object
-void ConcaveMesh::setScaling(const openglframework::Vector3& scaling) {
+void ConcaveMesh::setScaling(const openglframework::vec3& scaling) {
 
 	// Scale the collision shape
-	m_proxyShape->setLocalScaling(rp3d::Vector3(scaling.x, scaling.y, scaling.z));
+	m_proxyShape->setLocalScaling(rp3d::vec3(scaling.x(), scaling.y(), scaling.z()));
 
 	// Scale the graphics object
-	mScalingMatrix = openglframework::Matrix4(scaling.x, 0, 0, 0,
-											  0, scaling.y, 0,0,
-											  0, 0, scaling.z, 0,
+	m_scalingMatrix = openglframework::Matrix4(scaling.x(), 0, 0, 0,
+											  0, scaling.y(), 0,0,
+											  0, 0, scaling.z(), 0,
 											  0, 0, 0, 1.0f);
 }
 

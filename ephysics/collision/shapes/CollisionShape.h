@@ -8,8 +8,8 @@
 // Libraries
 #include <cassert>
 #include <typeinfo>
-#include <ephysics/mathematics/Vector3.h>
-#include <ephysics/mathematics/Matrix3x3.h>
+#include <etk/math/Vector3D.hpp>
+#include <etk/math/Matrix3x3.hpp>
 #include <ephysics/mathematics/Ray.h>
 #include <ephysics/collision/shapes/AABB.h>
 #include <ephysics/collision/RaycastInfo.h>
@@ -42,7 +42,7 @@ class CollisionShape {
 		CollisionShapeType m_type;
 
 		/// Scaling vector of the collision shape
-		Vector3 mScaling;
+		vec3 m_scaling;
 		
 		// -------------------- Methods -------------------- //
 
@@ -53,7 +53,7 @@ class CollisionShape {
 		CollisionShape& operator=(const CollisionShape& shape);
 
 		/// Return true if a point is inside the collision shape
-		virtual bool testPointInside(const Vector3& worldPoint, ProxyShape* proxyShape) const=0;
+		virtual bool testPointInside(const vec3& worldPoint, ProxyShape* proxyShape) const=0;
 
 		/// Raycast method with feedback information
 		virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const=0;
@@ -78,19 +78,19 @@ class CollisionShape {
 		virtual bool isConvex() const=0;
 
 		/// Return the local bounds of the shape in x, y and z directions
-		virtual void getLocalBounds(Vector3& min, Vector3& max) const=0;
+		virtual void getLocalBounds(vec3& min, vec3& max) const=0;
 
 		/// Return the scaling vector of the collision shape
-		Vector3 getScaling() const;
+		vec3 getScaling() const;
 
 		/// Set the local scaling vector of the collision shape
-		virtual void setLocalScaling(const Vector3& scaling);
+		virtual void setLocalScaling(const vec3& scaling);
 
 		/// Return the local inertia tensor of the collision shapes
-		virtual void computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const=0;
+		virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const=0;
 
 		/// Compute the world-space AABB of the collision shape given a transform
-		virtual void computeAABB(AABB& aabb, const Transform& transform) const;
+		virtual void computeAABB(AABB& aabb, const etk::Transform3D& transform) const;
 
 		/// Return true if the collision shape type is a convex shape
 		static bool isConvex(CollisionShapeType shapeType);
@@ -119,13 +119,13 @@ inline bool CollisionShape::isConvex(CollisionShapeType shapeType) {
 }
 
 // Return the scaling vector of the collision shape
-inline Vector3 CollisionShape::getScaling() const {
-	return mScaling;
+inline vec3 CollisionShape::getScaling() const {
+	return m_scaling;
 }
 
 // Set the scaling vector of the collision shape
-inline void CollisionShape::setLocalScaling(const Vector3& scaling) {
-	mScaling = scaling;
+inline void CollisionShape::setLocalScaling(const vec3& scaling) {
+	m_scaling = scaling;
 }
 
 // Return the maximum number of contact manifolds allowed in an overlapping

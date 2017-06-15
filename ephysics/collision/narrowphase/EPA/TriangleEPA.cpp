@@ -31,11 +31,11 @@ TriangleEPA::~TriangleEPA() {
 }
 
 // Compute the point v closest to the origin of this triangle
-bool TriangleEPA::computeClosestPoint(const Vector3* vertices) {
-	const Vector3& p0 = vertices[mIndicesVertices[0]];
+bool TriangleEPA::computeClosestPoint(const vec3* vertices) {
+	const vec3& p0 = vertices[mIndicesVertices[0]];
 
-	Vector3 v1 = vertices[mIndicesVertices[1]] - p0;
-	Vector3 v2 = vertices[mIndicesVertices[2]] - p0;
+	vec3 v1 = vertices[mIndicesVertices[1]] - p0;
+	vec3 v2 = vertices[mIndicesVertices[2]] - p0;
 	float v1Dotv1 = v1.dot(v1);
 	float v1Dotv2 = v1.dot(v2);
 	float v2Dotv2 = v2.dot(v2);
@@ -52,7 +52,7 @@ bool TriangleEPA::computeClosestPoint(const Vector3* vertices) {
 	// If the determinant is positive
 	if (mDet > 0.0) {
 		// Compute the closest point v
-		mClosestPoint = p0 + float(1.0) / mDet * (mLambda1 * v1 + mLambda2 * v2);
+		mClosestPoint = p0 + 1.0f / mDet * (mLambda1 * v1 + mLambda2 * v2);
 
 		// Compute the square distance of closest point to the origin
 		mDistSquare = mClosestPoint.dot(mClosestPoint);
@@ -101,7 +101,7 @@ void reactphysics3d::halfLink(const EdgeEPA& edge0, const EdgeEPA& edge1) {
 /// face from the new vertex, computes the silhouette and create the new faces from the new vertex in
 /// order that we always have a convex polytope. The faces visible from the new vertex are set
 /// obselete and will not be considered as being a candidate face in the future.
-bool TriangleEPA::computeSilhouette(const Vector3* vertices, uint32_t indexNewVertex,
+bool TriangleEPA::computeSilhouette(const vec3* vertices, uint32_t indexNewVertex,
 									TrianglesStore& triangleStore) {
 	
 	uint32_t first = triangleStore.getNbTriangles();

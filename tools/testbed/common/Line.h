@@ -37,7 +37,7 @@ class Line : public openglframework::Object3D {
 
 		// -------------------- Attributes -------------------- //
 
-		openglframework::Vector3 m_worldPoint1, m_worldPoint2;
+		openglframework::vec3 m_worldPoint1, m_worldPoint2;
 
 		// -------------------- Methods -------------------- //
 
@@ -46,17 +46,17 @@ class Line : public openglframework::Object3D {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		Line(const openglframework::Vector3& worldPoint1,
-			 const openglframework::Vector3& worldPoint2);
+		Line(const openglframework::vec3& worldPoint1,
+			 const openglframework::vec3& worldPoint2);
 
 		/// Destructor
 		~Line();
 
 		/// Return the first point of the line
-		openglframework::Vector3 getPoint1() const;
+		openglframework::vec3 getPoint1() const;
 
 		/// Return the second point of the line
-		openglframework::Vector3 getPoint2() const;
+		openglframework::vec3 getPoint2() const;
 
 		/// Render the line at the correct position and with the correct orientation
 		void render(openglframework::Shader& shader,
@@ -64,12 +64,12 @@ class Line : public openglframework::Object3D {
 };
 
 // Return the first point of the line
-inline openglframework::Vector3 Line::getPoint1() const {
+inline openglframework::vec3 Line::getPoint1() const {
 	return m_worldPoint1;
 }
 
 // Return the second point of the line
-inline openglframework::Vector3 Line::getPoint2() const {
+inline openglframework::vec3 Line::getPoint2() const {
 	return m_worldPoint2;
 }
 

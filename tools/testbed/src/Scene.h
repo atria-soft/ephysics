@@ -33,10 +33,10 @@
 struct ContactPoint {
 
 	public:
-		openglframework::Vector3 point;
+		openglframework::vec3 point;
 
 		/// Constructor
-		ContactPoint(const openglframework::Vector3& pointWorld) : point(pointWorld) {
+		ContactPoint(const openglframework::vec3& pointWorld) : point(pointWorld) {
 
 		}
 };
@@ -56,7 +56,7 @@ struct EngineSettings {
 	   float sleepLinearVelocity;		   // Sleep linear velocity
 	   float sleepAngularVelocity;		  // Sleep angular velocity
 	   bool isGravityEnabled;			   // True if gravity is enabled
-	   openglframework::Vector3 gravity;	// Gravity vector
+	   openglframework::vec3 gravity;	// Gravity vector
 
 	   /// Constructor
 	   EngineSettings() : elapsedTime(0.0f), timeStep(0.0f) {
@@ -82,7 +82,7 @@ class Scene {
 		openglframework::Camera mCamera;
 
 		/// Center of the scene
-		openglframework::Vector3 mCenterScene;
+		openglframework::vec3 mCenterScene;
 
 		/// Last mouse coordinates on the windows
 		double mLastMouseX, mLastMouseY;
@@ -91,7 +91,7 @@ class Scene {
 		int32_t mWindowWidth, mWindowHeight;
 
 		/// Last point computed on a sphere (for camera rotation)
-		openglframework::Vector3 mLastPointOnSphere;
+		openglframework::vec3 mLastPointOnSphere;
 
 		/// True if the last point computed on a sphere (for camera rotation) is valid
 		bool mIsLastPointOnSphereValid;
@@ -111,14 +111,14 @@ class Scene {
 		// -------------------- Methods -------------------- //
 
 		/// Set the scene position (where the camera needs to look at)
-		void setScenePosition(const openglframework::Vector3& position, float sceneRadius);
+		void setScenePosition(const openglframework::vec3& position, float sceneRadius);
 
 		/// Set the camera so that we can view the whole scene
 		void resetCameraToViewAll();
 
 		/// Map mouse coordinates to coordinates on the sphere
 		bool mapMouseCoordinatesToSphere(double xMouse, double yMouse,
-										 openglframework::Vector3& spherePoint) const;
+										 openglframework::vec3& spherePoint) const;
 
 		/// Zoom the camera
 		void zoom(float zoomDiff);

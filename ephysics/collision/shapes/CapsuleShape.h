@@ -30,7 +30,7 @@ class CapsuleShape : public ConvexShape {
 		// -------------------- Attributes -------------------- //
 
 		/// Half height of the capsule (height = distance between the centers of the two spheres)
-		float mHalfHeight;
+		float m_halfHeight;
 
 		// -------------------- Methods -------------------- //
 
@@ -41,19 +41,19 @@ class CapsuleShape : public ConvexShape {
 		CapsuleShape& operator=(const CapsuleShape& shape);
 
 		/// Return a local support point in a given direction without the object margin
-		virtual Vector3 getLocalSupportPointWithoutMargin(const Vector3& direction,
+		virtual vec3 getLocalSupportPointWithoutMargin(const vec3& direction,
 														  void** cachedCollisionData) const;
 
 		/// Return true if a point is inside the collision shape
-		virtual bool testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const;
+		virtual bool testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const;
 
 		/// Raycast method with feedback information
 		virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
 
 		/// Raycasting method between a ray one of the two spheres end cap of the capsule
-		bool raycastWithSphereEndCap(const Vector3& point1, const Vector3& point2,
-									 const Vector3& sphereCenter, float maxFraction,
-									 Vector3& hitLocalPoint, float& hitFraction) const;
+		bool raycastWithSphereEndCap(const vec3& point1, const vec3& point2,
+									 const vec3& sphereCenter, float maxFraction,
+									 vec3& hitLocalPoint, float& hitFraction) const;
 
 		/// Return the number of bytes used by the collision shape
 		virtual size_t getSizeInBytes() const;
@@ -75,13 +75,13 @@ class CapsuleShape : public ConvexShape {
 		float getHeight() const;
 
 		/// Set the scaling vector of the collision shape
-		virtual void setLocalScaling(const Vector3& scaling);
+		virtual void setLocalScaling(const vec3& scaling);
 
 		/// Return the local bounds of the shape in x, y and z directions
-		virtual void getLocalBounds(Vector3& min, Vector3& max) const;
+		virtual void getLocalBounds(vec3& min, vec3& max) const;
 
 		/// Return the local inertia tensor of the collision shape
-		virtual void computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const;
+		virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const;
 };
 
 // Get the radius of the capsule
@@ -89,7 +89,7 @@ class CapsuleShape : public ConvexShape {
  * @return The radius of the capsule shape (in meters)
  */
 inline float CapsuleShape::getRadius() const {
-	return mMargin;
+	return m_margin;
 }
 
 // Return the height of the capsule
@@ -97,14 +97,14 @@ inline float CapsuleShape::getRadius() const {
  * @return The height of the capsule shape (in meters)
  */
 inline float CapsuleShape::getHeight() const {
-	return mHalfHeight + mHalfHeight;
+	return m_halfHeight + m_halfHeight;
 }
 
 // Set the scaling vector of the collision shape
-inline void CapsuleShape::setLocalScaling(const Vector3& scaling) {
+inline void CapsuleShape::setLocalScaling(const vec3& scaling) {
 
-	mHalfHeight = (mHalfHeight / mScaling.y) * scaling.y;
-	mMargin = (mMargin / mScaling.x) * scaling.x;
+	m_halfHeight = (m_halfHeight / m_scaling.y()) * scaling.y();
+	m_margin = (m_margin / m_scaling.x()) * scaling.x();
 
 	CollisionShape::setLocalScaling(scaling);
 }
@@ -120,17 +120,17 @@ inline size_t CapsuleShape::getSizeInBytes() const {
  * @param min The minimum bounds of the shape in local-space coordinates
  * @param max The maximum bounds of the shape in local-space coordinates
  */
-inline void CapsuleShape::getLocalBounds(Vector3& min, Vector3& max) const {
+inline void CapsuleShape::getLocalBounds(vec3& min, vec3& max) const {
 
 	// Maximum bounds
-	max.x = mMargin;
-	max.y = mHalfHeight + mMargin;
-	max.z = mMargin;
+	max.setX(m_margin);
+	max.setY(m_halfHeight + m_margin);
+	max.setZ(m_margin);
 
 	// Minimum bounds
-	min.x = -mMargin;
-	min.y = -max.y;
-	min.z = min.x;
+	min.setX(-m_margin);
+	min.setY(-max.y());
+	min.setZ(min.x());
 }
 
 // Return a local support point in a given direction without the object margin.
@@ -140,21 +140,21 @@ inline void CapsuleShape::getLocalBounds(Vector3& min, Vector3& max) const {
 /// Therefore, in this method, we compute the support points of both top and bottom spheres of
 /// the capsule and return the point with the maximum dot product with the direction vector. Note
 /// that the object margin is implicitly the radius and height of the capsule.
-inline Vector3 CapsuleShape::getLocalSupportPointWithoutMargin(const Vector3& direction,
+inline vec3 CapsuleShape::getLocalSupportPointWithoutMargin(const vec3& direction,
 														void** cachedCollisionData) const {
 
 	// Support point top sphere
-	float dotProductTop = mHalfHeight * direction.y;
+	float dotProductTop = m_halfHeight * direction.y();
 
 	// Support point bottom sphere
-	float dotProductBottom = -mHalfHeight * direction.y;
+	float dotProductBottom = -m_halfHeight * direction.y();
 
 	// Return the point with the maximum dot product
 	if (dotProductTop > dotProductBottom) {
-		return Vector3(0, mHalfHeight, 0);
+		return vec3(0, m_halfHeight, 0);
 	}
 	else {
-		return Vector3(0, -mHalfHeight, 0);
+		return vec3(0, -m_halfHeight, 0);
 	}
 }
 

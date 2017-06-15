@@ -139,24 +139,24 @@ class TestCollisionWorld : public Test {
 			m_world = new CollisionWorld();
 
 			// Create the bodies
-			Transform boxTransform(Vector3(10, 0, 0), Quaternion::identity());
-			mBoxBody = m_world->createCollisionBody(boxTransform);
-			mBoxShape = new BoxShape(Vector3(3, 3, 3));
-			mBoxProxyShape = mBoxBody->addCollisionShape(mBoxShape, Transform::identity());
+			etk::Transform3D boxTransform(vec3(10, 0, 0), etk::Quaternion::identity());
+			mBoxBody = m_world->createCollisionBody(boxetk::Transform3D);
+			mBoxShape = new BoxShape(vec3(3, 3, 3));
+			mBoxProxyShape = mBoxBody->addCollisionShape(mBoxShape, etk::Transform3D::identity());
 
 			mSphereShape = new SphereShape(3.0);
-			Transform sphere1Transform(Vector3(10,5, 0), Quaternion::identity());
-			mSphere1Body = m_world->createCollisionBody(sphere1Transform);
-			mSphere1ProxyShape = mSphere1Body->addCollisionShape(mSphereShape, Transform::identity());
+			etk::Transform3D sphere1Transform(vec3(10,5, 0), etk::Quaternion::identity());
+			mSphere1Body = m_world->createCollisionBody(sphere1etk::Transform3D);
+			mSphere1ProxyShape = mSphere1Body->addCollisionShape(mSphereShape, etk::Transform3D::identity());
 
-			Transform sphere2Transform(Vector3(30, 10, 10), Quaternion::identity());
-			mSphere2Body = m_world->createCollisionBody(sphere2Transform);
-			mSphere2ProxyShape = mSphere2Body->addCollisionShape(mSphereShape, Transform::identity());
+			etk::Transform3D sphere2Transform(vec3(30, 10, 10), etk::Quaternion::identity());
+			mSphere2Body = m_world->createCollisionBody(sphere2etk::Transform3D);
+			mSphere2ProxyShape = mSphere2Body->addCollisionShape(mSphereShape, etk::Transform3D::identity());
 
-			Transform cylinderTransform(Vector3(10, -5, 0), Quaternion::identity());
-			mCylinderBody = m_world->createCollisionBody(cylinderTransform);
+			etk::Transform3D cylinderTransform(vec3(10, -5, 0), etk::Quaternion::identity());
+			mCylinderBody = m_world->createCollisionBody(cylinderetk::Transform3D);
 			mCylinderShape = new CylinderShape(2, 5);
-			mCylinderProxyShape = mCylinderBody->addCollisionShape(mCylinderShape, Transform::identity());
+			mCylinderProxyShape = mCylinderBody->addCollisionShape(mCylinderShape, etk::Transform3D::identity());
 
 			// Assign collision categories to proxy shapes
 			mBoxProxyShape->setCollisionCategoryBits(CATEGORY_1);
@@ -238,7 +238,7 @@ class TestCollisionWorld : public Test {
 			test(!m_collisionCallback.sphere1CollideWithSphere2);
 
 			// Move sphere 1 to collide with sphere 2
-			mSphere1Body->setTransform(Transform(Vector3(30, 15, 10), Quaternion::identity()));
+			mSphere1Body->setTransform(Transform(vec3(30, 15, 10), etk::Quaternion::identity()));
 
 			m_collisionCallback.reset();
 			m_world->testCollision(&m_collisionCallback);
@@ -262,7 +262,7 @@ class TestCollisionWorld : public Test {
 			test(!m_collisionCallback.sphere1CollideWithSphere2);
 
 			// Move sphere 1 to collide with box
-			mSphere1Body->setTransform(Transform(Vector3(10, 5, 0), Quaternion::identity()));
+			mSphere1Body->setTransform(Transform(vec3(10, 5, 0), etk::Quaternion::identity()));
 
 			// --------- Test collision with inactive bodies --------- //
 
@@ -307,7 +307,7 @@ class TestCollisionWorld : public Test {
 			test(!m_collisionCallback.sphere1CollideWithSphere2);
 
 			// Move sphere 1 to collide with sphere 2
-			mSphere1Body->setTransform(Transform(Vector3(30, 15, 10), Quaternion::identity()));
+			mSphere1Body->setTransform(Transform(vec3(30, 15, 10), etk::Quaternion::identity()));
 
 			m_collisionCallback.reset();
 			m_world->testCollision(&m_collisionCallback);
@@ -329,7 +329,7 @@ class TestCollisionWorld : public Test {
 			test(!m_collisionCallback.sphere1CollideWithSphere2);
 
 			// Move sphere 1 to collide with box
-			mSphere1Body->setTransform(Transform(Vector3(10, 5, 0), Quaternion::identity()));
+			mSphere1Body->setTransform(Transform(vec3(10, 5, 0), etk::Quaternion::identity()));
 
 			mBoxProxyShape->setCollideWithMaskBits(0xFFFF);
 			mSphere1ProxyShape->setCollideWithMaskBits(0xFFFF);

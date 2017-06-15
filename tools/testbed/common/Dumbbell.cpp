@@ -34,7 +34,7 @@ openglframework::VertexArrayObject Dumbbell::mVAO;
 int32_t Dumbbell::totalNbDumbbells = 0;
 
 // Constructor
-Dumbbell::Dumbbell(const openglframework::Vector3 &position,
+Dumbbell::Dumbbell(const openglframework::vec3 &position,
 				   reactphysics3d::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath)
 		 : openglframework::Mesh() {
 
@@ -45,7 +45,7 @@ Dumbbell::Dumbbell(const openglframework::Vector3 &position,
 	calculateNormals();
 
 	// Identity scaling matrix
-	mScalingMatrix.setToIdentity();
+	m_scalingMatrix.setToIdentity();
 
 	mDistanceBetweenSphere = 8.0f;
 
@@ -62,27 +62,27 @@ Dumbbell::Dumbbell(const openglframework::Vector3 &position,
 	// Create a cylinder collision shape for the middle of the dumbbell
 	// ReactPhysics3D will clone this object to create an int32_ternal one. Therefore,
 	// it is OK if this object is destroyed right after calling RigidBody::addCollisionShape()
-	const rp3d::float radiusCylinder = rp3d::float(0.5);
+	const rp3d::float radiusCylinder = rp3d::0.5f;
 	const rp3d::float heightCylinder = rp3d::float(8.0);
-	const rp3d::float massCylinder = rp3d::float(1.0);
+	const rp3d::float massCylinder = rp3d::1.0f;
 	mCylinderShape = new rp3d::CylinderShape(radiusCylinder, heightCylinder);
 
 	// Initial position and orientation of the rigid body
-	rp3d::Vector3 initPosition(position.x, position.y, position.z);
+	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
 	rp3d::float angleAroundX = 0;//rp3d::PI / 2;
-	rp3d::Quaternion initOrientation(angleAroundX, 0, 0);
-	rp3d::Transform transform_body(initPosition, initOrientation);
+	rp3d::etk::Quaternion initOrientation(angleAroundX, 0, 0);
+	rp3d::etk::Transform3D transform_body(initPosition, initOrientation);
 
-	mPreviousTransform = transform_body;
+	mPreviousetk::Transform3D = transform_body;
 
 	// Initial transform of the first sphere collision shape of the dumbbell (in local-space)
-	rp3d::Transform transformSphereShape1(rp3d::Vector3(0, mDistanceBetweenSphere / 2.0f, 0), rp3d::Quaternion::identity());
+	rp3d::etk::Transform3D transformSphereShape1(rp3d::vec3(0, mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
 
 	// Initial transform of the second sphere collision shape of the dumbell (in local-space)
-	rp3d::Transform transformSphereShape2(rp3d::Vector3(0, -mDistanceBetweenSphere / 2.0f, 0), rp3d::Quaternion::identity());
+	rp3d::etk::Transform3D transformSphereShape2(rp3d::vec3(0, -mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
 
 	// Initial transform of the cylinder collision shape of the dumbell (in local-space)
-	rp3d::Transform transformCylinderShape(rp3d::Vector3(0, 0, 0), rp3d::Quaternion::identity());
+	rp3d::etk::Transform3D transformCylinderShape(rp3d::vec3(0, 0, 0), rp3d::etk::Quaternion::identity());
 
 	// Create a rigid body corresponding to the dumbbell in the dynamics world
 	rp3d::RigidBody* body = dynamicsWorld->createRigidBody(transform_body);
@@ -94,7 +94,7 @@ Dumbbell::Dumbbell(const openglframework::Vector3 &position,
 
 	m_body = body;
 
-	m_transformMatrix = m_transformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * m_scalingMatrix;
 
 	// Create the VBOs and VAO
 	if (totalNbDumbbells == 0) {
@@ -105,7 +105,7 @@ Dumbbell::Dumbbell(const openglframework::Vector3 &position,
 }
 
 // Constructor
-Dumbbell::Dumbbell(const openglframework::Vector3 &position,
+Dumbbell::Dumbbell(const openglframework::vec3 &position,
 				   reactphysics3d::CollisionWorld* world, const std::string& meshFolderPath)
 		 : openglframework::Mesh() {
 
@@ -116,7 +116,7 @@ Dumbbell::Dumbbell(const openglframework::Vector3 &position,
 	calculateNormals();
 
 	// Identity scaling matrix
-	mScalingMatrix.setToIdentity();
+	m_scalingMatrix.setToIdentity();
 
 	mDistanceBetweenSphere = 8.0f;
 
@@ -132,24 +132,24 @@ Dumbbell::Dumbbell(const openglframework::Vector3 &position,
 	// Create a cylinder collision shape for the middle of the dumbbell
 	// ReactPhysics3D will clone this object to create an int32_ternal one. Therefore,
 	// it is OK if this object is destroyed right after calling RigidBody::addCollisionShape()
-	const rp3d::float radiusCylinder = rp3d::float(0.5);
+	const rp3d::float radiusCylinder = rp3d::0.5f;
 	const rp3d::float heightCylinder = rp3d::float(8.0);
 	mCylinderShape = new rp3d::CylinderShape(radiusCylinder, heightCylinder);
 
 	// Initial position and orientation of the rigid body
-	rp3d::Vector3 initPosition(position.x, position.y, position.z);
+	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
 	rp3d::float angleAroundX = 0;//rp3d::PI / 2;
-	rp3d::Quaternion initOrientation(angleAroundX, 0, 0);
-	rp3d::Transform transform_body(initPosition, initOrientation);
+	rp3d::etk::Quaternion initOrientation(angleAroundX, 0, 0);
+	rp3d::etk::Transform3D transform_body(initPosition, initOrientation);
 
 	// Initial transform of the first sphere collision shape of the dumbbell (in local-space)
-	rp3d::Transform transformSphereShape1(rp3d::Vector3(0, mDistanceBetweenSphere / 2.0f, 0), rp3d::Quaternion::identity());
+	rp3d::etk::Transform3D transformSphereShape1(rp3d::vec3(0, mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
 
 	// Initial transform of the second sphere collision shape of the dumbell (in local-space)
-	rp3d::Transform transformSphereShape2(rp3d::Vector3(0, -mDistanceBetweenSphere / 2.0f, 0), rp3d::Quaternion::identity());
+	rp3d::etk::Transform3D transformSphereShape2(rp3d::vec3(0, -mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
 
 	// Initial transform of the cylinder collision shape of the dumbell (in local-space)
-	rp3d::Transform transformCylinderShape(rp3d::Vector3(0, 0, 0), rp3d::Quaternion::identity());
+	rp3d::etk::Transform3D transformCylinderShape(rp3d::vec3(0, 0, 0), rp3d::etk::Quaternion::identity());
 
 	// Create a rigid body corresponding to the dumbbell in the dynamics world
 	m_body = world->createCollisionBody(transform_body);
@@ -159,7 +159,7 @@ Dumbbell::Dumbbell(const openglframework::Vector3 &position,
 	m_proxyShapeSphere2 = m_body->addCollisionShape(mSphereShape, transformSphereShape2);
 	m_proxyShapeCylinder = m_body->addCollisionShape(mCylinderShape, transformCylinderShape);
 
-	m_transformMatrix = m_transformMatrix * mScalingMatrix;
+	m_transformMatrix = m_transformMatrix * m_scalingMatrix;
 
 	// Create the VBOs and VAO
 	if (totalNbDumbbells == 0) {
@@ -205,7 +205,7 @@ void Dumbbell::render(openglframework::Shader& shader,
 	const openglframework::Matrix4 localToCameraMatrix = worldToCameraMatrix * m_transformMatrix;
 	const openglframework::Matrix3 normalMatrix =
 					   localToCameraMatrix.getUpperLeft3x3Matrix().getInverse().getTranspose();
-	shader.setMatrix3x3Uniform("normalMatrix", normalMatrix, false);
+	shader.setetk::Matrix3x3Uniform("normalMatrix", normalMatrix, false);
 
 	// Set the vertex color
 	openglframework::Color currentColor = m_body->isSleeping() ? mSleepingColor : mColor;
@@ -254,14 +254,14 @@ void Dumbbell::createVBOAndVAO() {
 	// Create the VBO for the vertices data
 	mVBOVertices.create();
 	mVBOVertices.bind();
-	size_t sizeVertices = m_vertices.size() * sizeof(openglframework::Vector3);
+	size_t sizeVertices = m_vertices.size() * sizeof(openglframework::vec3);
 	mVBOVertices.copyDataIntoVBO(sizeVertices, getVerticesPointer(), GL_STATIC_DRAW);
 	mVBOVertices.unbind();
 
 	// Create the VBO for the normals data
 	mVBONormals.create();
 	mVBONormals.bind();
-	size_t sizeNormals = mNormals.size() * sizeof(openglframework::Vector3);
+	size_t sizeNormals = mNormals.size() * sizeof(openglframework::vec3);
 	mVBONormals.copyDataIntoVBO(sizeNormals, getNormalsPointer(), GL_STATIC_DRAW);
 	mVBONormals.unbind();
 
@@ -269,7 +269,7 @@ void Dumbbell::createVBOAndVAO() {
 		// Create the VBO for the texture co data
 		mVBOTextureCoords.create();
 		mVBOTextureCoords.bind();
-		size_t sizeTextureCoords = mUVs.size() * sizeof(openglframework::Vector2);
+		size_t sizeTextureCoords = mUVs.size() * sizeof(openglframework::vec2);
 		mVBOTextureCoords.copyDataIntoVBO(sizeTextureCoords, getUVTextureCoordinatesPointer(), GL_STATIC_DRAW);
 		mVBOTextureCoords.unbind();
 	}
@@ -314,36 +314,36 @@ void Dumbbell::resetTransform(const rp3d::Transform& transform) {
 	// Reset the velocity of the rigid body
 	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(m_body);
 	if (rigidBody != NULL) {
-		rigidBody->setLinearVelocity(rp3d::Vector3(0, 0, 0));
-		rigidBody->setAngularVelocity(rp3d::Vector3(0, 0, 0));
+		rigidBody->setLinearVelocity(rp3d::vec3(0, 0, 0));
+		rigidBody->setAngularVelocity(rp3d::vec3(0, 0, 0));
 	}
 
-	updateTransform(1.0f);
+	updateetk::Transform3D(1.0f);
 }
 
 // Set the scaling of the object
-void Dumbbell::setScaling(const openglframework::Vector3& scaling) {
+void Dumbbell::setScaling(const openglframework::vec3& scaling) {
 
 	// Scale the collision shape
-	rp3d::Vector3 newScaling(scaling.x, scaling.y, scaling.z);
+	rp3d::vec3 newScaling(scaling.x(), scaling.y(), scaling.z());
 	m_proxyShapeCylinder->setLocalScaling(newScaling);
 	m_proxyShapeSphere1->setLocalScaling(newScaling);
 	m_proxyShapeSphere2->setLocalScaling(newScaling);
 
-	mDistanceBetweenSphere = (mDistanceBetweenSphere / mScalingMatrix.getValue(1, 1)) * scaling.y;
+	mDistanceBetweenSphere = (mDistanceBetweenSphere / m_scalingMatrix.getValue(1, 1)) * scaling.y();
 
 	// Initial transform of the first sphere collision shape of the dumbbell (in local-space)
-	rp3d::Transform transformSphereShape1(rp3d::Vector3(0, mDistanceBetweenSphere / 2.0f, 0), rp3d::Quaternion::identity());
+	rp3d::etk::Transform3D transformSphereShape1(rp3d::vec3(0, mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
 
 	// Initial transform of the second sphere collision shape of the dumbell (in local-space)
-	rp3d::Transform transformSphereShape2(rp3d::Vector3(0, -mDistanceBetweenSphere / 2.0f, 0), rp3d::Quaternion::identity());
+	rp3d::etk::Transform3D transformSphereShape2(rp3d::vec3(0, -mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
 
 	m_proxyShapeSphere1->setLocalToBodyTransform(transformSphereShape1);
 	m_proxyShapeSphere2->setLocalToBodyTransform(transformSphereShape2);
 
 	// Scale the graphics object
-	mScalingMatrix = openglframework::Matrix4(scaling.x, 0, 0, 0,
-											  0, scaling.y, 0, 0,
-											  0, 0, scaling.z, 0,
+	m_scalingMatrix = openglframework::Matrix4(scaling.x(), 0, 0, 0,
+											  0, scaling.y(), 0, 0,
+											  0, 0, scaling.z(), 0,
 											  0, 0, 0, 1);
 }

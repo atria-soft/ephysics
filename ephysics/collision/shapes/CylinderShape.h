@@ -38,7 +38,7 @@ class CylinderShape : public ConvexShape {
 		float mRadius;
 
 		/// Half height of the cylinder
-		float mHalfHeight;
+		float m_halfHeight;
 
 		// -------------------- Methods -------------------- //
 
@@ -49,11 +49,11 @@ class CylinderShape : public ConvexShape {
 		CylinderShape& operator=(const CylinderShape& shape);
 
 		/// Return a local support point in a given direction without the object margin
-		virtual Vector3 getLocalSupportPointWithoutMargin(const Vector3& direction,
+		virtual vec3 getLocalSupportPointWithoutMargin(const vec3& direction,
 														  void** cachedCollisionData) const;
 
 		/// Return true if a point is inside the collision shape
-		virtual bool testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const;
+		virtual bool testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const;
 
 		/// Raycast method with feedback information
 		virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
@@ -78,13 +78,13 @@ class CylinderShape : public ConvexShape {
 		float getHeight() const;
 
 		/// Set the scaling vector of the collision shape
-		virtual void setLocalScaling(const Vector3& scaling);
+		virtual void setLocalScaling(const vec3& scaling);
 
 		/// Return the local bounds of the shape in x, y and z directions
-		virtual void getLocalBounds(Vector3& min, Vector3& max) const;
+		virtual void getLocalBounds(vec3& min, vec3& max) const;
 
 		/// Return the local inertia tensor of the collision shape
-		virtual void computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const;
+		virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const;
 };
 
 // Return the radius
@@ -100,14 +100,14 @@ inline float CylinderShape::getRadius() const {
  * @return Height of the cylinder (in meters)
  */
 inline float CylinderShape::getHeight() const {
-	return mHalfHeight + mHalfHeight;
+	return m_halfHeight + m_halfHeight;
 }
 
 // Set the scaling vector of the collision shape
-inline void CylinderShape::setLocalScaling(const Vector3& scaling) {
+inline void CylinderShape::setLocalScaling(const vec3& scaling) {
 
-	mHalfHeight = (mHalfHeight / mScaling.y) * scaling.y;
-	mRadius = (mRadius / mScaling.x) * scaling.x;
+	m_halfHeight = (m_halfHeight / m_scaling.y()) * scaling.y();
+	mRadius = (mRadius / m_scaling.x()) * scaling.x();
 
 	CollisionShape::setLocalScaling(scaling);
 }
@@ -122,17 +122,15 @@ inline size_t CylinderShape::getSizeInBytes() const {
  * @param min The minimum bounds of the shape in local-space coordinates
  * @param max The maximum bounds of the shape in local-space coordinates
  */
-inline void CylinderShape::getLocalBounds(Vector3& min, Vector3& max) const {
-
+inline void CylinderShape::getLocalBounds(vec3& min, vec3& max) const {
 	// Maximum bounds
-	max.x = mRadius + mMargin;
-	max.y = mHalfHeight + mMargin;
-	max.z = max.x;
-
+	max.setX(mRadius + m_margin);
+	max.setY(m_halfHeight + m_margin);
+	max.setZ(max.x());
 	// Minimum bounds
-	min.x = -max.x;
-	min.y = -max.y;
-	min.z = min.x;
+	min.setX(-max.x());
+	min.setY(-max.y());
+	min.setZ(min.x());
 }
 
 // Return the local inertia tensor of the cylinder
@@ -141,18 +139,19 @@ inline void CylinderShape::getLocalBounds(Vector3& min, Vector3& max) const {
  *					coordinates
  * @param mass Mass to use to compute the inertia tensor of the collision shape
  */
-inline void CylinderShape::computeLocalInertiaTensor(Matrix3x3& tensor, float mass) const {
-	float height = float(2.0) * mHalfHeight;
-	float diag = (float(1.0) / float(12.0)) * mass * (3 * mRadius * mRadius + height * height);
-	tensor.setAllValues(diag, 0.0, 0.0, 0.0,
-						float(0.5) * mass * mRadius * mRadius, 0.0,
+inline void CylinderShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
+	float height = float(2.0) * m_halfHeight;
+	float diag = (1.0f / float(12.0)) * mass * (3 * mRadius * mRadius + height * height);
+	tensor.setValue(diag, 0.0, 0.0, 0.0,
+						0.5f * mass * mRadius * mRadius, 0.0,
 						0.0, 0.0, diag);
 }
 
 // Return true if a point is inside the collision shape
-inline bool CylinderShape::testPointInside(const Vector3& localPoint, ProxyShape* proxyShape) const{
-	return ((localPoint.x * localPoint.x + localPoint.z * localPoint.z) < mRadius * mRadius &&
-			localPoint.y < mHalfHeight && localPoint.y > -mHalfHeight);
+inline bool CylinderShape::testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const{
+	return (    (localPoint.x() * localPoint.x() + localPoint.z() * localPoint.z()) < mRadius * mRadius
+	         && localPoint.y() < m_halfHeight
+	         && localPoint.y() > -m_halfHeight);
 }
 
 }

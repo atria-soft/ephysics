@@ -64,7 +64,7 @@ class TrianglesStore {
 		TriangleEPA& last();
 
 		/// Create a new triangle
-		TriangleEPA* newTriangle(const Vector3* vertices, uint32_t v0, uint32_t v1, uint32_t v2);
+		TriangleEPA* newTriangle(const vec3* vertices, uint32_t v0, uint32_t v1, uint32_t v2);
 
 		/// Access operator
 		TriangleEPA& operator[](int32_t i);
@@ -92,7 +92,7 @@ inline TriangleEPA& TrianglesStore::last() {
 }
 
 // Create a new triangle
-inline TriangleEPA* TrianglesStore::newTriangle(const Vector3* vertices,
+inline TriangleEPA* TrianglesStore::newTriangle(const vec3* vertices,
 												uint32_t v0,uint32_t v1, uint32_t v2) {
 	TriangleEPA* newTriangle = NULL;
 

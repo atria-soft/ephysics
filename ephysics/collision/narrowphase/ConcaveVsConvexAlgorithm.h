@@ -83,7 +83,7 @@ class ConvexVsTriangleCallback : public TriangleCallback {
 		}
 
 		/// Test collision between a triangle and the convex mesh shape
-		virtual void testTriangle(const Vector3* trianglePoints);
+		virtual void testTriangle(const vec3* trianglePoints);
 };
 
 // Class SmoothMeshContactInfo
@@ -97,11 +97,11 @@ class SmoothMeshContactInfo {
 
 		ContactPointInfo contactInfo;
 		bool isFirstShapeTriangle;
-		Vector3 triangleVertices[3];
+		vec3 triangleVertices[3];
 
 		/// Constructor
-		SmoothMeshContactInfo(const ContactPointInfo& contact, bool firstShapeTriangle, const Vector3& trianglePoint1,
-							  const Vector3& trianglePoint2, const Vector3& trianglePoint3)
+		SmoothMeshContactInfo(const ContactPointInfo& contact, bool firstShapeTriangle, const vec3& trianglePoint1,
+							  const vec3& trianglePoint2, const vec3& trianglePoint3)
 			: contactInfo(contact) {
 			isFirstShapeTriangle = firstShapeTriangle;
 			triangleVertices[0] = trianglePoint1;
@@ -179,12 +179,12 @@ class ConcaveVsConvexAlgorithm : public NarrowPhaseAlgorithm {
 										NarrowPhaseCallback* narrowPhaseCallback);
 
 		/// Add a triangle vertex int32_to the set of processed triangles
-		void addProcessedVertex(std::unordered_multimap<int32_t, Vector3>& processTriangleVertices,
-								const Vector3& vertex);
+		void addProcessedVertex(std::unordered_multimap<int32_t, vec3>& processTriangleVertices,
+								const vec3& vertex);
 
 		/// Return true if the vertex is in the set of already processed vertices
-		bool hasVertexBeenProcessed(const std::unordered_multimap<int32_t, Vector3>& processTriangleVertices,
-									const Vector3& vertex) const;
+		bool hasVertexBeenProcessed(const std::unordered_multimap<int32_t, vec3>& processTriangleVertices,
+									const vec3& vertex) const;
 
 	public :
 
@@ -203,8 +203,8 @@ class ConcaveVsConvexAlgorithm : public NarrowPhaseAlgorithm {
 };
 
 // Add a triangle vertex int32_to the set of processed triangles
-inline void ConcaveVsConvexAlgorithm::addProcessedVertex(std::unordered_multimap<int32_t, Vector3>& processTriangleVertices, const Vector3& vertex) {
-	processTriangleVertices.insert(std::make_pair(int32_t(vertex.x * vertex.y * vertex.z), vertex));
+inline void ConcaveVsConvexAlgorithm::addProcessedVertex(std::unordered_multimap<int32_t, vec3>& processTriangleVertices, const vec3& vertex) {
+	processTriangleVertices.insert(std::make_pair(int32_t(vertex.x() * vertex.y() * vertex.z()), vertex));
 }
 
 }

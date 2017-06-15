@@ -45,23 +45,23 @@ struct ContactPointInfo {
 		const CollisionShape* collisionShape2;
 
 		/// Normalized normal vector of the collision contact in world space
-		Vector3 normal;
+		vec3 normal;
 
 		/// Penetration depth of the contact
 		float penetrationDepth;
 
 		/// Contact point of body 1 in local space of body 1
-		Vector3 localPoint1;
+		vec3 localPoint1;
 
 		/// Contact point of body 2 in local space of body 2
-		Vector3 localPoint2;
+		vec3 localPoint2;
 
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
 		ContactPointInfo(ProxyShape* proxyShape1, ProxyShape* proxyShape2, const CollisionShape* collShape1,
-						 const CollisionShape* collShape2, const Vector3& normal, float penetrationDepth,
-						 const Vector3& localPoint1, const Vector3& localPoint2)
+						 const CollisionShape* collShape2, const vec3& normal, float penetrationDepth,
+						 const vec3& localPoint1, const vec3& localPoint2)
 			: shape1(proxyShape1), shape2(proxyShape2), collisionShape1(collShape1), collisionShape2(collShape2),
 			  normal(normal), penetrationDepth(penetrationDepth), localPoint1(localPoint1),
 			  localPoint2(localPoint2) {
@@ -87,28 +87,28 @@ class ContactPoint {
 		CollisionBody* m_body2;
 
 		/// Normalized normal vector of the contact (from body1 toward body2) in world space
-		const Vector3 mNormal;
+		const vec3 mNormal;
 
 		/// Penetration depth
 		float mPenetrationDepth;
 
 		/// Contact point on body 1 in local space of body 1
-		const Vector3 mLocalPointOnBody1;
+		const vec3 mLocalPointOnBody1;
 
 		/// Contact point on body 2 in local space of body 2
-		const Vector3 mLocalPointOnBody2;
+		const vec3 mLocalPointOnBody2;
 
 		/// Contact point on body 1 in world space
-		Vector3 m_worldPointOnBody1;
+		vec3 m_worldPointOnBody1;
 
 		/// Contact point on body 2 in world space
-		Vector3 m_worldPointOnBody2;
+		vec3 m_worldPointOnBody2;
 
 		/// True if the contact is a resting contact (exists for more than one time step)
 		bool mIsRestingContact;
 
 		/// Two orthogonal vectors that span the tangential friction plane
-		Vector3 m_frictionVectors[2];
+		vec3 m_frictionVectors[2];
 
 		/// Cached penetration impulse
 		float mPenetrationImpulse;
@@ -120,7 +120,7 @@ class ContactPoint {
 		float m_frictionImpulse2;
 
 		/// Cached rolling resistance impulse
-		Vector3 m_rollingResistanceImpulse;
+		vec3 m_rollingResistanceImpulse;
 		
 		// -------------------- Methods -------------------- //
 
@@ -147,22 +147,22 @@ class ContactPoint {
 		CollisionBody* getBody2() const;
 
 		/// Return the normal vector of the contact
-		Vector3 getNormal() const;
+		vec3 getNormal() const;
 
 		/// Set the penetration depth of the contact
 		void setPenetrationDepth(float penetrationDepth);
 
 		/// Return the contact local point on body 1
-		Vector3 getLocalPointOnBody1() const;
+		vec3 getLocalPointOnBody1() const;
 
 		/// Return the contact local point on body 2
-		Vector3 getLocalPointOnBody2() const;
+		vec3 getLocalPointOnBody2() const;
 
 		/// Return the contact world point on body 1
-		Vector3 getWorldPointOnBody1() const;
+		vec3 getWorldPointOnBody1() const;
 
 		/// Return the contact world point on body 2
-		Vector3 getWorldPointOnBody2() const;
+		vec3 getWorldPointOnBody2() const;
 
 		/// Return the cached penetration impulse
 		float getPenetrationImpulse() const;
@@ -174,7 +174,7 @@ class ContactPoint {
 		float getFrictionImpulse2() const;
 
 		/// Return the cached rolling resistance impulse
-		Vector3 getRollingResistanceImpulse() const;
+		vec3 getRollingResistanceImpulse() const;
 
 		/// Set the cached penetration impulse
 		void setPenetrationImpulse(float impulse);
@@ -186,13 +186,13 @@ class ContactPoint {
 		void setFrictionImpulse2(float impulse);
 
 		/// Set the cached rolling resistance impulse
-		void setRollingResistanceImpulse(const Vector3& impulse);
+		void setRollingResistanceImpulse(const vec3& impulse);
 
 		/// Set the contact world point on body 1
-		void setWorldPointOnBody1(const Vector3& worldPoint);
+		void setWorldPointOnBody1(const vec3& worldPoint);
 
 		/// Set the contact world point on body 2
-		void setWorldPointOnBody2(const Vector3& worldPoint);
+		void setWorldPointOnBody2(const vec3& worldPoint);
 
 		/// Return true if the contact is a resting contact
 		bool getIsRestingContact() const;
@@ -201,16 +201,16 @@ class ContactPoint {
 		void setIsRestingContact(bool isRestingContact);
 
 		/// Get the first friction vector
-		Vector3 getFrictionVector1() const;
+		vec3 getFrictionVector1() const;
 
 		/// Set the first friction vector
-		void setFrictionVector1(const Vector3& frictionVector1);
+		void setFrictionVector1(const vec3& frictionVector1);
 
 		/// Get the second friction vector
-		Vector3 getFrictionVector2() const;
+		vec3 getFrictionvec2() const;
 
 		/// Set the second friction vector
-		void setFrictionVector2(const Vector3& frictionVector2);
+		void setFrictionvec2(const vec3& frictionvec2);
 
 		/// Return the penetration depth
 		float getPenetrationDepth() const;
@@ -230,7 +230,7 @@ inline CollisionBody* ContactPoint::getBody2() const {
 }
 
 // Return the normal vector of the contact
-inline Vector3 ContactPoint::getNormal() const {
+inline vec3 ContactPoint::getNormal() const {
 	return mNormal;
 }
 
@@ -240,22 +240,22 @@ inline void ContactPoint::setPenetrationDepth(float penetrationDepth) {
 }
 
 // Return the contact point on body 1
-inline Vector3 ContactPoint::getLocalPointOnBody1() const {
+inline vec3 ContactPoint::getLocalPointOnBody1() const {
 	return mLocalPointOnBody1;
 }
 
 // Return the contact point on body 2
-inline Vector3 ContactPoint::getLocalPointOnBody2() const {
+inline vec3 ContactPoint::getLocalPointOnBody2() const {
 	return mLocalPointOnBody2;
 }
 
 // Return the contact world point on body 1
-inline Vector3 ContactPoint::getWorldPointOnBody1() const {
+inline vec3 ContactPoint::getWorldPointOnBody1() const {
 	return m_worldPointOnBody1;
 }
 
 // Return the contact world point on body 2
-inline Vector3 ContactPoint::getWorldPointOnBody2() const {
+inline vec3 ContactPoint::getWorldPointOnBody2() const {
 	return m_worldPointOnBody2;
 }
 
@@ -275,7 +275,7 @@ inline float ContactPoint::getFrictionImpulse2() const {
 }
 
 // Return the cached rolling resistance impulse
-inline Vector3 ContactPoint::getRollingResistanceImpulse() const {
+inline vec3 ContactPoint::getRollingResistanceImpulse() const {
 	return m_rollingResistanceImpulse;
 }
 
@@ -295,17 +295,17 @@ inline void ContactPoint::setFrictionImpulse2(float impulse) {
 }
 
 // Set the cached rolling resistance impulse
-inline void ContactPoint::setRollingResistanceImpulse(const Vector3& impulse) {
+inline void ContactPoint::setRollingResistanceImpulse(const vec3& impulse) {
 	m_rollingResistanceImpulse = impulse;
 }
 
 // Set the contact world point on body 1
-inline void ContactPoint::setWorldPointOnBody1(const Vector3& worldPoint) {
+inline void ContactPoint::setWorldPointOnBody1(const vec3& worldPoint) {
 	m_worldPointOnBody1 = worldPoint;
 }
 
 // Set the contact world point on body 2
-inline void ContactPoint::setWorldPointOnBody2(const Vector3& worldPoint) {
+inline void ContactPoint::setWorldPointOnBody2(const vec3& worldPoint) {
 	m_worldPointOnBody2 = worldPoint;
 }
 
@@ -320,23 +320,23 @@ inline void ContactPoint::setIsRestingContact(bool isRestingContact) {
 }
 
 // Get the first friction vector
-inline Vector3 ContactPoint::getFrictionVector1() const {
+inline vec3 ContactPoint::getFrictionVector1() const {
 	return m_frictionVectors[0];
 }
 
 // Set the first friction vector
-inline void ContactPoint::setFrictionVector1(const Vector3& frictionVector1) {
+inline void ContactPoint::setFrictionVector1(const vec3& frictionVector1) {
 	m_frictionVectors[0] = frictionVector1;
 }
 
 // Get the second friction vector
-inline Vector3 ContactPoint::getFrictionVector2() const {
+inline vec3 ContactPoint::getFrictionvec2() const {
 	return m_frictionVectors[1];
 }
 
 // Set the second friction vector
-inline void ContactPoint::setFrictionVector2(const Vector3& frictionVector2) {
-	m_frictionVectors[1] = frictionVector2;
+inline void ContactPoint::setFrictionvec2(const vec3& frictionvec2) {
+	m_frictionVectors[1] = frictionvec2;
 }
 
 // Return the penetration depth of the contact

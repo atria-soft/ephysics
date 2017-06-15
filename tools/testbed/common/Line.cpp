@@ -27,8 +27,8 @@
 #include <ephysics/Line.h>
 
 // Constructor
-Line::Line(const openglframework::Vector3& worldPoint1,
-		   const openglframework::Vector3& worldPoint2)
+Line::Line(const openglframework::vec3& worldPoint1,
+		   const openglframework::vec3& worldPoint2)
 	 : m_worldPoint1(worldPoint1), m_worldPoint2(worldPoint2) {
 
 }
@@ -56,8 +56,8 @@ void Line::render(openglframework::Shader& shader,
 
 	/*
 	glBegin(GL_LINES);
-		glVertex3f(m_worldPoint1.x, m_worldPoint1.y, m_worldPoint1.z);
-		glVertex3f(m_worldPoint2.x, m_worldPoint2.y, m_worldPoint2.z);
+		glVertex3f(m_worldPoint1.x(), m_worldPoint1.y(), m_worldPoint1.z());
+		glVertex3f(m_worldPoint2.x(), m_worldPoint2.y(), m_worldPoint2.z());
 	glEnd();
 	*/
 

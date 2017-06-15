@@ -43,7 +43,7 @@ Scene::~Scene() {
 }
 
 // Set the scene position (where the camera needs to look at)
-void Scene::setScenePosition(const openglframework::Vector3& position, float sceneRadius) {
+void Scene::setScenePosition(const openglframework::vec3& position, float sceneRadius) {
 
 	// Set the position and radius of the scene
 	mCenterScene = position;
@@ -69,7 +69,7 @@ void Scene::resetCameraToViewAll() {
 
 // Map the mouse x,y coordinates to a point on a sphere
 bool Scene::mapMouseCoordinatesToSphere(double xMouse, double yMouse,
-										Vector3& spherePoint) const {
+										vec3& spherePoint) const {
 
 	if ((xMouse >= 0) && (xMouse <= mWindowWidth) && (yMouse >= 0) && (yMouse <= mWindowHeight)) {
 		float x = float(xMouse - 0.5f * mWindowWidth) / float(mWindowWidth);
@@ -79,9 +79,9 @@ bool Scene::mapMouseCoordinatesToSphere(double xMouse, double yMouse,
 		float sinx2siny2 = sinx * sinx + siny * siny;
 
 		// Compute the point on the sphere
-		spherePoint.x = sinx;
-		spherePoint.y = siny;
-		spherePoint.z = (sinx2siny2 < 1.0) ? sqrt(1.0f - sinx2siny2) : 0.0f;
+		spherePoint.x() = sinx;
+		spherePoint.y() = siny;
+		spherePoint.z() = (sinx2siny2 < 1.0) ? sqrt(1.0f - sinx2siny2) : 0.0f;
 
 		return true;
 	}
@@ -167,11 +167,11 @@ void Scene::rotate(int32_t xMouse, int32_t yMouse) {
 
 	if (mIsLastPointOnSphereValid) {
 
-		Vector3 newPoint3D;
+		vec3 newPoint3D;
 		bool isNewPointOK = mapMouseCoordinatesToSphere(xMouse, yMouse, newPoint3D);
 
 		if (isNewPointOK) {
-			Vector3 axis = mLastPointOnSphere.cross(newPoint3D);
+			vec3 axis = mLastPointOnSphere.cross(newPoint3D);
 			float cosAngle = mLastPointOnSphere.dot(newPoint3D);
 
 			float epsilon = std::numeric_limits<float>::epsilon();

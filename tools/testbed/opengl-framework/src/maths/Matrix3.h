@@ -29,7 +29,7 @@
 // Libraries
 #include <cassert>
 #include <limits>
-#include <ephysics/Vector3.h>
+#include <ephysics/vec3.h>
 
 namespace openglframework {
 
@@ -55,7 +55,7 @@ class Matrix3 {
 		Matrix3(float a1, float a2,
 				float a3, float b1, float b2, float b3,
 				float c1, float c2, float c3) {
-			setAllValues(a1, a2, a3, b1, b2, b3, c1, c2, c3);
+			setValue(a1, a2, a3, b1, b2, b3, c1, c2, c3);
 		}
 
 		// Constructor
@@ -66,15 +66,15 @@ class Matrix3 {
 		}
 
 		// Constructor
-		Matrix3(const Vector3& a1, const Vector3& a2, const Vector3& a3) {
-			m[0][0] = a1.x; m[0][1] = a2.x; m[0][2] = a3.x;
-			m[1][0] = a1.y; m[1][1] = a2.y; m[1][2] = a3.y;
-			m[2][0] = a1.z; m[2][1] = a2.z; m[2][2] = a3.z;
+		Matrix3(const vec3& a1, const vec3& a2, const vec3& a3) {
+			m[0][0] = a1.x(); m[0][1] = a2.x; m[0][2] = a3.x;
+			m[1][0] = a1.y(); m[1][1] = a2.y; m[1][2] = a3.y;
+			m[2][0] = a1.z(); m[2][1] = a2.z; m[2][2] = a3.z;
 		}
 
 		// Constructor
 		Matrix3(const Matrix3& matrix) {
-			setAllValues(matrix.m[0][0], matrix.m[0][1], matrix.m[0][2],
+			setValue(matrix.m[0][0], matrix.m[0][1], matrix.m[0][2],
 						 matrix.m[1][0], matrix.m[1][1], matrix.m[1][2],
 						 matrix.m[2][0], matrix.m[2][1], matrix.m[2][2]);
 		}
@@ -92,7 +92,7 @@ class Matrix3 {
 		}
 
 		// Method to set all the values in the matrix
-		void setAllValues(float a1, float a2, float a3, float b1, float b2, float b3,
+		void setValue(float a1, float a2, float a3, float b1, float b2, float b3,
 										  float c1, float c2, float c3) {
 			m[0][0] = a1; m[0][1] = a2; m[0][2] = a3;
 			m[1][0] = b1; m[1][1] = b2; m[1][2] = b3;
@@ -100,9 +100,9 @@ class Matrix3 {
 		}
 
 		// Return a column
-		Vector3 getColumn(int32_t i) const {
+		vec3 getColumn(int32_t i) const {
 			assert(i>= 0 && i<3);
-			return Vector3(m[0][i], m[1][i], m[2][i]);
+			return vec3(m[0][i], m[1][i], m[2][i]);
 		}
 
 		// Return the transpose matrix
@@ -181,7 +181,7 @@ class Matrix3 {
 		// Overloaded operator =
 		Matrix3& operator=(const Matrix3& matrix) {
 			if (&matrix != this) {
-				setAllValues(matrix.m[0][0], matrix.m[0][1], matrix.m[0][2],
+				setValue(matrix.m[0][0], matrix.m[0][1], matrix.m[0][2],
 							 matrix.m[1][0], matrix.m[1][1], matrix.m[1][2],
 							 matrix.m[2][0], matrix.m[2][1], matrix.m[2][2]);
 			}
@@ -231,10 +231,10 @@ class Matrix3 {
 		}
 
 		// Overloaded operator for multiplication with a vector
-		Vector3 operator*(const Vector3& vector) {
-			return Vector3(m[0][0]*vector.x + m[0][1]*vector.y + m[0][2]*vector.z,
-						   m[1][0]*vector.x + m[1][1]*vector.y + m[1][2]*vector.z,
-						   m[2][0]*vector.x + m[2][1]*vector.y + m[2][2]*vector.z);
+		vec3 operator*(const vec3& vector) {
+			return vec3(m[0][0]*vector.x() + m[0][1]*vector.y() + m[0][2]*vector.z(),
+						   m[1][0]*vector.x() + m[1][1]*vector.y() + m[1][2]*vector.z(),
+						   m[2][0]*vector.x() + m[2][1]*vector.y() + m[2][2]*vector.z());
 		}
 
 		// Overloaded operator for equality condition

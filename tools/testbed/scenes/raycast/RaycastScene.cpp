@@ -39,7 +39,7 @@ RaycastScene::RaycastScene(const std::string& name)
 	mIsContactPointsDisplayed = true;
 
 	// Compute the radius and the center of the scene
-	openglframework::Vector3 center(0, 0, 0);
+	openglframework::vec3 center(0, 0, 0);
 
 	// Set the center of the scene
 	setScenePosition(center, SCENE_RADIUS);
@@ -48,7 +48,7 @@ RaycastScene::RaycastScene(const std::string& name)
 	mCollisionWorld = new rp3d::CollisionWorld();
 
 	// ---------- Dumbbell ---------- //
-	openglframework::Vector3 position1(0, 0, 0);
+	openglframework::vec3 position1(0, 0, 0);
 
 	// Create a convex mesh and a corresponding collision body in the dynamics world
 	mDumbbell = new Dumbbell(position1, mCollisionWorld, mMeshFolderPath);
@@ -58,7 +58,7 @@ RaycastScene::RaycastScene(const std::string& name)
 	mDumbbell->setSleepingColor(mRedColorDemo);
 
 	// ---------- Box ---------- //
-	openglframework::Vector3 position2(0, 0, 0);
+	openglframework::vec3 position2(0, 0, 0);
 
 	// Create a box and a corresponding collision body in the dynamics world
 	mBox = new Box(BOX_SIZE, position2, mCollisionWorld);
@@ -69,7 +69,7 @@ RaycastScene::RaycastScene(const std::string& name)
 	mBox->setSleepingColor(mRedColorDemo);
 
 	// ---------- Sphere ---------- //
-	openglframework::Vector3 position3(0, 0, 0);
+	openglframework::vec3 position3(0, 0, 0);
 
 	// Create a sphere and a corresponding collision body in the dynamics world
 	mSphere = new Sphere(SPHERE_RADIUS, position3, mCollisionWorld,
@@ -80,7 +80,7 @@ RaycastScene::RaycastScene(const std::string& name)
 	mSphere->setSleepingColor(mRedColorDemo);
 
 	// ---------- Cone ---------- //
-	openglframework::Vector3 position4(0, 0, 0);
+	openglframework::vec3 position4(0, 0, 0);
 
 	// Create a cone and a corresponding collision body in the dynamics world
 	mCone = new Cone(CONE_RADIUS, CONE_HEIGHT, position4, mCollisionWorld,
@@ -91,7 +91,7 @@ RaycastScene::RaycastScene(const std::string& name)
 	mCone->setSleepingColor(mRedColorDemo);
 
 	// ---------- Cylinder ---------- //
-	openglframework::Vector3 position5(0, 0, 0);
+	openglframework::vec3 position5(0, 0, 0);
 
 	// Create a cylinder and a corresponding collision body in the dynamics world
 	mCylinder = new Cylinder(CYLINDER_RADIUS, CYLINDER_HEIGHT, position5,
@@ -102,7 +102,7 @@ RaycastScene::RaycastScene(const std::string& name)
 	mCylinder->setSleepingColor(mRedColorDemo);
 
 	// ---------- Capsule ---------- //
-	openglframework::Vector3 position6(0, 0, 0);
+	openglframework::vec3 position6(0, 0, 0);
 
 	// Create a cylinder and a corresponding collision body in the dynamics world
 	mCapsule = new Capsule(CAPSULE_RADIUS, CAPSULE_HEIGHT, position6 ,
@@ -113,7 +113,7 @@ RaycastScene::RaycastScene(const std::string& name)
 	mCapsule->setSleepingColor(mRedColorDemo);
 
 	// ---------- Convex Mesh ---------- //
-	openglframework::Vector3 position7(0, 0, 0);
+	openglframework::vec3 position7(0, 0, 0);
 
 	// Create a convex mesh and a corresponding collision body in the dynamics world
 	mConvexMesh = new ConvexMesh(position7, mCollisionWorld, mMeshFolderPath + "convexmesh.obj");
@@ -123,7 +123,7 @@ RaycastScene::RaycastScene(const std::string& name)
 	mConvexMesh->setSleepingColor(mRedColorDemo);
 
 	// ---------- Concave Mesh ---------- //
-	openglframework::Vector3 position8(0, 0, 0);
+	openglframework::vec3 position8(0, 0, 0);
 
 	// Create a convex mesh and a corresponding collision body in the dynamics world
 	mConcaveMesh = new ConcaveMesh(position8, mCollisionWorld, mMeshFolderPath + "city.obj");
@@ -133,7 +133,7 @@ RaycastScene::RaycastScene(const std::string& name)
 	mConcaveMesh->setSleepingColor(mRedColorDemo);
 
 	// ---------- Heightfield ---------- //
-	openglframework::Vector3 position9(0, 0, 0);
+	openglframework::vec3 position9(0, 0, 0);
 
 	// Create a convex mesh and a corresponding collision body in the dynamics world
 	mHeightField = new HeightField(position9, mCollisionWorld);
@@ -169,8 +169,8 @@ void RaycastScene::createLines() {
 
 			  // Create a line from the point on the sphere to the center of
 			  // the scene
-			  openglframework::Vector3 point1(x, y, z);
-			  openglframework::Vector3 point2(0.0f, 0.0f, 0.0f);
+			  openglframework::vec3 point1(x, y, z);
+			  openglframework::vec3 point2(0.0f, 0.0f, 0.0f);
 			  Line* line = new Line(point1, point2);
 			  mLines.push_back(line);
 
@@ -315,11 +315,11 @@ void RaycastScene::update() {
 		Line* line = *it;
 
 		// Create a ray corresponding to the line
-		openglframework::Vector3 p1 = line->getPoint1();
-		openglframework::Vector3 p2 = line->getPoint2();
+		openglframework::vec3 p1 = line->getPoint1();
+		openglframework::vec3 p2 = line->getPoint2();
 
-		rp3d::Vector3 point1(p1.x, p1.y, p1.z);
-		rp3d::Vector3 point2(p2.x, p2.y, p2.z);
+		rp3d::vec3 point1(p1.x(), p1.y(), p1.z());
+		rp3d::vec3 point2(p2.x(), p2.y(), p2.z());
 		rp3d::Ray ray(point1, point2);
 
 		// Perform a raycast query on the physics world by passing a raycast
@@ -351,7 +351,7 @@ void RaycastScene::renderSinglePass(openglframework::Shader& shader,
 	// model-view matrix)
 	const openglframework::Matrix3 normalMatrix =
 					   localToCameraMatrix.getUpperLeft3x3Matrix().getInverse().getTranspose();
-	shader.setMatrix3x3Uniform("normalMatrix", normalMatrix, false);
+	shader.setetk::Matrix3x3Uniform("normalMatrix", normalMatrix, false);
 
 	// Set the vertex color
 	openglframework::Vector4 color(1, 0, 0, 1);
@@ -399,7 +399,7 @@ void RaycastScene::createVBOAndVAO(openglframework::Shader& shader) {
 	// Create the VBO for the vertices data
 	mVBOVertices.create();
 	mVBOVertices.bind();
-	size_t sizeVertices = mLinePoints.size() * sizeof(openglframework::Vector3);
+	size_t sizeVertices = mLinePoints.size() * sizeof(openglframework::vec3);
 	mVBOVertices.copyDataIntoVBO(sizeVertices, &mLinePoints[0], GL_STATIC_DRAW);
 	mVBOVertices.unbind();
 

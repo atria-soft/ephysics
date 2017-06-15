@@ -93,7 +93,7 @@ class TestbedApplication : public Screen {
 		bool mIsMultisamplingActive;
 
 		/// Width and height of the window
-		int32_t mWidth, mHeight;
+		int32_t m_width, mHeight;
 
 		/// True if the next simulation update is a single physics step
 		bool mSinglePhysicsStepEnabled;
@@ -101,7 +101,7 @@ class TestbedApplication : public Screen {
 		/// True if the single physics step has been taken already
 		bool mSinglePhysicsStepDone;
 
-		openglframework::Vector2 mWindowToFramebufferRatio;
+		openglframework::vec2 mWindowToFramebufferRatio;
 
 		/// True if shadow mapping is enabled
 		bool mIsShadowMappingEnabled;
@@ -179,19 +179,19 @@ class TestbedApplication : public Screen {
 		virtual void drawContents();
 
 		/// Window resize event handler
-		virtual bool resizeEvent(const Vector2i& size);
+		virtual bool resizeEvent(const vec2i& size);
 
 		/// Default keyboard event handler
 		virtual bool keyboardEvent(int32_t key, int32_t scancode, int32_t action, int32_t modifiers);
 
 		/// Handle a mouse button event (default implementation: propagate to children)
-		virtual bool mouseButtonEvent(const Vector2i &p, int32_t button, bool down, int32_t modifiers);
+		virtual bool mouseButtonEvent(const vec2i &p, int32_t button, bool down, int32_t modifiers);
 
 		/// Handle a mouse motion event (default implementation: propagate to children)
-		virtual bool mouseMotionEvent(const Vector2i &p, const Vector2i &rel, int32_t button, int32_t modifiers);
+		virtual bool mouseMotionEvent(const vec2i &p, const vec2i &rel, int32_t button, int32_t modifiers);
 
 		/// Handle a mouse scroll event (default implementation: propagate to children)
-		virtual bool scrollEvent(const Vector2i &p, const Vector2f &rel);
+		virtual bool scrollEvent(const vec2i &p, const vec2f &rel);
 
 		/// Initialize the application
 		void init();
