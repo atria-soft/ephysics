@@ -28,6 +28,7 @@ def configure(target, my_module):
 	my_module.add_extra_flags()
 	# add the file to compile:
 	my_module.add_src_file([
+		'ephysics/debug.cpp',
 		'ephysics/memory/MemoryAllocator.cpp',
 		'ephysics/constraint/Joint.cpp',
 		'ephysics/constraint/HingeJoint.cpp',
@@ -83,6 +84,7 @@ def configure(target, my_module):
 		])
 	
 	my_module.add_header_file([
+		'ephysics/debug.hpp',
 		'ephysics/memory/MemoryAllocator.h',
 		'ephysics/memory/Stack.h',
 		'ephysics/constraint/BallAndSocketJoint.h',

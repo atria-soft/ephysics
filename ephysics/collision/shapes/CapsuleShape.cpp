@@ -14,13 +14,14 @@ using namespace reactphysics3d;
 
 // Constructor
 /**
- * @param radius The radius of the capsule (in meters)
- * @param height The height of the capsule (in meters)
+ * @param _radius The radius of the capsule (in meters)
+ * @param _height The height of the capsule (in meters)
  */
-CapsuleShape::CapsuleShape(float radius, float height)
-			: ConvexShape(CAPSULE, radius), m_halfHeight(height * 0.5f) {
-	assert(radius > 0.0f);
-	assert(height > 0.0f);
+CapsuleShape::CapsuleShape(float _radius, float _height):
+  ConvexShape(CAPSULE, _radius),
+  m_halfHeight(_height * 0.5f) {
+	assert(_radius > 0.0f);
+	assert(_height > 0.0f);
 }
 
 // Destructor

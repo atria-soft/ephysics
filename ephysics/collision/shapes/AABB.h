@@ -43,9 +43,6 @@ class AABB {
 		/// Copy-constructor
 		AABB(const AABB& aabb);
 
-		/// Destructor
-		~AABB();
-
 		/// Return the center point
 		vec3 getCenter() const;
 

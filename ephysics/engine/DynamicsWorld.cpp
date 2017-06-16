@@ -26,11 +26,11 @@ DynamicsWorld::DynamicsWorld(const vec3 &gravity)
 				m_nbVelocitySolverIterations(DEFAULT_VELOCITY_SOLVER_NB_ITERATIONS),
 				m_nbPositionSolverIterations(DEFAULT_POSITION_SOLVER_NB_ITERATIONS),
 				m_isSleepingEnabled(SPLEEPING_ENABLED), m_gravity(gravity),
-				m_isGravityEnabled(true), m_constrainedLinearVelocities(NULL),
-				m_constrainedAngularVelocities(NULL), m_splitLinearVelocities(NULL),
-				m_splitAngularVelocities(NULL), m_constrainedPositions(NULL),
-				m_constrainedOrientations(NULL), m_numberIslands(0),
-				m_numberIslandsCapacity(0), m_islands(NULL), m_numberBodiesCapacity(0),
+				m_isGravityEnabled(true), m_constrainedLinearVelocities(nullptr),
+				m_constrainedAngularVelocities(nullptr), m_splitLinearVelocities(nullptr),
+				m_splitAngularVelocities(nullptr), m_constrainedPositions(nullptr),
+				m_constrainedOrientations(nullptr), m_numberIslands(0),
+				m_numberIslandsCapacity(0), m_islands(nullptr), m_numberBodiesCapacity(0),
 				m_sleepLinearVelocity(DEFAULT_SLEEP_LINEAR_VELOCITY),
 				m_sleepAngularVelocity(DEFAULT_SLEEP_ANGULAR_VELOCITY),
 				m_timeBeforeSleep(DEFAULT_TIME_BEFORE_SLEEP) {
@@ -109,7 +109,7 @@ void DynamicsWorld::update(float timeStep) {
 	m_timeStep = timeStep;
 	
 	// Notify the event listener about the beginning of an int32_ternal tick
-	if (m_eventListener != NULL) {
+	if (m_eventListener != nullptr) {
 		m_eventListener->beginInternalTick();
 	}
 	
@@ -145,7 +145,7 @@ void DynamicsWorld::update(float timeStep) {
 	if (m_isSleepingEnabled) updateSleepingBodies();
 	
 	// Notify the event listener about the end of an int32_ternal tick
-	if (m_eventListener != NULL) m_eventListener->endInternalTick();
+	if (m_eventListener != nullptr) m_eventListener->endInternalTick();
 	
 	// Reset the external force and torque applied to the bodies
 	resetBodiesForceAndTorque();
@@ -185,9 +185,11 @@ void DynamicsWorld::int32_tegrateRigidBodiesPositions() {
 
 			// Update the new constrained position and orientation of the body
 			m_constrainedPositions[indexArray] = currentPosition + newLinVelocity * m_timeStep;
-			m_constrainedOrientations[indexArray] = currentOrientation +
-												   etk::Quaternion(0, newAngVelocity) *
-												   currentOrientation * 0.5f * m_timeStep;
+			m_constrainedOrientations[indexArray] = currentOrientation;
+			m_constrainedOrientations[indexArray] +=   etk::Quaternion(0, newAngVelocity)
+			                                         * currentOrientation
+			                                         * 0.5f
+			                                         * m_timeStep;
 		}
 	}
 }
@@ -244,12 +246,12 @@ void DynamicsWorld::initVelocityArrays() {
 		m_constrainedAngularVelocities = new vec3[m_numberBodiesCapacity];
 		m_constrainedPositions = new vec3[m_numberBodiesCapacity];
 		m_constrainedOrientations = new etk::Quaternion[m_numberBodiesCapacity];
-		assert(m_splitLinearVelocities != NULL);
-		assert(m_splitAngularVelocities != NULL);
-		assert(m_constrainedLinearVelocities != NULL);
-		assert(m_constrainedAngularVelocities != NULL);
-		assert(m_constrainedPositions != NULL);
-		assert(m_constrainedOrientations != NULL);
+		assert(m_splitLinearVelocities != nullptr);
+		assert(m_splitAngularVelocities != nullptr);
+		assert(m_constrainedLinearVelocities != nullptr);
+		assert(m_constrainedAngularVelocities != nullptr);
+		assert(m_constrainedPositions != nullptr);
+		assert(m_constrainedOrientations != nullptr);
 	}
 
 	// Reset the velocities arrays
@@ -297,11 +299,10 @@ void DynamicsWorld::int32_tegrateRigidBodiesVelocities() {
 			assert(m_splitAngularVelocities[indexBody] == vec3(0, 0, 0));
 
 			// Integrate the external force to get the new velocity of the body
-			m_constrainedLinearVelocities[indexBody] = bodies[b]->getLinearVelocity() +
-										m_timeStep * bodies[b]->m_massInverse * bodies[b]->m_externalForce;
-			m_constrainedAngularVelocities[indexBody] = bodies[b]->getAngularVelocity() +
-										m_timeStep * bodies[b]->getInertiaTensorInverseWorld() *
-										bodies[b]->m_externalTorque;
+			m_constrainedLinearVelocities[indexBody] = bodies[b]->getLinearVelocity();
+			m_constrainedLinearVelocities[indexBody] += bodies[b]->m_massInverse * bodies[b]->m_externalForce * m_timeStep;
+			m_constrainedAngularVelocities[indexBody] = bodies[b]->getAngularVelocity();
+			m_constrainedAngularVelocities[indexBody] += bodies[b]->getInertiaTensorInverseWorld() * bodies[b]->m_externalTorque * m_timeStep;
 
 			// If the gravity has to be applied to this rigid body
 			if (bodies[b]->isGravityEnabled() && m_isGravityEnabled) {
@@ -436,7 +437,7 @@ RigidBody* DynamicsWorld::createRigidBody(const etk::Transform3D& transform) {
 	// Create the rigid body
 	RigidBody* rigidBody = new (m_memoryAllocator.allocate(sizeof(RigidBody))) RigidBody(transform,
 																				*this, bodyID);
-	assert(rigidBody != NULL);
+	assert(rigidBody != nullptr);
 
 	// Add the rigid body to the physics world
 	m_bodies.insert(rigidBody);
@@ -460,7 +461,7 @@ void DynamicsWorld::destroyRigidBody(RigidBody* rigidBody) {
 
 	// Destroy all the joints in which the rigid body to be destroyed is involved
 	JointListElement* element;
-	for (element = rigidBody->m_jointsList; element != NULL; element = element->next) {
+	for (element = rigidBody->m_jointsList; element != nullptr; element = element->next) {
 		destroyJoint(element->joint);
 	}
 
@@ -485,7 +486,7 @@ void DynamicsWorld::destroyRigidBody(RigidBody* rigidBody) {
  */
 Joint* DynamicsWorld::createJoint(const JointInfo& jointInfo) {
 
-	Joint* newJoint = NULL;
+	Joint* newJoint = nullptr;
 
 	// Allocate memory to create the new joint
 	switch(jointInfo.type) {
@@ -530,7 +531,7 @@ Joint* DynamicsWorld::createJoint(const JointInfo& jointInfo) {
 		default:
 		{
 			assert(false);
-			return NULL;
+			return nullptr;
 		}
 	}
 
@@ -557,7 +558,7 @@ Joint* DynamicsWorld::createJoint(const JointInfo& jointInfo) {
  */
 void DynamicsWorld::destroyJoint(Joint* joint) {
 
-	assert(joint != NULL);
+	assert(joint != nullptr);
 
 	// If the collision between the two bodies of the constraint was disabled
 	if (!joint->isCollisionEnabled()) {
@@ -589,7 +590,7 @@ void DynamicsWorld::destroyJoint(Joint* joint) {
 // Add the joint to the list of joints of the two bodies involved in the joint
 void DynamicsWorld::addJointToBody(Joint* joint) {
 
-	assert(joint != NULL);
+	assert(joint != nullptr);
 
 	// Add the joint at the beginning of the linked list of joints of the first body
 	void* allocatedMemory1 = m_memoryAllocator.allocate(sizeof(JointListElement));
@@ -698,7 +699,7 @@ void DynamicsWorld::computeIslands() {
 
 			// For each contact manifold in which the current body is involded
 			ContactManifoldListElement* contactElement;
-			for (contactElement = bodyToVisit->m_contactManifoldsList; contactElement != NULL;
+			for (contactElement = bodyToVisit->m_contactManifoldsList; contactElement != nullptr;
 				 contactElement = contactElement->next) {
 
 				ContactManifold* contactManifold = contactElement->contactManifold;
@@ -728,7 +729,7 @@ void DynamicsWorld::computeIslands() {
 
 			// For each joint in which the current body is involved
 			JointListElement* jointElement;
-			for (jointElement = bodyToVisit->m_jointsList; jointElement != NULL;
+			for (jointElement = bodyToVisit->m_jointsList; jointElement != nullptr;
 				 jointElement = jointElement->next) {
 
 				Joint* joint = jointElement->joint;
@@ -904,7 +905,7 @@ void DynamicsWorld::testCollision(const CollisionBody* body,
 	std::set<uint32_t> shapes1;
 
 	// For each shape of the body
-	for (const ProxyShape* shape=body->getProxyShapesList(); shape != NULL;
+	for (const ProxyShape* shape=body->getProxyShapesList(); shape != nullptr;
 		 shape = shape->getNext()) {
 		shapes1.insert(shape->m_broadPhaseID);
 	}
@@ -929,13 +930,13 @@ void DynamicsWorld::testCollision(const CollisionBody* body1,
 
 	// Create the sets of shapes
 	std::set<uint32_t> shapes1;
-	for (const ProxyShape* shape=body1->getProxyShapesList(); shape != NULL;
+	for (const ProxyShape* shape=body1->getProxyShapesList(); shape != nullptr;
 		 shape = shape->getNext()) {
 		shapes1.insert(shape->m_broadPhaseID);
 	}
 
 	std::set<uint32_t> shapes2;
-	for (const ProxyShape* shape=body2->getProxyShapesList(); shape != NULL;
+	for (const ProxyShape* shape=body2->getProxyShapesList(); shape != nullptr;
 		 shape = shape->getNext()) {
 		shapes2.insert(shape->m_broadPhaseID);
 	}

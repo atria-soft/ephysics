@@ -21,8 +21,8 @@ const float ContactSolver::SLOP= float(0.01);
 
 // Constructor
 ContactSolver::ContactSolver(const std::map<RigidBody*, uint32_t>& mapBodyToVelocityIndex)
-			  :m_splitLinearVelocities(NULL), m_splitAngularVelocities(NULL),
-			   mContactConstraints(NULL), mLinearVelocities(NULL), mAngularVelocities(NULL),
+			  :m_splitLinearVelocities(nullptr), m_splitAngularVelocities(nullptr),
+			   mContactConstraints(nullptr), mLinearVelocities(nullptr), mAngularVelocities(nullptr),
 			   m_mapBodyToConstrainedVelocityIndex(mapBodyToVelocityIndex),
 			   mIsWarmStartingActive(true), mIsSplitImpulseActive(true),
 			   mIsSolveFrictionAtContactManifoldCenterActive(true) {
@@ -39,11 +39,11 @@ void ContactSolver::initializeForIsland(float dt, Island* island) {
 
 	PROFILE("ContactSolver::initializeForIsland()");
 
-	assert(island != NULL);
+	assert(island != nullptr);
 	assert(island->getNbBodies() > 0);
 	assert(island->getNbContactManifolds() > 0);
-	assert(m_splitLinearVelocities != NULL);
-	assert(m_splitAngularVelocities != NULL);
+	assert(m_splitLinearVelocities != nullptr);
+	assert(m_splitAngularVelocities != nullptr);
 
 	// Set the current time step
 	m_timeStep = dt;
@@ -51,7 +51,7 @@ void ContactSolver::initializeForIsland(float dt, Island* island) {
 	m_numberContactManifolds = island->getNbContactManifolds();
 
 	mContactConstraints = new ContactManifoldSolver[m_numberContactManifolds];
-	assert(mContactConstraints != NULL);
+	assert(mContactConstraints != nullptr);
 
 	// For each contact manifold of the island
 	ContactManifold** contactManifolds = island->getContactManifold();
@@ -66,8 +66,8 @@ void ContactSolver::initializeForIsland(float dt, Island* island) {
 		// Get the two bodies of the contact
 		RigidBody* body1 = static_cast<RigidBody*>(externalManifold->getContactPoint(0)->getBody1());
 		RigidBody* body2 = static_cast<RigidBody*>(externalManifold->getContactPoint(0)->getBody2());
-		assert(body1 != NULL);
-		assert(body2 != NULL);
+		assert(body1 != nullptr);
+		assert(body2 != nullptr);
 
 		// Get the position of the two bodies
 		const vec3& x1 = body1->m_centerOfMassWorld;
@@ -91,8 +91,8 @@ void ContactSolver::initializeForIsland(float dt, Island* island) {
 
 		// If we solve the friction constraints at the center of the contact manifold
 		if (mIsSolveFrictionAtContactManifoldCenterActive) {
-			int32_ternalManifold.frictionPointBody1 = vec3::zero();
-			int32_ternalManifold.frictionPointBody2 = vec3::zero();
+			int32_ternalManifold.frictionPointBody1 = vec3(0.0f,0.0f,0.0f);
+			int32_ternalManifold.frictionPointBody2 = vec3(0.0f,0.0f,0.0f);
 		}
 
 		// For each  contact point of the contact manifold
@@ -119,7 +119,7 @@ void ContactSolver::initializeForIsland(float dt, Island* island) {
 			contactPoint.penetrationImpulse = 0.0;
 			contactPoint.friction1Impulse = 0.0;
 			contactPoint.friction2Impulse = 0.0;
-			contactPoint.rollingResistanceImpulse = vec3::zero();
+			contactPoint.rollingResistanceImpulse = vec3(0.0f,0.0f,0.0f);
 
 			// If we solve the friction constraints at the center of the contact manifold
 			if (mIsSolveFrictionAtContactManifoldCenterActive) {
@@ -384,8 +384,8 @@ void ContactSolver::warmStart() {
 					if (contactManifold.rollingResistanceFactor > 0) {
 
 						// Compute the impulse P = J^T * lambda
-						const Impulse impulseRollingResistance(vec3::zero(), -contactPoint.rollingResistanceImpulse,
-															   vec3::zero(), contactPoint.rollingResistanceImpulse);
+						const Impulse impulseRollingResistance(vec3(0.0f,0.0f,0.0f), -contactPoint.rollingResistanceImpulse,
+															   vec3(0.0f,0.0f,0.0f), contactPoint.rollingResistanceImpulse);
 
 						// Apply the impulses to the bodies of the constraint
 						applyImpulse(impulseRollingResistance, contactManifold);
@@ -398,7 +398,7 @@ void ContactSolver::warmStart() {
 				contactPoint.penetrationImpulse = 0.0;
 				contactPoint.friction1Impulse = 0.0;
 				contactPoint.friction2Impulse = 0.0;
-				contactPoint.rollingResistanceImpulse = vec3::zero();
+				contactPoint.rollingResistanceImpulse = vec3(0.0f,0.0f,0.0f);
 			}
 		}
 
@@ -469,8 +469,8 @@ void ContactSolver::warmStart() {
 			// Compute the impulse P = J^T * lambda
 			angularImpulseBody1 = -contactManifold.rollingResistanceImpulse;
 			angularImpulseBody2 = contactManifold.rollingResistanceImpulse;
-			const Impulse impulseRollingResistance(vec3::zero(), angularImpulseBody1,
-												   vec3::zero(), angularImpulseBody2);
+			const Impulse impulseRollingResistance(vec3(0.0f,0.0f,0.0f), angularImpulseBody1,
+												   vec3(0.0f,0.0f,0.0f), angularImpulseBody2);
 
 			// Apply the impulses to the bodies of the constraint
 			applyImpulse(impulseRollingResistance, contactManifold);
@@ -481,7 +481,7 @@ void ContactSolver::warmStart() {
 			contactManifold.friction1Impulse = 0.0;
 			contactManifold.friction2Impulse = 0.0;
 			contactManifold.frictionTwistImpulse = 0.0;
-			contactManifold.rollingResistanceImpulse = vec3::zero();
+			contactManifold.rollingResistanceImpulse = vec3(0.0f,0.0f,0.0f);
 		}
 	}
 }
@@ -640,8 +640,8 @@ void ContactSolver::solve() {
 					deltaLambdaRolling = contactPoint.rollingResistanceImpulse - lambdaTempRolling;
 
 					// Compute the impulse P=J^T * lambda
-					const Impulse impulseRolling(vec3::zero(), -deltaLambdaRolling,
-												 vec3::zero(), deltaLambdaRolling);
+					const Impulse impulseRolling(vec3(0.0f,0.0f,0.0f), -deltaLambdaRolling,
+												 vec3(0.0f,0.0f,0.0f), deltaLambdaRolling);
 
 					// Apply the impulses to the bodies of the constraint
 					applyImpulse(impulseRolling, contactManifold);
@@ -742,15 +742,17 @@ void ContactSolver::solve() {
 				vec3 deltaLambdaRolling = contactManifold.inverseRollingResistance * (-JvRolling);
 				float rollingLimit = contactManifold.rollingResistanceFactor * sumPenetrationImpulse;
 				vec3 lambdaTempRolling = contactManifold.rollingResistanceImpulse;
-				contactManifold.rollingResistanceImpulse = clamp(contactManifold.rollingResistanceImpulse +
-																	 deltaLambdaRolling, rollingLimit);
+				contactManifold.rollingResistanceImpulse = clamp(contactManifold.rollingResistanceImpulse + deltaLambdaRolling,
+				                                                 rollingLimit);
 				deltaLambdaRolling = contactManifold.rollingResistanceImpulse - lambdaTempRolling;
 
 				// Compute the impulse P=J^T * lambda
 				angularImpulseBody1 = -deltaLambdaRolling;
 				angularImpulseBody2 = deltaLambdaRolling;
-				const Impulse impulseRolling(vec3::zero(), angularImpulseBody1,
-											 vec3::zero(), angularImpulseBody2);
+				const Impulse impulseRolling(vec3(0.0f,0.0f,0.0f),
+				                             angularImpulseBody1,
+				                             vec3(0.0f,0.0f,0.0f),
+				                             angularImpulseBody2);
 
 				// Apply the impulses to the bodies of the constraint
 				applyImpulse(impulseRolling, contactManifold);
@@ -846,7 +848,7 @@ void ContactSolver::computeFrictionVectors(const vec3& deltaVelocity,
 	else {
 
 		// Get any orthogonal vector to the normal as the first friction vector
-		contactPoint.frictionVector1 = contactPoint.normal.getOneUnitOrthogonalVector();
+		contactPoint.frictionVector1 = contactPoint.normal.getOrthoVector();
 	}
 
 	// The second friction vector is computed by the cross product of the firs
@@ -876,7 +878,7 @@ void ContactSolver::computeFrictionVectors(const vec3& deltaVelocity,
 	else {
 
 		// Get any orthogonal vector to the normal as the first friction vector
-		contact.frictionVector1 = contact.normal.getOneUnitOrthogonalVector();
+		contact.frictionVector1 = contact.normal.getOrthoVector();
 	}
 
 	// The second friction vector is computed by the cross product of the firs
@@ -887,8 +889,8 @@ void ContactSolver::computeFrictionVectors(const vec3& deltaVelocity,
 // Clean up the constraint solver
 void ContactSolver::cleanup() {
 
-	if (mContactConstraints != NULL) {
+	if (mContactConstraints != nullptr) {
 		delete[] mContactConstraints;
-		mContactConstraints = NULL;
+		mContactConstraints = nullptr;
 	}
 }

@@ -32,14 +32,8 @@ namespace reactphysics3d {
 class BoxShape : public ConvexShape {
 
 	protected :
-
-		// -------------------- Attributes -------------------- //
-
 		/// Extent sizes of the box in the x, y and z direction
 		vec3 m_extent;
-
-		// -------------------- Methods -------------------- //
-
 		/// Private copy-constructor
 		BoxShape(const BoxShape& shape);
 
@@ -60,14 +54,11 @@ class BoxShape : public ConvexShape {
 		virtual size_t getSizeInBytes() const;
 
 	public :
-
-		// -------------------- Methods -------------------- //
-
 		/// Constructor
 		BoxShape(const vec3& extent, float margin = OBJECT_MARGIN);
 
 		/// Destructor
-		virtual ~BoxShape();
+		virtual ~BoxShape() = default;
 
 		/// Return the extents of the box
 		vec3 getExtent() const;
@@ -76,7 +67,7 @@ class BoxShape : public ConvexShape {
 		virtual void setLocalScaling(const vec3& scaling);
 
 		/// Return the local bounds of the shape in x, y and z directions
-		virtual void getLocalBounds(vec3& min, vec3& max) const;
+		virtual void getLocalBounds(vec3& _min, vec3& _max) const;
 
 		/// Return the local inertia tensor of the collision shape
 		virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const;
@@ -104,13 +95,13 @@ inline void BoxShape::setLocalScaling(const vec3& scaling) {
  * @param min The minimum bounds of the shape in local-space coordinates
  * @param max The maximum bounds of the shape in local-space coordinates
  */
-inline void BoxShape::getLocalBounds(vec3& min, vec3& max) const {
+inline void BoxShape::getLocalBounds(vec3& _min, vec3& _max) const {
 
 	// Maximum bounds
-	max = m_extent + vec3(m_margin, m_margin, m_margin);
+	_max = m_extent + vec3(m_margin, m_margin, m_margin);
 
 	// Minimum bounds
-	min = -max;
+	_min = -_max;
 }
 
 // Return the number of bytes used by the collision shape

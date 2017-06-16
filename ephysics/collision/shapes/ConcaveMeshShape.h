@@ -16,31 +16,24 @@ namespace reactphysics3d {
 
 class ConcaveMeshShape;
 
-// class ConvexTriangleAABBOverlapCallback
 class ConvexTriangleAABBOverlapCallback : public DynamicAABBTreeOverlapCallback {
-
 	private:
-
-		TriangleCallback& m_triangleTestCallback;
-
-		// Reference to the concave mesh shape
-		const ConcaveMeshShape& m_concaveMeshShape;
-
-		// Reference to the Dynamic AABB tree
-		const DynamicAABBTree& m_dynamicAABBTree;
-
+		TriangleCallback& m_triangleTestCallback; //!< 
+		const ConcaveMeshShape& m_concaveMeshShape; //!< Reference to the concave mesh shape
+		const DynamicAABBTree& m_dynamicAABBTree; //!< Reference to the Dynamic AABB tree
 	public:
-
 		// Constructor
-		ConvexTriangleAABBOverlapCallback(TriangleCallback& triangleCallback, const ConcaveMeshShape& concaveShape,
-										  const DynamicAABBTree& dynamicAABBTree)
-		  : m_triangleTestCallback(triangleCallback), m_concaveMeshShape(concaveShape), m_dynamicAABBTree(dynamicAABBTree) {
-
+		ConvexTriangleAABBOverlapCallback(TriangleCallback& _triangleCallback,
+		                                  const ConcaveMeshShape& _concaveShape,
+		                                  const DynamicAABBTree& _dynamicAABBTree):
+		  m_triangleTestCallback(_triangleCallback),
+		  m_concaveMeshShape(_concaveShape),
+		  m_dynamicAABBTree(_dynamicAABBTree) {
+			
 		}
-
 		// Called when a overlapping node has been found during the call to
 		// DynamicAABBTree:reportAllShapesOverlappingWithAABB()
-		virtual void notifyOverlappingNode(int32_t nodeId);
+		virtual void notifyOverlappingNode(int32_t _nodeId);
 
 };
 

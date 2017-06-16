@@ -13,28 +13,22 @@
 using namespace reactphysics3d;
 using namespace std;
 
-// Constructor
-AABB::AABB() {
-
+AABB::AABB():
+  m_minCoordinates(0,0,0),
+  m_maxCoordinates(0,0,0) {
+	
 }
 
-// Constructor
 AABB::AABB(const vec3& minCoordinates, const vec3& maxCoordinates):
   m_minCoordinates(minCoordinates),
   m_maxCoordinates(maxCoordinates) {
 	
 }
 
-// Copy-constructor
 AABB::AABB(const AABB& aabb):
   m_minCoordinates(aabb.m_minCoordinates),
   m_maxCoordinates(aabb.m_maxCoordinates) {
 	
-}
-
-// Destructor
-AABB::~AABB() {
-
 }
 
 // Merge the AABB in parameter with the current one

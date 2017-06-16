@@ -9,6 +9,7 @@
 #include <ephysics/constraint/Joint.h>
 #include <ephysics/collision/shapes/CollisionShape.h>
 #include <ephysics/engine/DynamicsWorld.h>
+#include <ephysics/debug.hpp>
 
 // We want to use the ReactPhysics3D namespace
 using namespace reactphysics3d;
@@ -310,7 +311,9 @@ void RigidBody::updateBroadPhaseState() const {
 
 		// Recompute the world-space AABB of the collision shape
 		AABB aabb;
+		EPHY_ERROR("         : " << aabb.getMin() << " " << aabb.getMax());
 		shape->getCollisionShape()->computeAABB(aabb, m_transform *shape->getLocalToBodyTransform());
+		EPHY_ERROR("         : " << aabb.getMin() << " " << aabb.getMax());
 
 		// Update the broad-phase state for the proxy collision shape
 		m_world.m_collisionDetection.updateProxyCollisionShape(shape, aabb, displacement);

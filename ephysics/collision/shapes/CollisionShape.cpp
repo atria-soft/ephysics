@@ -12,14 +12,14 @@
 // We want to use the ReactPhysics3D namespace
 using namespace reactphysics3d;
 
-// Constructor
-CollisionShape::CollisionShape(CollisionShapeType type) : m_type(type), m_scaling(1.0, 1.0, 1.0) {
+CollisionShape::CollisionShape(CollisionShapeType type) :
+  m_type(type),
+  m_scaling(1.0f, 1.0f, 1.0f) {
 	
 }
 
-// Destructor
 CollisionShape::~CollisionShape() {
-
+	
 }
 
 // Compute the world-space AABB of the collision shape given a transform
@@ -33,18 +33,18 @@ void CollisionShape::computeAABB(AABB& aabb, const etk::Transform3D& transform) 
 	PROFILE("CollisionShape::computeAABB()");
 
 	// Get the local bounds in x,y and z direction
-	vec3 minBounds;
-	vec3 maxBounds;
+	vec3 minBounds(0,0,0);
+	vec3 maxBounds(0,0,0);
 	getLocalBounds(minBounds, maxBounds);
 
 	// Rotate the local bounds according to the orientation of the body
 	etk::Matrix3x3 worldAxis = transform.getOrientation().getMatrix().getAbsolute();
 	vec3 worldMinBounds(worldAxis.getColumn(0).dot(minBounds),
-						   worldAxis.getColumn(1).dot(minBounds),
-						   worldAxis.getColumn(2).dot(minBounds));
+	                    worldAxis.getColumn(1).dot(minBounds),
+	                    worldAxis.getColumn(2).dot(minBounds));
 	vec3 worldMaxBounds(worldAxis.getColumn(0).dot(maxBounds),
-						   worldAxis.getColumn(1).dot(maxBounds),
-						   worldAxis.getColumn(2).dot(maxBounds));
+	                    worldAxis.getColumn(1).dot(maxBounds),
+	                    worldAxis.getColumn(2).dot(maxBounds));
 
 	// Compute the minimum and maximum coordinates of the rotated extents
 	vec3 minCoordinates = transform.getPosition() + worldMinBounds;

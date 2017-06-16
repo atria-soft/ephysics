@@ -123,20 +123,17 @@ void BroadPhaseAlgorithm::removeProxyCollisionShape(ProxyShape* proxyShape) {
 }
 
 // Notify the broad-phase that a collision shape has moved and need to be updated
-void BroadPhaseAlgorithm::updateProxyCollisionShape(ProxyShape* proxyShape, const AABB& aabb,
-													const vec3& displacement, bool forceReinsert) {
-
-	int32_t broadPhaseID = proxyShape->m_broadPhaseID;
-
+void BroadPhaseAlgorithm::updateProxyCollisionShape(ProxyShape* _proxyShape,
+                                                    const AABB& _aabb,
+                                                    const vec3& _displacement,
+                                                    bool _forceReinsert) {
+	int32_t broadPhaseID = _proxyShape->m_broadPhaseID;
 	assert(broadPhaseID >= 0);
-
 	// Update the dynamic AABB tree according to the movement of the collision shape
-	bool hasBeenReInserted = m_dynamicAABBTree.updateObject(broadPhaseID, aabb, displacement, forceReinsert);
-
+	bool hasBeenReInserted = m_dynamicAABBTree.updateObject(broadPhaseID, _aabb, _displacement, _forceReinsert);
 	// If the collision shape has moved out of its fat AABB (and therefore has been reinserted
 	// int32_to the tree).
 	if (hasBeenReInserted) {
-
 		// Add the collision shape int32_to the array of shapes that have moved (or have been created)
 		// during the last simulation step
 		addMovedCollisionShape(broadPhaseID);

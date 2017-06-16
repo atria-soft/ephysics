@@ -18,18 +18,15 @@ using namespace reactphysics3d;
  * @param height Height of the cone (in meters)
  * @param margin Collision margin (in meters) around the collision shape
  */
-ConeShape::ConeShape(float radius, float height, float margin)
-		  : ConvexShape(CONE, margin), mRadius(radius), m_halfHeight(height * 0.5f) {
-	assert(mRadius > 0.0f);
+ConeShape::ConeShape(float radius, float height, float margin):
+  ConvexShape(CONE, margin),
+  m_radius(radius),
+  m_halfHeight(height * 0.5f) {
+	assert(m_radius > 0.0f);
 	assert(m_halfHeight > 0.0f);
 	
 	// Compute the sine of the semi-angle at the apex point
-	mSinTheta = mRadius / (sqrt(mRadius * mRadius + height * height));
-}
-
-// Destructor
-ConeShape::~ConeShape() {
-
+	m_sinTheta = m_radius / (sqrt(m_radius * m_radius + height * height));
 }
 
 // Return a local support point in a given direction without the object margin
@@ -37,7 +34,7 @@ vec3 ConeShape::getLocalSupportPointWithoutMargin(const vec3& direction,
 													 void** cachedCollisionData) const {
 
 	const vec3& v = direction;
-	float sinThetaTimesLengthV = mSinTheta * v.length();
+	float sinThetaTimesLengthV = m_sinTheta * v.length();
 	vec3 supportPoint;
 
 	if (v.y() > sinThetaTimesLengthV) {
@@ -46,7 +43,7 @@ vec3 ConeShape::getLocalSupportPointWithoutMargin(const vec3& direction,
 	else {
 		float projectedLength = sqrt(v.x() * v.x() + v.z() * v.z());
 		if (projectedLength > MACHINE_EPSILON) {
-			float d = mRadius / projectedLength;
+			float d = m_radius / projectedLength;
 			supportPoint = vec3(v.x() * d, -m_halfHeight, v.z() * d);
 		}
 		else {
@@ -70,7 +67,7 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 	vec3 centerBase(0, -m_halfHeight, 0);
 	vec3 axis(0, float(-1.0), 0);
 	float heightSquare = float(4.0) * m_halfHeight * m_halfHeight;
-	float cosThetaSquare = heightSquare / (heightSquare + mRadius * mRadius);
+	float cosThetaSquare = heightSquare / (heightSquare + m_radius * m_radius);
 	float factor = 1.0f - cosThetaSquare;
 	vec3 delta = ray.point1 - V;
 	float c0 = -cosThetaSquare * delta.x() * delta.x()  + factor * delta.y() * delta.y() -
@@ -148,7 +145,7 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 		// Only keep this int32_tersection if it is inside the cone radius
 		localHitPoint[2] = ray.point1 + tHit[2] * r;
 
-		if ((localHitPoint[2] - centerBase).length2() > mRadius * mRadius) {
+		if ((localHitPoint[2] - centerBase).length2() > m_radius * m_radius) {
 			tHit[2] = float(-1.0);
 		}
 
@@ -175,7 +172,7 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 		float h = float(2.0) * m_halfHeight;
 		float value1 = (localHitPoint[hitIndex].x() * localHitPoint[hitIndex].x() +
 						  localHitPoint[hitIndex].z() * localHitPoint[hitIndex].z());
-		float rOverH = mRadius / h;
+		float rOverH = m_radius / h;
 		float value2 = 1.0f + rOverH * rOverH;
 		float factor = 1.0f / std::sqrt(value1 * value2);
 		float x = localHitPoint[hitIndex].x() * factor;

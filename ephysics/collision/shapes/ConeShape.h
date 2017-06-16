@@ -29,22 +29,13 @@ namespace reactphysics3d {
  * default margin distance by not using the "margin" parameter in the constructor.
  */
 class ConeShape : public ConvexShape {
-
 	protected :
-
-		// -------------------- Attributes -------------------- //
-
 		/// Radius of the base
-		float mRadius;
-
+		float m_radius;
 		/// Half height of the cone
 		float m_halfHeight;
-
 		/// sine of the semi angle at the apex point
-		float mSinTheta;
-
-		// -------------------- Methods -------------------- //
-
+		float m_sinTheta;
 		/// Private copy-constructor
 		ConeShape(const ConeShape& shape);
 
@@ -69,10 +60,7 @@ class ConeShape : public ConvexShape {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		ConeShape(float mRadius, float height, float margin = OBJECT_MARGIN);
-
-		/// Destructor
-		virtual ~ConeShape();
+		ConeShape(float m_radius, float height, float margin = OBJECT_MARGIN);
 
 		/// Return the radius
 		float getRadius() const;
@@ -95,7 +83,7 @@ class ConeShape : public ConvexShape {
  * @return Radius of the cone (in meters)
  */
 inline float ConeShape::getRadius() const {
-	return mRadius;
+	return m_radius;
 }
 
 // Return the height
@@ -110,7 +98,7 @@ inline float ConeShape::getHeight() const {
 inline void ConeShape::setLocalScaling(const vec3& scaling) {
 
 	m_halfHeight = (m_halfHeight / m_scaling.y()) * scaling.y();
-	mRadius = (mRadius / m_scaling.x()) * scaling.x();
+	m_radius = (m_radius / m_scaling.x()) * scaling.x();
 
 	CollisionShape::setLocalScaling(scaling);
 }
@@ -128,7 +116,7 @@ inline size_t ConeShape::getSizeInBytes() const {
 inline void ConeShape::getLocalBounds(vec3& min, vec3& max) const {
 
 	// Maximum bounds
-	max.setX(mRadius + m_margin);
+	max.setX(m_radius + m_margin);
 	max.setY(m_halfHeight + m_margin);
 	max.setZ(max.x());
 
@@ -145,7 +133,7 @@ inline void ConeShape::getLocalBounds(vec3& min, vec3& max) const {
  * @param mass Mass to use to compute the inertia tensor of the collision shape
  */
 inline void ConeShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
-	float rSquare = mRadius * mRadius;
+	float rSquare = m_radius * m_radius;
 	float diagXZ = float(0.15) * mass * (rSquare + m_halfHeight);
 	tensor.setValue(diagXZ, 0.0, 0.0,
 						0.0, float(0.3) * mass * rSquare,
@@ -154,7 +142,7 @@ inline void ConeShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float m
 
 // Return true if a point is inside the collision shape
 inline bool ConeShape::testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const {
-	const float radiusHeight = mRadius * (-localPoint.y() + m_halfHeight) /
+	const float radiusHeight = m_radius * (-localPoint.y() + m_halfHeight) /
 										  (m_halfHeight * float(2.0));
 	return (localPoint.y() < m_halfHeight && localPoint.y() > -m_halfHeight) &&
 		   (localPoint.x() * localPoint.x() + localPoint.z() * localPoint.z() < radiusHeight *radiusHeight);

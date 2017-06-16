@@ -7,6 +7,7 @@
 
 // Libraries
 #include <ephysics/configuration.h>
+#include <etk/math/Vector3D.hpp>
 
 #include <algorithm>
 #include <cassert>

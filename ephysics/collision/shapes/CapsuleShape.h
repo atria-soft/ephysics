@@ -24,16 +24,9 @@ namespace reactphysics3d {
  * capsule shape.
  */
 class CapsuleShape : public ConvexShape {
-
-	protected :
-
-		// -------------------- Attributes -------------------- //
-
+	protected:
 		/// Half height of the capsule (height = distance between the centers of the two spheres)
 		float m_halfHeight;
-
-		// -------------------- Methods -------------------- //
-
 		/// Private copy-constructor
 		CapsuleShape(const CapsuleShape& shape);
 
@@ -59,11 +52,8 @@ class CapsuleShape : public ConvexShape {
 		virtual size_t getSizeInBytes() const;
 
 	public :
-
-		// -------------------- Methods -------------------- //
-
 		/// Constructor
-		CapsuleShape(float radius, float height);
+		CapsuleShape(float _radius, float _height);
 
 		/// Destructor
 		virtual ~CapsuleShape();

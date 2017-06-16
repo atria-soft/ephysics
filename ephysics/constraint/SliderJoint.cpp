@@ -76,7 +76,7 @@ void SliderJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDa
 	// Compute the two orthogonal vectors to the slider axis in world-space
 	mSliderAxisWorld = orientationBody1 * mSliderAxisBody1;
 	mSliderAxisWorld.normalize();
-	mN1 = mSliderAxisWorld.getOneUnitOrthogonalVector();
+	mN1 = mSliderAxisWorld.getOrthoVector();
 	mN2 = mSliderAxisWorld.cross(mN1);
 
 	// Check if the limit constraints are violated or not
@@ -128,8 +128,8 @@ void SliderJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDa
 	mBTranslation.setZero();
 	float biasFactor = (BETA / constraintSolverData.timeStep);
 	if (m_positionCorrectionTechnique == BAUMGARTE_JOINTS) {
-		mBTranslation.x() = u.dot(mN1);
-		mBTranslation.y() = u.dot(mN2);
+		mBTranslation.setX(u.dot(mN1));
+		mBTranslation.setY(u.dot(mN2));
 		mBTranslation *= biasFactor;
 	}
 
@@ -440,7 +440,7 @@ void SliderJoint::solvePositionConstraint(const ConstraintSolverData& constraint
 	// Compute the two orthogonal vectors to the slider axis in world-space
 	mSliderAxisWorld = q1 * mSliderAxisBody1;
 	mSliderAxisWorld.normalize();
-	mN1 = mSliderAxisWorld.getOneUnitOrthogonalVector();
+	mN1 = mSliderAxisWorld.getOrthoVector();
 	mN2 = mSliderAxisWorld.cross(mN1);
 
 	// Check if the limit constraints are violated or not

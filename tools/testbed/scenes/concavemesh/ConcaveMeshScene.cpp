@@ -177,7 +177,7 @@ void ConcaveMeshScene::renderSinglePass(Shader& shader, const openglframework::M
 void ConcaveMeshScene::reset() {
 
 	// Reset the transform
-	rp3d::etk::Transform3D transform(rp3d::vec3::zero(), rp3d::etk::Quaternion::identity());
+	rp3d::etk::Transform3D transform(rp3d::vec3(0.0f,0.0f,0.0f)(), rp3d::etk::Quaternion::identity());
 	mConcaveMesh->resetTransform(transform);
 
 	for (int32_t i=0; i<NB_BOXES_X; i++) {

@@ -93,7 +93,7 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 	vec3 a2 = orientationBody2 * mHingeLocalAxisBody2;
 	mA1.normalize();
 	a2.normalize();
-	const vec3 b2 = a2.getOneUnitOrthogonalVector();
+	const vec3 b2 = a2.getOrthoVector();
 	const vec3 c2 = a2.cross(b2);
 	mB2CrossA1 = b2.cross(mA1);
 	mC2CrossA1 = c2.cross(mA1);
@@ -104,11 +104,11 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 
 	// Compute the inverse mass matrix K=JM^-1J^t for the 3 translation constraints (3x3 matrix)
 	float inverseMassBodies = m_body1->m_massInverse + m_body2->m_massInverse;
-	etk::Matrix3x3 massMatrix = Matrix3x3(inverseMassBodies, 0, 0,
-									0, inverseMassBodies, 0,
-									0, 0, inverseMassBodies) +
-						   skewSymmetricMatrixU1 * m_i1 * skewSymmetricMatrixU1.getTranspose() +
-						   skewSymmetricMatrixU2 * m_i2 * skewSymmetricMatrixU2.getTranspose();
+	etk::Matrix3x3 massMatrix = etk::Matrix3x3(inverseMassBodies, 0, 0,
+	                                           0, inverseMassBodies, 0,
+	                                           0, 0, inverseMassBodies)
+	                            + skewSymmetricMatrixU1 * m_i1 * skewSymmetricMatrixU1.getTranspose()
+	                            + skewSymmetricMatrixU2 * m_i2 * skewSymmetricMatrixU2.getTranspose();
 	m_inverseMassMatrixTranslation.setZero();
 	if (m_body1->getType() == DYNAMIC || m_body2->getType() == DYNAMIC) {
 		m_inverseMassMatrixTranslation = massMatrix.getInverse();
@@ -423,7 +423,7 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 	vec3 a2 = q2 * mHingeLocalAxisBody2;
 	mA1.normalize();
 	a2.normalize();
-	const vec3 b2 = a2.getOneUnitOrthogonalVector();
+	const vec3 b2 = a2.getOrthoVector();
 	const vec3 c2 = a2.cross(b2);
 	mB2CrossA1 = b2.cross(mA1);
 	mC2CrossA1 = c2.cross(mA1);
@@ -436,11 +436,11 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 
 	// Compute the matrix K=JM^-1J^t (3x3 matrix) for the 3 translation constraints
 	float inverseMassBodies = m_body1->m_massInverse + m_body2->m_massInverse;
-	etk::Matrix3x3 massMatrix = Matrix3x3(inverseMassBodies, 0, 0,
-									0, inverseMassBodies, 0,
-									0, 0, inverseMassBodies) +
-						   skewSymmetricMatrixU1 * m_i1 * skewSymmetricMatrixU1.getTranspose() +
-						   skewSymmetricMatrixU2 * m_i2 * skewSymmetricMatrixU2.getTranspose();
+	etk::Matrix3x3 massMatrix = etk::Matrix3x3(inverseMassBodies, 0, 0,
+	                                           0, inverseMassBodies, 0,
+	                                           0, 0, inverseMassBodies)
+	                            + skewSymmetricMatrixU1 * m_i1 * skewSymmetricMatrixU1.getTranspose()
+	                            + skewSymmetricMatrixU2 * m_i2 * skewSymmetricMatrixU2.getTranspose();
 	m_inverseMassMatrixTranslation.setZero();
 	if (m_body1->getType() == DYNAMIC || m_body2->getType() == DYNAMIC) {
 		m_inverseMassMatrixTranslation = massMatrix.getInverse();
@@ -762,7 +762,7 @@ float HingeJoint::computeCurrentHingeAngle(const etk::Quaternion& orientationBod
 	// axis is not pointing in the same direction as the hinge axis, we use the rotation -q which
 	// has the same |sin(theta/2)| value but the value cos(theta/2) is sign inverted. Some details
 	// about this trick is explained in the source code of OpenTissue (http://www.opentissue.org).
-	float cosHalfAngle = relativeRotation.w;
+	float cosHalfAngle = relativeRotation.w();
 	float sinHalfAngleAbs = relativeRotation.getVectorV().length();
 
 	// Compute the dot product of the relative rotation axis and the hinge axis

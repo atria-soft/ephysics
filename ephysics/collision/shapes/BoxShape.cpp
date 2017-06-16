@@ -18,16 +18,12 @@ using namespace reactphysics3d;
  * @param extent The vector with the three extents of the box (in meters)
  * @param margin The collision margin (in meters) around the collision shape
  */
-BoxShape::BoxShape(const vec3& extent, float margin)
-		 : ConvexShape(BOX, margin), m_extent(extent - vec3(margin, margin, margin)) {
-	assert(extent.x() > 0.0f && extent.x() > margin);
-	assert(extent.y() > 0.0f && extent.y() > margin);
-	assert(extent.z() > 0.0f && extent.z() > margin);
-}
-
-// Destructor
-BoxShape::~BoxShape() {
-
+BoxShape::BoxShape(const vec3& _extent, float _margin):
+  ConvexShape(BOX, _margin),
+  m_extent(_extent - vec3(_margin, _margin, _margin)) {
+	assert(_extent.x() > 0.0f && _extent.x() > _margin);
+	assert(_extent.y() > 0.0f && _extent.y() > _margin);
+	assert(_extent.z() > 0.0f && _extent.z() > _margin);
 }
 
 // Return the local inertia tensor of the collision shape
