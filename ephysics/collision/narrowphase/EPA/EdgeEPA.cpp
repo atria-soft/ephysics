@@ -5,13 +5,13 @@
  */
 
 // Libraries
-#include <ephysics/collision/narrowphase/EPA/EdgeEPA.h>
-#include <ephysics/collision/narrowphase/EPA/TriangleEPA.h>
-#include <ephysics/collision/narrowphase/EPA/TrianglesStore.h>
+#include <ephysics/collision/narrowphase/EPA/EdgeEPA.hpp>
+#include <ephysics/collision/narrowphase/EPA/TriangleEPA.hpp>
+#include <ephysics/collision/narrowphase/EPA/TrianglesStore.hpp>
 #include <cassert>
 
 // We want to use the ReactPhysics3D namespace
-using namespace reactphysics3d;
+using namespace ephysics;
 
 
 // Constructor

@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/RaycastScene.h>
+#include <ephysics/RaycastScene.hpp>
 
 // Namespaces
 using namespace openglframework;
@@ -45,7 +45,7 @@ RaycastScene::RaycastScene(const std::string& name)
 	setScenePosition(center, SCENE_RADIUS);
 
 	// Create the dynamics world for the physics simulation
-	mCollisionWorld = new rp3d::CollisionWorld();
+	mCollisionWorld = new ephysics::CollisionWorld();
 
 	// ---------- Dumbbell ---------- //
 	openglframework::vec3 position1(0, 0, 0);
@@ -318,9 +318,9 @@ void RaycastScene::update() {
 		openglframework::vec3 p1 = line->getPoint1();
 		openglframework::vec3 p2 = line->getPoint2();
 
-		rp3d::vec3 point1(p1.x(), p1.y(), p1.z());
-		rp3d::vec3 point2(p2.x(), p2.y(), p2.z());
-		rp3d::Ray ray(point1, point2);
+		ephysics::vec3 point1(p1.x(), p1.y(), p1.z());
+		ephysics::vec3 point2(p2.x(), p2.y(), p2.z());
+		ephysics::Ray ray(point1, point2);
 
 		// Perform a raycast query on the physics world by passing a raycast
 		// callback class in argument.

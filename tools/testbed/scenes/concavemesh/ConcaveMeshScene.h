@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -27,12 +27,12 @@
 #define TRIANGLE_MESH_SCENE_H
 
 // Libraries
-#include <ephysics/openglframework.h>
-#include <ephysics/reactphysics3d.h>
-#include <ephysics/Box.h>
-#include <ephysics/SceneDemo.h>
-#include <ephysics/ConcaveMesh.h>
-#include <ephysics/Box.h>
+#include <ephysics/openglframework.hpp>
+#include <ephysics/ephysics.hpp>
+#include <ephysics/Box.hpp>
+#include <ephysics/SceneDemo.hpp>
+#include <ephysics/ConcaveMesh.hpp>
+#include <ephysics/Box.hpp>
 
 namespace trianglemeshscene {
 
@@ -56,7 +56,7 @@ class ConcaveMeshScene : public SceneDemo {
 		ConcaveMesh* mConcaveMesh;
 
 		/// Dynamics world used for the physics simulation
-		rp3d::DynamicsWorld* mDynamicsWorld;
+		ephysics::DynamicsWorld* mDynamicsWorld;
 
 	public:
 

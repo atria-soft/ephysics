@@ -5,11 +5,11 @@
  */
 
 // Libraries
-#include <ephysics/constraint/HingeJoint.h>
-#include <ephysics/engine/ConstraintSolver.h>
+#include <ephysics/constraint/HingeJoint.hpp>
+#include <ephysics/engine/ConstraintSolver.hpp>
 #include <cmath>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Static variables definition
 const float HingeJoint::BETA = float(0.2);

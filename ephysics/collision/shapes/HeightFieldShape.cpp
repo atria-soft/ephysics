@@ -5,9 +5,9 @@
  */
 
 // Libraries
-#include <ephysics/collision/shapes/HeightFieldShape.h>
+#include <ephysics/collision/shapes/HeightFieldShape.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 /**

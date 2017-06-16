@@ -6,9 +6,9 @@
 #pragma once
 
 // Libraries
-#include <ephysics/constraint/Joint.h>
+#include <ephysics/constraint/Joint.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 Joint::Joint(const JointInfo& jointInfo)

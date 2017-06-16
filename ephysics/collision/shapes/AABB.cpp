@@ -6,11 +6,11 @@
 
 
 // Libraries
-#include <ephysics/collision/shapes/AABB.h>
-#include <ephysics/configuration.h>
+#include <ephysics/collision/shapes/AABB.hpp>
+#include <ephysics/configuration.hpp>
 #include <cassert>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 using namespace std;
 
 AABB::AABB():

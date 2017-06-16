@@ -5,9 +5,9 @@
  */
 
 // Libraries
-#include <ephysics/constraint/SliderJoint.h>
+#include <ephysics/constraint/SliderJoint.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Static variables definition
 const float SliderJoint::BETA = float(0.2);

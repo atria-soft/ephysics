@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -27,10 +27,10 @@
 #define JOINTS_SCENE_H
 
 // Libraries
-#include <ephysics/openglframework.h>
-#include <ephysics/reactphysics3d.h>
-#include <ephysics/Box.h>
-#include <ephysics/SceneDemo.h>
+#include <ephysics/openglframework.hpp>
+#include <ephysics/ephysics.hpp>
+#include <ephysics/Box.hpp>
+#include <ephysics/SceneDemo.hpp>
 
 namespace jointsscene {
 
@@ -57,10 +57,10 @@ class JointsScene : public SceneDemo {
 		Box* mHingeJointChainBoxes[NB_HINGE_BOXES];
 
 		/// Ball-And-Socket joints of the chain
-		rp3d::BallAndSocketJoint* mBallAndSocketJoints[NB_BALLSOCKETJOINT_BOXES-1];
+		ephysics::BallAndSocketJoint* mBallAndSocketJoints[NB_BALLSOCKETJOINT_BOXES-1];
 
 		/// Hinge joints of the chain
-		rp3d::HingeJoint* mHingeJoints[NB_HINGE_BOXES-1];
+		ephysics::HingeJoint* mHingeJoints[NB_HINGE_BOXES-1];
 
 		/// Bottom box of the Slider joint
 		Box* mSliderJointBottomBox;
@@ -69,7 +69,7 @@ class JointsScene : public SceneDemo {
 		Box* mSliderJointTopBox;
 
 		/// Slider joint
-		rp3d::SliderJoint* mSliderJoint;
+		ephysics::SliderJoint* mSliderJoint;
 
 		/// Propeller box
 		Box* mPropellerBox;
@@ -81,19 +81,19 @@ class JointsScene : public SceneDemo {
 		Box* mFixedJointBox2;
 
 		/// Hinge joint
-		rp3d::HingeJoint* mPropellerHingeJoint;
+		ephysics::HingeJoint* mPropellerHingeJoint;
 
 		/// First Fixed joint
-		rp3d::FixedJoint* mFixedJoint1;
+		ephysics::FixedJoint* mFixedJoint1;
 
 		/// Second Fixed joint
-		rp3d::FixedJoint* mFixedJoint2;
+		ephysics::FixedJoint* mFixedJoint2;
 
 		/// Box for the floor
 		Box* mFloor;
 
 		/// Dynamics world used for the physics simulation
-		rp3d::DynamicsWorld* mDynamicsWorld;
+		ephysics::DynamicsWorld* mDynamicsWorld;
 
 		// -------------------- Methods -------------------- //
 

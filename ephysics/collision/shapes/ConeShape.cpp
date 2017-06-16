@@ -6,11 +6,11 @@
 
 // Libraries
 #include <complex>
-#include <ephysics/configuration.h>
-#include <ephysics/collision/shapes/ConeShape.h>
-#include <ephysics/collision/ProxyShape.h>
+#include <ephysics/configuration.hpp>
+#include <ephysics/collision/shapes/ConeShape.hpp>
+#include <ephysics/collision/ProxyShape.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 /**

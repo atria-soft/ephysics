@@ -5,9 +5,9 @@
  */
 
 // Libraries
-#include <ephysics/engine/Island.h>
+#include <ephysics/engine/Island.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 Island::Island(uint32_t nbMaxBodies, uint32_t nbMaxContactManifolds, uint32_t nbMaxJoints,

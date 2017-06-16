@@ -5,13 +5,13 @@
  */
 
 // Libraries
-#include <ephysics/collision/narrowphase/EPA/EPAAlgorithm.h>
-#include <ephysics/engine/Profiler.h>
-#include <ephysics/collision/narrowphase/GJK/GJKAlgorithm.h>
-#include <ephysics/collision/narrowphase/EPA/TrianglesStore.h>
+#include <ephysics/collision/narrowphase/EPA/EPAAlgorithm.hpp>
+#include <ephysics/engine/Profiler.hpp>
+#include <ephysics/collision/narrowphase/GJK/GJKAlgorithm.hpp>
+#include <ephysics/collision/narrowphase/EPA/TrianglesStore.hpp>
 
 // We want to use the ReactPhysics3D namespace
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 EPAAlgorithm::EPAAlgorithm() {

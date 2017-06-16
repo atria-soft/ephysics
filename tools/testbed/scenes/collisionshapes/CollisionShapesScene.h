@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -27,18 +27,18 @@
 #define COLLISION_SHAPES_SCENE_H
 
 // Libraries
-#include <ephysics/openglframework.h>
-#include <ephysics/reactphysics3d.h>
-#include <ephysics/SceneDemo.h>
-#include <ephysics/Sphere.h>
-#include <ephysics/Box.h>
-#include <ephysics/Cone.h>
-#include <ephysics/Cylinder.h>
-#include <ephysics/Capsule.h>
-#include <ephysics/ConvexMesh.h>
-#include <ephysics/ConcaveMesh.h>
-#include <ephysics/Dumbbell.h>
-#include <ephysics/VisualContactPoint.h>
+#include <ephysics/openglframework.hpp>
+#include <ephysics/ephysics.hpp>
+#include <ephysics/SceneDemo.hpp>
+#include <ephysics/Sphere.hpp>
+#include <ephysics/Box.hpp>
+#include <ephysics/Cone.hpp>
+#include <ephysics/Cylinder.hpp>
+#include <ephysics/Capsule.hpp>
+#include <ephysics/ConvexMesh.hpp>
+#include <ephysics/ConcaveMesh.hpp>
+#include <ephysics/Dumbbell.hpp>
+#include <ephysics/VisualContactPoint.hpp>
 
 namespace collisionshapesscene {
 
@@ -96,7 +96,7 @@ class CollisionShapesScene : public SceneDemo {
 		Box* mFloor;
 
 		/// Dynamics world used for the physics simulation
-		rp3d::DynamicsWorld* mDynamicsWorld;
+		ephysics::DynamicsWorld* mDynamicsWorld;
 
 	public:
 

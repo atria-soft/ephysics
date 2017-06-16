@@ -5,11 +5,11 @@
  */
 
 // Libraries
-#include <ephysics/collision/shapes/ConcaveShape.h>
+#include <ephysics/collision/shapes/ConcaveShape.hpp>
 
 
 // We want to use the ReactPhysics3D namespace
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 ConcaveShape::ConcaveShape(CollisionShapeType type)

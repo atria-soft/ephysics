@@ -5,12 +5,12 @@
  */
 
 // Libraries
-#include <ephysics/collision/broadphase/BroadPhaseAlgorithm.h>
-#include <ephysics/collision/CollisionDetection.h>
-#include <ephysics/engine/Profiler.h>
+#include <ephysics/collision/broadphase/BroadPhaseAlgorithm.hpp>
+#include <ephysics/collision/CollisionDetection.hpp>
+#include <ephysics/engine/Profiler.hpp>
 
 // We want to use the ReactPhysics3D namespace
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 BroadPhaseAlgorithm::BroadPhaseAlgorithm(CollisionDetection& collisionDetection)

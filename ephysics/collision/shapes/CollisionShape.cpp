@@ -5,12 +5,12 @@
  */
 
 // Libraries
-#include <ephysics/collision/shapes/CollisionShape.h>
-#include <ephysics/engine/Profiler.h>
-#include <ephysics/body/CollisionBody.h>
+#include <ephysics/collision/shapes/CollisionShape.hpp>
+#include <ephysics/engine/Profiler.hpp>
+#include <ephysics/body/CollisionBody.hpp>
 
 // We want to use the ReactPhysics3D namespace
-using namespace reactphysics3d;
+using namespace ephysics;
 
 CollisionShape::CollisionShape(CollisionShapeType type) :
   m_type(type),

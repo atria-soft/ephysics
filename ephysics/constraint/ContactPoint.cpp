@@ -5,10 +5,10 @@
  */
 
 // Libraries
-#include <ephysics/constraint/ContactPoint.h>
-#include <ephysics/collision/ProxyShape.h>
+#include <ephysics/constraint/ContactPoint.hpp>
+#include <ephysics/collision/ProxyShape.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 using namespace std;
 
 // Constructor

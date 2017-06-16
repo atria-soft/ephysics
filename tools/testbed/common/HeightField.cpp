@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,12 +24,12 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/HeightField.h>
-#include <ephysics/PerlinNoise.h>
+#include <ephysics/HeightField.hpp>
+#include <ephysics/PerlinNoise.hpp>
 
 // Constructor
 HeightField::HeightField(const openglframework::vec3 &position,
-					   reactphysics3d::CollisionWorld* world)
+					   ephysics::CollisionWorld* world)
 		   : openglframework::Mesh(), mVBOVertices(GL_ARRAY_BUFFER),
 			 mVBONormals(GL_ARRAY_BUFFER), mVBOTextureCoords(GL_ARRAY_BUFFER),
 			 mVBOIndices(GL_ELEMENT_ARRAY_BUFFER) {
@@ -48,13 +48,13 @@ HeightField::HeightField(const openglframework::vec3 &position,
 
 	// Create the collision shape for the rigid body (convex mesh shape) and
 	// do not forget to delete it at the end
-	mHeightFieldShape = new rp3d::HeightFieldShape(NB_POINTS_WIDTH, NB_POINTS_LENGTH, m_minHeight, m_maxHeight,
-											   mHeightData, rp3d::HeightFieldShape::HEIGHT_FLOAT_TYPE);
+	mHeightFieldShape = new ephysics::HeightFieldShape(NB_POINTS_WIDTH, NB_POINTS_LENGTH, m_minHeight, m_maxHeight,
+											   mHeightData, ephysics::HeightFieldShape::HEIGHT_FLOAT_TYPE);
 
 	// Initial position and orientation of the rigid body
-	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-	rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-	rp3d::etk::Transform3D transform(initPosition, initOrientation);
+	ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+	ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+	ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 	mPreviousetk::Transform3D = transform;
 
@@ -62,7 +62,7 @@ HeightField::HeightField(const openglframework::vec3 &position,
 	m_body = world->createCollisionBody(transform);
 
 	// Add a collision shape to the body and specify the mass of the collision shape
-	m_proxyShape = m_body->addCollisionShape(mHeightFieldShape, rp3d::etk::Transform3D::identity());
+	m_proxyShape = m_body->addCollisionShape(mHeightFieldShape, ephysics::etk::Transform3D::identity());
 
 	// Create the VBOs and VAO
 	createVBOAndVAO();
@@ -72,7 +72,7 @@ HeightField::HeightField(const openglframework::vec3 &position,
 
 // Constructor
 HeightField::HeightField(const openglframework::vec3 &position, float mass,
-					   reactphysics3d::DynamicsWorld* dynamicsWorld)
+					   ephysics::DynamicsWorld* dynamicsWorld)
 		   : openglframework::Mesh(), mVBOVertices(GL_ARRAY_BUFFER),
 			 mVBONormals(GL_ARRAY_BUFFER), mVBOTextureCoords(GL_ARRAY_BUFFER),
 			 mVBOIndices(GL_ELEMENT_ARRAY_BUFFER) {
@@ -91,19 +91,19 @@ HeightField::HeightField(const openglframework::vec3 &position, float mass,
 
 	// Create the collision shape for the rigid body (convex mesh shape) and
 	// do not forget to delete it at the end
-	mHeightFieldShape = new rp3d::HeightFieldShape(NB_POINTS_WIDTH, NB_POINTS_LENGTH, m_minHeight, m_maxHeight,
-												   mHeightData, rp3d::HeightFieldShape::HEIGHT_FLOAT_TYPE);
+	mHeightFieldShape = new ephysics::HeightFieldShape(NB_POINTS_WIDTH, NB_POINTS_LENGTH, m_minHeight, m_maxHeight,
+												   mHeightData, ephysics::HeightFieldShape::HEIGHT_FLOAT_TYPE);
 
 	// Initial position and orientation of the rigid body
-	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-	rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-	rp3d::etk::Transform3D transform(initPosition, initOrientation);
+	ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+	ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+	ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 	// Create a rigid body corresponding to the sphere in the dynamics world
-	rp3d::RigidBody* body = dynamicsWorld->createRigidBody(transform);
+	ephysics::RigidBody* body = dynamicsWorld->createRigidBody(transform);
 
 	// Add a collision shape to the body and specify the mass of the collision shape
-	m_proxyShape = body->addCollisionShape(mHeightFieldShape, rp3d::etk::Transform3D::identity(), mass);
+	m_proxyShape = body->addCollisionShape(mHeightFieldShape, ephysics::etk::Transform3D::identity(), mass);
 
 	m_body = body;
 
@@ -321,7 +321,7 @@ void HeightField::createVBOAndVAO() {
 }
 
 // Reset the transform
-void HeightField::resetTransform(const rp3d::Transform& transform) {
+void HeightField::resetTransform(const ephysics::Transform& transform) {
 
 	// Reset the transform
 	m_body->setTransform(transform);
@@ -329,10 +329,10 @@ void HeightField::resetTransform(const rp3d::Transform& transform) {
 	m_body->setIsSleeping(false);
 
 	// Reset the velocity of the rigid body
-	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(m_body);
+	ephysics::RigidBody* rigidBody = dynamic_cast<ephysics::RigidBody*>(m_body);
 	if (rigidBody != NULL) {
-		rigidBody->setLinearVelocity(rp3d::vec3(0, 0, 0));
-		rigidBody->setAngularVelocity(rp3d::vec3(0, 0, 0));
+		rigidBody->setLinearVelocity(ephysics::vec3(0, 0, 0));
+		rigidBody->setAngularVelocity(ephysics::vec3(0, 0, 0));
 	}
 
 	updateetk::Transform3D(1.0f);
@@ -342,7 +342,7 @@ void HeightField::resetTransform(const rp3d::Transform& transform) {
 void HeightField::setScaling(const openglframework::vec3& scaling) {
 
 	// Scale the collision shape
-	m_proxyShape->setLocalScaling(rp3d::vec3(scaling.x(), scaling.y(), scaling.z()));
+	m_proxyShape->setLocalScaling(ephysics::vec3(scaling.x(), scaling.y(), scaling.z()));
 
 	// Scale the graphics object
 	m_scalingMatrix = openglframework::Matrix4(scaling.x(), 0, 0, 0,

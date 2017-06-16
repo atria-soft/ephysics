@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,9 +24,9 @@
 ********************************************************************************/
 
 // Librairies
-#include <test/TestSuite.h>
+#include <test/TestSuite.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 TestSuite::TestSuite(const std::string& name, std::ostream* outputStream)

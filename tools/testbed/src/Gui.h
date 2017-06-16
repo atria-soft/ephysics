@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -27,9 +27,9 @@
 #define	GUI_H
 
 // Libraries
-#include <nanogui/opengl.h>
-#include <nanogui/nanogui.h>
-#include <ephysics/openglframework.h>
+#include <nanogui/opengl.hpp>
+#include <nanogui/nanogui.hpp>
+#include <ephysics/openglframework.hpp>
 #include <sstream>
 #include <iomanip>
 

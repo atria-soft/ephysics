@@ -6,10 +6,10 @@
 
 // Libraries
 #include <complex>
-#include <ephysics/configuration.h>
-#include <ephysics/collision/shapes/ConvexMeshShape.h>
+#include <ephysics/configuration.hpp>
+#include <ephysics/collision/shapes/ConvexMeshShape.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor to initialize with an array of 3D vertices.
 /// This method creates an int32_ternal copy of the input vertices.

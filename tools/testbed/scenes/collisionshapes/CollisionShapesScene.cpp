@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/CollisionShapesScene.h>
+#include <ephysics/CollisionShapesScene.hpp>
 
 // Namespaces
 using namespace openglframework;
@@ -43,10 +43,10 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 	setScenePosition(center, SCENE_RADIUS);
 
 	// Gravity vector in the dynamics world
-	rp3d::vec3 gravity(0, -9.81, 0);
+	ephysics::vec3 gravity(0, -9.81, 0);
 
 	// Create the dynamics world for the physics simulation
-	mDynamicsWorld = new rp3d::DynamicsWorld(gravity);
+	mDynamicsWorld = new ephysics::DynamicsWorld(gravity);
 
 	// Set the number of iterations of the constraint solver
 	mDynamicsWorld->setNbIterationsVelocitySolver(15);
@@ -69,8 +69,8 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 		dumbbell->setSleepingColor(mRedColorDemo);
 
 		// Change the material properties of the rigid body
-		rp3d::Material& material = dumbbell->getRigidBody()->getMaterial();
-		material.setBounciness(rp3d::float(0.2));
+		ephysics::Material& material = dumbbell->getRigidBody()->getMaterial();
+		material.setBounciness(ephysics::float(0.2));
 
 		// Add the mesh the list of dumbbells in the scene
 		mDumbbells.push_back(dumbbell);
@@ -93,8 +93,8 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 		box->setSleepingColor(mRedColorDemo);
 
 		// Change the material properties of the rigid body
-		rp3d::Material& material = box->getRigidBody()->getMaterial();
-		material.setBounciness(rp3d::float(0.2));
+		ephysics::Material& material = box->getRigidBody()->getMaterial();
+		material.setBounciness(ephysics::float(0.2));
 
 		// Add the sphere the list of sphere in the scene
 		mBoxes.push_back(box);
@@ -121,8 +121,8 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 		sphere->setSleepingColor(mRedColorDemo);
 
 		// Change the material properties of the rigid body
-		rp3d::Material& material = sphere->getRigidBody()->getMaterial();
-		material.setBounciness(rp3d::float(0.2));
+		ephysics::Material& material = sphere->getRigidBody()->getMaterial();
+		material.setBounciness(ephysics::float(0.2));
 
 		// Add the sphere the list of sphere in the scene
 		mSpheres.push_back(sphere);
@@ -149,8 +149,8 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 		cone->setSleepingColor(mRedColorDemo);
 
 		// Change the material properties of the rigid body
-		rp3d::Material& material = cone->getRigidBody()->getMaterial();
-		material.setBounciness(rp3d::float(0.2));
+		ephysics::Material& material = cone->getRigidBody()->getMaterial();
+		material.setBounciness(ephysics::float(0.2));
 
 		// Add the cone the list of sphere in the scene
 		mCones.push_back(cone);
@@ -177,8 +177,8 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 		cylinder->setSleepingColor(mRedColorDemo);
 
 		// Change the material properties of the rigid body
-		rp3d::Material& material = cylinder->getRigidBody()->getMaterial();
-		material.setBounciness(rp3d::float(0.2));
+		ephysics::Material& material = cylinder->getRigidBody()->getMaterial();
+		material.setBounciness(ephysics::float(0.2));
 
 		// Add the cylinder the list of sphere in the scene
 		mCylinders.push_back(cylinder);
@@ -204,8 +204,8 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 		capsule->setSleepingColor(mRedColorDemo);
 
 		// Change the material properties of the rigid body
-		rp3d::Material& material = capsule->getRigidBody()->getMaterial();
-		material.setBounciness(rp3d::float(0.2));
+		ephysics::Material& material = capsule->getRigidBody()->getMaterial();
+		material.setBounciness(ephysics::float(0.2));
 
 		// Add the cylinder the list of sphere in the scene
 		mCapsules.push_back(capsule);
@@ -228,8 +228,8 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 		mesh->setSleepingColor(mRedColorDemo);
 
 		// Change the material properties of the rigid body
-		rp3d::Material& material = mesh->getRigidBody()->getMaterial();
-		material.setBounciness(rp3d::float(0.2));
+		ephysics::Material& material = mesh->getRigidBody()->getMaterial();
+		material.setBounciness(ephysics::float(0.2));
 
 		// Add the mesh the list of sphere in the scene
 		mConvexMeshes.push_back(mesh);
@@ -245,38 +245,38 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 	mFloor->setSleepingColor(mGreyColorDemo);
 
 	// The floor must be a static rigid body
-	mFloor->getRigidBody()->setType(rp3d::STATIC);
+	mFloor->getRigidBody()->setType(ephysics::STATIC);
 
 	// Change the material properties of the rigid body
-	rp3d::Material& material = mFloor->getRigidBody()->getMaterial();
-	material.setBounciness(rp3d::float(0.2));
+	ephysics::Material& material = mFloor->getRigidBody()->getMaterial();
+	material.setBounciness(ephysics::float(0.2));
 
 	// ---------- Create the triangular mesh ---------- //
 
 	/*
 	// Position
 	openglframework::vec3 position(0, 0, 0);
-	rp3d::float mass = 1.0;
+	ephysics::float mass = 1.0;
 
 	// Create a convex mesh and a corresponding rigid in the dynamics world
 	mConcaveMesh = new ConcaveMesh(position, mass, mDynamicsWorld, meshFolderPath);
 
 	// Set the mesh as beeing static
-	mConcaveMesh->getRigidBody()->setType(rp3d::STATIC);
+	mConcaveMesh->getRigidBody()->setType(ephysics::STATIC);
 
 	// Set the box color
 	mConcaveMesh->setColor(mDemoColors[0]);
 	mConcaveMesh->setSleepingColor(mRedColorDemo);
 
 	// Change the material properties of the rigid body
-	rp3d::Material& material = mConcaveMesh->getRigidBody()->getMaterial();
-	material.setBounciness(rp3d::float(0.2));
+	ephysics::Material& material = mConcaveMesh->getRigidBody()->getMaterial();
+	material.setBounciness(ephysics::float(0.2));
 	material.setFrictionCoefficient(0.1);
 	*/
 
 	// Get the physics engine parameters
 	mEngineSettings.isGravityEnabled = mDynamicsWorld->isGravityEnabled();
-	rp3d::vec3 gravityVector = mDynamicsWorld->getGravity();
+	ephysics::vec3 gravityVector = mDynamicsWorld->getGravity();
 	mEngineSettings.gravity = openglframework::vec3(gravityVector.x(), gravityVector.y(), gravityVector.z());
 	mEngineSettings.isSleepingEnabled = mDynamicsWorld->isSleepingEnabled();
 	mEngineSettings.sleepLinearVelocity = mDynamicsWorld->getSleepLinearVelocity();
@@ -380,7 +380,7 @@ void CollisionShapesScene::updatePhysics() {
 
 	// Update the physics engine parameters
 	mDynamicsWorld->setIsGratityEnabled(mEngineSettings.isGravityEnabled);
-	rp3d::vec3 gravity(mEngineSettings.gravity.x(), mEngineSettings.gravity.y(),
+	ephysics::vec3 gravity(mEngineSettings.gravity.x(), mEngineSettings.gravity.y(),
 									 mEngineSettings.gravity.z());
 	mDynamicsWorld->setGravity(gravity);
 	mDynamicsWorld->enableSleeping(mEngineSettings.isSleepingEnabled);
@@ -522,9 +522,9 @@ void CollisionShapesScene::reset() {
 										  radius * sin(angle));
 
 		// Initial position and orientation of the rigid body
-		rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-		rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-		rp3d::etk::Transform3D transform(initPosition, initOrientation);
+		ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+		ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+		ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 		// Reset the transform
 		mDumbbells[i]->resetTransform(transform);
@@ -540,9 +540,9 @@ void CollisionShapesScene::reset() {
 										  radius * sin(angle));
 
 		// Initial position and orientation of the rigid body
-		rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-		rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-		rp3d::etk::Transform3D transform(initPosition, initOrientation);
+		ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+		ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+		ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 		// Reset the transform
 		mBoxes[i]->resetTransform(transform);
@@ -558,9 +558,9 @@ void CollisionShapesScene::reset() {
 										  radius * sin(angle));
 
 		// Initial position and orientation of the rigid body
-		rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-		rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-		rp3d::etk::Transform3D transform(initPosition, initOrientation);
+		ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+		ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+		ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 		// Reset the transform
 		mSpheres[i]->resetTransform(transform);
@@ -576,9 +576,9 @@ void CollisionShapesScene::reset() {
 										  radius * sin(angle));
 
 		// Initial position and orientation of the rigid body
-		rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-		rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-		rp3d::etk::Transform3D transform(initPosition, initOrientation);
+		ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+		ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+		ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 		// Reset the transform
 		mCones[i]->resetTransform(transform);
@@ -594,9 +594,9 @@ void CollisionShapesScene::reset() {
 										  radius * sin(angle));
 
 		// Initial position and orientation of the rigid body
-		rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-		rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-		rp3d::etk::Transform3D transform(initPosition, initOrientation);
+		ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+		ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+		ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 		// Reset the transform
 		mCylinders[i]->resetTransform(transform);
@@ -612,9 +612,9 @@ void CollisionShapesScene::reset() {
 										  radius * sin(angle));
 
 		// Initial position and orientation of the rigid body
-		rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-		rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-		rp3d::etk::Transform3D transform(initPosition, initOrientation);
+		ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+		ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+		ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 		// Reset the transform
 		mCapsules[i]->resetTransform(transform);
@@ -630,9 +630,9 @@ void CollisionShapesScene::reset() {
 										  radius * sin(angle));
 
 		// Initial position and orientation of the rigid body
-		rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-		rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-		rp3d::etk::Transform3D transform(initPosition, initOrientation);
+		ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+		ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+		ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 		// Reset the transform
 		mConvexMeshes[i]->resetTransform(transform);

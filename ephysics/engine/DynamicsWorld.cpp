@@ -5,14 +5,14 @@
  */
 
 // Libraries
-#include <ephysics/engine/DynamicsWorld.h>
-#include <ephysics/constraint/BallAndSocketJoint.h>
-#include <ephysics/constraint/SliderJoint.h>
-#include <ephysics/constraint/HingeJoint.h>
-#include <ephysics/constraint/FixedJoint.h>
+#include <ephysics/engine/DynamicsWorld.hpp>
+#include <ephysics/constraint/BallAndSocketJoint.hpp>
+#include <ephysics/constraint/SliderJoint.hpp>
+#include <ephysics/constraint/HingeJoint.hpp>
+#include <ephysics/constraint/FixedJoint.hpp>
 
 // Namespaces
-using namespace reactphysics3d;
+using namespace ephysics;
 using namespace std;
 
 // Constructor
@@ -432,7 +432,7 @@ RigidBody* DynamicsWorld::createRigidBody(const etk::Transform3D& transform) {
 	bodyindex bodyID = computeNextAvailableBodyID();
 
 	// Largest index cannot be used (it is used for invalid index)
-	assert(bodyID < std::numeric_limits<reactphysics3d::bodyindex>::max());
+	assert(bodyID < std::numeric_limits<ephysics::bodyindex>::max());
 
 	// Create the rigid body
 	RigidBody* rigidBody = new (m_memoryAllocator.allocate(sizeof(RigidBody))) RigidBody(transform,

@@ -7,9 +7,9 @@
 
 // Libraries
 #include <iostream>
-#include <ephysics/collision/ContactManifold.h>
+#include <ephysics/collision/ContactManifold.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 ContactManifold::ContactManifold(ProxyShape* shape1, ProxyShape* shape2,

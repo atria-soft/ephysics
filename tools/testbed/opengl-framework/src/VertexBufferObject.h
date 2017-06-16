@@ -27,7 +27,7 @@
 #define VERTEX_BUFFER_OBJECT_H
 
 // Libraries
-#include <nanogui/opengl.h>
+#include <nanogui/opengl.hpp>
 #include <cassert>
 #include <iostream>
 

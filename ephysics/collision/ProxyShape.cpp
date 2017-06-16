@@ -5,9 +5,9 @@
  */
 
 // Libraries
-#include <ephysics/collision/ProxyShape.h>
+#include <ephysics/collision/ProxyShape.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 /**

@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/VertexArrayObject.h>
+#include <ephysics/VertexArrayObject.hpp>
 
 using namespace openglframework;
 

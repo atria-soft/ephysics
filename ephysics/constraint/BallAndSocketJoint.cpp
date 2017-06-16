@@ -5,10 +5,10 @@
  */
 
 // Libraries
-#include <ephysics/constraint/BallAndSocketJoint.h>
-#include <ephysics/engine/ConstraintSolver.h>
+#include <ephysics/constraint/BallAndSocketJoint.hpp>
+#include <ephysics/engine/ConstraintSolver.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Static variables definition
 const float BallAndSocketJoint::BETA = float(0.2);

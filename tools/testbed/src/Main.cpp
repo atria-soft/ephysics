@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,8 +24,8 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/TestbedApplication.h>
-#include <ephysics/nanogui/nanogui.h>
+#include <ephysics/TestbedApplication.hpp>
+#include <ephysics/nanogui/nanogui.hpp>
 
 using namespace nanogui;
 

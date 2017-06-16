@@ -5,15 +5,15 @@
  */
 
 // Libraries
-#include <ephysics/mathematics/mathematics_functions.h>
+#include <ephysics/mathematics/mathematics_functions.hpp>
 #include <etk/math/Vector3D.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 /// Compute the barycentric coordinates u, v, w of a point p inside the triangle (a, b, c)
 /// This method uses the technique described in the book Real-Time collision detection by
 /// Christer Ericson.
-void reactphysics3d::computeBarycentricCoordinatesInTriangle(const vec3& a, const vec3& b, const vec3& c,
+void ephysics::computeBarycentricCoordinatesInTriangle(const vec3& a, const vec3& b, const vec3& c,
 											 const vec3& p, float& u, float& v, float& w) {
 	const vec3 v0 = b - a;
 	const vec3 v1 = c - a;
@@ -32,7 +32,7 @@ void reactphysics3d::computeBarycentricCoordinatesInTriangle(const vec3& a, cons
 }
 
 // Clamp a vector such that it is no longer than a given maximum length
-vec3 reactphysics3d::clamp(const vec3& vector, float maxLength) {
+vec3 ephysics::clamp(const vec3& vector, float maxLength) {
 	if (vector.length2() > maxLength * maxLength) {
 		return vector.safeNormalized() * maxLength;
 	}

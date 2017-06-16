@@ -5,10 +5,10 @@
  */
 
 // Libraries
-#include <ephysics/constraint/FixedJoint.h>
-#include <ephysics/engine/ConstraintSolver.h>
+#include <ephysics/constraint/FixedJoint.hpp>
+#include <ephysics/engine/ConstraintSolver.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Static variables definition
 const float FixedJoint::BETA = float(0.2);

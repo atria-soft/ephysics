@@ -7,9 +7,9 @@
 #ifdef IS_PROFILING_ACTIVE
 
 // Libraries
-#include <ephysics/Profiler.h>
+#include <ephysics/Profiler.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Initialization of static variables
 ProfileNode Profiler::m_rootNode("Root", NULL);

@@ -1,14 +1,14 @@
-[![Travis Build Status](https://travis-ci.org/DanielChappuis/reactphysics3d.svg?branch=master)](https://travis-ci.org/DanielChappuis/reactphysics3d)
+[![Travis Build Status](https://travis-ci.org/DanielChappuis/ephysics.svg?branch=master)](https://travis-ci.org/DanielChappuis/ephysics)
 
 ## ReactPhysics3D
 
 ReactPhysics3D is an open source C++ physics engine library that can be used in 3D simulations and games.
 
-Website : [http://www.reactphysics3d.com](http://www.reactphysics3d.com)
+Website : [http://www.ephysics.com](http://www.ephysics.com)
 
 Author : Daniel Chappuis
 
-<img src="https://raw.githubusercontent.com/DanielChappuis/reactphysics3d/master/documentation/UserManual/images/testbed.png" alt="Drawing" height="400" />
+<img src="https://raw.githubusercontent.com/DanielChappuis/ephysics/master/documentation/UserManual/images/testbed.png" alt="Drawing" height="400" />
 
 ## Features
 
@@ -38,7 +38,7 @@ The ReactPhysics3D library is released under the open-source BSD 3 clauses licen
 
 ## Documentation
 
-You can find the User Manual and the Doxygen API Documentation [here](http://www.reactphysics3d.com/documentation.html)
+You can find the User Manual and the Doxygen API Documentation [here](http://www.ephysics.com/documentation.html)
 
 ## Branches
 
@@ -48,4 +48,4 @@ your application, it is recommended to checkout the "master" branch.
 
 ## Issues
 
-If you find any issue with the library, you can report it on the issue tracker [here](https://github.com/DanielChappuis/reactphysics3d/issues).
+If you find any issue with the library, you can report it on the issue tracker [here](https://github.com/DanielChappuis/ephysics/issues).

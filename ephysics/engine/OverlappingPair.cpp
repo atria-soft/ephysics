@@ -5,9 +5,9 @@
  */
 
 // Libraries
-#include <ephysics/engine/OverlappingPair.h>
+#include <ephysics/engine/OverlappingPair.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 
 // Constructor

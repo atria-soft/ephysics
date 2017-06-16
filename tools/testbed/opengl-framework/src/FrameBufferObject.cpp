@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/FrameBufferObject.h>
+#include <ephysics/FrameBufferObject.hpp>
 #include <iostream>
 
 using namespace openglframework;

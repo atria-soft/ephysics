@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/Mesh.h>
+#include <ephysics/Mesh.hpp>
 
 // Namespaces
 using namespace openglframework;

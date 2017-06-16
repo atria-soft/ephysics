@@ -5,11 +5,11 @@
  */
 
 // Libraries
-#include <ephysics/body/Body.h>
-#include <ephysics/collision/shapes/CollisionShape.h>
+#include <ephysics/body/Body.hpp>
+#include <ephysics/collision/shapes/CollisionShape.hpp>
 
 // We want to use the ReactPhysics3D namespace
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 /**

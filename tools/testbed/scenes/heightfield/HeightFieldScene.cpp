@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/HeightFieldScene.h>
+#include <ephysics/HeightFieldScene.hpp>
 
 // Namespaces
 using namespace openglframework;
@@ -40,10 +40,10 @@ HeightFieldScene::HeightFieldScene(const std::string& name) : SceneDemo(name, SC
 	setScenePosition(center, SCENE_RADIUS);
 
 	// Gravity vector in the dynamics world
-	rp3d::vec3 gravity(0, rp3d::float(-9.81), 0);
+	ephysics::vec3 gravity(0, ephysics::float(-9.81), 0);
 
 	// Create the dynamics world for the physics simulation
-	mDynamicsWorld = new rp3d::DynamicsWorld(gravity);
+	mDynamicsWorld = new ephysics::DynamicsWorld(gravity);
 
 	// Set the number of iterations of the constraint solver
 	mDynamicsWorld->setNbIterationsVelocitySolver(15);
@@ -64,34 +64,34 @@ HeightFieldScene::HeightFieldScene(const std::string& name) : SceneDemo(name, SC
 		mBoxes[i]->setSleepingColor(mRedColorDemo);
 
 		// Change the material properties of the rigid body
-		rp3d::Material& boxMaterial = mBoxes[i]->getRigidBody()->getMaterial();
-		boxMaterial.setBounciness(rp3d::float(0.2));
+		ephysics::Material& boxMaterial = mBoxes[i]->getRigidBody()->getMaterial();
+		boxMaterial.setBounciness(ephysics::float(0.2));
 	}
 
 	// ---------- Create the height field ---------- //
 
 	// Position
 	openglframework::vec3 position(0, 0, 0);
-	rp3d::float mass = 1.0;
+	ephysics::float mass = 1.0;
 
 	// Create a convex mesh and a corresponding rigid in the dynamics world
 	mHeightField = new HeightField(position, mass, mDynamicsWorld);
 
 	// Set the mesh as beeing static
-	mHeightField->getRigidBody()->setType(rp3d::STATIC);
+	mHeightField->getRigidBody()->setType(ephysics::STATIC);
 
 	// Set the color
 	mHeightField->setColor(mGreyColorDemo);
 	mHeightField->setSleepingColor(mGreyColorDemo);
 
 	// Change the material properties of the rigid body
-	rp3d::Material& material = mHeightField->getRigidBody()->getMaterial();
-	material.setBounciness(rp3d::float(0.2));
+	ephysics::Material& material = mHeightField->getRigidBody()->getMaterial();
+	material.setBounciness(ephysics::float(0.2));
 	material.setFrictionCoefficient(0.1);
 
 	// Get the physics engine parameters
 	mEngineSettings.isGravityEnabled = mDynamicsWorld->isGravityEnabled();
-	rp3d::vec3 gravityVector = mDynamicsWorld->getGravity();
+	ephysics::vec3 gravityVector = mDynamicsWorld->getGravity();
 	mEngineSettings.gravity = openglframework::vec3(gravityVector.x(), gravityVector.y(), gravityVector.z());
 	mEngineSettings.isSleepingEnabled = mDynamicsWorld->isSleepingEnabled();
 	mEngineSettings.sleepLinearVelocity = mDynamicsWorld->getSleepLinearVelocity();
@@ -126,7 +126,7 @@ void HeightFieldScene::updatePhysics() {
 
 	// Update the physics engine parameters
 	mDynamicsWorld->setIsGratityEnabled(mEngineSettings.isGravityEnabled);
-	rp3d::vec3 gravity(mEngineSettings.gravity.x(), mEngineSettings.gravity.y(),
+	ephysics::vec3 gravity(mEngineSettings.gravity.x(), mEngineSettings.gravity.y(),
 									 mEngineSettings.gravity.z());
 	mDynamicsWorld->setGravity(gravity);
 	mDynamicsWorld->enableSleeping(mEngineSettings.isSleepingEnabled);
@@ -173,14 +173,14 @@ void HeightFieldScene::renderSinglePass(Shader& shader, const openglframework::M
 void HeightFieldScene::reset() {
 
 	// Reset the transform
-	rp3d::etk::Transform3D transform(rp3d::vec3(0, 0, 0), rp3d::etk::Quaternion::identity());
+	ephysics::etk::Transform3D transform(ephysics::vec3(0, 0, 0), rp3d::etk::Quaternion::identity());
 	mHeightField->resetTransform(transform);
 
 	float heightFieldWidth = 10.0f;
 	float stepDist = heightFieldWidth / (NB_BOXES + 1);
 	for (int32_t i=0; i<NB_BOXES; i++) {
-		rp3d::vec3 boxPosition(-heightFieldWidth * 0.5f + i * stepDist , 14 + 6.0f * i, -heightFieldWidth * 0.5f + i * stepDist);
-		rp3d::etk::Transform3D boxTransform(boxPosition, rp3d::etk::Quaternion::identity());
+		ephysics::vec3 boxPosition(-heightFieldWidth * 0.5f + i * stepDist , 14 + 6.0f * i, -heightFieldWidth * 0.5f + i * stepDist);
+		ephysics::etk::Transform3D boxTransform(boxPosition, ephysics::etk::Quaternion::identity());
 		mBoxes[i]->resetTransform(boxTransform);
 	}
 }

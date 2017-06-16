@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -27,7 +27,7 @@
 #define VISUAL_CONTACT_POINT_H
 
 // Libraries
-#include <ephysics/openglframework.h>
+#include <ephysics/openglframework.hpp>
 
 const float VISUAL_CONTACT_POINT_RADIUS = 0.2f;
 

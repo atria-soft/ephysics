@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/Cylinder.h>
+#include <ephysics/Cylinder.hpp>
 
 openglframework::VertexBufferObject Cylinder::mVBOVertices(GL_ARRAY_BUFFER);
 openglframework::VertexBufferObject Cylinder::mVBONormals(GL_ARRAY_BUFFER);
@@ -35,7 +35,7 @@ int32_t Cylinder::totalNbCylinders = 0;
 
 // Constructor
 Cylinder::Cylinder(float radius, float height, const openglframework::vec3& position,
-				   reactphysics3d::CollisionWorld* world,
+				   ephysics::CollisionWorld* world,
 				   const std::string& meshFolderPath)
 	 : openglframework::Mesh(), mRadius(radius), mHeight(height) {
 
@@ -56,12 +56,12 @@ Cylinder::Cylinder(float radius, float height, const openglframework::vec3& posi
 
 	// Create the collision shape for the rigid body (cylinder shape) and do not
 	// forget to delete it at the end
-	mCylinderShape = new rp3d::CylinderShape(mRadius, mHeight);
+	mCylinderShape = new ephysics::CylinderShape(mRadius, mHeight);
 
 	// Initial position and orientation of the rigid body
-	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-	rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-	rp3d::etk::Transform3D transform(initPosition, initOrientation);
+	ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+	ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+	ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 	mPreviousetk::Transform3D = transform;
 
@@ -69,7 +69,7 @@ Cylinder::Cylinder(float radius, float height, const openglframework::vec3& posi
 	m_body = world->createCollisionBody(transform);
 
 	// Add a collision shape to the body and specify the mass of the shape
-	m_proxyShape = m_body->addCollisionShape(mCylinderShape, rp3d::etk::Transform3D::identity());
+	m_proxyShape = m_body->addCollisionShape(mCylinderShape, ephysics::etk::Transform3D::identity());
 
 	m_transformMatrix = m_transformMatrix * m_scalingMatrix;
 
@@ -83,7 +83,7 @@ Cylinder::Cylinder(float radius, float height, const openglframework::vec3& posi
 
 // Constructor
 Cylinder::Cylinder(float radius, float height, const openglframework::vec3& position,
-		   float mass, reactphysics3d::DynamicsWorld* dynamicsWorld,
+		   float mass, ephysics::DynamicsWorld* dynamicsWorld,
 				   const std::string& meshFolderPath)
 	 : openglframework::Mesh(), mRadius(radius), mHeight(height) {
 
@@ -104,18 +104,18 @@ Cylinder::Cylinder(float radius, float height, const openglframework::vec3& posi
 
 	// Create the collision shape for the rigid body (cylinder shape) and do
 	// not forget to delete it at the end
-	mCylinderShape = new rp3d::CylinderShape(mRadius, mHeight);
+	mCylinderShape = new ephysics::CylinderShape(mRadius, mHeight);
 
 	// Initial position and orientation of the rigid body
-	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-	rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-	rp3d::etk::Transform3D transform(initPosition, initOrientation);
+	ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+	ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+	ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 	// Create a rigid body corresponding to the cylinder in the dynamics world
-	rp3d::RigidBody* body = dynamicsWorld->createRigidBody(transform);
+	ephysics::RigidBody* body = dynamicsWorld->createRigidBody(transform);
 
 	// Add a collision shape to the body and specify the mass of the shape
-	m_proxyShape = body->addCollisionShape(mCylinderShape, rp3d::etk::Transform3D::identity(), mass);
+	m_proxyShape = body->addCollisionShape(mCylinderShape, ephysics::etk::Transform3D::identity(), mass);
 
 	m_transformMatrix = m_transformMatrix * m_scalingMatrix;
 
@@ -263,7 +263,7 @@ void Cylinder::createVBOAndVAO() {
 }
 
 // Reset the transform
-void Cylinder::resetTransform(const rp3d::Transform& transform) {
+void Cylinder::resetTransform(const ephysics::Transform& transform) {
 
 	// Reset the transform
 	m_body->setTransform(transform);
@@ -271,10 +271,10 @@ void Cylinder::resetTransform(const rp3d::Transform& transform) {
 	m_body->setIsSleeping(false);
 
 	// Reset the velocity of the rigid body
-	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(m_body);
+	ephysics::RigidBody* rigidBody = dynamic_cast<ephysics::RigidBody*>(m_body);
 	if (rigidBody != NULL) {
-		rigidBody->setLinearVelocity(rp3d::vec3(0, 0, 0));
-		rigidBody->setAngularVelocity(rp3d::vec3(0, 0, 0));
+		rigidBody->setLinearVelocity(ephysics::vec3(0, 0, 0));
+		rigidBody->setAngularVelocity(ephysics::vec3(0, 0, 0));
 	}
 
 	updateetk::Transform3D(1.0f);
@@ -284,7 +284,7 @@ void Cylinder::resetTransform(const rp3d::Transform& transform) {
 void Cylinder::setScaling(const openglframework::vec3& scaling) {
 
 	// Scale the collision shape
-	m_proxyShape->setLocalScaling(rp3d::vec3(scaling.x(), scaling.y(), scaling.z()));
+	m_proxyShape->setLocalScaling(ephysics::vec3(scaling.x(), scaling.y(), scaling.z()));
 
 	// Scale the graphics object
 	m_scalingMatrix = openglframework::Matrix4(mRadius * scaling.x(), 0, 0, 0,

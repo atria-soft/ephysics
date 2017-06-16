@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/Dumbbell.h>
+#include <ephysics/Dumbbell.hpp>
 
 openglframework::VertexBufferObject Dumbbell::mVBOVertices(GL_ARRAY_BUFFER);
 openglframework::VertexBufferObject Dumbbell::mVBONormals(GL_ARRAY_BUFFER);
@@ -35,7 +35,7 @@ int32_t Dumbbell::totalNbDumbbells = 0;
 
 // Constructor
 Dumbbell::Dumbbell(const openglframework::vec3 &position,
-				   reactphysics3d::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath)
+				   ephysics::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath)
 		 : openglframework::Mesh() {
 
 	// Load the mesh from a file
@@ -55,37 +55,37 @@ Dumbbell::Dumbbell(const openglframework::vec3 &position,
 	// Create a sphere collision shape for the two ends of the dumbbell
 	// ReactPhysics3D will clone this object to create an int32_ternal one. Therefore,
 	// it is OK if this object is destroyed right after calling RigidBody::addCollisionShape()
-	const rp3d::float radiusSphere = rp3d::float(1.5);
-	const rp3d::float massSphere = rp3d::float(2.0);
-	mSphereShape = new rp3d::SphereShape(radiusSphere);
+	const ephysics::float radiusSphere = ephysics::float(1.5);
+	const ephysics::float massSphere = ephysics::float(2.0);
+	mSphereShape = new ephysics::SphereShape(radiusSphere);
 
 	// Create a cylinder collision shape for the middle of the dumbbell
 	// ReactPhysics3D will clone this object to create an int32_ternal one. Therefore,
 	// it is OK if this object is destroyed right after calling RigidBody::addCollisionShape()
-	const rp3d::float radiusCylinder = rp3d::0.5f;
-	const rp3d::float heightCylinder = rp3d::float(8.0);
-	const rp3d::float massCylinder = rp3d::1.0f;
-	mCylinderShape = new rp3d::CylinderShape(radiusCylinder, heightCylinder);
+	const ephysics::float radiusCylinder = ephysics::0.5f;
+	const ephysics::float heightCylinder = ephysics::float(8.0);
+	const ephysics::float massCylinder = ephysics::1.0f;
+	mCylinderShape = new ephysics::CylinderShape(radiusCylinder, heightCylinder);
 
 	// Initial position and orientation of the rigid body
-	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-	rp3d::float angleAroundX = 0;//rp3d::PI / 2;
-	rp3d::etk::Quaternion initOrientation(angleAroundX, 0, 0);
-	rp3d::etk::Transform3D transform_body(initPosition, initOrientation);
+	ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+	ephysics::float angleAroundX = 0;//ephysics::PI / 2;
+	ephysics::etk::Quaternion initOrientation(angleAroundX, 0, 0);
+	ephysics::etk::Transform3D transform_body(initPosition, initOrientation);
 
 	mPreviousetk::Transform3D = transform_body;
 
 	// Initial transform of the first sphere collision shape of the dumbbell (in local-space)
-	rp3d::etk::Transform3D transformSphereShape1(rp3d::vec3(0, mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
+	ephysics::etk::Transform3D transformSphereShape1(ephysics::vec3(0, mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
 
 	// Initial transform of the second sphere collision shape of the dumbell (in local-space)
-	rp3d::etk::Transform3D transformSphereShape2(rp3d::vec3(0, -mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
+	ephysics::etk::Transform3D transformSphereShape2(ephysics::vec3(0, -mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
 
 	// Initial transform of the cylinder collision shape of the dumbell (in local-space)
-	rp3d::etk::Transform3D transformCylinderShape(rp3d::vec3(0, 0, 0), rp3d::etk::Quaternion::identity());
+	ephysics::etk::Transform3D transformCylinderShape(ephysics::vec3(0, 0, 0), rp3d::etk::Quaternion::identity());
 
 	// Create a rigid body corresponding to the dumbbell in the dynamics world
-	rp3d::RigidBody* body = dynamicsWorld->createRigidBody(transform_body);
+	ephysics::RigidBody* body = dynamicsWorld->createRigidBody(transform_body);
 
 	// Add the three collision shapes to the body and specify the mass and transform of the shapes
 	m_proxyShapeSphere1 = body->addCollisionShape(mSphereShape, transformSphereShape1, massSphere);
@@ -106,7 +106,7 @@ Dumbbell::Dumbbell(const openglframework::vec3 &position,
 
 // Constructor
 Dumbbell::Dumbbell(const openglframework::vec3 &position,
-				   reactphysics3d::CollisionWorld* world, const std::string& meshFolderPath)
+				   ephysics::CollisionWorld* world, const std::string& meshFolderPath)
 		 : openglframework::Mesh() {
 
 	// Load the mesh from a file
@@ -126,30 +126,30 @@ Dumbbell::Dumbbell(const openglframework::vec3 &position,
 	// Create a sphere collision shape for the two ends of the dumbbell
 	// ReactPhysics3D will clone this object to create an int32_ternal one. Therefore,
 	// it is OK if this object is destroyed right after calling RigidBody::addCollisionShape()
-	const rp3d::float radiusSphere = rp3d::float(1.5);
-	mSphereShape = new rp3d::SphereShape(radiusSphere);
+	const ephysics::float radiusSphere = ephysics::float(1.5);
+	mSphereShape = new ephysics::SphereShape(radiusSphere);
 
 	// Create a cylinder collision shape for the middle of the dumbbell
 	// ReactPhysics3D will clone this object to create an int32_ternal one. Therefore,
 	// it is OK if this object is destroyed right after calling RigidBody::addCollisionShape()
-	const rp3d::float radiusCylinder = rp3d::0.5f;
-	const rp3d::float heightCylinder = rp3d::float(8.0);
-	mCylinderShape = new rp3d::CylinderShape(radiusCylinder, heightCylinder);
+	const ephysics::float radiusCylinder = ephysics::0.5f;
+	const ephysics::float heightCylinder = ephysics::float(8.0);
+	mCylinderShape = new ephysics::CylinderShape(radiusCylinder, heightCylinder);
 
 	// Initial position and orientation of the rigid body
-	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-	rp3d::float angleAroundX = 0;//rp3d::PI / 2;
-	rp3d::etk::Quaternion initOrientation(angleAroundX, 0, 0);
-	rp3d::etk::Transform3D transform_body(initPosition, initOrientation);
+	ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+	ephysics::float angleAroundX = 0;//ephysics::PI / 2;
+	ephysics::etk::Quaternion initOrientation(angleAroundX, 0, 0);
+	ephysics::etk::Transform3D transform_body(initPosition, initOrientation);
 
 	// Initial transform of the first sphere collision shape of the dumbbell (in local-space)
-	rp3d::etk::Transform3D transformSphereShape1(rp3d::vec3(0, mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
+	ephysics::etk::Transform3D transformSphereShape1(ephysics::vec3(0, mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
 
 	// Initial transform of the second sphere collision shape of the dumbell (in local-space)
-	rp3d::etk::Transform3D transformSphereShape2(rp3d::vec3(0, -mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
+	ephysics::etk::Transform3D transformSphereShape2(ephysics::vec3(0, -mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
 
 	// Initial transform of the cylinder collision shape of the dumbell (in local-space)
-	rp3d::etk::Transform3D transformCylinderShape(rp3d::vec3(0, 0, 0), rp3d::etk::Quaternion::identity());
+	ephysics::etk::Transform3D transformCylinderShape(ephysics::vec3(0, 0, 0), rp3d::etk::Quaternion::identity());
 
 	// Create a rigid body corresponding to the dumbbell in the dynamics world
 	m_body = world->createCollisionBody(transform_body);
@@ -304,7 +304,7 @@ void Dumbbell::createVBOAndVAO() {
 }
 
 // Reset the transform
-void Dumbbell::resetTransform(const rp3d::Transform& transform) {
+void Dumbbell::resetTransform(const ephysics::Transform& transform) {
 
 	// Reset the transform
 	m_body->setTransform(transform);
@@ -312,10 +312,10 @@ void Dumbbell::resetTransform(const rp3d::Transform& transform) {
 	m_body->setIsSleeping(false);
 
 	// Reset the velocity of the rigid body
-	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(m_body);
+	ephysics::RigidBody* rigidBody = dynamic_cast<ephysics::RigidBody*>(m_body);
 	if (rigidBody != NULL) {
-		rigidBody->setLinearVelocity(rp3d::vec3(0, 0, 0));
-		rigidBody->setAngularVelocity(rp3d::vec3(0, 0, 0));
+		rigidBody->setLinearVelocity(ephysics::vec3(0, 0, 0));
+		rigidBody->setAngularVelocity(ephysics::vec3(0, 0, 0));
 	}
 
 	updateetk::Transform3D(1.0f);
@@ -325,7 +325,7 @@ void Dumbbell::resetTransform(const rp3d::Transform& transform) {
 void Dumbbell::setScaling(const openglframework::vec3& scaling) {
 
 	// Scale the collision shape
-	rp3d::vec3 newScaling(scaling.x(), scaling.y(), scaling.z());
+	ephysics::vec3 newScaling(scaling.x(), scaling.y(), scaling.z());
 	m_proxyShapeCylinder->setLocalScaling(newScaling);
 	m_proxyShapeSphere1->setLocalScaling(newScaling);
 	m_proxyShapeSphere2->setLocalScaling(newScaling);
@@ -333,10 +333,10 @@ void Dumbbell::setScaling(const openglframework::vec3& scaling) {
 	mDistanceBetweenSphere = (mDistanceBetweenSphere / m_scalingMatrix.getValue(1, 1)) * scaling.y();
 
 	// Initial transform of the first sphere collision shape of the dumbbell (in local-space)
-	rp3d::etk::Transform3D transformSphereShape1(rp3d::vec3(0, mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
+	ephysics::etk::Transform3D transformSphereShape1(ephysics::vec3(0, mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
 
 	// Initial transform of the second sphere collision shape of the dumbell (in local-space)
-	rp3d::etk::Transform3D transformSphereShape2(rp3d::vec3(0, -mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
+	ephysics::etk::Transform3D transformSphereShape2(ephysics::vec3(0, -mDistanceBetweenSphere / 2.0f, 0), rp3d::etk::Quaternion::identity());
 
 	m_proxyShapeSphere1->setLocalToBodyTransform(transformSphereShape1);
 	m_proxyShapeSphere2->setLocalToBodyTransform(transformSphereShape2);

@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/Capsule.h>
+#include <ephysics/Capsule.hpp>
 
 openglframework::VertexBufferObject Capsule::mVBOVertices(GL_ARRAY_BUFFER);
 openglframework::VertexBufferObject Capsule::mVBONormals(GL_ARRAY_BUFFER);
@@ -35,7 +35,7 @@ int32_t Capsule::totalNbCapsules = 0;
 
 // Constructor
 Capsule::Capsule(float radius, float height, const openglframework::vec3& position,
-				 reactphysics3d::CollisionWorld* world,
+				 ephysics::CollisionWorld* world,
 				 const std::string& meshFolderPath)
 		: openglframework::Mesh(), mRadius(radius), mHeight(height) {
 
@@ -57,12 +57,12 @@ Capsule::Capsule(float radius, float height, const openglframework::vec3& positi
 	// Create the collision shape for the rigid body (sphere shape)
 	// ReactPhysics3D will clone this object to create an int32_ternal one. Therefore,
 	// it is OK if this object is destroyed right after calling RigidBody::addCollisionShape()
-	mCapsuleShape = new rp3d::CapsuleShape(mRadius, mHeight);
+	mCapsuleShape = new ephysics::CapsuleShape(mRadius, mHeight);
 
 	// Initial position and orientation of the rigid body
-	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-	rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-	rp3d::etk::Transform3D transform(initPosition, initOrientation);
+	ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+	ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+	ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 	mPreviousetk::Transform3D = transform;
 
@@ -70,7 +70,7 @@ Capsule::Capsule(float radius, float height, const openglframework::vec3& positi
 	m_body = world->createCollisionBody(transform);
 
 	// Add a collision shape to the body and specify the mass of the shape
-	m_proxyShape = m_body->addCollisionShape(mCapsuleShape, rp3d::etk::Transform3D::identity());
+	m_proxyShape = m_body->addCollisionShape(mCapsuleShape, ephysics::etk::Transform3D::identity());
 
 	m_transformMatrix = m_transformMatrix * m_scalingMatrix;
 
@@ -84,7 +84,7 @@ Capsule::Capsule(float radius, float height, const openglframework::vec3& positi
 
 // Constructor
 Capsule::Capsule(float radius, float height, const openglframework::vec3& position,
-				 float mass, reactphysics3d::DynamicsWorld* dynamicsWorld,
+				 float mass, ephysics::DynamicsWorld* dynamicsWorld,
 				 const std::string& meshFolderPath)
 		: openglframework::Mesh(), mRadius(radius), mHeight(height) {
 
@@ -106,18 +106,18 @@ Capsule::Capsule(float radius, float height, const openglframework::vec3& positi
 	// Create the collision shape for the rigid body (sphere shape)
 	// ReactPhysics3D will clone this object to create an int32_ternal one. Therefore,
 	// it is OK if this object is destroyed right after calling RigidBody::addCollisionShape()
-	mCapsuleShape = new rp3d::CapsuleShape(mRadius, mHeight);
+	mCapsuleShape = new ephysics::CapsuleShape(mRadius, mHeight);
 
 	// Initial position and orientation of the rigid body
-	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-	rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-	rp3d::etk::Transform3D transform(initPosition, initOrientation);
+	ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+	ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+	ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 	// Create a rigid body corresponding in the dynamics world
-	rp3d::RigidBody* body = dynamicsWorld->createRigidBody(transform);
+	ephysics::RigidBody* body = dynamicsWorld->createRigidBody(transform);
 
 	// Add a collision shape to the body and specify the mass of the shape
-	m_proxyShape = body->addCollisionShape(mCapsuleShape, rp3d::etk::Transform3D::identity(), mass);
+	m_proxyShape = body->addCollisionShape(mCapsuleShape, ephysics::etk::Transform3D::identity(), mass);
 
 	m_body = body;
 
@@ -265,7 +265,7 @@ void Capsule::createVBOAndVAO() {
 }
 
 // Reset the transform
-void Capsule::resetTransform(const rp3d::Transform& transform) {
+void Capsule::resetTransform(const ephysics::Transform& transform) {
 
 	// Reset the transform
 	m_body->setTransform(transform);
@@ -273,10 +273,10 @@ void Capsule::resetTransform(const rp3d::Transform& transform) {
 	m_body->setIsSleeping(false);
 
 	// Reset the velocity of the rigid body
-	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(m_body);
+	ephysics::RigidBody* rigidBody = dynamic_cast<ephysics::RigidBody*>(m_body);
 	if (rigidBody != NULL) {
-		rigidBody->setLinearVelocity(rp3d::vec3(0, 0, 0));
-		rigidBody->setAngularVelocity(rp3d::vec3(0, 0, 0));
+		rigidBody->setLinearVelocity(ephysics::vec3(0, 0, 0));
+		rigidBody->setAngularVelocity(ephysics::vec3(0, 0, 0));
 	}
 
 	updateetk::Transform3D(1.0f);
@@ -286,7 +286,7 @@ void Capsule::resetTransform(const rp3d::Transform& transform) {
 void Capsule::setScaling(const openglframework::vec3& scaling) {
 
 	// Scale the collision shape
-	m_proxyShape->setLocalScaling(rp3d::vec3(scaling.x(), scaling.y(), scaling.z()));
+	m_proxyShape->setLocalScaling(ephysics::vec3(scaling.x(), scaling.y(), scaling.z()));
 
 	// Scale the graphics object
 	m_scalingMatrix = openglframework::Matrix4(mRadius * scaling.x(), 0, 0, 0,

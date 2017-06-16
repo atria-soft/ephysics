@@ -5,11 +5,11 @@
  */
 
 // Libraries
-#include <ephysics/engine/CollisionWorld.h>
+#include <ephysics/engine/CollisionWorld.hpp>
 #include <algorithm>
 
 // Namespaces
-using namespace reactphysics3d;
+using namespace ephysics;
 using namespace std;
 
 // Constructor
@@ -44,7 +44,7 @@ CollisionBody* CollisionWorld::createCollisionBody(const etk::Transform3D& trans
 	bodyindex bodyID = computeNextAvailableBodyID();
 
 	// Largest index cannot be used (it is used for invalid index)
-	assert(bodyID < std::numeric_limits<reactphysics3d::bodyindex>::max());
+	assert(bodyID < std::numeric_limits<ephysics::bodyindex>::max());
 
 	// Create the collision body
 	CollisionBody* collisionBody = new (m_memoryAllocator.allocate(sizeof(CollisionBody)))

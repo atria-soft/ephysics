@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -29,20 +29,20 @@
 // Libraries
 #define _USE_MATH_DEFINES
 #include <cmath>
-#include <ephysics/openglframework.h>
-#include <ephysics/reactphysics3d.h>
-#include <ephysics/SceneDemo.h>
-#include <ephysics/Sphere.h>
-#include <ephysics/Box.h>
-#include <ephysics/Cone.h>
-#include <ephysics/Cylinder.h>
-#include <ephysics/Capsule.h>
-#include <ephysics/Line.h>
-#include <ephysics/ConvexMesh.h>
-#include <ephysics/ConcaveMesh.h>
-#include <ephysics/HeightField.h>
-#include <ephysics/Dumbbell.h>
-#include <ephysics/VisualContactPoint.h>
+#include <ephysics/openglframework.hpp>
+#include <ephysics/ephysics.hpp>
+#include <ephysics/SceneDemo.hpp>
+#include <ephysics/Sphere.hpp>
+#include <ephysics/Box.hpp>
+#include <ephysics/Cone.hpp>
+#include <ephysics/Cylinder.hpp>
+#include <ephysics/Capsule.hpp>
+#include <ephysics/Line.hpp>
+#include <ephysics/ConvexMesh.hpp>
+#include <ephysics/ConcaveMesh.hpp>
+#include <ephysics/HeightField.hpp>
+#include <ephysics/Dumbbell.hpp>
+#include <ephysics/VisualContactPoint.hpp>
 
 namespace raycastscene {
 
@@ -62,7 +62,7 @@ const float RAY_LENGTH = 30.0f;
 const int32_t NB_BODIES = 9;
 
 // Raycast manager
-class RaycastManager : public rp3d::RaycastCallback {
+class RaycastManager : public ephysics::RaycastCallback {
 
 	private:
 
@@ -83,13 +83,13 @@ class RaycastManager : public rp3d::RaycastCallback {
 
 		}
 
-		virtual rp3d::float notifyRaycastHit(const rp3d::RaycastInfo& raycastInfo) {
-			rp3d::vec3 hitPos = raycastInfo.worldPoint;
+		virtual ephysics::float notifyRaycastHit(const ephysics::RaycastInfo& raycastInfo) {
+			ephysics::vec3 hitPos = raycastInfo.worldPoint;
 			openglframework::vec3 position(hitPos.x(), hitPos.y(), hitPos.z());
 			mHitPoints.push_back(ContactPoint(position));
 
 			// Create a line to display the normal at hit point
-			rp3d::vec3 n = raycastInfo.worldNormal;
+			ephysics::vec3 n = raycastInfo.worldNormal;
 			openglframework::vec3 normal(n.x(), n.y(), n.z());
 			Line* normalLine = new Line(position, position + normal);
 			mNormals.push_back(normalLine);
@@ -150,7 +150,7 @@ class RaycastScene : public SceneDemo {
 		HeightField* mHeightField;
 
 		/// Collision world used for the physics simulation
-		rp3d::CollisionWorld* mCollisionWorld;
+		ephysics::CollisionWorld* mCollisionWorld;
 
 		/// All the points to render the lines
 		std::vector<openglframework::vec3> mLinePoints;

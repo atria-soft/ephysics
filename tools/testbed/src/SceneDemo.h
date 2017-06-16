@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -27,9 +27,9 @@
 #define SCENEDEMO_H
 
 // Libraries
-#include <ephysics/Scene.h>
-#include <ephysics/VisualContactPoint.h>
-#include <ephysics/reactphysics3d.h>
+#include <ephysics/Scene.hpp>
+#include <ephysics/VisualContactPoint.hpp>
+#include <ephysics/ephysics.hpp>
 
 // Constants
 const int32_t SHADOWMAP_WIDTH = 2048;
@@ -136,7 +136,7 @@ class SceneDemo : public Scene {
 		void virtual setIsShadowMappingEnabled(bool isShadowMappingEnabled);
 
 		/// Return all the contact points of the scene
-		std::vector<ContactPoint> computeContactPointsOfWorld(const rp3d::DynamicsWorld* world) const;
+		std::vector<ContactPoint> computeContactPointsOfWorld(const ephysics::DynamicsWorld* world) const;
 };
 
 // Enabled/Disable the shadow mapping

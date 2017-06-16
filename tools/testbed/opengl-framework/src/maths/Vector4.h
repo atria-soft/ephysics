@@ -27,8 +27,8 @@
 #define VECTOR4_H
 
 // Libraries
-#include <math.h>
-#include <assert.h>
+#include <math.hpp>
+#include <assert.hpp>
 
 namespace openglframework {
 

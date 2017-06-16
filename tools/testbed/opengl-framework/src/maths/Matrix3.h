@@ -29,7 +29,7 @@
 // Libraries
 #include <cassert>
 #include <limits>
-#include <ephysics/vec3.h>
+#include <ephysics/vec3.hpp>
 
 namespace openglframework {
 

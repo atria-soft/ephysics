@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,8 +24,8 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/Scene.h>
-#include <GLFW/glfw3.h>
+#include <ephysics/Scene.hpp>
+#include <GLFW/glfw3.hpp>
 
 using namespace openglframework;
 

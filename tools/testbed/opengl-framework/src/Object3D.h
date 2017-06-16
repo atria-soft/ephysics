@@ -27,8 +27,8 @@
 #define OBJECT3D_H
 
 // Libraries
-#include <ephysics/maths/vec3.h>
-#include <ephysics/maths/Matrix4.h>
+#include <ephysics/maths/vec3.hpp>
+#include <ephysics/maths/Matrix4.hpp>
 
 namespace openglframework {
 

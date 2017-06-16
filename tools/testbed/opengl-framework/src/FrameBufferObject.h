@@ -27,8 +27,8 @@
 #define FRAME_BUFFER_OBJECT_H
 
 // Libraries
-#include <ephysics/definitions.h>
-#include <nanogui/opengl.h>
+#include <ephysics/definitions.hpp>
+#include <nanogui/opengl.hpp>
 #include <cassert>
 #include <iostream>
 

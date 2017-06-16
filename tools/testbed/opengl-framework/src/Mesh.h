@@ -30,12 +30,12 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <ephysics/definitions.h>
-#include <ephysics/maths/vec2.h>
-#include <ephysics/maths/vec3.h>
-#include <ephysics/maths/Color.h>
-#include <ephysics/Texture2D.h>
-#include <ephysics/Object3D.h>
+#include <ephysics/definitions.hpp>
+#include <ephysics/maths/vec2.hpp>
+#include <ephysics/maths/vec3.hpp>
+#include <ephysics/maths/Color.hpp>
+#include <ephysics/Texture2D.hpp>
+#include <ephysics/Object3D.hpp>
 
 namespace openglframework {
 

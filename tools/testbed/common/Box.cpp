@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/Box.h>
+#include <ephysics/Box.hpp>
 
 // Macros
 #define MEMBER_OFFSET(s,m) ((char *)NULL + (offsetof(s,m)))
@@ -112,7 +112,7 @@ GLfloat Box::mCubeNormals[108] = {
 };
 // Constructor
 Box::Box(const openglframework::vec3& size, const openglframework::vec3 &position,
-		 reactphysics3d::CollisionWorld* world)
+		 ephysics::CollisionWorld* world)
 	: openglframework::Object3D() {
 
 	// Initialize the size of the box
@@ -132,12 +132,12 @@ Box::Box(const openglframework::vec3& size, const openglframework::vec3 &positio
 	// Create the collision shape for the rigid body (box shape)
 	// ReactPhysics3D will clone this object to create an int32_ternal one. Therefore,
 	// it is OK if this object is destroyed right after calling RigidBody::addCollisionShape()
-	mBoxShape = new rp3d::BoxShape(rp3d::vec3(mSize[0], mSize[1], mSize[2]));
+	mBoxShape = new ephysics::BoxShape(ephysics::vec3(mSize[0], mSize[1], mSize[2]));
 
 	// Initial position and orientation of the rigid body
-	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-	rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-	rp3d::etk::Transform3D transform(initPosition, initOrientation);
+	ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+	ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+	ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 	mPreviousetk::Transform3D = transform;
 
@@ -145,7 +145,7 @@ Box::Box(const openglframework::vec3& size, const openglframework::vec3 &positio
 	m_body = world->createCollisionBody(transform);
 
 	// Add the collision shape to the body
-	m_proxyShape = m_body->addCollisionShape(mBoxShape, rp3d::etk::Transform3D::identity());
+	m_proxyShape = m_body->addCollisionShape(mBoxShape, ephysics::etk::Transform3D::identity());
 
 	// If the Vertex Buffer object has not been created yet
 	if (totalNbBoxes == 0) {
@@ -161,7 +161,7 @@ Box::Box(const openglframework::vec3& size, const openglframework::vec3 &positio
 
 // Constructor
 Box::Box(const openglframework::vec3& size, const openglframework::vec3& position,
-		 float mass, reactphysics3d::DynamicsWorld* world)
+		 float mass, ephysics::DynamicsWorld* world)
 	: openglframework::Object3D() {
 
 	// Initialize the size of the box
@@ -181,20 +181,20 @@ Box::Box(const openglframework::vec3& size, const openglframework::vec3& positio
 	// Create the collision shape for the rigid body (box shape)
 	// ReactPhysics3D will clone this object to create an int32_ternal one. Therefore,
 	// it is OK if this object is destroyed right after calling RigidBody::addCollisionShape()
-	mBoxShape = new rp3d::BoxShape(rp3d::vec3(mSize[0], mSize[1], mSize[2]));
+	mBoxShape = new ephysics::BoxShape(ephysics::vec3(mSize[0], mSize[1], mSize[2]));
 
 	// Initial position and orientation of the rigid body
-	rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-	rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-	rp3d::etk::Transform3D transform(initPosition, initOrientation);
+	ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+	ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+	ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 	mPreviousetk::Transform3D = transform;
 
 	// Create a rigid body in the dynamics world
-	rp3d::RigidBody* body = world->createRigidBody(transform);
+	ephysics::RigidBody* body = world->createRigidBody(transform);
 
 	// Add the collision shape to the body
-	m_proxyShape = body->addCollisionShape(mBoxShape, rp3d::etk::Transform3D::identity(), mass);
+	m_proxyShape = body->addCollisionShape(mBoxShape, ephysics::etk::Transform3D::identity(), mass);
 
 	m_body = body;
 
@@ -312,7 +312,7 @@ void Box::createVBOAndVAO() {
 }
 
 // Reset the transform
-void Box::resetTransform(const rp3d::Transform& transform) {
+void Box::resetTransform(const ephysics::Transform& transform) {
 
 	// Reset the transform
 	m_body->setTransform(transform);
@@ -320,10 +320,10 @@ void Box::resetTransform(const rp3d::Transform& transform) {
 	m_body->setIsSleeping(false);
 
 	// Reset the velocity of the rigid body
-	rp3d::RigidBody* rigidBody = dynamic_cast<rp3d::RigidBody*>(m_body);
+	ephysics::RigidBody* rigidBody = dynamic_cast<ephysics::RigidBody*>(m_body);
 	if (rigidBody != NULL) {
-		rigidBody->setLinearVelocity(rp3d::vec3(0, 0, 0));
-		rigidBody->setAngularVelocity(rp3d::vec3(0, 0, 0));
+		rigidBody->setLinearVelocity(ephysics::vec3(0, 0, 0));
+		rigidBody->setAngularVelocity(ephysics::vec3(0, 0, 0));
 	}
 
 	updateetk::Transform3D(1.0f);
@@ -333,7 +333,7 @@ void Box::resetTransform(const rp3d::Transform& transform) {
 void Box::setScaling(const openglframework::vec3& scaling) {
 
 	// Scale the collision shape
-	m_proxyShape->setLocalScaling(rp3d::vec3(scaling.x(), scaling.y(), scaling.z()));
+	m_proxyShape->setLocalScaling(ephysics::vec3(scaling.x(), scaling.y(), scaling.z()));
 
 	// Scale the graphics object
 	m_scalingMatrix = openglframework::Matrix4(mSize[0] * scaling.x(), 0, 0, 0,

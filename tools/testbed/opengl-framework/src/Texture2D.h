@@ -29,8 +29,8 @@
 // Libraries
 #include <string>
 #include <cassert>
-#include <ephysics/definitions.h>
-#include <nanogui/opengl.h>
+#include <ephysics/definitions.hpp>
+#include <nanogui/opengl.hpp>
 
 namespace openglframework {
 

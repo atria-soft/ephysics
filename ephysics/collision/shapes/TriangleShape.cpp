@@ -5,13 +5,13 @@
  */
 
 // Libraries
-#include <ephysics/collision/shapes/TriangleShape.h>
-#include <ephysics/collision/ProxyShape.h>
-#include <ephysics/engine/Profiler.h>
-#include <ephysics/configuration.h>
+#include <ephysics/collision/shapes/TriangleShape.hpp>
+#include <ephysics/collision/ProxyShape.hpp>
+#include <ephysics/engine/Profiler.hpp>
+#include <ephysics/configuration.hpp>
 #include <cassert>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 /**

@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -27,11 +27,11 @@
 #define TEST_VECTOR2_H
 
 // Libraries
-#include <test/Test.h>
+#include <test/Test.hpp>
 #include <etk/math/Vector2D.hpp>
 
 /// Reactphysics3D namespace
-namespace reactphysics3d {
+namespace ephysics {
 
 // Class Testvec2
 /**

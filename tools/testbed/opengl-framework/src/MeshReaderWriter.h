@@ -29,7 +29,7 @@
 // Libraries
 #include <string>
 #include <stdexcept>
-#include <ephysics/Mesh.h>
+#include <ephysics/Mesh.hpp>
 
 namespace openglframework {
 

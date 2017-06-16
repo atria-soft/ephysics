@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -27,10 +27,10 @@
 #define CUBES_SCENE_H
 
 // Libraries
-#include <ephysics/openglframework.h>
-#include <ephysics/reactphysics3d.h>
-#include <ephysics/Box.h>
-#include <ephysics/SceneDemo.h>
+#include <ephysics/openglframework.hpp>
+#include <ephysics/ephysics.hpp>
+#include <ephysics/Box.hpp>
+#include <ephysics/SceneDemo.hpp>
 
 namespace cubesscene {
 	// Constants
@@ -48,7 +48,7 @@ namespace cubesscene {
 			/// Box for the floor
 			Box* mFloor;
 			/// Dynamics world used for the physics simulation
-			rp3d::DynamicsWorld* m_dynamicsWorld;
+			ephysics::DynamicsWorld* m_dynamicsWorld;
 		public:
 			/// Constructor
 			CubesScene(const std::string& name);

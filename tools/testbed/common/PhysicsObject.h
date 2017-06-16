@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -27,8 +27,8 @@
 #define PHYSICSOBJECT_H
 
 // Libraries
-#include <ephysics/openglframework.h>
-#include <ephysics/reactphysics3d.h>
+#include <ephysics/openglframework.hpp>
+#include <ephysics/ephysics.hpp>
 
 // Class PhysicsObject
 class PhysicsObject {
@@ -36,10 +36,10 @@ class PhysicsObject {
 	protected:
 
 		/// Body used to simulate the dynamics of the box
-		rp3d::CollisionBody* m_body;
+		ephysics::CollisionBody* m_body;
 
 		/// Previous transform of the body (for int32_terpolation)
-		rp3d::etk::Transform3D mPreviousTransform;
+		ephysics::etk::Transform3D mPreviousTransform;
 
 		/// Main color of the box
 		openglframework::Color mColor;
@@ -66,10 +66,10 @@ class PhysicsObject {
 		void setSleepingColor(const openglframework::Color& color);
 
 		/// Return a pointer to the collision body of the box
-		reactphysics3d::CollisionBody* getCollisionBody();
+		ephysics::CollisionBody* getCollisionBody();
 
 		/// Return a pointer to the rigid body of the box
-		reactphysics3d::RigidBody* getRigidBody();
+		ephysics::RigidBody* getRigidBody();
 
 		/// Set the scaling of the object
 		virtual void setScaling(const openglframework::vec3& scaling)=0;
@@ -86,13 +86,13 @@ inline void PhysicsObject::setSleepingColor(const openglframework::Color& color)
 }
 
 // Return a pointer to the collision body of the box
-inline rp3d::CollisionBody* PhysicsObject::getCollisionBody() {
+inline ephysics::CollisionBody* PhysicsObject::getCollisionBody() {
 	return m_body;
 }
 
 // Return a pointer to the rigid body of the box (NULL if it's not a rigid body)
-inline rp3d::RigidBody* PhysicsObject::getRigidBody() {
-	return dynamic_cast<rp3d::RigidBody*>(m_body);
+inline ephysics::RigidBody* PhysicsObject::getRigidBody() {
+	return dynamic_cast<ephysics::RigidBody*>(m_body);
 }
 
 #endif

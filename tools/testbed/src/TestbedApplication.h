@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -27,11 +27,11 @@
 #define	TESTBED_APPLICATION_H
 
 // Libraries
-#include <ephysics/openglframework.h>
-#include <ephysics/Gui.h>
-#include <ephysics/Scene.h>
-#include <ephysics/Timer.h>
-#include <GLFW/glfw3.h>
+#include <ephysics/openglframework.hpp>
+#include <ephysics/Gui.hpp>
+#include <ephysics/Scene.hpp>
+#include <ephysics/Timer.hpp>
+#include <GLFW/glfw3.hpp>
 
 using namespace nanogui;
 

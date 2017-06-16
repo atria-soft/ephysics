@@ -5,11 +5,11 @@
  */
 
 // Libraries
-#include <ephysics/collision/shapes/CylinderShape.h>
-#include <ephysics/collision/ProxyShape.h>
-#include <ephysics/configuration.h>
+#include <ephysics/collision/shapes/CylinderShape.hpp>
+#include <ephysics/collision/ProxyShape.hpp>
+#include <ephysics/configuration.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 /**

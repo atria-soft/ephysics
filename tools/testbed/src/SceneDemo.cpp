@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,8 +24,8 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/SceneDemo.h>
-#include <GLFW/glfw3.h>
+#include <ephysics/SceneDemo.hpp>
+#include <GLFW/glfw3.hpp>
 
 using namespace openglframework;
 
@@ -317,24 +317,24 @@ void SceneDemo::removeAllContactPoints() {
 }
 
 // Return all the contact points of the scene
-std::vector<ContactPoint> SceneDemo::computeContactPointsOfWorld(const rp3d::DynamicsWorld* world) const {
+std::vector<ContactPoint> SceneDemo::computeContactPointsOfWorld(const ephysics::DynamicsWorld* world) const {
 
 	std::vector<ContactPoint> contactPoints;
 
 	// Get the list of contact manifolds from the world
-	std::vector<const rp3d::ContactManifold*> manifolds = world->getContactsList();
+	std::vector<const ephysics::ContactManifold*> manifolds = world->getContactsList();
 
 	// For each contact manifold
-	std::vector<const rp3d::ContactManifold*>::const_iterator it;
+	std::vector<const ephysics::ContactManifold*>::const_iterator it;
 	for (it = manifolds.begin(); it != manifolds.end(); ++it) {
 
-		const rp3d::ContactManifold* manifold = *it;
+		const ephysics::ContactManifold* manifold = *it;
 
 		// For each contact point of the manifold
 		for (uint32_t i=0; i<manifold->getNbContactPoints(); i++) {
 
-			rp3d::ContactPoint* contactPoint = manifold->getContactPoint(i);
-			rp3d::vec3 point = contactPoint->getWorldPointOnBody1();
+			ephysics::ContactPoint* contactPoint = manifold->getContactPoint(i);
+			ephysics::vec3 point = contactPoint->getWorldPointOnBody1();
 			ContactPoint contact(openglframework::vec3(point.x(), point.y(), point.z()));
 			contactPoints.push_back(contact);
 		}

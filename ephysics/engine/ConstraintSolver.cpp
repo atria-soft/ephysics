@@ -5,10 +5,10 @@
  */
 
 // Libraries
-#include <ephysics/engine/ConstraintSolver.h>
-#include <ephysics/engine/Profiler.h>
+#include <ephysics/engine/ConstraintSolver.hpp>
+#include <ephysics/engine/Profiler.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 ConstraintSolver::ConstraintSolver(const std::map<RigidBody*, uint32_t>& mapBodyToVelocityIndex)

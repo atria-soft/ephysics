@@ -5,10 +5,10 @@
  */
 
 // Libraries
-#include <ephysics/collision/narrowphase/NarrowPhaseAlgorithm.h>
+#include <ephysics/collision/narrowphase/NarrowPhaseAlgorithm.hpp>
 
 // We want to use the ReactPhysics3D namespace
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 NarrowPhaseAlgorithm::NarrowPhaseAlgorithm()

@@ -28,12 +28,12 @@
 
 // Libraries
 #include <cmath>
-#include <assert.h>
+#include <assert.hpp>
 #include <iostream>
-#include <ephysics/vec3.h>
-#include <ephysics/Vector4.h>
-#include <ephysics/Matrix3.h>
-#include <ephysics/definitions.h>
+#include <ephysics/vec3.hpp>
+#include <ephysics/Vector4.hpp>
+#include <ephysics/Matrix3.hpp>
+#include <ephysics/definitions.hpp>
 
 namespace openglframework {
 

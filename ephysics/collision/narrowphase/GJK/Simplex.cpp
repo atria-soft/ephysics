@@ -5,11 +5,11 @@
  */
 
 // Libraries
-#include <ephysics/collision/narrowphase/GJK/Simplex.h>
+#include <ephysics/collision/narrowphase/GJK/Simplex.hpp>
 #include <cfloat>
 
 // We want to use the ReactPhysics3D namespace
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 Simplex::Simplex() : mBitsCurrentSimplex(0x0), mAllBits(0x0) {

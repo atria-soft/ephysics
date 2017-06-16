@@ -5,13 +5,13 @@
  */
 
 // Libraries
-#include <ephysics/collision/broadphase/DynamicAABBTree.h>
-#include <ephysics/collision/broadphase/BroadPhaseAlgorithm.h>
-#include <ephysics/memory/Stack.h>
-#include <ephysics/engine/Profiler.h>
+#include <ephysics/collision/broadphase/DynamicAABBTree.hpp>
+#include <ephysics/collision/broadphase/BroadPhaseAlgorithm.hpp>
+#include <ephysics/memory/Stack.hpp>
+#include <ephysics/engine/Profiler.hpp>
 #include <ephysics/debug.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Initialization of static variables
 const int32_t TreeNode::NULL_TREE_NODE = -1;

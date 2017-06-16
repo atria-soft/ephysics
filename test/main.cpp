@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,21 +24,21 @@
 ********************************************************************************/
 
 // Libraries
-#include <test/TestSuite.h>
-#include <test/tests/mathematics/Testvec2.h>
-#include <test/tests/mathematics/Testvec3.h>
-#include <test/tests/mathematics/Testetk::Transform3D.h>
-#include <test/tests/mathematics/Testetk::Quaternion.h>
-#include <test/tests/mathematics/Testetk::Matrix2x2.h>
-#include <test/tests/mathematics/Testetk::Matrix3x3.h>
-#include <test/tests/mathematics/TestMathematicsFunctions.h>
-#include <test/tests/collision/TestPointInside.h>
-#include <test/tests/collision/TestRaycast.h>
-#include <test/tests/collision/TestCollisionWorld.h>
-#include <test/tests/collision/TestAABB.h>
-#include <test/tests/collision/TestDynamicAABBTree.h>
+#include <test/TestSuite.hpp>
+#include <test/tests/mathematics/Testvec2.hpp>
+#include <test/tests/mathematics/Testvec3.hpp>
+#include <test/tests/mathematics/Testetk::Transform3D.hpp>
+#include <test/tests/mathematics/Testetk::Quaternion.hpp>
+#include <test/tests/mathematics/Testetk::Matrix2x2.hpp>
+#include <test/tests/mathematics/Testetk::Matrix3x3.hpp>
+#include <test/tests/mathematics/TestMathematicsFunctions.hpp>
+#include <test/tests/collision/TestPointInside.hpp>
+#include <test/tests/collision/TestRaycast.hpp>
+#include <test/tests/collision/TestCollisionWorld.hpp>
+#include <test/tests/collision/TestAABB.hpp>
+#include <test/tests/collision/TestDynamicAABBTree.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 int32_t main() {
 

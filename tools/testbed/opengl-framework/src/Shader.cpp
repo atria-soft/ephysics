@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/Shader.h>
+#include <ephysics/Shader.hpp>
 #include <cassert>
 #include <fstream>
 #include <iostream>

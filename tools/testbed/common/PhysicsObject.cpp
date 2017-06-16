@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/PhysicsObject.h>
+#include <ephysics/PhysicsObject.hpp>
 
 /// Constructor
 PhysicsObject::PhysicsObject() {
@@ -38,16 +38,16 @@ openglframework::Matrix4 PhysicsObject::computeetk::Transform3D(float int32_terp
 														const openglframework::Matrix4& scalingMatrix) {
 
 	// Get the transform of the rigid body
-	rp3d::etk::Transform3D transform = m_body->getTransform();
+	ephysics::etk::Transform3D transform = m_body->getTransform();
 
 	// Interpolate the transform between the previous one and the new one
-	rp3d::etk::Transform3D int32_terpolatedTransform = rp3d::Transform::int32_terpolateTransforms(mPreviousTransform,
+	ephysics::etk::Transform3D int32_terpolatedTransform = ephysics::Transform::int32_terpolateTransforms(mPreviousTransform,
 																				  transform,
 																				  int32_terpolationFactor);
 	mPreviousetk::Transform3D = transform;
 
 	// Compute the transform used for rendering the box
-	rp3d::float matrix[16];
+	ephysics::float matrix[16];
 	int32_terpolatedetk::Transform3D.getOpenGLMatrix(matrix);
 	openglframework::Matrix4 newMatrix(matrix[0], matrix[4], matrix[8], matrix[12],
 									   matrix[1], matrix[5], matrix[9], matrix[13],

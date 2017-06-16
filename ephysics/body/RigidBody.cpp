@@ -5,14 +5,14 @@
  */
 
 // Libraries
-#include <ephysics/body/RigidBody.h>
-#include <ephysics/constraint/Joint.h>
-#include <ephysics/collision/shapes/CollisionShape.h>
-#include <ephysics/engine/DynamicsWorld.h>
+#include <ephysics/body/RigidBody.hpp>
+#include <ephysics/constraint/Joint.hpp>
+#include <ephysics/collision/shapes/CollisionShape.hpp>
+#include <ephysics/engine/DynamicsWorld.hpp>
 #include <ephysics/debug.hpp>
 
 // We want to use the ReactPhysics3D namespace
-using namespace reactphysics3d;
+using namespace ephysics;
 
 
 RigidBody::RigidBody(const etk::Transform3D& transform, CollisionWorld& world, bodyindex id)

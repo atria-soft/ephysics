@@ -27,23 +27,23 @@
 #define OPENGL_FRAMEWORK_H
 
 // Libraries
-#include <ephysics/MeshReaderWriter.h>
-#include <ephysics/TextureReaderWriter.h>
-#include <ephysics/Camera.h>
-#include <ephysics/Light.h>
-#include <ephysics/Mesh.h>
-#include <ephysics/Shader.h>
-#include <ephysics/Texture2D.h>
-#include <ephysics/FrameBufferObject.h>
-#include <ephysics/VertexBufferObject.h>
-#include <ephysics/VertexArrayObject.h>
-#include <ephysics/Shader.h>
-#include <ephysics/maths/Color.h>
-#include <ephysics/maths/vec2.h>
-#include <ephysics/maths/vec3.h>
-#include <ephysics/maths/Vector4.h>
-#include <ephysics/maths/Matrix4.h>
-#include <ephysics/maths/Matrix3.h>
-#include <ephysics/definitions.h>
+#include <ephysics/MeshReaderWriter.hpp>
+#include <ephysics/TextureReaderWriter.hpp>
+#include <ephysics/Camera.hpp>
+#include <ephysics/Light.hpp>
+#include <ephysics/Mesh.hpp>
+#include <ephysics/Shader.hpp>
+#include <ephysics/Texture2D.hpp>
+#include <ephysics/FrameBufferObject.hpp>
+#include <ephysics/VertexBufferObject.hpp>
+#include <ephysics/VertexArrayObject.hpp>
+#include <ephysics/Shader.hpp>
+#include <ephysics/maths/Color.hpp>
+#include <ephysics/maths/vec2.hpp>
+#include <ephysics/maths/vec3.hpp>
+#include <ephysics/maths/Vector4.hpp>
+#include <ephysics/maths/Matrix4.hpp>
+#include <ephysics/maths/Matrix3.hpp>
+#include <ephysics/definitions.hpp>
 
 #endif

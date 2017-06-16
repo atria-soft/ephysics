@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -27,11 +27,11 @@
 #define HEIGHT_FIELD_SCENE_H
 
 // Libraries
-#include <ephysics/openglframework.h>
-#include <ephysics/reactphysics3d.h>
-#include <ephysics/Box.h>
-#include <ephysics/SceneDemo.h>
-#include <ephysics/HeightField.h>
+#include <ephysics/openglframework.hpp>
+#include <ephysics/ephysics.hpp>
+#include <ephysics/Box.hpp>
+#include <ephysics/SceneDemo.hpp>
+#include <ephysics/HeightField.hpp>
 
 namespace heightfieldscene {
 
@@ -53,7 +53,7 @@ class HeightFieldScene : public SceneDemo {
 		HeightField* mHeightField;
 
 		/// Dynamics world used for the physics simulation
-		rp3d::DynamicsWorld* mDynamicsWorld;
+		ephysics::DynamicsWorld* mDynamicsWorld;
 
 	public:
 

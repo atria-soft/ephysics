@@ -5,13 +5,13 @@
  */
 
 // Libraries
-#include <ephysics/engine/ContactSolver.h>
-#include <ephysics/engine/DynamicsWorld.h>
-#include <ephysics/body/RigidBody.h>
-#include <ephysics/engine/Profiler.h>
+#include <ephysics/engine/ContactSolver.hpp>
+#include <ephysics/engine/DynamicsWorld.hpp>
+#include <ephysics/body/RigidBody.hpp>
+#include <ephysics/engine/Profiler.hpp>
 #include <limits>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 using namespace std;
 
 // Constants initialization

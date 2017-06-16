@@ -1,4 +1,4 @@
-#include <ephysics/PerlinNoise.h>
+#include <ephysics/PerlinNoise.hpp>
 
 PerlinNoise::PerlinNoise()
 {

@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/VertexBufferObject.h>
+#include <ephysics/VertexBufferObject.hpp>
 
 using namespace openglframework;
 

@@ -5,18 +5,18 @@
  */
 
 // Libraries
-#include <ephysics/collision/narrowphase/GJK/GJKAlgorithm.h>
-#include <ephysics/collision/narrowphase/GJK/Simplex.h>
-#include <ephysics/constraint/ContactPoint.h>
-#include <ephysics/configuration.h>
-#include <ephysics/engine/Profiler.h>
+#include <ephysics/collision/narrowphase/GJK/GJKAlgorithm.hpp>
+#include <ephysics/collision/narrowphase/GJK/Simplex.hpp>
+#include <ephysics/constraint/ContactPoint.hpp>
+#include <ephysics/configuration.hpp>
+#include <ephysics/engine/Profiler.hpp>
 #include <algorithm>
 #include <cmath>
 #include <cfloat>
 #include <cassert>
 
 // We want to use the ReactPhysics3D namespace
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 GJKAlgorithm::GJKAlgorithm() : NarrowPhaseAlgorithm() {

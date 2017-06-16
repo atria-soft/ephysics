@@ -5,9 +5,9 @@
  */
 
 // Libraries
-#include <ephysics/engine/Material.h>
+#include <ephysics/engine/Material.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 Material::Material()

@@ -27,7 +27,7 @@
 #define TEXTURE_READER_WRITER_H
 
 // Libraries
-#include <ephysics/Texture2D.h>
+#include <ephysics/Texture2D.hpp>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>

@@ -5,9 +5,9 @@
  */
 
 // Libraries
-#include <ephysics/collision/TriangleVertexArray.h>
+#include <ephysics/collision/TriangleVertexArray.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 /// Note that your data will not be copied int32_to the TriangleVertexArray and

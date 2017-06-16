@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/Light.h>
+#include <ephysics/Light.hpp>
 
 // Namespaces
 using namespace openglframework;

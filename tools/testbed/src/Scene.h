@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -27,7 +27,7 @@
 #define SCENE_H
 
 // Libraries
-#include <ephysics/openglframework.h>
+#include <ephysics/openglframework.hpp>
 
 // Structure ContactPoint
 struct ContactPoint {

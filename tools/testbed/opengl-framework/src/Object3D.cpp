@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/Object3D.h>
+#include <ephysics/Object3D.hpp>
 
 // Namespaces
 using namespace openglframework;

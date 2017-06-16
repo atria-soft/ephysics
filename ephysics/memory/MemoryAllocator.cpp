@@ -5,11 +5,11 @@
  */
 
 // Libraries
-#include <ephysics/memory/MemoryAllocator.h>
+#include <ephysics/memory/MemoryAllocator.hpp>
 #include <cstdlib>
 #include <cassert>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Initialization of static variables
 bool MemoryAllocator::isMapSizeToHeadIndexInitialized = false;

@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -27,9 +27,9 @@
 #define HEIGHT_FIELD_H
 
 // Libraries
-#include <ephysics/openglframework.h>
-#include <ephysics/reactphysics3d.h>
-#include <ephysics/PhysicsObject.h>
+#include <ephysics/openglframework.hpp>
+#include <ephysics/ephysics.hpp>
+#include <ephysics/PhysicsObject.hpp>
 
 
 // Class HeightField
@@ -46,11 +46,11 @@ class HeightField : public openglframework::Mesh, public PhysicsObject {
 		float mHeightData[NB_POINTS_WIDTH * NB_POINTS_LENGTH];
 
 		/// Previous transform (for int32_terpolation)
-		rp3d::etk::Transform3D mPreviousTransform;
+		ephysics::etk::Transform3D mPreviousTransform;
 
 		/// Collision shape
-		rp3d::HeightFieldShape* mHeightFieldShape;
-		rp3d::ProxyShape* m_proxyShape;
+		ephysics::HeightFieldShape* mHeightFieldShape;
+		ephysics::ProxyShape* m_proxyShape;
 
 		/// Scaling matrix
 		openglframework::Matrix4 m_scalingMatrix;
@@ -90,11 +90,11 @@ class HeightField : public openglframework::Mesh, public PhysicsObject {
 
 		/// Constructor
 		HeightField(const openglframework::vec3& position,
-				   rp3d::CollisionWorld* world);
+				   ephysics::CollisionWorld* world);
 
 		/// Constructor
 		HeightField(const openglframework::vec3& position, float mass,
-				   rp3d::DynamicsWorld* dynamicsWorld);
+				   ephysics::DynamicsWorld* dynamicsWorld);
 
 		/// Destructor
 		~HeightField();
@@ -104,7 +104,7 @@ class HeightField : public openglframework::Mesh, public PhysicsObject {
 					const openglframework::Matrix4& worldToCameraMatrix);
 
 		/// Set the position of the box
-		void resetTransform(const rp3d::Transform& transform);
+		void resetTransform(const ephysics::Transform& transform);
 
 		/// Update the transform matrix of the object
 		virtual void updateetk::Transform3D(float int32_terpolationFactor);

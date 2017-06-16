@@ -24,11 +24,11 @@
 ********************************************************************************/
 
 // Librairies
-#include <ephysics/TextureReaderWriter.h>
+#include <ephysics/TextureReaderWriter.hpp>
 #include <string>
 #ifdef USE_JPEG_TEXTURE
-	#include <jpeglib.h>
-	#include <jerror.h>
+	#include <jpeglib.hpp>
+	#include <jerror.hpp>
 #endif
 
 using namespace openglframework;

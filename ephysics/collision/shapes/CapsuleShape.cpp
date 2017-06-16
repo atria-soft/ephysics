@@ -5,12 +5,12 @@
  */
 
 // Libraries
-#include <ephysics/collision/shapes/CapsuleShape.h>
-#include <ephysics/collision/ProxyShape.h>
-#include <ephysics/configuration.h>
+#include <ephysics/collision/shapes/CapsuleShape.hpp>
+#include <ephysics/collision/ProxyShape.hpp>
+#include <ephysics/configuration.hpp>
 #include <cassert>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 /**

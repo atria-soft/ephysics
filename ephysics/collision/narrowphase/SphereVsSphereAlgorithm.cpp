@@ -5,11 +5,11 @@
  */
 
 // Libraries
-#include <ephysics/collision/narrowphase/SphereVsSphereAlgorithm.h>
-#include <ephysics/collision/shapes/SphereShape.h>
+#include <ephysics/collision/narrowphase/SphereVsSphereAlgorithm.hpp>
+#include <ephysics/collision/shapes/SphereShape.hpp>
 
 // We want to use the ReactPhysics3D namespace
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 SphereVsSphereAlgorithm::SphereVsSphereAlgorithm() :

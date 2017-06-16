@@ -5,10 +5,10 @@
  */
 
 // Libraries
-#include <ephysics/collision/shapes/ConcaveMeshShape.h>
+#include <ephysics/collision/shapes/ConcaveMeshShape.hpp>
 #include <iostream>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 ConcaveMeshShape::ConcaveMeshShape(TriangleMesh* triangleMesh):

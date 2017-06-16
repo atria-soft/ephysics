@@ -5,10 +5,10 @@
  */
 
 // Libraries
-#include <ephysics/engine/Timer.h>
+#include <ephysics/engine/Timer.hpp>
 
 // We want to use the ReactPhysics3D namespace
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 Timer::Timer(double timeStep) : m_timeStep(timeStep), m_isRunning(false) {

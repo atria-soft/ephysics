@@ -5,10 +5,10 @@
  */
 
 // Libraries
-#include <ephysics/collision/narrowphase/EPA/TrianglesStore.h>
+#include <ephysics/collision/narrowphase/EPA/TrianglesStore.hpp>
 
 // We use the ReactPhysics3D namespace
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 TrianglesStore::TrianglesStore() : m_numberTriangles(0) {

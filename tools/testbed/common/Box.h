@@ -1,5 +1,5 @@
 /********************************************************************************
- * ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+ * ReactPhysics3D physics library, http://www.ephysics.com				 *
  * Copyright (c) 2010-2016 Daniel Chappuis									   *
  *********************************************************************************
  *																			   *
@@ -27,9 +27,9 @@
 #define BOX_H
 
 // Libraries
-#include <ephysics/openglframework.h>
-#include <ephysics/reactphysics3d.h>
-#include <ephysics/PhysicsObject.h>
+#include <ephysics/openglframework.hpp>
+#include <ephysics/ephysics.hpp>
+#include <ephysics/PhysicsObject.hpp>
 
 // Class Box
 class Box : public openglframework::Object3D, public PhysicsObject {
@@ -41,8 +41,8 @@ class Box : public openglframework::Object3D, public PhysicsObject {
 		/// Size of each side of the box
 		float mSize[3];
 
-		rp3d::BoxShape* mBoxShape;
-		rp3d::ProxyShape* m_proxyShape;
+		ephysics::BoxShape* mBoxShape;
+		ephysics::ProxyShape* m_proxyShape;
 
 		/// Scaling matrix (applied to a cube to obtain the correct box dimensions)
 		openglframework::Matrix4 m_scalingMatrix;
@@ -76,11 +76,11 @@ class Box : public openglframework::Object3D, public PhysicsObject {
 
 		/// Constructor
 		Box(const openglframework::vec3& size, const openglframework::vec3& position,
-				reactphysics3d::CollisionWorld* world);
+				ephysics::CollisionWorld* world);
 
 		/// Constructor
 		Box(const openglframework::vec3& size, const openglframework::vec3& position,
-				float mass, reactphysics3d::DynamicsWorld *world);
+				float mass, ephysics::DynamicsWorld *world);
 
 		/// Destructor
 		~Box();
@@ -89,7 +89,7 @@ class Box : public openglframework::Object3D, public PhysicsObject {
 		void render(openglframework::Shader& shader, const openglframework::Matrix4& worldToCameraMatrix);
 
 		/// Set the position of the box
-		void resetTransform(const rp3d::Transform& transform);
+		void resetTransform(const ephysics::Transform& transform);
 
 		/// Update the transform matrix of the object
 		virtual void updateetk::Transform3D(float int32_terpolationFactor);

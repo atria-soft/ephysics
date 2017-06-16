@@ -5,14 +5,14 @@
  */
 
 // Libraries
-#include <ephysics/collision/shapes/ConcaveShape.h>
-#include <ephysics/collision/shapes/TriangleShape.h>
-#include <ephysics/collision/narrowphase/ConcaveVsConvexAlgorithm.h>
-#include <ephysics/collision/CollisionDetection.h>
-#include <ephysics/engine/CollisionWorld.h>
+#include <ephysics/collision/shapes/ConcaveShape.hpp>
+#include <ephysics/collision/shapes/TriangleShape.hpp>
+#include <ephysics/collision/narrowphase/ConcaveVsConvexAlgorithm.hpp>
+#include <ephysics/collision/CollisionDetection.hpp>
+#include <ephysics/engine/CollisionWorld.hpp>
 #include <algorithm>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 ConcaveVsConvexAlgorithm::ConcaveVsConvexAlgorithm() {

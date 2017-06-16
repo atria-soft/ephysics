@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/ConcaveMeshScene.h>
+#include <ephysics/ConcaveMeshScene.hpp>
 
 // Namespaces
 using namespace openglframework;
@@ -43,10 +43,10 @@ ConcaveMeshScene::ConcaveMeshScene(const std::string& name)
 	setScenePosition(center, SCENE_RADIUS);
 
 	// Gravity vector in the dynamics world
-	rp3d::vec3 gravity(0, rp3d::float(-9.81), 0);
+	ephysics::vec3 gravity(0, ephysics::float(-9.81), 0);
 
 	// Create the dynamics world for the physics simulation
-	mDynamicsWorld = new rp3d::DynamicsWorld(gravity);
+	mDynamicsWorld = new ephysics::DynamicsWorld(gravity);
 
 	// Set the number of iterations of the constraint solver
 	mDynamicsWorld->setNbIterationsVelocitySolver(15);
@@ -68,8 +68,8 @@ ConcaveMeshScene::ConcaveMeshScene(const std::string& name)
 			mBoxes[i * NB_BOXES_Z + j]->setSleepingColor(mRedColorDemo);
 
 			// Change the material properties of the rigid body
-			rp3d::Material& boxMaterial = mBoxes[i * NB_BOXES_Z + j]->getRigidBody()->getMaterial();
-			boxMaterial.setBounciness(rp3d::float(0.2));
+			ephysics::Material& boxMaterial = mBoxes[i * NB_BOXES_Z + j]->getRigidBody()->getMaterial();
+			boxMaterial.setBounciness(ephysics::float(0.2));
 		}
 	}
 
@@ -77,26 +77,26 @@ ConcaveMeshScene::ConcaveMeshScene(const std::string& name)
 
 	// Position
 	openglframework::vec3 position(0, 0, 0);
-	rp3d::float mass = 1.0;
+	ephysics::float mass = 1.0;
 
 	// Create a convex mesh and a corresponding rigid in the dynamics world
 	mConcaveMesh = new ConcaveMesh(position, mass, mDynamicsWorld, meshFolderPath + "city.obj");
 
 	// Set the mesh as beeing static
-	mConcaveMesh->getRigidBody()->setType(rp3d::STATIC);
+	mConcaveMesh->getRigidBody()->setType(ephysics::STATIC);
 
 	// Set the box color
 	mConcaveMesh->setColor(mGreyColorDemo);
 	mConcaveMesh->setSleepingColor(mGreyColorDemo);
 
 	// Change the material properties of the rigid body
-	rp3d::Material& material = mConcaveMesh->getRigidBody()->getMaterial();
-	material.setBounciness(rp3d::float(0.2));
+	ephysics::Material& material = mConcaveMesh->getRigidBody()->getMaterial();
+	material.setBounciness(ephysics::float(0.2));
 	material.setFrictionCoefficient(0.1);
 
 	// Get the physics engine parameters
 	mEngineSettings.isGravityEnabled = mDynamicsWorld->isGravityEnabled();
-	rp3d::vec3 gravityVector = mDynamicsWorld->getGravity();
+	ephysics::vec3 gravityVector = mDynamicsWorld->getGravity();
 	mEngineSettings.gravity = openglframework::vec3(gravityVector.x(), gravityVector.y(), gravityVector.z());
 	mEngineSettings.isSleepingEnabled = mDynamicsWorld->isSleepingEnabled();
 	mEngineSettings.sleepLinearVelocity = mDynamicsWorld->getSleepLinearVelocity();
@@ -130,7 +130,7 @@ void ConcaveMeshScene::updatePhysics() {
 
 	// Update the physics engine parameters
 	mDynamicsWorld->setIsGratityEnabled(mEngineSettings.isGravityEnabled);
-	rp3d::vec3 gravity(mEngineSettings.gravity.x(), mEngineSettings.gravity.y(),
+	ephysics::vec3 gravity(mEngineSettings.gravity.x(), mEngineSettings.gravity.y(),
 									 mEngineSettings.gravity.z());
 	mDynamicsWorld->setGravity(gravity);
 	mDynamicsWorld->enableSleeping(mEngineSettings.isSleepingEnabled);
@@ -177,16 +177,16 @@ void ConcaveMeshScene::renderSinglePass(Shader& shader, const openglframework::M
 void ConcaveMeshScene::reset() {
 
 	// Reset the transform
-	rp3d::etk::Transform3D transform(rp3d::vec3(0.0f,0.0f,0.0f)(), rp3d::etk::Quaternion::identity());
+	ephysics::etk::Transform3D transform(ephysics::vec3(0.0f,0.0f,0.0f)(), rp3d::etk::Quaternion::identity());
 	mConcaveMesh->resetTransform(transform);
 
 	for (int32_t i=0; i<NB_BOXES_X; i++) {
 		for (int32_t j=0; j<NB_BOXES_Z; j++) {
 
 			// Position
-			rp3d::vec3 boxPosition(-NB_BOXES_X * BOX_SIZE * BOXES_SPACE / 2 + i * BOX_SIZE * BOXES_SPACE, 30, -NB_BOXES_Z * BOX_SIZE * BOXES_SPACE / 2 + j * BOX_SIZE * BOXES_SPACE);
+			ephysics::vec3 boxPosition(-NB_BOXES_X * BOX_SIZE * BOXES_SPACE / 2 + i * BOX_SIZE * BOXES_SPACE, 30, -NB_BOXES_Z * BOX_SIZE * BOXES_SPACE / 2 + j * BOX_SIZE * BOXES_SPACE);
 
-			rp3d::etk::Transform3D boxTransform(boxPosition, rp3d::etk::Quaternion::identity());
+			ephysics::etk::Transform3D boxTransform(boxPosition, ephysics::etk::Quaternion::identity());
 			mBoxes[i * NB_BOXES_Z + j]->resetTransform(boxTransform);
 		}
 	}

@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/CubesScene.h>
+#include <ephysics/CubesScene.hpp>
 
 // Namespaces
 using namespace openglframework;
@@ -41,10 +41,10 @@ CubesScene::CubesScene(const std::string& name)
 	setScenePosition(center, SCENE_RADIUS);
 
 	// Gravity vector in the dynamics world
-	rp3d::vec3 gravity(0, rp3d::float(-9.81), 0);
+	ephysics::vec3 gravity(0, ephysics::float(-9.81), 0);
 
 	// Create the dynamics world for the physics simulation
-	m_dynamicsWorld = new rp3d::DynamicsWorld(gravity);
+	m_dynamicsWorld = new ephysics::DynamicsWorld(gravity);
 
 	// Set the number of iterations of the constraint solver
 	m_dynamicsWorld->setNbIterationsVelocitySolver(15);
@@ -68,8 +68,8 @@ CubesScene::CubesScene(const std::string& name)
 		cube->setSleepingColor(mRedColorDemo);
 
 		// Change the material properties of the rigid body
-		rp3d::Material& material = cube->getRigidBody()->getMaterial();
-		material.setBounciness(rp3d::float(0.4));
+		ephysics::Material& material = cube->getRigidBody()->getMaterial();
+		material.setBounciness(ephysics::float(0.4));
 
 		// Add the box the list of box in the scene
 		mBoxes.push_back(cube);
@@ -82,15 +82,15 @@ CubesScene::CubesScene(const std::string& name)
 	mFloor->setSleepingColor(mGreyColorDemo);
 
 	// The floor must be a static rigid body
-	mFloor->getRigidBody()->setType(rp3d::STATIC);
+	mFloor->getRigidBody()->setType(ephysics::STATIC);
 
 	// Change the material properties of the floor rigid body
-	rp3d::Material& material = mFloor->getRigidBody()->getMaterial();
-	material.setBounciness(rp3d::float(0.3));
+	ephysics::Material& material = mFloor->getRigidBody()->getMaterial();
+	material.setBounciness(ephysics::float(0.3));
 
 	// Get the physics engine parameters
 	mEngineSettings.isGravityEnabled = m_dynamicsWorld->isGravityEnabled();
-	rp3d::vec3 gravityVector = m_dynamicsWorld->getGravity();
+	ephysics::vec3 gravityVector = m_dynamicsWorld->getGravity();
 	mEngineSettings.gravity = openglframework::vec3(gravityVector.x(), gravityVector.y(), gravityVector.z());
 	mEngineSettings.isSleepingEnabled = m_dynamicsWorld->isSleepingEnabled();
 	mEngineSettings.sleepLinearVelocity = m_dynamicsWorld->getSleepLinearVelocity();
@@ -128,7 +128,7 @@ void CubesScene::updatePhysics() {
 
 	// Update the physics engine parameters
 	m_dynamicsWorld->setIsGratityEnabled(mEngineSettings.isGravityEnabled);
-	rp3d::vec3 gravity(mEngineSettings.gravity.x(), mEngineSettings.gravity.y(),
+	ephysics::vec3 gravity(mEngineSettings.gravity.x(), mEngineSettings.gravity.y(),
 									 mEngineSettings.gravity.z());
 	m_dynamicsWorld->setGravity(gravity);
 	m_dynamicsWorld->enableSleeping(mEngineSettings.isSleepingEnabled);
@@ -189,9 +189,9 @@ void CubesScene::reset() {
 										  0);
 
 		// Initial position and orientation of the rigid body
-		rp3d::vec3 initPosition(position.x(), position.y(), position.z());
-		rp3d::etk::Quaternion initOrientation = rp3d::Quaternion::identity();
-		rp3d::etk::Transform3D transform(initPosition, initOrientation);
+		ephysics::vec3 initPosition(position.x(), position.y(), position.z());
+		ephysics::etk::Quaternion initOrientation = ephysics::Quaternion::identity();
+		ephysics::etk::Transform3D transform(initPosition, initOrientation);
 
 		mBoxes[i]->resetTransform(transform);
 	}

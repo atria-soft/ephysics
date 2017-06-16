@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -24,17 +24,17 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/TestbedApplication.h>
-#include <ephysics/openglframework.h>
+#include <ephysics/TestbedApplication.hpp>
+#include <ephysics/openglframework.hpp>
 #include <iostream>
 #include <cstdlib>
 #include <sstream>
-#include <ephysics/cubes/CubesScene.h>
-#include <ephysics/joints/JointsScene.h>
-#include <ephysics/collisionshapes/CollisionShapesScene.h>
-#include <ephysics/heightfield/HeightFieldScene.h>
-#include <ephysics/raycast/RaycastScene.h>
-#include <ephysics/concavemesh/ConcaveMeshScene.h>
+#include <ephysics/cubes/CubesScene.hpp>
+#include <ephysics/joints/JointsScene.hpp>
+#include <ephysics/collisionshapes/CollisionShapesScene.hpp>
+#include <ephysics/heightfield/HeightFieldScene.hpp>
+#include <ephysics/raycast/RaycastScene.hpp>
+#include <ephysics/concavemesh/ConcaveMeshScene.hpp>
 
 using namespace openglframework;
 using namespace jointsscene;

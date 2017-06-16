@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -27,9 +27,9 @@
 #define CONCAVE_MESH_H
 
 // Libraries
-#include <ephysics/openglframework.h>
-#include <ephysics/reactphysics3d.h>
-#include <ephysics/PhysicsObject.h>
+#include <ephysics/openglframework.hpp>
+#include <ephysics/ephysics.hpp>
+#include <ephysics/PhysicsObject.hpp>
 
 // Class ConcaveMesh
 class ConcaveMesh : public openglframework::Mesh, public PhysicsObject {
@@ -39,11 +39,11 @@ class ConcaveMesh : public openglframework::Mesh, public PhysicsObject {
 		// -------------------- Attributes -------------------- //
 
 		/// Previous transform (for int32_terpolation)
-		rp3d::etk::Transform3D mPreviousTransform;
+		ephysics::etk::Transform3D mPreviousTransform;
 
 		/// Collision shape
-		rp3d::ConcaveMeshShape* mConcaveShape;
-		rp3d::ProxyShape* m_proxyShape;
+		ephysics::ConcaveMeshShape* mConcaveShape;
+		ephysics::ProxyShape* m_proxyShape;
 
 		/// Scaling matrix
 		openglframework::Matrix4 m_scalingMatrix;
@@ -64,7 +64,7 @@ class ConcaveMesh : public openglframework::Mesh, public PhysicsObject {
 		openglframework::VertexArrayObject mVAO;
 
 		/// Structure with pointer to the shared mesh data (vertices, indices, ...)
-		rp3d::TriangleMesh mPhysicsTriangleMesh;
+		ephysics::TriangleMesh mPhysicsTriangleMesh;
 
 		// -------------------- Methods -------------------- //
 
@@ -77,11 +77,11 @@ class ConcaveMesh : public openglframework::Mesh, public PhysicsObject {
 
 		/// Constructor
 		ConcaveMesh(const openglframework::vec3& position,
-				   rp3d::CollisionWorld* world, const std::string& meshPath);
+				   ephysics::CollisionWorld* world, const std::string& meshPath);
 
 		/// Constructor
 		ConcaveMesh(const openglframework::vec3& position, float mass,
-				   rp3d::DynamicsWorld* dynamicsWorld, const std::string& meshPath);
+				   ephysics::DynamicsWorld* dynamicsWorld, const std::string& meshPath);
 
 		/// Destructor
 		~ConcaveMesh();
@@ -91,7 +91,7 @@ class ConcaveMesh : public openglframework::Mesh, public PhysicsObject {
 					const openglframework::Matrix4& worldToCameraMatrix);
 
 		/// Set the position of the box
-		void resetTransform(const rp3d::Transform& transform);
+		void resetTransform(const ephysics::Transform& transform);
 
 		/// Update the transform matrix of the object
 		virtual void updateetk::Transform3D(float int32_terpolationFactor);

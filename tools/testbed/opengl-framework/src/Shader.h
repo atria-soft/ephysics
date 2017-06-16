@@ -27,16 +27,16 @@
 #define SHADER_H
 
 // Libraries
-#include <ephysics/definitions.h>
-#include <ephysics/maths/Matrix4.h>
-#include <ephysics/maths/vec2.h>
-#include <ephysics/maths/vec3.h>
-#include <ephysics/maths/Vector4.h>
+#include <ephysics/definitions.hpp>
+#include <ephysics/maths/Matrix4.hpp>
+#include <ephysics/maths/vec2.hpp>
+#include <ephysics/maths/vec3.hpp>
+#include <ephysics/maths/Vector4.hpp>
 #include <string>
 #include <iostream>
 #include <stdexcept>
 #include <exception>
-#include <nanogui/opengl.h>
+#include <nanogui/opengl.hpp>
 
 namespace openglframework {
 

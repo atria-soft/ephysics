@@ -5,12 +5,12 @@
  */
 
 // Libraries
-#include <ephysics/collision/CollisionDetection.h>
-#include <ephysics/engine/CollisionWorld.h>
-#include <ephysics/body/Body.h>
-#include <ephysics/collision/shapes/BoxShape.h>
-#include <ephysics/body/RigidBody.h>
-#include <ephysics/configuration.h>
+#include <ephysics/collision/CollisionDetection.hpp>
+#include <ephysics/engine/CollisionWorld.hpp>
+#include <ephysics/body/Body.hpp>
+#include <ephysics/collision/shapes/BoxShape.hpp>
+#include <ephysics/body/RigidBody.hpp>
+#include <ephysics/configuration.hpp>
 #include <cassert>
 #include <complex>
 #include <set>
@@ -18,7 +18,7 @@
 #include <utility>
 
 // We want to use the ReactPhysics3D namespace
-using namespace reactphysics3d;
+using namespace ephysics;
 using namespace std;
 
 // Constructor

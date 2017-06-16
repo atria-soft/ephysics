@@ -25,8 +25,8 @@
 
 
 // Libraries
-#include <ephysics/Camera.h>
-#include <ephysics/definitions.h>
+#include <ephysics/Camera.hpp>
+#include <ephysics/definitions.hpp>
 #include <cmath>
 
 // Namespaces

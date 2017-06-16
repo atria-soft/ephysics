@@ -6,10 +6,10 @@
 
 // Libraries
 
-#include <ephysics/collision/RaycastInfo.h>
-#include <ephysics/collision/ProxyShape.h>
+#include <ephysics/collision/RaycastInfo.hpp>
+#include <ephysics/collision/ProxyShape.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Ray cast test against a proxy shape
 float RaycastTest::raycastAgainstShape(ProxyShape* shape, const Ray& ray) {

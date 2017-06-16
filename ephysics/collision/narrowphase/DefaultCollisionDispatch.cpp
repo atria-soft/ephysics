@@ -5,10 +5,10 @@
  */
 
 // Libraries
-#include <ephysics/collision/narrowphase/DefaultCollisionDispatch.h>
-#include <ephysics/collision/shapes/CollisionShape.h>
+#include <ephysics/collision/narrowphase/DefaultCollisionDispatch.hpp>
+#include <ephysics/collision/shapes/CollisionShape.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 DefaultCollisionDispatch::DefaultCollisionDispatch() {

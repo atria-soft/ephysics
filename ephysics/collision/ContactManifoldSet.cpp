@@ -5,9 +5,9 @@
  */
 
 // Libraries
-#include <ephysics/collision/ContactManifoldSet.h>
+#include <ephysics/collision/ContactManifoldSet.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 ContactManifoldSet::ContactManifoldSet(ProxyShape* shape1, ProxyShape* shape2,

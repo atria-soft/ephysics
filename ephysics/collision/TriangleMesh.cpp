@@ -5,9 +5,9 @@
  */
 
 // Libraries
-#include <ephysics/collision/TriangleMesh.h>
+#include <ephysics/collision/TriangleMesh.hpp>
 
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 TriangleMesh::TriangleMesh() {

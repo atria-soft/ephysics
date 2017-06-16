@@ -1,5 +1,5 @@
 /********************************************************************************
-* ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+* ReactPhysics3D physics library, http://www.ephysics.com				 *
 * Copyright (c) 2010-2016 Daniel Chappuis									   *
 *********************************************************************************
 *																			   *
@@ -31,13 +31,13 @@
 #include <iostream>
 #include <ctime>
 #include <cassert>
-#include <ephysics/configuration.h>
+#include <ephysics/configuration.hpp>
 
 #if defined(WINDOWS_OS)   // For Windows platform
    #define NOMINMAX	   // This is used to avoid definition of max() and min() macros
-   #include <windows.h>
+   #include <windows.hpp>
 #else								   // For Mac OS or Linux platform
-   #include <sys/time.h>
+   #include <sys/time.hpp>
 #endif
 
 // Class Timer

@@ -5,12 +5,12 @@
  */
 
 // Libraries
-#include <ephysics/collision/narrowphase/EPA/TriangleEPA.h>
-#include <ephysics/collision/narrowphase/EPA/EdgeEPA.h>
-#include <ephysics/collision/narrowphase/EPA/TrianglesStore.h>
+#include <ephysics/collision/narrowphase/EPA/TriangleEPA.hpp>
+#include <ephysics/collision/narrowphase/EPA/EdgeEPA.hpp>
+#include <ephysics/collision/narrowphase/EPA/TrianglesStore.hpp>
 
 // We use the ReactPhysics3D namespace
-using namespace reactphysics3d;
+using namespace ephysics;
 
 // Constructor
 TriangleEPA::TriangleEPA() {
@@ -66,7 +66,7 @@ bool TriangleEPA::computeClosestPoint(const vec3* vertices) {
 /// Link an edge with another one. It means that the current edge of a triangle will
 /// be associated with the edge of another triangle in order that both triangles
 /// are neighbour along both edges).
-bool reactphysics3d::link(const EdgeEPA& edge0, const EdgeEPA& edge1) {
+bool ephysics::link(const EdgeEPA& edge0, const EdgeEPA& edge1) {
 	bool isPossible = (edge0.getSourceVertexIndex() == edge1.getTargetVertexIndex() &&
 					   edge0.getTargetVertexIndex() == edge1.getSourceVertexIndex());
 
@@ -82,7 +82,7 @@ bool reactphysics3d::link(const EdgeEPA& edge0, const EdgeEPA& edge1) {
 /// between an edge "edge0" and an edge "edge1" represents the fact that "edge1" is an
 /// adjacent edge of "edge0" but not the opposite. The opposite edge connection will
 /// be made later.
-void reactphysics3d::halfLink(const EdgeEPA& edge0, const EdgeEPA& edge1) {
+void ephysics::halfLink(const EdgeEPA& edge0, const EdgeEPA& edge1) {
 	assert(edge0.getSourceVertexIndex() == edge1.getTargetVertexIndex() &&
 		   edge0.getTargetVertexIndex() == edge1.getSourceVertexIndex());
 

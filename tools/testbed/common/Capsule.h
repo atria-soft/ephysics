@@ -1,5 +1,5 @@
 /********************************************************************************
- * ReactPhysics3D physics library, http://www.reactphysics3d.com				 *
+ * ReactPhysics3D physics library, http://www.ephysics.com				 *
  * Copyright (c) 2010-2016 Daniel Chappuis									   *
  *********************************************************************************
  *																			   *
@@ -27,9 +27,9 @@
 #define CAPSULE_H
 
 // Libraries
-#include <ephysics/openglframework.h>
-#include <ephysics/reactphysics3d.h>
-#include <ephysics/PhysicsObject.h>
+#include <ephysics/openglframework.hpp>
+#include <ephysics/ephysics.hpp>
+#include <ephysics/PhysicsObject.hpp>
 
 // Class Sphere
 class Capsule : public openglframework::Mesh, public PhysicsObject {
@@ -48,11 +48,11 @@ class Capsule : public openglframework::Mesh, public PhysicsObject {
 		openglframework::Matrix4 m_scalingMatrix;
 
 		/// Collision shape
-		rp3d::CapsuleShape* mCapsuleShape;
-		rp3d::ProxyShape* m_proxyShape;
+		ephysics::CapsuleShape* mCapsuleShape;
+		ephysics::ProxyShape* m_proxyShape;
 
 		/// Previous transform (for int32_terpolation)
-		rp3d::etk::Transform3D mPreviousTransform;
+		ephysics::etk::Transform3D mPreviousTransform;
 
 		/// Vertex Buffer Object for the vertices data
 		static openglframework::VertexBufferObject mVBOVertices;
@@ -83,11 +83,11 @@ class Capsule : public openglframework::Mesh, public PhysicsObject {
 
 		/// Constructor
 		Capsule(float radius, float height, const openglframework::vec3& position,
-				reactphysics3d::CollisionWorld* world, const std::string& meshFolderPath);
+				ephysics::CollisionWorld* world, const std::string& meshFolderPath);
 
 		/// Constructor
 		Capsule(float radius, float height, const openglframework::vec3& position,
-				float mass, reactphysics3d::DynamicsWorld* dynamicsWorld,
+				float mass, ephysics::DynamicsWorld* dynamicsWorld,
 				const std::string& meshFolderPath);
 
 		/// Destructor
@@ -98,7 +98,7 @@ class Capsule : public openglframework::Mesh, public PhysicsObject {
 				const openglframework::Matrix4& worldToCameraMatrix);
 
 		/// Set the position of the box
-		void resetTransform(const rp3d::Transform& transform);
+		void resetTransform(const ephysics::Transform& transform);
 
 		/// Update the transform matrix of the object
 		virtual void updateetk::Transform3D(float int32_terpolationFactor);

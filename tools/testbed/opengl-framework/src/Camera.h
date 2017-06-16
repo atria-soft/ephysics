@@ -27,8 +27,8 @@
 #define CAMERA_H
 
 // Libraries
-#include <ephysics/Object3D.h>
-#include <ephysics/definitions.h>
+#include <ephysics/Object3D.hpp>
+#include <ephysics/definitions.hpp>
 
 namespace openglframework {
 

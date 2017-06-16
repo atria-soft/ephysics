@@ -24,7 +24,7 @@
 ********************************************************************************/
 
 // Libraries
-#include <ephysics/MeshReaderWriter.h>
+#include <ephysics/MeshReaderWriter.hpp>
 #include <fstream>
 #include <sstream>
 #include <locale>
