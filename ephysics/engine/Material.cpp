@@ -23,8 +23,3 @@ Material::Material(const Material& material)
 		   m_rollingResistance(material.m_rollingResistance), m_bounciness(material.m_bounciness) {
 
 }
-
-// Destructor
-Material::~Material() {
-
-}

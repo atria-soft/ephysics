@@ -4,7 +4,6 @@
  * @license BSD 3 clauses (see license file)
  */
 
-// Libraries
 #include <ephysics/engine/Island.hpp>
 
 using namespace ephysics;

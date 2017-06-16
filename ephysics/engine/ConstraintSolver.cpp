@@ -4,7 +4,6 @@
  * @license BSD 3 clauses (see license file)
  */
 
-// Libraries
 #include <ephysics/engine/ConstraintSolver.hpp>
 #include <ephysics/engine/Profiler.hpp>
 
@@ -13,12 +12,7 @@ using namespace ephysics;
 // Constructor
 ConstraintSolver::ConstraintSolver(const std::map<RigidBody*, uint32_t>& mapBodyToVelocityIndex)
 				 : m_mapBodyToConstrainedVelocityIndex(mapBodyToVelocityIndex),
-				   mIsWarmStartingActive(true), m_constraintSolverData(mapBodyToVelocityIndex) {
-
-}
-
-// Destructor
-ConstraintSolver::~ConstraintSolver() {
+				   m_isWarmStartingActive(true), m_constraintSolverData(mapBodyToVelocityIndex) {
 
 }
 
@@ -36,7 +30,7 @@ void ConstraintSolver::initializeForIsland(float dt, Island* island) {
 
 	// Initialize the constraint solver data used to initialize and solve the constraints
 	m_constraintSolverData.timeStep = m_timeStep;
-	m_constraintSolverData.isWarmStartingActive = mIsWarmStartingActive;
+	m_constraintSolverData.isWarmStartingActive = m_isWarmStartingActive;
 
 	// For each joint of the island
 	Joint** joints = island->getJoints();
@@ -46,7 +40,7 @@ void ConstraintSolver::initializeForIsland(float dt, Island* island) {
 		joints[i]->initBeforeSolve(m_constraintSolverData);
 
 		// Warm-start the constraint if warm-starting is enabled
-		if (mIsWarmStartingActive) {
+		if (m_isWarmStartingActive) {
 			joints[i]->warmstart(m_constraintSolverData);
 		}
 	}

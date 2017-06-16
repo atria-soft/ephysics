@@ -4,68 +4,40 @@
  * @license BSD 3 clauses (see license file)
  */
 #pragma once
-
-// Libraries
 #include <cassert>
 #include <ephysics/configuration.hpp>
 
 namespace ephysics {
-
-// Class Material
-/**
- * This class contains the material properties of a rigid body that will be use for
- * the dynamics simulation like the friction coefficient or the bounciness of the rigid
- * body.
- */
-class Material {
-
-	private :
-
-		// -------------------- Attributes -------------------- //
-
-		/// Friction coefficient (positive value)
-		float m_frictionCoefficient;
-
-		/// Rolling resistance factor (positive value)
-		float m_rollingResistance;
-
-		/// Bounciness during collisions (between 0 and 1) where 1 is for a very bouncy body
-		float m_bounciness;
-
-	public :
-
-		// -------------------- Methods -------------------- //
-
-		/// Constructor
-		Material();
-
-		/// Copy-constructor
-		Material(const Material& material);
-
-		/// Destructor
-		~Material();
-
-		/// Return the bounciness
-		float getBounciness() const;
-
-		/// Set the bounciness.
-		void setBounciness(float bounciness);
-
-		/// Return the friction coefficient
-		float getFrictionCoefficient() const;
-
-		/// Set the friction coefficient.
-		void setFrictionCoefficient(float frictionCoefficient);
-
-		/// Return the rolling resistance factor
-		float getRollingResistance() const;
-
-		/// Set the rolling resistance factor
-		void setRollingResistance(float rollingResistance);
-
-		/// Overloaded assignment operator
-		Material& operator=(const Material& material);
-};
+	/**
+	 * This class contains the material properties of a rigid body that will be use for
+	 * the dynamics simulation like the friction coefficient or the bounciness of the rigid
+	 * body.
+	 */
+	class Material {
+		private :
+			float m_frictionCoefficient; //!< Friction coefficient (positive value)
+			float m_rollingResistance; //!< Rolling resistance factor (positive value)
+			float m_bounciness; //!< Bounciness during collisions (between 0 and 1) where 1 is for a very bouncy body
+		public :
+			/// Constructor
+			Material();
+			/// Copy-constructor
+			Material(const Material& material);
+			/// Return the bounciness
+			float getBounciness() const;
+			/// Set the bounciness.
+			void setBounciness(float bounciness);
+			/// Return the friction coefficient
+			float getFrictionCoefficient() const;
+			/// Set the friction coefficient.
+			void setFrictionCoefficient(float frictionCoefficient);
+			/// Return the rolling resistance factor
+			float getRollingResistance() const;
+			/// Set the rolling resistance factor
+			void setRollingResistance(float rollingResistance);
+			/// Overloaded assignment operator
+			Material& operator=(const Material& material);
+	};
 
 // Return the bounciness
 /**

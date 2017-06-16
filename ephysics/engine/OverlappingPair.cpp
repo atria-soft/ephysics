@@ -16,8 +16,3 @@ OverlappingPair::OverlappingPair(ProxyShape* shape1, ProxyShape* shape2, int32_t
   m_cachedSeparatingAxis(1.0, 1.0, 1.0) {
 	
 }
-
-// Destructor
-OverlappingPair::~OverlappingPair() {
-	
-}
