@@ -67,7 +67,7 @@ class ConvexShape : public CollisionShape {
 };
 
 /// Return true if the collision shape is convex, false if it is concave
-inline bool ConvexShape::isConvex() const {
+bool ConvexShape::isConvex() const {
 	return true;
 }
 
@@ -75,7 +75,7 @@ inline bool ConvexShape::isConvex() const {
 /**
  * @return The margin (in meters) around the collision shape
  */
-inline float ConvexShape::getMargin() const {
+float ConvexShape::getMargin() const {
 	return m_margin;
 }
 

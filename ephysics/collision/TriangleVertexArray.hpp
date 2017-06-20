@@ -5,12 +5,9 @@
  */
 #pragma once
 
-// Libraries
 #include <ephysics/configuration.hpp>
 
 namespace ephysics {
-
-// Class TriangleVertexArray
 /**
  * This class is used to describe the vertices and faces of a triangular mesh.
  * A TriangleVertexArray represents a continuous array of vertices and indexes
@@ -21,9 +18,7 @@ namespace ephysics {
  * remains valid during the TriangleVertexArray life.
  */
 class TriangleVertexArray {
-
 	public:
-
 		/// Data type for the vertices in the array
 		enum VertexDataType {VERTEX_FLOAT_TYPE, VERTEX_DOUBLE_TYPE};
 
@@ -31,35 +26,15 @@ class TriangleVertexArray {
 		enum IndexDataType {INDEX_INTEGER_TYPE, INDEX_SHORT_TYPE};
 
 	protected:
-
-		/// Number of vertices in the array
-		uint32_t m_numberVertices;
-
-		/// Pointer to the first vertex value in the array
-		unsigned char* m_verticesStart;
-
-		/// Stride (number of bytes) between the beginning of two vertices
-		/// values in the array
-		int32_t m_verticesStride;
-
-		/// Number of triangles in the array
-		uint32_t m_numberTriangles;
-
-		/// Pointer to the first vertex index of the array
-		unsigned char* m_indicesStart;
-
-		/// Stride (number of bytes) between the beginning of two indices in
-		/// the array
-		int32_t m_indicesStride;
-
-		/// Data type of the vertices in the array
-		VertexDataType m_vertexDataType;
-
-		/// Data type of the indices in the array
-		IndexDataType m_indexDataType;
-
+		uint32_t m_numberVertices; //!< Number of vertices in the array
+		unsigned char* m_verticesStart; //!< Pointer to the first vertex value in the array
+		int32_t m_verticesStride; //!< Stride (number of bytes) between the beginning of two vertices values in the array
+		uint32_t m_numberTriangles; //!< Number of triangles in the array
+		unsigned char* m_indicesStart; //!< Pointer to the first vertex index of the array
+		int32_t m_indicesStride; //!< Stride (number of bytes) between the beginning of two indices in the array
+		VertexDataType m_vertexDataType; //!< Data type of the vertices in the array
+		IndexDataType m_indexDataType; //!< Data type of the indices in the array
 	public:
-
 		/// Constructor
 		TriangleVertexArray(uint32_t nbVertices, void* verticesStart, int32_t verticesStride,
 							uint32_t nbTriangles, void* indexesStart, int32_t indexesStride,

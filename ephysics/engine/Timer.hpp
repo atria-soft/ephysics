@@ -20,7 +20,6 @@
 #endif
 
 
-/// Namespace ReactPhysics3D
 namespace ephysics {
 	/**
 	 * @brief This class will take care of the time in the physics engine. It
@@ -68,50 +67,48 @@ namespace ephysics {
 	};
 
 // Return the timestep of the physics engine
-inline double Timer::getTimeStep() const {
+double Timer::getTimeStep() const {
 	return m_timeStep;
 }
 
 // Set the timestep of the physics engine
-inline void Timer::setTimeStep(double timeStep) {
+void Timer::setTimeStep(double timeStep) {
 	assert(timeStep > 0.0f);
 	m_timeStep = timeStep;
 }
 
 // Return the current time
-inline long double Timer::getPhysicsTime() const {
+long double Timer::getPhysicsTime() const {
 	return m_lastUpdateTime;
 }
 
 // Return if the timer is running
-inline bool Timer::getIsRunning() const {
+bool Timer::getIsRunning() const {
 	return m_isRunning;
 }
 
 // Start the timer
-inline void Timer::start() {
+void Timer::start() {
 	if (!m_isRunning) {
-
 		// Get the current system time
 		m_lastUpdateTime = getCurrentSystemTime();
-
 		m_accumulator = 0.0;
 		m_isRunning = true;
 	}
 }
 
 // Stop the timer
-inline void Timer::stop() {
+void Timer::stop() {
 	m_isRunning = false;
 }
 
 // True if it's possible to take a new step
-inline bool Timer::isPossibleToTakeStep() const {
+bool Timer::isPossibleToTakeStep() const {
 	return (m_accumulator >= m_timeStep);
 }
 
 // Take a new step => update the timer by adding the timeStep value to the current time
-inline void Timer::nextStep() {
+void Timer::nextStep() {
 	assert(m_isRunning);
 
 	// Update the accumulator value
@@ -119,23 +116,15 @@ inline void Timer::nextStep() {
 }
 
 // Compute the int32_terpolation factor
-inline float Timer::computeInterpolationFactor() {
+float Timer::computeInterpolationFactor() {
 	return (float(m_accumulator / m_timeStep));
 }
 
 // Compute the time since the last update() call and add it to the accumulator
-inline void Timer::update() {
-
-	// Get the current system time
+void Timer::update() {
 	long double currentTime = getCurrentSystemTime();
-
-	// Compute the delta display time between two display frames
 	m_deltaTime = currentTime - m_lastUpdateTime;
-
-	// Update the current display time
 	m_lastUpdateTime = currentTime;
-
-	// Update the accumulator value
 	m_accumulator += m_deltaTime;
 }
 

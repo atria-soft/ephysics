@@ -169,32 +169,32 @@ class HeightFieldShape : public ConcaveShape {
 };
 
 // Return the number of rows in the height field
-inline int32_t HeightFieldShape::getNbRows() const {
+int32_t HeightFieldShape::getNbRows() const {
 	return m_numberRows;
 }
 
 // Return the number of columns in the height field
-inline int32_t HeightFieldShape::getNbColumns() const {
+int32_t HeightFieldShape::getNbColumns() const {
 	return m_numberColumns;
 }
 
 // Return the type of height value in the height field
-inline HeightFieldShape::HeightDataType HeightFieldShape::getHeightDataType() const {
+HeightFieldShape::HeightDataType HeightFieldShape::getHeightDataType() const {
 	return m_heightDataType;
 }
 
 // Return the number of bytes used by the collision shape
-inline size_t HeightFieldShape::getSizeInBytes() const {
+size_t HeightFieldShape::getSizeInBytes() const {
 	return sizeof(HeightFieldShape);
 }
 
 // Set the local scaling vector of the collision shape
-inline void HeightFieldShape::setLocalScaling(const vec3& scaling) {
+void HeightFieldShape::setLocalScaling(const vec3& scaling) {
 	CollisionShape::setLocalScaling(scaling);
 }
 
 // Return the height of a given (x,y) point in the height field
-inline float HeightFieldShape::getHeightAt(int32_t x, int32_t y) const {
+float HeightFieldShape::getHeightAt(int32_t x, int32_t y) const {
 
 	switch(m_heightDataType) {
 		case HEIGHT_FLOAT_TYPE : return ((float*)m_heightFieldData)[y * m_numberColumns + x];
@@ -205,7 +205,7 @@ inline float HeightFieldShape::getHeightAt(int32_t x, int32_t y) const {
 }
 
 // Return the closest inside int32_teger grid value of a given floating grid value
-inline int32_t HeightFieldShape::computeIntegerGridValue(float value) const {
+int32_t HeightFieldShape::computeIntegerGridValue(float value) const {
 	return (value < 0.0f) ? value - 0.5f : value + float(0.5);
 }
 
@@ -215,7 +215,7 @@ inline int32_t HeightFieldShape::computeIntegerGridValue(float value) const {
  *					coordinates
  * @param mass Mass to use to compute the inertia tensor of the collision shape
  */
-inline void HeightFieldShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
+void HeightFieldShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
 
 	// Default inertia tensor
 	// Note that this is not very realistic for a concave triangle mesh.

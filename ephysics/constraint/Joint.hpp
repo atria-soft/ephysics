@@ -185,7 +185,7 @@ class Joint {
 /**
  * @return The first body involved in the joint
  */
-inline RigidBody* Joint::getBody1() const {
+RigidBody* Joint::getBody1() const {
 	return m_body1;
 }
 
@@ -193,7 +193,7 @@ inline RigidBody* Joint::getBody1() const {
 /**
  * @return The second body involved in the joint
  */
-inline RigidBody* Joint::getBody2() const {
+RigidBody* Joint::getBody2() const {
 	return m_body2;
 }
 
@@ -201,7 +201,7 @@ inline RigidBody* Joint::getBody2() const {
 /**
  * @return True if the joint is active
  */
-inline bool Joint::isActive() const {
+bool Joint::isActive() const {
 	return (m_body1->isActive() && m_body2->isActive());
 }
 
@@ -209,7 +209,7 @@ inline bool Joint::isActive() const {
 /**
  * @return The type of the joint
  */
-inline JointType Joint::getType() const {
+JointType Joint::getType() const {
 	return m_type;
 }
 
@@ -218,12 +218,12 @@ inline JointType Joint::getType() const {
  * @return True if the collision is enabled between the two bodies of the joint
  *			  is enabled and false otherwise
  */
-inline bool Joint::isCollisionEnabled() const {
+bool Joint::isCollisionEnabled() const {
 	return m_isCollisionEnabled;
 }
 
 // Return true if the joint has already been added int32_to an island
-inline bool Joint::isAlreadyInIsland() const {
+bool Joint::isAlreadyInIsland() const {
 	return m_isAlreadyInIsland;
 }
 

@@ -84,12 +84,12 @@ namespace ephysics {
 			 */
 			void raycast(const Ray& _ray,
 			             RaycastCallback* _raycastCallback,
-			             unsigned short _raycastWithCategoryMaskBitss = 0xFFFF) const {
+			             unsigned short _raycastWithCategoryMaskBits = 0xFFFF) const {
 				m_collisionDetection.raycast(_raycastCallback, _ray, _raycastWithCategoryMaskBits);
 			}
 			/// Test if the AABBs of two bodies overlap
-			bool testAABBOverlap(const CollisionBody* body1,
-								 const CollisionBody* body2) const;
+			bool testAABBOverlap(const CollisionBody* _body1,
+			                     const CollisionBody* _body2) const;
 			/**
 			 * @brief Test if the AABBs of two proxy shapes overlap
 			 * @param _shape1 Pointer to the first proxy shape to test
@@ -97,26 +97,26 @@ namespace ephysics {
 			 */
 			bool testAABBOverlap(const ProxyShape* _shape1,
 			                     const ProxyShape* _shape2) const {
-				return m_collisionDetection.testAABBOverlap(shape1, shape2);
+				return m_collisionDetection.testAABBOverlap(_shape1, _shape2);
 			}
 			/// Test and report collisions between a given shape and all the others
 			/// shapes of the world
-			virtual void testCollision(const ProxyShape* shape,
-									   CollisionCallback* callback);
+			virtual void testCollision(const ProxyShape* _shape,
+			                           CollisionCallback* _callback);
 			/// Test and report collisions between two given shapes
-			virtual void testCollision(const ProxyShape* shape1,
-									   const ProxyShape* shape2,
-									   CollisionCallback* callback);
+			virtual void testCollision(const ProxyShape* _shape1,
+			                           const ProxyShape* _shape2,
+			                           CollisionCallback* _callback);
 			/// Test and report collisions between a body and all the others bodies of the
 			/// world
-			virtual void testCollision(const CollisionBody* body,
-									   CollisionCallback* callback);
+			virtual void testCollision(const CollisionBody* _body,
+			                           CollisionCallback* _callback);
 			/// Test and report collisions between two bodies
-			virtual void testCollision(const CollisionBody* body1,
-									   const CollisionBody* body2,
-									   CollisionCallback* callback);
+			virtual void testCollision(const CollisionBody* _body1,
+			                           const CollisionBody* _body2,
+			                           CollisionCallback* _callback);
 			/// Test and report collisions between all shapes of the world
-			virtual void testCollision(CollisionCallback* callback);
+			virtual void testCollision(CollisionCallback* _callback);
 			friend class CollisionDetection;
 			friend class CollisionBody;
 			friend class RigidBody;

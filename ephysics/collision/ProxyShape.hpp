@@ -157,7 +157,7 @@ class ProxyShape {
 };
 
 // Return the pointer to the cached collision data
-inline void** ProxyShape::getCachedCollisionData()  {
+void** ProxyShape::getCachedCollisionData()  {
 	return &m_cachedCollisionData;
 }
 
@@ -165,7 +165,7 @@ inline void** ProxyShape::getCachedCollisionData()  {
 /**
  * @return Pointer to the int32_ternal collision shape
  */
-inline const CollisionShape* ProxyShape::getCollisionShape() const {
+const CollisionShape* ProxyShape::getCollisionShape() const {
 	return m_collisionShape;
 }
 
@@ -173,7 +173,7 @@ inline const CollisionShape* ProxyShape::getCollisionShape() const {
 /**
  * @return Pointer to the parent body
  */
-inline CollisionBody* ProxyShape::getBody() const {
+CollisionBody* ProxyShape::getBody() const {
 	return m_body;
 }
 
@@ -181,7 +181,7 @@ inline CollisionBody* ProxyShape::getBody() const {
 /**
  * @return Mass of the collision shape (in kilograms)
  */
-inline float ProxyShape::getMass() const {
+float ProxyShape::getMass() const {
 	return m_mass;
 }
 
@@ -189,7 +189,7 @@ inline float ProxyShape::getMass() const {
 /**
  * @return A pointer to the user data stored int32_to the proxy shape
  */
-inline void* ProxyShape::getUserData() const {
+void* ProxyShape::getUserData() const {
 	return m_userData;
 }
 
@@ -197,7 +197,7 @@ inline void* ProxyShape::getUserData() const {
 /**
  * @param userData Pointer to the user data you want to store within the proxy shape
  */
-inline void ProxyShape::setUserData(void* userData) {
+void ProxyShape::setUserData(void* userData) {
 	m_userData = userData;
 }
 
@@ -206,12 +206,12 @@ inline void ProxyShape::setUserData(void* userData) {
  * @return The transformation that transforms the local-space of the collision shape
  *		 to the local-space of the parent body
  */
-inline const etk::Transform3D& ProxyShape::getLocalToBodyTransform() const {
+const etk::Transform3D& ProxyShape::getLocalToBodyTransform() const {
 	return m_localToBodyTransform;
 }
 
 // Set the local to parent body transform
-inline void ProxyShape::setLocalToBodyTransform(const etk::Transform3D& transform) {
+void ProxyShape::setLocalToBodyTransform(const etk::Transform3D& transform) {
 
 	m_localToBodyTransform = transform;
 
@@ -226,7 +226,7 @@ inline void ProxyShape::setLocalToBodyTransform(const etk::Transform3D& transfor
  * @return The transformation that transforms the local-space of the collision
  *		 shape to the world-space
  */
-inline const etk::Transform3D ProxyShape::getLocalToWorldTransform() const {
+const etk::Transform3D ProxyShape::getLocalToWorldTransform() const {
 	return m_body->m_transform * m_localToBodyTransform;
 }
 
@@ -234,7 +234,7 @@ inline const etk::Transform3D ProxyShape::getLocalToWorldTransform() const {
 /**
  * @return Pointer to the next proxy shape in the linked list of proxy shapes
  */
-inline ProxyShape* ProxyShape::getNext() {
+ProxyShape* ProxyShape::getNext() {
 	return m_next;
 }
 
@@ -242,7 +242,7 @@ inline ProxyShape* ProxyShape::getNext() {
 /**
  * @return Pointer to the next proxy shape in the linked list of proxy shapes
  */
-inline const ProxyShape* ProxyShape::getNext() const {
+const ProxyShape* ProxyShape::getNext() const {
 	return m_next;
 }
 
@@ -250,7 +250,7 @@ inline const ProxyShape* ProxyShape::getNext() const {
 /**
  * @return The collision category bits mask of the proxy shape
  */
-inline unsigned short ProxyShape::getCollisionCategoryBits() const {
+unsigned short ProxyShape::getCollisionCategoryBits() const {
 	return m_collisionCategoryBits;
 }
 
@@ -258,7 +258,7 @@ inline unsigned short ProxyShape::getCollisionCategoryBits() const {
 /**
  * @param collisionCategoryBits The collision category bits mask of the proxy shape
  */
-inline void ProxyShape::setCollisionCategoryBits(unsigned short collisionCategoryBits) {
+void ProxyShape::setCollisionCategoryBits(unsigned short collisionCategoryBits) {
 	m_collisionCategoryBits = collisionCategoryBits;
 }
 
@@ -266,7 +266,7 @@ inline void ProxyShape::setCollisionCategoryBits(unsigned short collisionCategor
 /**
  * @return The bits mask that specifies with which collision category this shape will collide
  */
-inline unsigned short ProxyShape::getCollideWithMaskBits() const {
+unsigned short ProxyShape::getCollideWithMaskBits() const {
 	return m_collideWithMaskBits;
 }
 
@@ -274,7 +274,7 @@ inline unsigned short ProxyShape::getCollideWithMaskBits() const {
 /**
  * @param collideWithMaskBits The bits mask that specifies with which collision category this shape will collide
  */
-inline void ProxyShape::setCollideWithMaskBits(unsigned short collideWithMaskBits) {
+void ProxyShape::setCollideWithMaskBits(unsigned short collideWithMaskBits) {
 	m_collideWithMaskBits = collideWithMaskBits;
 }
 
@@ -282,7 +282,7 @@ inline void ProxyShape::setCollideWithMaskBits(unsigned short collideWithMaskBit
 /**
  * @return The local scaling vector
  */
-inline vec3 ProxyShape::getLocalScaling() const {
+vec3 ProxyShape::getLocalScaling() const {
 	return m_collisionShape->getScaling();
 }
 
@@ -290,7 +290,7 @@ inline vec3 ProxyShape::getLocalScaling() const {
 /**
  * @param scaling The new local scaling vector
  */
-inline void ProxyShape::setLocalScaling(const vec3& scaling) {
+void ProxyShape::setLocalScaling(const vec3& scaling) {
 
 	// Set the local scaling of the collision shape
 	m_collisionShape->setLocalScaling(scaling);

@@ -58,48 +58,48 @@ namespace ephysics {
 	};
 
 // Return the pointer to first body
-inline ProxyShape* OverlappingPair::getShape1() const {
+ProxyShape* OverlappingPair::getShape1() const {
 	return m_contactManifoldSet.getShape1();
 }
 
 // Return the pointer to second body
-inline ProxyShape* OverlappingPair::getShape2() const {
+ProxyShape* OverlappingPair::getShape2() const {
 	return m_contactManifoldSet.getShape2();
 }
 
 // Add a contact to the contact manifold
-inline void OverlappingPair::addContact(ContactPoint* contact) {
+void OverlappingPair::addContact(ContactPoint* contact) {
 	m_contactManifoldSet.addContactPoint(contact);
 }
 
 // Update the contact manifold
-inline void OverlappingPair::update() {
+void OverlappingPair::update() {
 	m_contactManifoldSet.update();
 }
 
 // Return the cached separating axis
-inline vec3 OverlappingPair::getCachedSeparatingAxis() const {
+vec3 OverlappingPair::getCachedSeparatingAxis() const {
 	return m_cachedSeparatingAxis;
 }
 
 // Set the cached separating axis
-inline void OverlappingPair::setCachedSeparatingAxis(const vec3& axis) {
+void OverlappingPair::setCachedSeparatingAxis(const vec3& axis) {
 	m_cachedSeparatingAxis = axis;
 }
 
 
 // Return the number of contact points in the contact manifold
-inline uint32_t OverlappingPair::getNbContactPoints() const {
+uint32_t OverlappingPair::getNbContactPoints() const {
 	return m_contactManifoldSet.getTotalNbContactPoints();
 }
 
 // Return the contact manifold
-inline const ContactManifoldSet& OverlappingPair::getContactManifoldSet() {
+const ContactManifoldSet& OverlappingPair::getContactManifoldSet() {
 	return m_contactManifoldSet;
 }
 
 // Return the pair of bodies index
-inline overlappingpairid OverlappingPair::computeID(ProxyShape* shape1, ProxyShape* shape2) {
+overlappingpairid OverlappingPair::computeID(ProxyShape* shape1, ProxyShape* shape2) {
 	assert(shape1->m_broadPhaseID >= 0 && shape2->m_broadPhaseID >= 0);
 
 	// Construct the pair of body index
@@ -111,7 +111,7 @@ inline overlappingpairid OverlappingPair::computeID(ProxyShape* shape1, ProxySha
 }
 
 // Return the pair of bodies index
-inline bodyindexpair OverlappingPair::computeBodiesIndexPair(CollisionBody* body1,
+bodyindexpair OverlappingPair::computeBodiesIndexPair(CollisionBody* body1,
 															 CollisionBody* body2) {
 
 	// Construct the pair of body index
@@ -123,7 +123,7 @@ inline bodyindexpair OverlappingPair::computeBodiesIndexPair(CollisionBody* body
 }
 
 // Clear the contact points of the contact manifold
-inline void OverlappingPair::clearContactPoints() {
+void OverlappingPair::clearContactPoints() {
    m_contactManifoldSet.clear();
 }
 

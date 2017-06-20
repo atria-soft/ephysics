@@ -91,7 +91,7 @@ class CylinderShape : public ConvexShape {
 /**
  * @return Radius of the cylinder (in meters)
  */
-inline float CylinderShape::getRadius() const {
+float CylinderShape::getRadius() const {
 	return mRadius;
 }
 
@@ -99,12 +99,12 @@ inline float CylinderShape::getRadius() const {
 /**
  * @return Height of the cylinder (in meters)
  */
-inline float CylinderShape::getHeight() const {
+float CylinderShape::getHeight() const {
 	return m_halfHeight + m_halfHeight;
 }
 
 // Set the scaling vector of the collision shape
-inline void CylinderShape::setLocalScaling(const vec3& scaling) {
+void CylinderShape::setLocalScaling(const vec3& scaling) {
 
 	m_halfHeight = (m_halfHeight / m_scaling.y()) * scaling.y();
 	mRadius = (mRadius / m_scaling.x()) * scaling.x();
@@ -113,7 +113,7 @@ inline void CylinderShape::setLocalScaling(const vec3& scaling) {
 }
 
 // Return the number of bytes used by the collision shape
-inline size_t CylinderShape::getSizeInBytes() const {
+size_t CylinderShape::getSizeInBytes() const {
 	return sizeof(CylinderShape);
 }
 
@@ -122,7 +122,7 @@ inline size_t CylinderShape::getSizeInBytes() const {
  * @param min The minimum bounds of the shape in local-space coordinates
  * @param max The maximum bounds of the shape in local-space coordinates
  */
-inline void CylinderShape::getLocalBounds(vec3& min, vec3& max) const {
+void CylinderShape::getLocalBounds(vec3& min, vec3& max) const {
 	// Maximum bounds
 	max.setX(mRadius + m_margin);
 	max.setY(m_halfHeight + m_margin);
@@ -139,7 +139,7 @@ inline void CylinderShape::getLocalBounds(vec3& min, vec3& max) const {
  *					coordinates
  * @param mass Mass to use to compute the inertia tensor of the collision shape
  */
-inline void CylinderShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
+void CylinderShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
 	float height = float(2.0) * m_halfHeight;
 	float diag = (1.0f / float(12.0)) * mass * (3 * mRadius * mRadius + height * height);
 	tensor.setValue(diag, 0.0, 0.0, 0.0,
@@ -148,7 +148,7 @@ inline void CylinderShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, flo
 }
 
 // Return true if a point is inside the collision shape
-inline bool CylinderShape::testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const{
+bool CylinderShape::testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const{
 	return (    (localPoint.x() * localPoint.x() + localPoint.z() * localPoint.z()) < mRadius * mRadius
 	         && localPoint.y() < m_halfHeight
 	         && localPoint.y() > -m_halfHeight);

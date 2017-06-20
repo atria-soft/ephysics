@@ -43,7 +43,7 @@ namespace ephysics {
 /**
  * @return Bounciness factor (between 0 and 1) where 1 is very bouncy
  */
-inline float Material::getBounciness() const {
+float Material::getBounciness() const {
 	return m_bounciness;
 }
 
@@ -53,7 +53,7 @@ inline float Material::getBounciness() const {
 /**
  * @param bounciness Bounciness factor (between 0 and 1) where 1 is very bouncy
  */
-inline void Material::setBounciness(float bounciness) {
+void Material::setBounciness(float bounciness) {
 	assert(bounciness >= 0.0f && bounciness <= 1.0f);
 	m_bounciness = bounciness;
 }
@@ -62,7 +62,7 @@ inline void Material::setBounciness(float bounciness) {
 /**
  * @return Friction coefficient (positive value)
  */
-inline float Material::getFrictionCoefficient() const {
+float Material::getFrictionCoefficient() const {
 	return m_frictionCoefficient;
 }
 
@@ -72,7 +72,7 @@ inline float Material::getFrictionCoefficient() const {
 /**
  * @param frictionCoefficient Friction coefficient (positive value)
  */
-inline void Material::setFrictionCoefficient(float frictionCoefficient) {
+void Material::setFrictionCoefficient(float frictionCoefficient) {
 	assert(frictionCoefficient >= 0.0f);
 	m_frictionCoefficient = frictionCoefficient;
 }
@@ -83,7 +83,7 @@ inline void Material::setFrictionCoefficient(float frictionCoefficient) {
 /**
  * @return The rolling resistance factor (positive value)
  */
-inline float Material::getRollingResistance() const {
+float Material::getRollingResistance() const {
 	return m_rollingResistance;
 }
 
@@ -93,13 +93,13 @@ inline float Material::getRollingResistance() const {
 /**
  * @param rollingResistance The rolling resistance factor
  */
-inline void Material::setRollingResistance(float rollingResistance) {
+void Material::setRollingResistance(float rollingResistance) {
 	assert(rollingResistance >= 0);
 	m_rollingResistance = rollingResistance;
 }
 
 // Overloaded assignment operator
-inline Material& Material::operator=(const Material& material) {
+Material& Material::operator=(const Material& material) {
 
 	// Check for self-assignment
 	if (this != &material) {

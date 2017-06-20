@@ -11,23 +11,24 @@
 #include <ephysics/engine/DynamicsWorld.hpp>
 #include <ephysics/debug.hpp>
 
-// We want to use the ReactPhysics3D namespace
 using namespace ephysics;
 
 
-RigidBody::RigidBody(const etk::Transform3D& transform, CollisionWorld& world, bodyindex id)
-		  : CollisionBody(transform, world, id), m_initMass(1.0f),
-			m_centerOfMassLocal(0, 0, 0), m_centerOfMassWorld(transform.getPosition()),
-			m_isGravityEnabled(true), m_linearDamping(0.0f), m_angularDamping(float(0.0)),
-			m_jointsList(NULL) {
-
+RigidBody::RigidBody(const etk::Transform3D& _transform, CollisionWorld& _world, bodyindex _id):
+  CollisionBody(_transform, _world, _id),
+  m_initMass(1.0f),
+  m_centerOfMassLocal(0, 0, 0),
+  m_centerOfMassWorld(_transform.getPosition()),
+  m_isGravityEnabled(true),
+  m_linearDamping(0.0f),
+  m_angularDamping(float(0.0)),
+  m_jointsList(nullptr) {
 	// Compute the inverse mass
 	m_massInverse = 1.0f / m_initMass;
 }
 
-// Destructor
 RigidBody::~RigidBody() {
-	assert(m_jointsList == NULL);
+	assert(m_jointsList == nullptr);
 }
 
 
@@ -60,37 +61,23 @@ void RigidBody::setType(BodyType _type) {
 	m_externalTorque.setZero();
 }
 
-// Set the local inertia tensor of the body (in local-space coordinates)
-/**
- * @param inertiaTensorLocal The 3x3 inertia tensor matrix of the body in local-space
- *						   coordinates
- */
-void RigidBody::setInertiaTensorLocal(const etk::Matrix3x3& inertiaTensorLocal) {
 
-	if (m_type != DYNAMIC) return;
-
-	m_inertiaTensorLocal = inertiaTensorLocal;
-
-	// Compute the inverse local inertia tensor
+void RigidBody::setInertiaTensorLocal(const etk::Matrix3x3& _inertiaTensorLocal) {
+	if (m_type != DYNAMIC) {
+		return;
+	}
+	m_inertiaTensorLocal = _inertiaTensorLocal;
 	m_inertiaTensorLocalInverse = m_inertiaTensorLocal.getInverse();
 }
 
-// Set the local center of mass of the body (in local-space coordinates)
-/**
- * @param centerOfMassLocal The center of mass of the body in local-space
- *						  coordinates
- */
-void RigidBody::setCenterOfMassLocal(const vec3& centerOfMassLocal) {
 
-	if (m_type != DYNAMIC) return;
-
+void RigidBody::setCenterOfMassLocal(const vec3& _centerOfMassLocal) {
+	if (m_type != DYNAMIC) {
+		return;
+	}
 	const vec3 oldCenterOfMass = m_centerOfMassWorld;
-	m_centerOfMassLocal = centerOfMassLocal;
-
-	// Compute the center of mass in world-space coordinates
+	m_centerOfMassLocal = _centerOfMassLocal;
 	m_centerOfMassWorld = m_transform * m_centerOfMassLocal;
-
-	// Update the linear velocity of the center of mass
 	m_linearVelocity += m_angularVelocity.cross(m_centerOfMassWorld - oldCenterOfMass);
 }
 
@@ -108,24 +95,24 @@ void RigidBody::setMass(float _mass) {
 	}
 }
 
-void RigidBody::removeJointFrom_jointsList(MemoryAllocator& memoryAllocator, const Joint* joint) {
-	assert(joint != nullptr);
+void RigidBody::removeJointFrom_jointsList(MemoryAllocator& _memoryAllocator, const Joint* _joint) {
+	assert(_joint != nullptr);
 	assert(m_jointsList != nullptr);
 	// Remove the joint from the linked list of the joints of the first body
-	if (m_jointsList->joint == joint) {   // If the first element is the one to remove
+	if (m_jointsList->joint == _joint) {   // If the first element is the one to remove
 		JointListElement* elementToRemove = m_jointsList;
 		m_jointsList = elementToRemove->next;
 		elementToRemove->~JointListElement();
-		memoryAllocator.release(elementToRemove, sizeof(JointListElement));
+		_memoryAllocator.release(elementToRemove, sizeof(JointListElement));
 	}
 	else {  // If the element to remove is not the first one in the list
 		JointListElement* currentElement = m_jointsList;
 		while (currentElement->next != nullptr) {
-			if (currentElement->next->joint == joint) {
+			if (currentElement->next->joint == _joint) {
 				JointListElement* elementToRemove = currentElement->next;
 				currentElement->next = elementToRemove->next;
 				elementToRemove->~JointListElement();
-				memoryAllocator.release(elementToRemove, sizeof(JointListElement));
+				_memoryAllocator.release(elementToRemove, sizeof(JointListElement));
 				break;
 			}
 			currentElement = currentElement->next;
@@ -133,68 +120,32 @@ void RigidBody::removeJointFrom_jointsList(MemoryAllocator& memoryAllocator, con
 	}
 }
 
-// Add a collision shape to the body.
-/// When you add a collision shape to the body, an int32_ternal copy of this
-/// collision shape will be created int32_ternally. Therefore, you can delete it
-/// right after calling this method or use it later to add it to another body.
-/// This method will return a pointer to a new proxy shape. A proxy shape is
-/// an object that links a collision shape and a given body. You can use the
-/// returned proxy shape to get and set information about the corresponding
-/// collision shape for that body.
-/**
- * @param collisionShape The collision shape you want to add to the body
- * @param transform The transformation of the collision shape that transforms the
- *		local-space of the collision shape int32_to the local-space of the body
- * @param mass Mass (in kilograms) of the collision shape you want to add
- * @return A pointer to the proxy shape that has been created to link the body to
- *		 the new collision shape you have added.
- */
-ProxyShape* RigidBody::addCollisionShape(CollisionShape* collisionShape,
-										 const etk::Transform3D& transform,
-										 float mass) {
 
-	assert(mass > 0.0f);
-
+ProxyShape* RigidBody::addCollisionShape(CollisionShape* _collisionShape,
+                                         const etk::Transform3D& _transform,
+                                         float _mass) {
+	assert(_mass > 0.0f);
 	// Create a new proxy collision shape to attach the collision shape to the body
-	ProxyShape* proxyShape = new (m_world.m_memoryAllocator.allocate(
-									  sizeof(ProxyShape))) ProxyShape(this, collisionShape,
-																	  transform, mass);
-
+	ProxyShape* proxyShape = new (m_world.m_memoryAllocator.allocate(sizeof(ProxyShape))) ProxyShape(this, _collisionShape, _transform, _mass);
 	// Add it to the list of proxy collision shapes of the body
-	if (m_proxyCollisionShapes == NULL) {
+	if (m_proxyCollisionShapes == nullptr) {
 		m_proxyCollisionShapes = proxyShape;
-	}
-	else {
+	} else {
 		proxyShape->m_next = m_proxyCollisionShapes;
 		m_proxyCollisionShapes = proxyShape;
 	}
-
 	// Compute the world-space AABB of the new collision shape
 	AABB aabb;
-	collisionShape->computeAABB(aabb, m_transform * transform);
-
+	_collisionShape->computeAABB(aabb, m_transform * _transform);
 	// Notify the collision detection about this new collision shape
 	m_world.m_collisionDetection.addProxyCollisionShape(proxyShape, aabb);
-
 	m_numberCollisionShapes++;
-
-	// Recompute the center of mass, total mass and inertia tensor of the body with the new
-	// collision shape
 	recomputeMassInformation();
-
-	// Return a pointer to the proxy collision shape
 	return proxyShape;
 }
 
-// Remove a collision shape from the body
-/// To remove a collision shape, you need to specify the pointer to the proxy
-/// shape that has been returned when you have added the collision shape to the
-/// body
-/**
- * @param proxyShape The pointer of the proxy shape you want to remove
- */
-void RigidBody::removeCollisionShape(const ProxyShape* proxyShape) {
-	CollisionBody::removeCollisionShape(proxyShape);
+void RigidBody::removeCollisionShape(const ProxyShape* _proxyShape) {
+	CollisionBody::removeCollisionShape(_proxyShape);
 	recomputeMassInformation();
 }
 
@@ -241,8 +192,6 @@ void RigidBody::setTransform(const etk::Transform3D& _transform) {
 	updateBroadPhaseState();
 }
 
-// Recompute the center of mass, total mass and inertia tensor of the body using all
-// the collision shapes attached to the body.
 void RigidBody::recomputeMassInformation() {
 	m_initMass = 0.0f;
 	m_massInverse = 0.0f;
@@ -300,21 +249,16 @@ void RigidBody::recomputeMassInformation() {
 
 
 void RigidBody::updateBroadPhaseState() const {
-
 	PROFILE("RigidBody::updateBroadPhaseState()");
-
 	DynamicsWorld& world = static_cast<DynamicsWorld&>(m_world);
- 	 const vec3 displacement = world.m_timeStep * m_linearVelocity;
-
+	const vec3 displacement = world.m_timeStep * m_linearVelocity;
 	// For all the proxy collision shapes of the body
 	for (ProxyShape* shape = m_proxyCollisionShapes; shape != nullptr; shape = shape->m_next) {
-
 		// Recompute the world-space AABB of the collision shape
 		AABB aabb;
 		EPHY_ERROR("         : " << aabb.getMin() << " " << aabb.getMax());
 		shape->getCollisionShape()->computeAABB(aabb, m_transform *shape->getLocalToBodyTransform());
 		EPHY_ERROR("         : " << aabb.getMin() << " " << aabb.getMax());
-
 		// Update the broad-phase state for the proxy collision shape
 		m_world.m_collisionDetection.updateProxyCollisionShape(shape, aabb, displacement);
 	}
@@ -322,41 +266,32 @@ void RigidBody::updateBroadPhaseState() const {
 
 
 void RigidBody::applyForceToCenterOfMass(const vec3& _force) {
-	// If it is not a dynamic body, we do nothing
 	if (m_type != DYNAMIC) {
 		return;
 	}
-	// Awake the body if it was sleeping
 	if (m_isSleeping) {
 		setIsSleeping(false);
 	}
-	// Add the force
 	m_externalForce += _force;
 }
 
 void RigidBody::applyForce(const vec3& _force, const vec3& _point) {
-	// If it is not a dynamic body, we do nothing
 	if (m_type != DYNAMIC) {
 		return;
 	}
-	// Awake the body if it was sleeping
 	if (m_isSleeping) {
 		setIsSleeping(false);
 	}
-	// Add the force and torque
 	m_externalForce += _force;
 	m_externalTorque += (_point - m_centerOfMassWorld).cross(_force);
 }
 
 void RigidBody::applyTorque(const vec3& _torque) {
-	// If it is not a dynamic body, we do nothing
 	if (m_type != DYNAMIC) {
 		return;
 	}
-	// Awake the body if it was sleeping
 	if (m_isSleeping) {
 		setIsSleeping(false);
 	}
-	// Add the torque
 	m_externalTorque += _torque;
 }

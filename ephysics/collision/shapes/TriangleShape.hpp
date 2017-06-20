@@ -5,45 +5,28 @@
  */
 #pragma once
 
-// Libraries
 #include <ephysics/mathematics/mathematics.hpp>
 #include <ephysics/collision/shapes/ConvexShape.hpp>
 
-/// ReactPhysics3D namespace
 namespace ephysics {
 
-/// Raycast test side for the triangle
+/**
+ * @brief Raycast test side for the triangle
+ */
 enum TriangleRaycastSide {
-
-	/// Raycast against front triangle
-	FRONT,
-
-	/// Raycast against back triangle
-	BACK,
-
-	/// Raycast against front and back triangle
-	FRONT_AND_BACK
+	FRONT, //!< Raycast against front triangle
+	BACK, //!< Raycast against back triangle
+	FRONT_AND_BACK //!< Raycast against front and back triangle
 };
 
-// Class TriangleShape
 /**
  * This class represents a triangle collision shape that is centered
  * at the origin and defined three points.
  */
 class TriangleShape : public ConvexShape {
-
 	protected:
-
-		// -------------------- Attribute -------------------- //
-
-		/// Three points of the triangle
-		vec3 mPoints[3];
-
-		/// Raycast test type for the triangle (front, back, front-back)
-		TriangleRaycastSide m_raycastTestType;
-
-		// -------------------- Methods -------------------- //
-
+		vec3 m_points[3]; //!< Three points of the triangle
+		TriangleRaycastSide m_raycastTestType; //!< Raycast test type for the triangle (front, back, front-back)
 		/// Private copy-constructor
 		TriangleShape(const TriangleShape& shape);
 
@@ -64,9 +47,6 @@ class TriangleShape : public ConvexShape {
 		virtual size_t getSizeInBytes() const;
 
 	public:
-
-		// -------------------- Methods -------------------- //
-
 		/// Constructor
 		TriangleShape(const vec3& point1, const vec3& point2, const vec3& point3,
 					  float margin = OBJECT_MARGIN);
@@ -94,23 +74,20 @@ class TriangleShape : public ConvexShape {
 
 		/// Return the coordinates of a given vertex of the triangle
 		vec3 getVertex(int32_t index) const;
-
-		// ---------- Friendship ---------- //
-
 		friend class ConcaveMeshRaycastCallback;
 		friend class TriangleOverlapCallback;
 };
 
 // Return the number of bytes used by the collision shape
-inline size_t TriangleShape::getSizeInBytes() const {
+size_t TriangleShape::getSizeInBytes() const {
 	return sizeof(TriangleShape);
 }
 
 // Return a local support point in a given direction without the object margin
-inline vec3 TriangleShape::getLocalSupportPointWithoutMargin(const vec3& direction,
+vec3 TriangleShape::getLocalSupportPointWithoutMargin(const vec3& direction,
 															  void** cachedCollisionData) const {
-	vec3 dotProducts(direction.dot(mPoints[0]), direction.dot(mPoints[1]), direction.dot(mPoints[2]));
-	return mPoints[dotProducts.getMaxAxis()];
+	vec3 dotProducts(direction.dot(m_points[0]), direction.dot(m_points[1]), direction.dot(m_points[2]));
+	return m_points[dotProducts.getMaxAxis()];
 }
 
 // Return the local bounds of the shape in x, y and z directions.
@@ -119,11 +96,11 @@ inline vec3 TriangleShape::getLocalSupportPointWithoutMargin(const vec3& directi
  * @param min The minimum bounds of the shape in local-space coordinates
  * @param max The maximum bounds of the shape in local-space coordinates
  */
-inline void TriangleShape::getLocalBounds(vec3& min, vec3& max) const {
+void TriangleShape::getLocalBounds(vec3& min, vec3& max) const {
 
-	const vec3 xAxis(mPoints[0].x(), mPoints[1].x(), mPoints[2].x());
-	const vec3 yAxis(mPoints[0].y(), mPoints[1].y(), mPoints[2].y());
-	const vec3 zAxis(mPoints[0].z(), mPoints[1].z(), mPoints[2].z());
+	const vec3 xAxis(m_points[0].x(), m_points[1].x(), m_points[2].x());
+	const vec3 yAxis(m_points[0].y(), m_points[1].y(), m_points[2].y());
+	const vec3 zAxis(m_points[0].z(), m_points[1].z(), m_points[2].z());
 	min.setValue(xAxis.getMin(), yAxis.getMin(), zAxis.getMin());
 	max.setValue(xAxis.getMax(), yAxis.getMax(), zAxis.getMax());
 
@@ -132,11 +109,11 @@ inline void TriangleShape::getLocalBounds(vec3& min, vec3& max) const {
 }
 
 // Set the local scaling vector of the collision shape
-inline void TriangleShape::setLocalScaling(const vec3& scaling) {
+void TriangleShape::setLocalScaling(const vec3& scaling) {
 
-	mPoints[0] = (mPoints[0] / m_scaling) * scaling;
-	mPoints[1] = (mPoints[1] / m_scaling) * scaling;
-	mPoints[2] = (mPoints[2] / m_scaling) * scaling;
+	m_points[0] = (m_points[0] / m_scaling) * scaling;
+	m_points[1] = (m_points[1] / m_scaling) * scaling;
+	m_points[2] = (m_points[2] / m_scaling) * scaling;
 
 	CollisionShape::setLocalScaling(scaling);
 }
@@ -147,7 +124,7 @@ inline void TriangleShape::setLocalScaling(const vec3& scaling) {
  *					coordinates
  * @param mass Mass to use to compute the inertia tensor of the collision shape
  */
-inline void TriangleShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
+void TriangleShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
 	tensor.setZero();
 }
 
@@ -157,11 +134,11 @@ inline void TriangleShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, flo
  *				  computed in world-space coordinates
  * @param transform etk::Transform3D used to compute the AABB of the collision shape
  */
-inline void TriangleShape::computeAABB(AABB& aabb, const etk::Transform3D& transform) const {
+void TriangleShape::computeAABB(AABB& aabb, const etk::Transform3D& transform) const {
 
-	const vec3 worldPoint1 = transform * mPoints[0];
-	const vec3 worldPoint2 = transform * mPoints[1];
-	const vec3 worldPoint3 = transform * mPoints[2];
+	const vec3 worldPoint1 = transform * m_points[0];
+	const vec3 worldPoint2 = transform * m_points[1];
+	const vec3 worldPoint3 = transform * m_points[2];
 
 	const vec3 xAxis(worldPoint1.x(), worldPoint2.x(), worldPoint3.x());
 	const vec3 yAxis(worldPoint1.y(), worldPoint2.y(), worldPoint3.y());
@@ -171,12 +148,12 @@ inline void TriangleShape::computeAABB(AABB& aabb, const etk::Transform3D& trans
 }
 
 // Return true if a point is inside the collision shape
-inline bool TriangleShape::testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const {
+bool TriangleShape::testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const {
 	return false;
 }
 
 // Return the raycast test type (front, back, front-back)
-inline TriangleRaycastSide TriangleShape::getRaycastTestType() const {
+TriangleRaycastSide TriangleShape::getRaycastTestType() const {
 	return m_raycastTestType;
 }
 
@@ -184,7 +161,7 @@ inline TriangleRaycastSide TriangleShape::getRaycastTestType() const {
 /**
  * @param testType Raycast test type for the triangle (front, back, front-back)
  */
-inline void TriangleShape::setRaycastTestType(TriangleRaycastSide testType) {
+void TriangleShape::setRaycastTestType(TriangleRaycastSide testType) {
 	m_raycastTestType = testType;
 }
 
@@ -192,9 +169,9 @@ inline void TriangleShape::setRaycastTestType(TriangleRaycastSide testType) {
 /**
  * @param index Index (0 to 2) of a vertex of the triangle
  */
-inline vec3 TriangleShape::getVertex(int32_t index) const {
+vec3 TriangleShape::getVertex(int32_t index) const {
 	assert(index >= 0 && index < 3);
-	return mPoints[index];
+	return m_points[index];
 }
 
 }

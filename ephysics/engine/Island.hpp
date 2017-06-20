@@ -59,51 +59,51 @@ namespace ephysics {
 	};
 
 // Add a body int32_to the island
-inline void Island::addBody(RigidBody* body) {
+void Island::addBody(RigidBody* body) {
 	assert(!body->isSleeping());
 	m_bodies[m_numberBodies] = body;
 	m_numberBodies++;
 }
 
 // Add a contact manifold int32_to the island
-inline void Island::addContactManifold(ContactManifold* contactManifold) {
+void Island::addContactManifold(ContactManifold* contactManifold) {
 	m_contactManifolds[m_numberContactManifolds] = contactManifold;
 	m_numberContactManifolds++;
 }
 
 // Add a joint int32_to the island
-inline void Island::addJoint(Joint* joint) {
+void Island::addJoint(Joint* joint) {
 	m_joints[m_numberJoints] = joint;
 	m_numberJoints++;
 }
 
 // Return the number of bodies in the island
-inline uint32_t Island::getNbBodies() const {
+uint32_t Island::getNbBodies() const {
 	return m_numberBodies;
 }
 
 // Return the number of contact manifolds in the island
-inline uint32_t Island::getNbContactManifolds() const {
+uint32_t Island::getNbContactManifolds() const {
 	return m_numberContactManifolds;
 }
 
 // Return the number of joints in the island
-inline uint32_t Island::getNbJoints() const {
+uint32_t Island::getNbJoints() const {
 	return m_numberJoints;
 }
 
 // Return a pointer to the array of bodies
-inline RigidBody** Island::getBodies() {
+RigidBody** Island::getBodies() {
 	return m_bodies;
 }
 
 // Return a pointer to the array of contact manifolds
-inline ContactManifold** Island::getContactManifold() {
+ContactManifold** Island::getContactManifold() {
 	return m_contactManifolds;
 }
 
 // Return a pointer to the array of joints
-inline Joint** Island::getJoints() {
+Joint** Island::getJoints() {
 	return m_joints;
 }
 

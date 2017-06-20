@@ -5,46 +5,34 @@
  */
 #pragma once
 
-// Libraries
 #include <ephysics/body/Body.hpp>
 #include <ephysics/constraint/ContactPoint.hpp>
 #include <ephysics/collision/narrowphase/NarrowPhaseAlgorithm.hpp>
 
-
-/// Namespace ReactPhysics3D
 namespace ephysics {
-
-// Class SphereVsSphereAlgorithm
 /**
- * This class is used to compute the narrow-phase collision detection
+ * @brief It is used to compute the narrow-phase collision detection
  * between two sphere collision shapes.
  */
 class SphereVsSphereAlgorithm : public NarrowPhaseAlgorithm {
-
 	protected :
-
-		// -------------------- Methods -------------------- //
-
-		/// Private copy-constructor
-		SphereVsSphereAlgorithm(const SphereVsSphereAlgorithm& algorithm);
-
-		/// Private assignment operator
-		SphereVsSphereAlgorithm& operator=(const SphereVsSphereAlgorithm& algorithm);
-		
+		SphereVsSphereAlgorithm(const SphereVsSphereAlgorithm& algorithm) = delete;
+		SphereVsSphereAlgorithm& operator=(const SphereVsSphereAlgorithm& algorithm) = delete;
 	public :
-
-		// -------------------- Methods -------------------- //
-
-		/// Constructor
+		/**
+		 * @brief Constructor
+		 */
 		SphereVsSphereAlgorithm();
-
-		/// Destructor
-		virtual ~SphereVsSphereAlgorithm();
-
-		/// Compute a contact info if the two bounding volume collide
-		virtual void testCollision(const CollisionShapeInfo& shape1Info,
-								   const CollisionShapeInfo& shape2Info,
-								   NarrowPhaseCallback* narrowPhaseCallback);
+		/**
+		 * @brief Destructor
+		 */
+		virtual ~SphereVsSphereAlgorithm() = default;
+		/**
+		 * @brief Compute a contact info if the two bounding volume collide
+		 */
+		virtual void testCollision(const CollisionShapeInfo& _shape1Info,
+		                           const CollisionShapeInfo& _shape2Info,
+		                           NarrowPhaseCallback* _narrowPhaseCallback);
 };
 
 }

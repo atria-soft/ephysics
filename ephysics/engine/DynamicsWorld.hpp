@@ -166,7 +166,7 @@ namespace ephysics {
 	};
 
 // Reset the external force and torque applied to the bodies
-inline void DynamicsWorld::resetBodiesForceAndTorque() {
+void DynamicsWorld::resetBodiesForceAndTorque() {
 
 	// For each body of the world
 	std::set<RigidBody*>::iterator it;
@@ -177,7 +177,7 @@ inline void DynamicsWorld::resetBodiesForceAndTorque() {
 }
 
 // Get the number of iterations for the velocity constraint solver
-inline uint32_t DynamicsWorld::getNbIterationsVelocitySolver() const {
+uint32_t DynamicsWorld::getNbIterationsVelocitySolver() const {
 	return m_nbVelocitySolverIterations;
 }
 
@@ -185,12 +185,12 @@ inline uint32_t DynamicsWorld::getNbIterationsVelocitySolver() const {
 /**
  * @param nbIterations Number of iterations for the velocity solver
  */
-inline void DynamicsWorld::setNbIterationsVelocitySolver(uint32_t nbIterations) {
+void DynamicsWorld::setNbIterationsVelocitySolver(uint32_t nbIterations) {
 	m_nbVelocitySolverIterations = nbIterations;
 }
 
 // Get the number of iterations for the position constraint solver
-inline uint32_t DynamicsWorld::getNbIterationsPositionSolver() const {
+uint32_t DynamicsWorld::getNbIterationsPositionSolver() const {
 	return m_nbPositionSolverIterations;
 }
 
@@ -198,7 +198,7 @@ inline uint32_t DynamicsWorld::getNbIterationsPositionSolver() const {
 /**
  * @param nbIterations Number of iterations for the position solver
  */
-inline void DynamicsWorld::setNbIterationsPositionSolver(uint32_t nbIterations) {
+void DynamicsWorld::setNbIterationsPositionSolver(uint32_t nbIterations) {
 	m_nbPositionSolverIterations = nbIterations;
 }
 
@@ -206,7 +206,7 @@ inline void DynamicsWorld::setNbIterationsPositionSolver(uint32_t nbIterations) 
 /**
  * @param technique Technique used for the position correction (Baumgarte or Split Impulses)
  */
-inline void DynamicsWorld::setContactsPositionCorrectionTechnique(
+void DynamicsWorld::setContactsPositionCorrectionTechnique(
 							  ContactsPositionCorrectionTechnique technique) {
 	if (technique == BAUMGARTE_CONTACTS) {
 		m_contactSolver.setIsSplitImpulseActive(false);
@@ -220,7 +220,7 @@ inline void DynamicsWorld::setContactsPositionCorrectionTechnique(
 /**
  * @param technique Technique used for the joins position correction (Baumgarte or Non Linear Gauss Seidel)
  */
-inline void DynamicsWorld::setJointsPositionCorrectionTechnique(
+void DynamicsWorld::setJointsPositionCorrectionTechnique(
 							  JointsPositionCorrectionTechnique technique) {
 	if (technique == BAUMGARTE_JOINTS) {
 		m_constraintSolver.setIsNonLinearGaussSeidelPositionCorrectionActive(false);
@@ -236,7 +236,7 @@ inline void DynamicsWorld::setJointsPositionCorrectionTechnique(
  * @param isActive True if you want the friction to be solved at the center of
  *				 the contact manifold and false otherwise
  */
-inline void DynamicsWorld::setIsSolveFrictionAtContactManifoldCenterActive(bool isActive) {
+void DynamicsWorld::setIsSolveFrictionAtContactManifoldCenterActive(bool isActive) {
 	m_contactSolver.setIsSolveFrictionAtContactManifoldCenterActive(isActive);
 }
 
@@ -244,7 +244,7 @@ inline void DynamicsWorld::setIsSolveFrictionAtContactManifoldCenterActive(bool 
 /**
  * @return The current gravity vector (in meter per seconds squared)
  */
-inline vec3 DynamicsWorld::getGravity() const {
+vec3 DynamicsWorld::getGravity() const {
 	return m_gravity;
 }
 
@@ -252,7 +252,7 @@ inline vec3 DynamicsWorld::getGravity() const {
 /**
  * @param gravity The gravity vector (in meter per seconds squared)
  */
-inline void DynamicsWorld::setGravity(vec3& gravity) {
+void DynamicsWorld::setGravity(vec3& gravity) {
 	m_gravity = gravity;
 }
 
@@ -260,7 +260,7 @@ inline void DynamicsWorld::setGravity(vec3& gravity) {
 /**
  * @return True if the gravity is enabled in the world
  */
-inline bool DynamicsWorld::isGravityEnabled() const {
+bool DynamicsWorld::isGravityEnabled() const {
 	return m_isGravityEnabled;
 }
 
@@ -269,7 +269,7 @@ inline bool DynamicsWorld::isGravityEnabled() const {
  * @param isGravityEnabled True if you want to enable the gravity in the world
  *						 and false otherwise
  */
-inline void DynamicsWorld::setIsGratityEnabled(bool isGravityEnabled) {
+void DynamicsWorld::setIsGratityEnabled(bool isGravityEnabled) {
 	m_isGravityEnabled = isGravityEnabled;
 }
 
@@ -277,7 +277,7 @@ inline void DynamicsWorld::setIsGratityEnabled(bool isGravityEnabled) {
 /**
  * @return Number of rigid bodies in the world
  */
-inline uint32_t DynamicsWorld::getNbRigidBodies() const {
+uint32_t DynamicsWorld::getNbRigidBodies() const {
 	return m_rigidBodies.size();
 }
 
@@ -285,7 +285,7 @@ inline uint32_t DynamicsWorld::getNbRigidBodies() const {
 /**
  * @return Number of joints in the world
  */
-inline uint32_t DynamicsWorld::getNbJoints() const {
+uint32_t DynamicsWorld::getNbJoints() const {
 	return m_joints.size();
 }
 
@@ -293,7 +293,7 @@ inline uint32_t DynamicsWorld::getNbJoints() const {
 /**
  * @return Starting iterator of the set of rigid bodies
  */
-inline std::set<RigidBody*>::iterator DynamicsWorld::getRigidBodiesBeginIterator() {
+std::set<RigidBody*>::iterator DynamicsWorld::getRigidBodiesBeginIterator() {
 	return m_rigidBodies.begin();
 }
 
@@ -301,7 +301,7 @@ inline std::set<RigidBody*>::iterator DynamicsWorld::getRigidBodiesBeginIterator
 /**
  * @return Ending iterator of the set of rigid bodies
  */
-inline std::set<RigidBody*>::iterator DynamicsWorld::getRigidBodiesEndIterator() {
+std::set<RigidBody*>::iterator DynamicsWorld::getRigidBodiesEndIterator() {
 	return m_rigidBodies.end();
 }
 
@@ -309,7 +309,7 @@ inline std::set<RigidBody*>::iterator DynamicsWorld::getRigidBodiesEndIterator()
 /**
  * @return True if the sleeping technique is enabled and false otherwise
  */
-inline bool DynamicsWorld::isSleepingEnabled() const {
+bool DynamicsWorld::isSleepingEnabled() const {
 	return m_isSleepingEnabled;
 }
 
@@ -317,7 +317,7 @@ inline bool DynamicsWorld::isSleepingEnabled() const {
 /**
  * @return The sleep linear velocity (in meters per second)
  */
-inline float DynamicsWorld::getSleepLinearVelocity() const {
+float DynamicsWorld::getSleepLinearVelocity() const {
 	return m_sleepLinearVelocity;
 }
 
@@ -328,7 +328,7 @@ inline float DynamicsWorld::getSleepLinearVelocity() const {
 /**
  * @param sleepLinearVelocity The sleep linear velocity (in meters per second)
  */
-inline void DynamicsWorld::setSleepLinearVelocity(float sleepLinearVelocity) {
+void DynamicsWorld::setSleepLinearVelocity(float sleepLinearVelocity) {
 	assert(sleepLinearVelocity >= 0.0f);
 	m_sleepLinearVelocity = sleepLinearVelocity;
 }
@@ -337,7 +337,7 @@ inline void DynamicsWorld::setSleepLinearVelocity(float sleepLinearVelocity) {
 /**
  * @return The sleep angular velocity (in radian per second)
  */
-inline float DynamicsWorld::getSleepAngularVelocity() const {
+float DynamicsWorld::getSleepAngularVelocity() const {
 	return m_sleepAngularVelocity;
 }
 
@@ -348,7 +348,7 @@ inline float DynamicsWorld::getSleepAngularVelocity() const {
 /**
  * @param sleepAngularVelocity The sleep angular velocity (in radian per second)
  */
-inline void DynamicsWorld::setSleepAngularVelocity(float sleepAngularVelocity) {
+void DynamicsWorld::setSleepAngularVelocity(float sleepAngularVelocity) {
 	assert(sleepAngularVelocity >= 0.0f);
 	m_sleepAngularVelocity = sleepAngularVelocity;
 }
@@ -357,7 +357,7 @@ inline void DynamicsWorld::setSleepAngularVelocity(float sleepAngularVelocity) {
 /**
  * @return Time a body is required to stay still before sleeping (in seconds)
  */
-inline float DynamicsWorld::getTimeBeforeSleep() const {
+float DynamicsWorld::getTimeBeforeSleep() const {
 	return m_timeBeforeSleep;
 }
 
@@ -366,7 +366,7 @@ inline float DynamicsWorld::getTimeBeforeSleep() const {
 /**
  * @param timeBeforeSleep Time a body is required to stay still before sleeping (in seconds)
  */
-inline void DynamicsWorld::setTimeBeforeSleep(float timeBeforeSleep) {
+void DynamicsWorld::setTimeBeforeSleep(float timeBeforeSleep) {
 	assert(timeBeforeSleep >= 0.0f);
 	m_timeBeforeSleep = timeBeforeSleep;
 }
@@ -377,7 +377,7 @@ inline void DynamicsWorld::setTimeBeforeSleep(float timeBeforeSleep) {
  * @param eventListener Pointer to the event listener object that will receive
  *					  event callbacks during the simulation
  */
-inline void DynamicsWorld::setEventListener(EventListener* eventListener) {
+void DynamicsWorld::setEventListener(EventListener* eventListener) {
 	m_eventListener = eventListener;
 }
 

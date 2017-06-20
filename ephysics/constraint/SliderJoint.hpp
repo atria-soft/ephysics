@@ -322,7 +322,7 @@ class SliderJoint : public Joint {
 /**
  * @return True if the joint limits are enabled
  */
-inline bool SliderJoint::isLimitEnabled() const {
+bool SliderJoint::isLimitEnabled() const {
 	return mIsLimitEnabled;
 }
 
@@ -330,7 +330,7 @@ inline bool SliderJoint::isLimitEnabled() const {
 /**
  * @return True if the joint motor is enabled
  */
-inline bool SliderJoint::isMotorEnabled() const {
+bool SliderJoint::isMotorEnabled() const {
 	return mIsMotorEnabled;
 }
 
@@ -338,7 +338,7 @@ inline bool SliderJoint::isMotorEnabled() const {
 /**
  * @return The minimum translation limit of the joint (in meters)
  */
-inline float SliderJoint::getMinTranslationLimit() const {
+float SliderJoint::getMinTranslationLimit() const {
 	return mLowerLimit;
 }
 
@@ -346,7 +346,7 @@ inline float SliderJoint::getMinTranslationLimit() const {
 /**
  * @return The maximum translation limit of the joint (in meters)
  */
-inline float SliderJoint::getMaxTranslationLimit() const {
+float SliderJoint::getMaxTranslationLimit() const {
 	return mUpperLimit;
 }
 
@@ -354,7 +354,7 @@ inline float SliderJoint::getMaxTranslationLimit() const {
 /**
  * @return The current motor speed of the joint (in meters per second)
  */
-inline float SliderJoint::getMotorSpeed() const {
+float SliderJoint::getMotorSpeed() const {
 	return mMotorSpeed;
 }
 
@@ -362,7 +362,7 @@ inline float SliderJoint::getMotorSpeed() const {
 /**
  * @return The maximum force of the joint motor (in Newton x meters)
  */
-inline float SliderJoint::getMaxMotorForce() const {
+float SliderJoint::getMaxMotorForce() const {
 	return mMaxMotorForce;
 }
 
@@ -371,12 +371,12 @@ inline float SliderJoint::getMaxMotorForce() const {
  * @param timeStep Time step (in seconds)
  * @return The current force of the joint motor (in Newton x meters)
  */
-inline float SliderJoint::getMotorForce(float timeStep) const {
+float SliderJoint::getMotorForce(float timeStep) const {
 	return m_impulseMotor / timeStep;
 }
 
 // Return the number of bytes used by the joint
-inline size_t SliderJoint::getSizeInBytes() const {
+size_t SliderJoint::getSizeInBytes() const {
 	return sizeof(SliderJoint);
 }
 

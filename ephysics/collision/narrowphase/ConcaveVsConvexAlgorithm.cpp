@@ -88,28 +88,28 @@ void ConcaveVsConvexAlgorithm::testCollision(const CollisionShapeInfo& shape1Inf
 void ConvexVsTriangleCallback::testTriangle(const vec3* trianglePoints) {
 
 	// Create a triangle collision shape
-	float margin = mConcaveShape->getTriangleMargin();
+	float margin = m_concaveShape->getTriangleMargin();
 	TriangleShape triangleShape(trianglePoints[0], trianglePoints[1], trianglePoints[2], margin);
 
 	// Select the collision algorithm to use between the triangle and the convex shape
 	NarrowPhaseAlgorithm* algo = m_collisionDetection->getCollisionAlgorithm(triangleShape.getType(),
-																			mConvexShape->getType());
+																			m_convexShape->getType());
 
 	// If there is no collision algorithm between those two kinds of shapes
 	if (algo == NULL) return;
 
 	// Notify the narrow-phase algorithm about the overlapping pair we are going to test
-	algo->setCurrentOverlappingPair(mOverlappingPair);
+	algo->setCurrentOverlappingPair(m_overlappingPair);
 
 	// Create the CollisionShapeInfo objects
-	CollisionShapeInfo shapeConvexInfo(mConvexProxyShape, mConvexShape, mConvexProxyShape->getLocalToWorldTransform(),
-									   mOverlappingPair, mConvexProxyShape->getCachedCollisionData());
-	CollisionShapeInfo shapeConcaveInfo(mConcaveProxyShape, &triangleShape,
-										mConcaveProxyShape->getLocalToWorldTransform(),
-										mOverlappingPair, mConcaveProxyShape->getCachedCollisionData());
+	CollisionShapeInfo shapeConvexInfo(m_convexProxyShape, m_convexShape, m_convexProxyShape->getLocalToWorldTransform(),
+									   m_overlappingPair, m_convexProxyShape->getCachedCollisionData());
+	CollisionShapeInfo shapeConcaveInfo(m_concaveProxyShape, &triangleShape,
+										m_concaveProxyShape->getLocalToWorldTransform(),
+										m_overlappingPair, m_concaveProxyShape->getCachedCollisionData());
 
 	// Use the collision algorithm to test collision between the triangle and the other convex shape
-	algo->testCollision(shapeConvexInfo, shapeConcaveInfo, mNarrowPhaseCallback);
+	algo->testCollision(shapeConvexInfo, shapeConcaveInfo, m_narrowPhaseCallback);
 }
 
 // Process the concave triangle mesh collision using the smooth mesh collision algorithm described

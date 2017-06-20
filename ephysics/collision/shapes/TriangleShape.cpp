@@ -22,9 +22,9 @@ using namespace ephysics;
  */
 TriangleShape::TriangleShape(const vec3& point1, const vec3& point2, const vec3& point3, float margin)
 			  : ConvexShape(TRIANGLE, margin) {
-	mPoints[0] = point1;
-	mPoints[1] = point2;
-	mPoints[2] = point3;
+	m_points[0] = point1;
+	m_points[1] = point2;
+	m_points[2] = point3;
 	m_raycastTestType = FRONT;
 }
 
@@ -41,9 +41,9 @@ bool TriangleShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape
 	PROFILE("TriangleShape::raycast()");
 
 	const vec3 pq = ray.point2 - ray.point1;
-	const vec3 pa = mPoints[0] - ray.point1;
-	const vec3 pb = mPoints[1] - ray.point1;
-	const vec3 pc = mPoints[2] - ray.point1;
+	const vec3 pa = m_points[0] - ray.point1;
+	const vec3 pb = m_points[1] - ray.point1;
+	const vec3 pc = m_points[2] - ray.point1;
 
 	// Test if the line PQ is inside the eges BC, CA and AB. We use the triple
 	// product for this test.
@@ -89,12 +89,12 @@ bool TriangleShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape
 	w *= denom;
 
 	// Compute the local hit point using the barycentric coordinates
-	const vec3 localHitPoint = u * mPoints[0] + v * mPoints[1] + w * mPoints[2];
+	const vec3 localHitPoint = u * m_points[0] + v * m_points[1] + w * m_points[2];
 	const float hitFraction = (localHitPoint - ray.point1).length() / pq.length();
 
 	if (hitFraction < 0.0f || hitFraction > ray.maxFraction) return false;
 
-	vec3 localHitNormal = (mPoints[1] - mPoints[0]).cross(mPoints[2] - mPoints[0]);
+	vec3 localHitNormal = (m_points[1] - m_points[0]).cross(m_points[2] - m_points[0]);
 	if (localHitNormal.dot(pq) > 0.0f) localHitNormal = -localHitNormal;
 
 	raycastInfo.body = proxyShape->getBody();

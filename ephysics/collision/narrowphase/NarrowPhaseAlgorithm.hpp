@@ -85,7 +85,7 @@ class NarrowPhaseAlgorithm {
 };
 
 // Set the current overlapping pair of bodies
-inline void NarrowPhaseAlgorithm::setCurrentOverlappingPair(OverlappingPair* overlappingPair) {
+void NarrowPhaseAlgorithm::setCurrentOverlappingPair(OverlappingPair* overlappingPair) {
 	mCurrentOverlappingPair = overlappingPair;
 }
 

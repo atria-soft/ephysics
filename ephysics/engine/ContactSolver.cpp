@@ -499,7 +499,7 @@ void ContactSolver::solve() {
 
 		ContactManifoldSolver& contactManifold = m_contactConstraints[c];
 
-		float sumPenetrationImpulse = 0.0;
+		float sum_penetrationImpulse = 0.0;
 
 		// Get the constrained velocities
 		const vec3& v1 = m_linearVelocities[contactManifold.indexBody1];
@@ -545,7 +545,7 @@ void ContactSolver::solve() {
 			// Apply the impulse to the bodies of the constraint
 			applyImpulse(impulsePenetration, contactManifold);
 
-			sumPenetrationImpulse += contactPoint.penetrationImpulse;
+			sum_penetrationImpulse += contactPoint.penetrationImpulse;
 
 			// If the split impulse position correction is active
 			if (m_isSplitImpulseActive) {
@@ -661,7 +661,7 @@ void ContactSolver::solve() {
 
 			// Compute the Lagrange multiplier lambda
 			float deltaLambda = -Jv * contactManifold.inverseFriction1Mass;
-			float frictionLimit = contactManifold.frictionCoefficient * sumPenetrationImpulse;
+			float frictionLimit = contactManifold.frictionCoefficient * sum_penetrationImpulse;
 			lambdaTemp = contactManifold.friction1Impulse;
 			contactManifold.friction1Impulse = std::max(-frictionLimit,
 														std::min(contactManifold.friction1Impulse +
@@ -688,7 +688,7 @@ void ContactSolver::solve() {
 
 			// Compute the Lagrange multiplier lambda
 			deltaLambda = -Jv * contactManifold.inverseFriction2Mass;
-			frictionLimit = contactManifold.frictionCoefficient * sumPenetrationImpulse;
+			frictionLimit = contactManifold.frictionCoefficient * sum_penetrationImpulse;
 			lambdaTemp = contactManifold.friction2Impulse;
 			contactManifold.friction2Impulse = std::max(-frictionLimit,
 														std::min(contactManifold.friction2Impulse +
@@ -713,7 +713,7 @@ void ContactSolver::solve() {
 			Jv = deltaV.dot(contactManifold.normal);
 
 			deltaLambda = -Jv * (contactManifold.inverseTwistFrictionMass);
-			frictionLimit = contactManifold.frictionCoefficient * sumPenetrationImpulse;
+			frictionLimit = contactManifold.frictionCoefficient * sum_penetrationImpulse;
 			lambdaTemp = contactManifold.frictionTwistImpulse;
 			contactManifold.frictionTwistImpulse = std::max(-frictionLimit,
 															std::min(contactManifold.frictionTwistImpulse
@@ -740,7 +740,7 @@ void ContactSolver::solve() {
 
 				// Compute the Lagrange multiplier lambda
 				vec3 deltaLambdaRolling = contactManifold.inverseRollingResistance * (-JvRolling);
-				float rollingLimit = contactManifold.rollingResistanceFactor * sumPenetrationImpulse;
+				float rollingLimit = contactManifold.rollingResistanceFactor * sum_penetrationImpulse;
 				vec3 lambdaTempRolling = contactManifold.rollingResistanceImpulse;
 				contactManifold.rollingResistanceImpulse = clamp(contactManifold.rollingResistanceImpulse + deltaLambdaRolling,
 				                                                 rollingLimit);

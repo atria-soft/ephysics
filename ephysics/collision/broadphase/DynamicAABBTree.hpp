@@ -216,38 +216,38 @@ class DynamicAABBTree {
 };
 
 // Return true if the node is a leaf of the tree
-inline bool TreeNode::isLeaf() const {
+bool TreeNode::isLeaf() const {
 	return (height == 0);
 }
 
 // Return the fat AABB corresponding to a given node ID
-inline const AABB& DynamicAABBTree::getFatAABB(int32_t nodeID) const {
+const AABB& DynamicAABBTree::getFatAABB(int32_t nodeID) const {
 	assert(nodeID >= 0 && nodeID < m_numberAllocatedNodes);
 	return m_nodes[nodeID].aabb;
 }
 
 // Return the pointer to the data array of a given leaf node of the tree
-inline int32_t* DynamicAABBTree::getNodeDataInt(int32_t nodeID) const {
+int32_t* DynamicAABBTree::getNodeDataInt(int32_t nodeID) const {
 	assert(nodeID >= 0 && nodeID < m_numberAllocatedNodes);
 	assert(m_nodes[nodeID].isLeaf());
 	return m_nodes[nodeID].dataInt;
 }
 
 // Return the pointer to the data pointer of a given leaf node of the tree
-inline void* DynamicAABBTree::getNodeDataPointer(int32_t nodeID) const {
+void* DynamicAABBTree::getNodeDataPointer(int32_t nodeID) const {
 	assert(nodeID >= 0 && nodeID < m_numberAllocatedNodes);
 	assert(m_nodes[nodeID].isLeaf());
 	return m_nodes[nodeID].dataPointer;
 }
 
 // Return the root AABB of the tree
-inline AABB DynamicAABBTree::getRootAABB() const {
+AABB DynamicAABBTree::getRootAABB() const {
 	return getFatAABB(m_rootNodeID);
 }
 
 // Add an object int32_to the tree. This method creates a new leaf node in the tree and
 // returns the ID of the corresponding node.
-inline int32_t DynamicAABBTree::addObject(const AABB& aabb, int32_t data1, int32_t data2) {
+int32_t DynamicAABBTree::addObject(const AABB& aabb, int32_t data1, int32_t data2) {
 
 	int32_t nodeId = addObjectInternal(aabb);
 
@@ -259,7 +259,7 @@ inline int32_t DynamicAABBTree::addObject(const AABB& aabb, int32_t data1, int32
 
 // Add an object int32_to the tree. This method creates a new leaf node in the tree and
 // returns the ID of the corresponding node.
-inline int32_t DynamicAABBTree::addObject(const AABB& aabb, void* data) {
+int32_t DynamicAABBTree::addObject(const AABB& aabb, void* data) {
 
 	int32_t nodeId = addObjectInternal(aabb);
 

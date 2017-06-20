@@ -131,7 +131,7 @@ namespace ephysics {
 	};
 
 // Set the constrained velocities arrays
-inline void ConstraintSolver::setConstrainedVelocitiesArrays(vec3* constrainedLinearVelocities,
+void ConstraintSolver::setConstrainedVelocitiesArrays(vec3* constrainedLinearVelocities,
 															vec3* constrainedAngularVelocities) {
 	assert(constrainedLinearVelocities != NULL);
 	assert(constrainedAngularVelocities != NULL);
@@ -140,7 +140,7 @@ inline void ConstraintSolver::setConstrainedVelocitiesArrays(vec3* constrainedLi
 }
 
 // Set the constrained positions/orientations arrays
-inline void ConstraintSolver::setConstrainedPositionsArrays(vec3* constrainedPositions,
+void ConstraintSolver::setConstrainedPositionsArrays(vec3* constrainedPositions,
 														   etk::Quaternion* constrainedOrientations) {
 	assert(constrainedPositions != NULL);
 	assert(constrainedOrientations != NULL);

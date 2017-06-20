@@ -14,22 +14,22 @@ using namespace std;
 // Constructor
 ContactPoint::ContactPoint(const ContactPointInfo& contactInfo)
 			 : m_body1(contactInfo.shape1->getBody()), m_body2(contactInfo.shape2->getBody()),
-			   mNormal(contactInfo.normal),
-			   mPenetrationDepth(contactInfo.penetrationDepth),
-			   mLocalPointOnBody1(contactInfo.localPoint1),
-			   mLocalPointOnBody2(contactInfo.localPoint2),
+			   m_normal(contactInfo.normal),
+			   m_penetrationDepth(contactInfo.penetrationDepth),
+			   m_localPointOnBody1(contactInfo.localPoint1),
+			   m_localPointOnBody2(contactInfo.localPoint2),
 			   m_worldPointOnBody1(contactInfo.shape1->getBody()->getTransform() *
 								  contactInfo.shape1->getLocalToBodyTransform() *
 								  contactInfo.localPoint1),
 			   m_worldPointOnBody2(contactInfo.shape2->getBody()->getTransform() *
 								  contactInfo.shape2->getLocalToBodyTransform() *
 								  contactInfo.localPoint2),
-			   mIsRestingContact(false) {
+			   m_isRestingContact(false) {
 
 	m_frictionVectors[0] = vec3(0, 0, 0);
 	m_frictionVectors[1] = vec3(0, 0, 0);
 
-	assert(mPenetrationDepth > 0.0);
+	assert(m_penetrationDepth > 0.0);
 
 }
 

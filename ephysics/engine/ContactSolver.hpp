@@ -238,7 +238,7 @@ namespace ephysics {
 	};
 
 // Set the split velocities arrays
-inline void ContactSolver::setSplitVelocitiesArrays(vec3* splitLinearVelocities,
+void ContactSolver::setSplitVelocitiesArrays(vec3* splitLinearVelocities,
 													vec3* splitAngularVelocities) {
 	assert(splitLinearVelocities != NULL);
 	assert(splitAngularVelocities != NULL);
@@ -247,7 +247,7 @@ inline void ContactSolver::setSplitVelocitiesArrays(vec3* splitLinearVelocities,
 }
 
 // Set the constrained velocities arrays
-inline void ContactSolver::setConstrainedVelocitiesArrays(vec3* constrainedLinearVelocities,
+void ContactSolver::setConstrainedVelocitiesArrays(vec3* constrainedLinearVelocities,
 														  vec3* constrainedAngularVelocities) {
 	assert(constrainedLinearVelocities != NULL);
 	assert(constrainedAngularVelocities != NULL);
@@ -256,23 +256,23 @@ inline void ContactSolver::setConstrainedVelocitiesArrays(vec3* constrainedLinea
 }
 
 // Return true if the split impulses position correction technique is used for contacts
-inline bool ContactSolver::isSplitImpulseActive() const {
+bool ContactSolver::isSplitImpulseActive() const {
 	return m_isSplitImpulseActive;
 }
 
 // Activate or Deactivate the split impulses for contacts
-inline void ContactSolver::setIsSplitImpulseActive(bool isActive) {
+void ContactSolver::setIsSplitImpulseActive(bool isActive) {
 	m_isSplitImpulseActive = isActive;
 }
 
 // Activate or deactivate the solving of friction constraints at the center of
 // the contact manifold instead of solving them at each contact point
-inline void ContactSolver::setIsSolveFrictionAtContactManifoldCenterActive(bool isActive) {
+void ContactSolver::setIsSolveFrictionAtContactManifoldCenterActive(bool isActive) {
 	m_isSolveFrictionAtContactManifoldCenterActive = isActive;
 }
 
 // Compute the collision restitution factor from the restitution factor of each body
-inline float ContactSolver::computeMixedRestitutionFactor(RigidBody* body1,
+float ContactSolver::computeMixedRestitutionFactor(RigidBody* body1,
 															RigidBody* body2) const {
 	float restitution1 = body1->getMaterial().getBounciness();
 	float restitution2 = body2->getMaterial().getBounciness();
@@ -282,7 +282,7 @@ inline float ContactSolver::computeMixedRestitutionFactor(RigidBody* body1,
 }
 
 // Compute the mixed friction coefficient from the friction coefficient of each body
-inline float ContactSolver::computeMixedFrictionCoefficient(RigidBody *body1,
+float ContactSolver::computeMixedFrictionCoefficient(RigidBody *body1,
 															  RigidBody *body2) const {
 	// Use the geometric mean to compute the mixed friction coefficient
 	return sqrt(body1->getMaterial().getFrictionCoefficient() *
@@ -290,13 +290,13 @@ inline float ContactSolver::computeMixedFrictionCoefficient(RigidBody *body1,
 }
 
 // Compute th mixed rolling resistance factor between two bodies
-inline float ContactSolver::computeMixedRollingResistance(RigidBody* body1,
+float ContactSolver::computeMixedRollingResistance(RigidBody* body1,
 															RigidBody* body2) const {
 	return float(0.5f) * (body1->getMaterial().getRollingResistance() + body2->getMaterial().getRollingResistance());
 }
 
 // Compute a penetration constraint impulse
-inline const Impulse ContactSolver::computePenetrationImpulse(float deltaLambda,
+const Impulse ContactSolver::computePenetrationImpulse(float deltaLambda,
 														  const ContactPointSolver& contactPoint)
 														  const {
 	return Impulse(-contactPoint.normal * deltaLambda, -contactPoint.r1CrossN * deltaLambda,
@@ -304,7 +304,7 @@ inline const Impulse ContactSolver::computePenetrationImpulse(float deltaLambda,
 }
 
 // Compute the first friction constraint impulse
-inline const Impulse ContactSolver::computeFriction1Impulse(float deltaLambda,
+const Impulse ContactSolver::computeFriction1Impulse(float deltaLambda,
 														const ContactPointSolver& contactPoint)
 														const {
 	return Impulse(-contactPoint.frictionVector1 * deltaLambda,
@@ -314,7 +314,7 @@ inline const Impulse ContactSolver::computeFriction1Impulse(float deltaLambda,
 }
 
 // Compute the second friction constraint impulse
-inline const Impulse ContactSolver::computeFriction2Impulse(float deltaLambda,
+const Impulse ContactSolver::computeFriction2Impulse(float deltaLambda,
 														const ContactPointSolver& contactPoint)
 														const {
 	return Impulse(-contactPoint.frictionvec2 * deltaLambda,

@@ -25,12 +25,6 @@
 
 // Libraries
 #include <test/TestSuite.hpp>
-#include <test/tests/mathematics/Testvec2.hpp>
-#include <test/tests/mathematics/Testvec3.hpp>
-#include <test/tests/mathematics/Testetk::Transform3D.hpp>
-#include <test/tests/mathematics/Testetk::Quaternion.hpp>
-#include <test/tests/mathematics/Testetk::Matrix2x2.hpp>
-#include <test/tests/mathematics/Testetk::Matrix3x3.hpp>
 #include <test/tests/mathematics/TestMathematicsFunctions.hpp>
 #include <test/tests/collision/TestPointInside.hpp>
 #include <test/tests/collision/TestRaycast.hpp>

@@ -321,7 +321,7 @@ class HingeJoint : public Joint {
 /**
  * @return True if the limits of the joint are enabled and false otherwise
  */
-inline bool HingeJoint::isLimitEnabled() const {
+bool HingeJoint::isLimitEnabled() const {
 	return mIsLimitEnabled;
 }
 
@@ -329,7 +329,7 @@ inline bool HingeJoint::isLimitEnabled() const {
 /**
  * @return True if the motor of joint is enabled and false otherwise
  */
-inline bool HingeJoint::isMotorEnabled() const {
+bool HingeJoint::isMotorEnabled() const {
 	return mIsMotorEnabled;
 }
 
@@ -337,7 +337,7 @@ inline bool HingeJoint::isMotorEnabled() const {
 /**
  * @return The minimum limit angle of the joint (in radian)
  */
-inline float HingeJoint::getMinAngleLimit() const {
+float HingeJoint::getMinAngleLimit() const {
 	return mLowerLimit;
 }
 
@@ -345,7 +345,7 @@ inline float HingeJoint::getMinAngleLimit() const {
 /**
  * @return The maximum limit angle of the joint (in radian)
  */
-inline float HingeJoint::getMaxAngleLimit() const {
+float HingeJoint::getMaxAngleLimit() const {
 	return mUpperLimit;
 }
 
@@ -353,7 +353,7 @@ inline float HingeJoint::getMaxAngleLimit() const {
 /**
  * @return The current speed of the joint motor (in radian per second)
  */
-inline float HingeJoint::getMotorSpeed() const {
+float HingeJoint::getMotorSpeed() const {
 	return mMotorSpeed;
 }
 
@@ -361,7 +361,7 @@ inline float HingeJoint::getMotorSpeed() const {
 /**
  * @return The maximum torque of the joint motor (in Newtons)
  */
-inline float HingeJoint::getMaxMotorTorque() const {
+float HingeJoint::getMaxMotorTorque() const {
 	return mMaxMotorTorque;
 }
 
@@ -370,12 +370,12 @@ inline float HingeJoint::getMaxMotorTorque() const {
  * @param timeStep The current time step (in seconds)
  * @return The int32_tensity of the current torque (in Newtons) of the joint motor
  */
-inline float HingeJoint::getMotorTorque(float timeStep) const {
+float HingeJoint::getMotorTorque(float timeStep) const {
 	return m_impulseMotor / timeStep;
 }
 
 // Return the number of bytes used by the joint
-inline size_t HingeJoint::getSizeInBytes() const {
+size_t HingeJoint::getSizeInBytes() const {
 	return sizeof(HingeJoint);
 }
 

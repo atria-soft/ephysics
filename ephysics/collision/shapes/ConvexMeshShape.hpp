@@ -128,13 +128,13 @@ class ConvexMeshShape : public ConvexShape {
 };
 
 /// Set the scaling vector of the collision shape
-inline void ConvexMeshShape::setLocalScaling(const vec3& scaling) {
+void ConvexMeshShape::setLocalScaling(const vec3& scaling) {
 	ConvexShape::setLocalScaling(scaling);
 	recalculateBounds();
 }
 
 // Return the number of bytes used by the collision shape
-inline size_t ConvexMeshShape::getSizeInBytes() const {
+size_t ConvexMeshShape::getSizeInBytes() const {
 	return sizeof(ConvexMeshShape);
 }
 
@@ -143,7 +143,7 @@ inline size_t ConvexMeshShape::getSizeInBytes() const {
  * @param min The minimum bounds of the shape in local-space coordinates
  * @param max The maximum bounds of the shape in local-space coordinates
  */
-inline void ConvexMeshShape::getLocalBounds(vec3& min, vec3& max) const {
+void ConvexMeshShape::getLocalBounds(vec3& min, vec3& max) const {
 	min = m_minBounds;
 	max = m_maxBounds;
 }
@@ -156,7 +156,7 @@ inline void ConvexMeshShape::getLocalBounds(vec3& min, vec3& max) const {
 *					coordinates
 * @param mass Mass to use to compute the inertia tensor of the collision shape
 */
-inline void ConvexMeshShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
+void ConvexMeshShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
 	float factor = (1.0f / float(3.0)) * mass;
 	vec3 realExtent = 0.5f * (m_maxBounds - m_minBounds);
 	assert(realExtent.x() > 0 && realExtent.y() > 0 && realExtent.z() > 0);
@@ -172,7 +172,7 @@ inline void ConvexMeshShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, f
 /**
  * @param vertex Vertex to be added
  */
-inline void ConvexMeshShape::addVertex(const vec3& vertex) {
+void ConvexMeshShape::addVertex(const vec3& vertex) {
 
 	// Add the vertex in to vertices array
 	m_vertices.push_back(vertex);
@@ -207,7 +207,7 @@ inline void ConvexMeshShape::addVertex(const vec3& vertex) {
 * @param v1 Index of the first vertex of the edge to add
 * @param v2 Index of the second vertex of the edge to add
 */
-inline void ConvexMeshShape::addEdge(uint32_t v1, uint32_t v2) {
+void ConvexMeshShape::addEdge(uint32_t v1, uint32_t v2) {
 
 	// If the entry for vertex v1 does not exist in the adjacency list
 	if (m_edgesAdjacencyList.count(v1) == 0) {
@@ -228,7 +228,7 @@ inline void ConvexMeshShape::addEdge(uint32_t v1, uint32_t v2) {
 /**
  * @return True if the edges information is used and false otherwise
  */
-inline bool ConvexMeshShape::isEdgesInformationUsed() const {
+bool ConvexMeshShape::isEdgesInformationUsed() const {
 	return m_isEdgesInformationUsed;
 }
 
@@ -238,12 +238,12 @@ inline bool ConvexMeshShape::isEdgesInformationUsed() const {
  * @param isEdgesUsed True if you want to use the edges information to speed up
  *					the collision detection with the convex mesh shape
  */
-inline void ConvexMeshShape::setIsEdgesInformationUsed(bool isEdgesUsed) {
+void ConvexMeshShape::setIsEdgesInformationUsed(bool isEdgesUsed) {
 	m_isEdgesInformationUsed = isEdgesUsed;
 }
 
 // Return true if a point is inside the collision shape
-inline bool ConvexMeshShape::testPointInside(const vec3& localPoint,
+bool ConvexMeshShape::testPointInside(const vec3& localPoint,
 											 ProxyShape* proxyShape) const {
 
 	// Use the GJK algorithm to test if the point is inside the convex mesh

@@ -128,7 +128,7 @@ class FixedJoint : public Joint {
 };
 
 // Return the number of bytes used by the joint
-inline size_t FixedJoint::getSizeInBytes() const {
+size_t FixedJoint::getSizeInBytes() const {
 	return sizeof(FixedJoint);
 }
 

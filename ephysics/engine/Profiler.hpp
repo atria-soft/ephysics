@@ -147,113 +147,113 @@ namespace ephysics {
 #define PROFILE(name) ProfileSample profileSample(name)
 
 // Return true if we are at the root of the profiler tree
-inline bool ProfileNodeIterator::isRoot() {
+bool ProfileNodeIterator::isRoot() {
 	return (m_currentParentNode->getParentNode() == nullptr);
 }
 
 // Return true if we are at the end of a branch of the profiler tree
-inline bool ProfileNodeIterator::isEnd() {
+bool ProfileNodeIterator::isEnd() {
 	return (m_currentChildNode == nullptr);
 }
 
 // Return the name of the current node
-inline const char* ProfileNodeIterator::getCurrentName() {
+const char* ProfileNodeIterator::getCurrentName() {
 	return m_currentChildNode->getName();
 }
 
 // Return the total time of the current node
-inline long double ProfileNodeIterator::getCurrentTotalTime() {
+long double ProfileNodeIterator::getCurrentTotalTime() {
 	return m_currentChildNode->getTotalTime();
 }
 
 // Return the total number of calls of the current node
-inline uint32_t ProfileNodeIterator::getCurrentNbTotalCalls() {
+uint32_t ProfileNodeIterator::getCurrentNbTotalCalls() {
 	return m_currentChildNode->getNbTotalCalls();
 }
 
 // Return the name of the current parent node
-inline const char* ProfileNodeIterator::getCurrentParentName() {
+const char* ProfileNodeIterator::getCurrentParentName() {
 	return m_currentParentNode->getName();
 }
 
 // Return the total time of the current parent node
-inline long double ProfileNodeIterator::getCurrentParentTotalTime() {
+long double ProfileNodeIterator::getCurrentParentTotalTime() {
 	return m_currentParentNode->getTotalTime();
 }
 
 // Return the total number of calls of the current parent node
-inline uint32_t ProfileNodeIterator::getCurrentParentNbTotalCalls() {
+uint32_t ProfileNodeIterator::getCurrentParentNbTotalCalls() {
 	return m_currentParentNode->getNbTotalCalls();
 }
 
 // Go to the first node
-inline void ProfileNodeIterator::first() {
+void ProfileNodeIterator::first() {
 	m_currentChildNode = m_currentParentNode->getChildNode();
 }
 
 // Go to the next node
-inline void ProfileNodeIterator::next() {
+void ProfileNodeIterator::next() {
 	m_currentChildNode = m_currentChildNode->getSiblingNode();
 }
 
 // Return a pointer to the parent node
-inline ProfileNode* ProfileNode::getParentNode() {
+ProfileNode* ProfileNode::getParentNode() {
 	return m_parentNode;
 }
 
 // Return a pointer to a sibling node
-inline ProfileNode* ProfileNode::getSiblingNode() {
+ProfileNode* ProfileNode::getSiblingNode() {
 	return m_siblingNode;
 }
 
 // Return a pointer to a child node
-inline ProfileNode* ProfileNode::getChildNode() {
+ProfileNode* ProfileNode::getChildNode() {
 	return m_childNode;
 }
 
 // Return the name of the node
-inline const char* ProfileNode::getName() {
+const char* ProfileNode::getName() {
 	return m_name;
 }
 
 // Return the total number of call of the corresponding block of code
-inline uint32_t ProfileNode::getNbTotalCalls() const {
+uint32_t ProfileNode::getNbTotalCalls() const {
 	return m_numberTotalCalls;
 }
 
 // Return the total time spent in the block of code
-inline long double ProfileNode::getTotalTime() const {
+long double ProfileNode::getTotalTime() const {
 	return m_totalTime;
 }
 
 // Return the number of frames
-inline uint32_t Profiler::getNbFrames() {
+uint32_t Profiler::getNbFrames() {
 	return m_frameCounter;
 }
 
 // Return the elasped time since the start/reset of the profiling
-inline long double Profiler::getElapsedTimeSinceStart() {
+long double Profiler::getElapsedTimeSinceStart() {
 	long double currentTime = Timer::getCurrentSystemTime() * 1000.0;
 	return currentTime - m_profilingStartTime;
 }
 
 // Increment the frame counter
-inline void Profiler::incrementFrameCounter() {
+void Profiler::incrementFrameCounter() {
 	m_frameCounter++;
 }
 
 // Return an iterator over the profiler tree starting at the root
-inline ProfileNodeIterator* Profiler::getIterator() {
+ProfileNodeIterator* Profiler::getIterator() {
 	return new ProfileNodeIterator(&m_rootNode);
 }
 
 // Destroy a previously allocated iterator
-inline void Profiler::destroyIterator(ProfileNodeIterator* iterator) {
+void Profiler::destroyIterator(ProfileNodeIterator* iterator) {
 	delete iterator;
 }
 
 // Destroy the profiler (release the memory)
-inline void Profiler::destroy() {
+void Profiler::destroy() {
 	m_rootNode.destroy();
 }
 

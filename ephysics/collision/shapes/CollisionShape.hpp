@@ -5,7 +5,6 @@
  */
 #pragma once
 
-// Libraries
 #include <cassert>
 #include <typeinfo>
 #include <etk/math/Vector3D.hpp>
@@ -15,19 +14,14 @@
 #include <ephysics/collision/RaycastInfo.hpp>
 #include <ephysics/memory/MemoryAllocator.hpp>
 
-/// ReactPhysics3D namespace
 namespace ephysics {
-	
-/// Type of the collision shape
 enum CollisionShapeType {TRIANGLE, BOX, SPHERE, CONE, CYLINDER,
 						 CAPSULE, CONVEX_MESH, CONCAVE_MESH, HEIGHTFIELD};
 const int32_t NB_COLLISION_SHAPE_TYPES = 9;
 
-// Declarations
 class ProxyShape;
 class CollisionBody;
 
-// Class CollisionShape
 /**
  * This abstract class represents the collision shape associated with a
  * body that is used during the narrow-phase collision detection.
@@ -37,9 +31,9 @@ class CollisionShape {
 		CollisionShapeType m_type; //!< Type of the collision shape
 		vec3 m_scaling; //!< Scaling vector of the collision shape
 		/// Private copy-constructor
-		CollisionShape(const CollisionShape& shape);
+		CollisionShape(const CollisionShape& shape) = delete;
 		/// Private assignment operator
-		CollisionShape& operator=(const CollisionShape& shape);
+		CollisionShape& operator=(const CollisionShape& shape) = delete;
 		/// Return true if a point is inside the collision shape
 		virtual bool testPointInside(const vec3& worldPoint, ProxyShape* proxyShape) const=0;
 		/// Raycast method with feedback information
@@ -78,28 +72,28 @@ class CollisionShape {
 /**
  * @return The type of the collision shape (box, sphere, cylinder, ...)
  */
-inline CollisionShapeType CollisionShape::getType() const {
+CollisionShapeType CollisionShape::getType() const {
 	return m_type;
 }
 
 // Return true if the collision shape type is a convex shape
-inline bool CollisionShape::isConvex(CollisionShapeType shapeType) {
+bool CollisionShape::isConvex(CollisionShapeType shapeType) {
 	return shapeType != CONCAVE_MESH && shapeType != HEIGHTFIELD;
 }
 
 // Return the scaling vector of the collision shape
-inline vec3 CollisionShape::getScaling() const {
+vec3 CollisionShape::getScaling() const {
 	return m_scaling;
 }
 
 // Set the scaling vector of the collision shape
-inline void CollisionShape::setLocalScaling(const vec3& scaling) {
+void CollisionShape::setLocalScaling(const vec3& scaling) {
 	m_scaling = scaling;
 }
 
 // Return the maximum number of contact manifolds allowed in an overlapping
 // pair wit the given two collision shape types
-inline int32_t CollisionShape::computeNbMaxContactManifolds(CollisionShapeType shapeType1,
+int32_t CollisionShape::computeNbMaxContactManifolds(CollisionShapeType shapeType1,
 														CollisionShapeType shapeType2) {
 	// If both shapes are convex
 	if (isConvex(shapeType1) && isConvex(shapeType2)) {
