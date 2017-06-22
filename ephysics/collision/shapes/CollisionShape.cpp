@@ -54,3 +54,14 @@ void CollisionShape::computeAABB(AABB& aabb, const etk::Transform3D& transform) 
 	aabb.setMin(minCoordinates);
 	aabb.setMax(maxCoordinates);
 }
+
+int32_t CollisionShape::computeNbMaxContactManifolds(CollisionShapeType shapeType1,
+														CollisionShapeType shapeType2) {
+	// If both shapes are convex
+	if (isConvex(shapeType1) && isConvex(shapeType2)) {
+		return NB_MAX_CONTACT_MANIFOLDS_CONVEX_SHAPE;
+	}   // If there is at least one concave shape
+	else {
+		return NB_MAX_CONTACT_MANIFOLDS_CONCAVE_SHAPE;
+	}
+}

@@ -10,31 +10,30 @@
 #include <ephysics/collision/narrowphase/NarrowPhaseAlgorithm.hpp>
 
 namespace ephysics {
-/**
- * @brief It is used to compute the narrow-phase collision detection
- * between two sphere collision shapes.
- */
-class SphereVsSphereAlgorithm : public NarrowPhaseAlgorithm {
-	protected :
-		SphereVsSphereAlgorithm(const SphereVsSphereAlgorithm& algorithm) = delete;
-		SphereVsSphereAlgorithm& operator=(const SphereVsSphereAlgorithm& algorithm) = delete;
-	public :
-		/**
-		 * @brief Constructor
-		 */
-		SphereVsSphereAlgorithm();
-		/**
-		 * @brief Destructor
-		 */
-		virtual ~SphereVsSphereAlgorithm() = default;
-		/**
-		 * @brief Compute a contact info if the two bounding volume collide
-		 */
-		virtual void testCollision(const CollisionShapeInfo& _shape1Info,
-		                           const CollisionShapeInfo& _shape2Info,
-		                           NarrowPhaseCallback* _narrowPhaseCallback);
-};
-
+	/**
+	 * @brief It is used to compute the narrow-phase collision detection
+	 * between two sphere collision shapes.
+	 */
+	class SphereVsSphereAlgorithm : public NarrowPhaseAlgorithm {
+		protected :
+			SphereVsSphereAlgorithm(const SphereVsSphereAlgorithm&) = delete;
+			SphereVsSphereAlgorithm& operator=(const SphereVsSphereAlgorithm&) = delete;
+		public :
+			/**
+			 * @brief Constructor
+			 */
+			SphereVsSphereAlgorithm();
+			/**
+			 * @brief Destructor
+			 */
+			virtual ~SphereVsSphereAlgorithm() = default;
+			/**
+			 * @brief Compute a contact info if the two bounding volume collide
+			 */
+			virtual void testCollision(const CollisionShapeInfo& _shape1Info,
+			                           const CollisionShapeInfo& _shape2Info,
+			                           NarrowPhaseCallback* _narrowPhaseCallback);
+	};
 }
 
 

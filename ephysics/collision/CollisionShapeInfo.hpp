@@ -5,49 +5,35 @@
  */
 #pragma once
 
-// Libraries
 #include <ephysics/collision/shapes/CollisionShape.hpp>
 
-/// Namespace ReactPhysics3D
 namespace ephysics {
-
-class OverlappingPair;
-
-// Class CollisionShapeInfo
-/**
- * This structure regroups different things about a collision shape. This is
- * used to pass information about a collision shape to a collision algorithm.
- */
-struct CollisionShapeInfo {
-
-	public:
-
-		/// Broadphase overlapping pair
-		OverlappingPair* overlappingPair;
-
-		/// Proxy shape
-		ProxyShape* proxyShape;
-
-		/// Pointer to the collision shape
-		const CollisionShape* collisionShape;
-
-		/// etk::Transform3D that maps from collision shape local-space to world-space
-		etk::Transform3D shapeToWorldTransform;
-
-		/// Cached collision data of the proxy shape
-		void** cachedCollisionData;
-
-		/// Constructor
-		CollisionShapeInfo(ProxyShape* proxyCollisionShape, const CollisionShape* shape,
-						   const etk::Transform3D& shapeLocalToWorldTransform, OverlappingPair* pair,
-						   void** cachedData)
-			  : overlappingPair(pair), proxyShape(proxyCollisionShape), collisionShape(shape),
-				shapeToWorldTransform(shapeLocalToWorldTransform),
-				cachedCollisionData(cachedData) {
-
-		}
-};
-
+	class OverlappingPair;
+	/**
+	 * @brief It regroups different things about a collision shape. This is
+	 * used to pass information about a collision shape to a collision algorithm.
+	 */
+	struct CollisionShapeInfo {
+		public:
+			OverlappingPair* overlappingPair; //!< Broadphase overlapping pair
+			ProxyShape* proxyShape; //!< Proxy shape
+			const CollisionShape* collisionShape; //!< Pointer to the collision shape
+			etk::Transform3D shapeToWorldTransform; //!< etk::Transform3D that maps from collision shape local-space to world-space
+			void** cachedCollisionData; //!< Cached collision data of the proxy shape
+			/// Constructor
+			CollisionShapeInfo(ProxyShape* _proxyCollisionShape,
+			                   const CollisionShape* _shape,
+			                   const etk::Transform3D& _shapeLocalToWorldTransform,
+			                   OverlappingPair* _pair,
+			                   void** _cachedData):
+			  overlappingPair(_pair),
+			  proxyShape(_proxyCollisionShape),
+			  collisionShape(_shape),
+			  shapeToWorldTransform(_shapeLocalToWorldTransform),
+			  cachedCollisionData(_cachedData) {
+				
+			}
+	};
 }
 
 

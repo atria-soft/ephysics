@@ -511,3 +511,86 @@ void TestCollisionBetweenShapesCallback::notifyContact(OverlappingPair* overlapp
 						   const ContactPointInfo& contactInfo) {
 	m_collisionCallback->notifyContact(contactInfo);
 }
+
+// Return the Narrow-phase collision detection algorithm to use between two types of shapes
+NarrowPhaseAlgorithm* CollisionDetection::getCollisionAlgorithm(CollisionShapeType shape1Type, CollisionShapeType shape2Type) const {
+	return m_collisionMatrix[shape1Type][shape2Type];
+}
+
+// Set the collision dispatch configuration
+void CollisionDetection::setCollisionDispatch(CollisionDispatch* collisionDispatch) {
+	m_collisionDispatch = collisionDispatch;
+
+	m_collisionDispatch->init(this, &m_memoryAllocator);
+
+	// Fill-in the collision matrix with the new algorithms to use
+	fillInCollisionMatrix();
+}
+
+// Add a body to the collision detection
+void CollisionDetection::addProxyCollisionShape(ProxyShape* proxyShape,
+													   const AABB& aabb) {
+	
+	// Add the body to the broad-phase
+	m_broadPhaseAlgorithm.addProxyCollisionShape(proxyShape, aabb);
+
+	m_isCollisionShapesAdded = true;
+}  
+
+// Add a pair of bodies that cannot collide with each other
+void CollisionDetection::addNoCollisionPair(CollisionBody* body1,
+												   CollisionBody* body2) {
+	m_noCollisionPairs.insert(OverlappingPair::computeBodiesIndexPair(body1, body2));
+}
+
+// Remove a pair of bodies that cannot collide with each other
+void CollisionDetection::removeNoCollisionPair(CollisionBody* body1,
+													  CollisionBody* body2) {
+	m_noCollisionPairs.erase(OverlappingPair::computeBodiesIndexPair(body1, body2));
+}
+
+// Ask for a collision shape to be tested again during broad-phase.
+/// We simply put the shape in the list of collision shape that have moved in the
+/// previous frame so that it is tested for collision again in the broad-phase.
+void CollisionDetection::askForBroadPhaseCollisionCheck(ProxyShape* shape) {
+	m_broadPhaseAlgorithm.addMovedCollisionShape(shape->m_broadPhaseID);
+}
+
+// Update a proxy collision shape (that has moved for instance)
+void CollisionDetection::updateProxyCollisionShape(ProxyShape* shape, const AABB& aabb,
+														  const vec3& displacement, bool forceReinsert) {
+	m_broadPhaseAlgorithm.updateProxyCollisionShape(shape, aabb, displacement);
+}
+
+// Ray casting method
+void CollisionDetection::raycast(RaycastCallback* raycastCallback,
+										const Ray& ray,
+										unsigned short raycastWithCategoryMaskBits) const {
+
+	PROFILE("CollisionDetection::raycast()");
+
+	RaycastTest rayCastTest(raycastCallback);
+
+	// Ask the broad-phase algorithm to call the testRaycastAgainstShape()
+	// callback method for each proxy shape hit by the ray in the broad-phase
+	m_broadPhaseAlgorithm.raycast(ray, rayCastTest, raycastWithCategoryMaskBits);
+}
+
+// Test if the AABBs of two proxy shapes overlap
+bool CollisionDetection::testAABBOverlap(const ProxyShape* shape1,
+												const ProxyShape* shape2) const {
+
+	// If one of the shape's body is not active, we return no overlap
+	if (!shape1->getBody()->isActive() || !shape2->getBody()->isActive()) {
+		return false;
+	}
+
+	return m_broadPhaseAlgorithm.testOverlappingShapes(shape1, shape2);
+}
+
+// Return a pointer to the world
+CollisionWorld* CollisionDetection::getWorld() {
+	return m_world;
+}
+
+

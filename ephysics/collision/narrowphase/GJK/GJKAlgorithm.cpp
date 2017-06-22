@@ -82,7 +82,7 @@ void GJKAlgorithm::testCollision(const CollisionShapeInfo& shape1Info,
 	Simplex simplex;
 
 	// Get the previous point V (last cached separating axis)
-	vec3 v = mCurrentOverlappingPair->getCachedSeparatingAxis();
+	vec3 v = m_currentOverlappingPair->getCachedSeparatingAxis();
 
 	// Initialize the upper bound for the square distance
 	float distSquare = DECIMAL_LARGEST;
@@ -103,7 +103,7 @@ void GJKAlgorithm::testCollision(const CollisionShapeInfo& shape1Info,
 		if (vDotw > 0.0 && vDotw * vDotw > distSquare * marginSquare) {
 						
 			// Cache the current separating axis for frame coherence
-			mCurrentOverlappingPair->setCachedSeparatingAxis(v);
+			m_currentOverlappingPair->setCachedSeparatingAxis(v);
 			
 			// No int32_tersection, we return
 			return;

@@ -130,22 +130,4 @@ namespace ephysics {
 											   etk::Quaternion* constrainedOrientations);
 	};
 
-// Set the constrained velocities arrays
-void ConstraintSolver::setConstrainedVelocitiesArrays(vec3* constrainedLinearVelocities,
-															vec3* constrainedAngularVelocities) {
-	assert(constrainedLinearVelocities != NULL);
-	assert(constrainedAngularVelocities != NULL);
-	m_constraintSolverData.linearVelocities = constrainedLinearVelocities;
-	m_constraintSolverData.angularVelocities = constrainedAngularVelocities;
-}
-
-// Set the constrained positions/orientations arrays
-void ConstraintSolver::setConstrainedPositionsArrays(vec3* constrainedPositions,
-														   etk::Quaternion* constrainedOrientations) {
-	assert(constrainedPositions != NULL);
-	assert(constrainedOrientations != NULL);
-	m_constraintSolverData.positions = constrainedPositions;
-	m_constraintSolverData.orientations = constrainedOrientations;
-}
-
 }

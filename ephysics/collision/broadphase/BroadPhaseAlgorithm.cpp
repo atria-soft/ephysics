@@ -254,7 +254,7 @@ float BroadPhaseRaycastCallback::raycastBroadPhaseShape(int32_t nodeId, const Ra
 	return hitFraction;
 }
 
-bool BroadPhaseAlgorithm::testOverlappingShapes(const _ProxyShape* shape1,
+bool BroadPhaseAlgorithm::testOverlappingShapes(const ProxyShape* _shape1,
                                                 const ProxyShape* _shape2) const {
 	// Get the two AABBs of the collision shapes
 	const AABB& aabb1 = m_dynamicAABBTree.getFatAABB(_shape1->m_broadPhaseID);

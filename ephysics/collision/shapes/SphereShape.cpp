@@ -25,6 +25,39 @@ SphereShape::~SphereShape() {
 
 }
 
+
+void SphereShape::setLocalScaling(const vec3& _scaling) {
+	m_margin = (m_margin / m_scaling.x()) * _scaling.x();
+	CollisionShape::setLocalScaling(_scaling);
+}
+
+void SphereShape::computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const {
+	float diag = 0.4f * _mass * m_margin * m_margin;
+	_tensor.setValue(diag, 0.0f,  0.0f,
+	                 0.0f,  diag, 0.0f,
+	                 0.0f,  0.0f,  diag);
+}
+
+void SphereShape::computeAABB(AABB& _aabb, const etk::Transform3D& _transform) const {
+	// Get the local extents in x,y and z direction
+	vec3 extents(m_margin, m_margin, m_margin);
+	// Update the AABB with the new minimum and maximum coordinates
+	_aabb.setMin(_transform.getPosition() - extents);
+	_aabb.setMax(_transform.getPosition() + extents);
+}
+
+void SphereShape::getLocalBounds(vec3& _min, vec3& _max) const {
+	// Maximum bounds
+	_max.setX(m_margin);
+	_max.setY(m_margin);
+	_max.setZ(m_margin);
+	// Minimum bounds
+	_min.setX(-m_margin);
+	_min.setY(_min.x());
+	_min.setZ(_min.x());
+}
+
+
 // Raycast method with feedback information
 bool SphereShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const {
 

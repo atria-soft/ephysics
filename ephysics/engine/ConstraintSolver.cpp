@@ -9,73 +9,68 @@
 
 using namespace ephysics;
 
-// Constructor
-ConstraintSolver::ConstraintSolver(const std::map<RigidBody*, uint32_t>& mapBodyToVelocityIndex)
-				 : m_mapBodyToConstrainedVelocityIndex(mapBodyToVelocityIndex),
-				   m_isWarmStartingActive(true), m_constraintSolverData(mapBodyToVelocityIndex) {
-
+ConstraintSolver::ConstraintSolver(const std::map<RigidBody*, uint32_t>& _mapBodyToVelocityIndex):
+  m_mapBodyToConstrainedVelocityIndex(_mapBodyToVelocityIndex),
+  m_isWarmStartingActive(true),
+  m_constraintSolverData(_mapBodyToVelocityIndex) {
+	
 }
 
-// Initialize the constraint solver for a given island
-void ConstraintSolver::initializeForIsland(float dt, Island* island) {
-
+void ConstraintSolver::initializeForIsland(float _dt, Island* _island) {
 	PROFILE("ConstraintSolver::initializeForIsland()");
-
-	assert(island != NULL);
-	assert(island->getNbBodies() > 0);
-	assert(island->getNbJoints() > 0);
-
+	assert(_island != nullptr);
+	assert(_island->getNbBodies() > 0);
+	assert(_island->getNbJoints() > 0);
 	// Set the current time step
-	m_timeStep = dt;
-
+	m_timeStep = _dt;
 	// Initialize the constraint solver data used to initialize and solve the constraints
 	m_constraintSolverData.timeStep = m_timeStep;
 	m_constraintSolverData.isWarmStartingActive = m_isWarmStartingActive;
-
 	// For each joint of the island
-	Joint** joints = island->getJoints();
-	for (uint32_t i=0; i<island->getNbJoints(); i++) {
-
+	Joint** joints = _island->getJoints();
+	for (uint32_t iii=0; iii<_island->getNbJoints(); ++iii) {
 		// Initialize the constraint before solving it
-		joints[i]->initBeforeSolve(m_constraintSolverData);
-
+		joints[iii]->initBeforeSolve(m_constraintSolverData);
 		// Warm-start the constraint if warm-starting is enabled
 		if (m_isWarmStartingActive) {
-			joints[i]->warmstart(m_constraintSolverData);
+			joints[iii]->warmstart(m_constraintSolverData);
 		}
 	}
 }
 
-// Solve the velocity constraints
-void ConstraintSolver::solveVelocityConstraints(Island* island) {
-
+void ConstraintSolver::solveVelocityConstraints(Island* _island) {
 	PROFILE("ConstraintSolver::solveVelocityConstraints()");
-
-	assert(island != NULL);
-	assert(island->getNbJoints() > 0);
-
+	assert(_island != nullptr);
+	assert(_island->getNbJoints() > 0);
 	// For each joint of the island
-	Joint** joints = island->getJoints();
-	for (uint32_t i=0; i<island->getNbJoints(); i++) {
-
-		// Solve the constraint
-		joints[i]->solveVelocityConstraint(m_constraintSolverData);
+	Joint** joints = _island->getJoints();
+	for (uint32_t iii=0; iii<_island->getNbJoints(); ++iii) {
+		joints[iii]->solveVelocityConstraint(m_constraintSolverData);
 	}
 }
 
-// Solve the position constraints
-void ConstraintSolver::solvePositionConstraints(Island* island) {
-
+void ConstraintSolver::solvePositionConstraints(Island* _island) {
 	PROFILE("ConstraintSolver::solvePositionConstraints()");
-
-	assert(island != NULL);
-	assert(island->getNbJoints() > 0);
-
-	// For each joint of the island
-	Joint** joints = island->getJoints();
-	for (uint32_t i=0; i < island->getNbJoints(); i++) {
-
-		// Solve the constraint
-		joints[i]->solvePositionConstraint(m_constraintSolverData);
+	assert(_island != nullptr);
+	assert(_island->getNbJoints() > 0);
+	Joint** joints = _island->getJoints();
+	for (uint32_t iii=0; iii < _island->getNbJoints(); ++iii) {
+		joints[iii]->solvePositionConstraint(m_constraintSolverData);
 	}
+}
+
+void ConstraintSolver::setConstrainedVelocitiesArrays(vec3* _constrainedLinearVelocities,
+                                                      vec3* _constrainedAngularVelocities) {
+	assert(_constrainedLinearVelocities != nullptr);
+	assert(_constrainedAngularVelocities != nullptr);
+	m_constraintSolverData.linearVelocities = _constrainedLinearVelocities;
+	m_constraintSolverData.angularVelocities = _constrainedAngularVelocities;
+}
+
+void ConstraintSolver::setConstrainedPositionsArrays(vec3* _constrainedPositions,
+                                                     etk::Quaternion* _constrainedOrientations) {
+	assert(_constrainedPositions != nullptr);
+	assert(_constrainedOrientations != nullptr);
+	m_constraintSolverData.positions = _constrainedPositions;
+	m_constraintSolverData.orientations = _constrainedOrientations;
 }

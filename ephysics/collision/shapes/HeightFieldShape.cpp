@@ -246,3 +246,61 @@ void TriangleOverlapCallback::testTriangle(const vec3* trianglePoints) {
 		m_isHit = true;
 	}
 }
+
+// Return the number of rows in the height field
+int32_t HeightFieldShape::getNbRows() const {
+	return m_numberRows;
+}
+
+// Return the number of columns in the height field
+int32_t HeightFieldShape::getNbColumns() const {
+	return m_numberColumns;
+}
+
+// Return the type of height value in the height field
+HeightFieldShape::HeightDataType HeightFieldShape::getHeightDataType() const {
+	return m_heightDataType;
+}
+
+// Return the number of bytes used by the collision shape
+size_t HeightFieldShape::getSizeInBytes() const {
+	return sizeof(HeightFieldShape);
+}
+
+// Set the local scaling vector of the collision shape
+void HeightFieldShape::setLocalScaling(const vec3& scaling) {
+	CollisionShape::setLocalScaling(scaling);
+}
+
+// Return the height of a given (x,y) point in the height field
+float HeightFieldShape::getHeightAt(int32_t x, int32_t y) const {
+
+	switch(m_heightDataType) {
+		case HEIGHT_FLOAT_TYPE : return ((float*)m_heightFieldData)[y * m_numberColumns + x];
+		case HEIGHT_DOUBLE_TYPE : return ((double*)m_heightFieldData)[y * m_numberColumns + x];
+		case HEIGHT_INT_TYPE : return ((int32_t*)m_heightFieldData)[y * m_numberColumns + x] * m_integerHeightScale;
+		default: assert(false); return 0;
+	}
+}
+
+// Return the closest inside int32_teger grid value of a given floating grid value
+int32_t HeightFieldShape::computeIntegerGridValue(float value) const {
+	return (value < 0.0f) ? value - 0.5f : value + float(0.5);
+}
+
+// Return the local inertia tensor
+/**
+ * @param[out] tensor The 3x3 inertia tensor matrix of the shape in local-space
+ *					coordinates
+ * @param mass Mass to use to compute the inertia tensor of the collision shape
+ */
+void HeightFieldShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
+
+	// Default inertia tensor
+	// Note that this is not very realistic for a concave triangle mesh.
+	// However, in most cases, it will only be used static bodies and therefore,
+	// the inertia tensor is not used.
+	tensor.setValue(mass, 0, 0,
+						0, mass, 0,
+						0, 0, mass);
+}

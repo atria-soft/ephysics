@@ -190,7 +190,7 @@ bool AABB::testCollisionTriangleAABB(const vec3* _trianglePoints) const {
 bool AABB::contains(const vec3& _point) const {
 	return    _point.x() >= m_minCoordinates.x() - MACHINE_EPSILON && _point.x() <= m_maxCoordinates.x() + MACHINE_EPSILON
 	       && _point.y() >= m_minCoordinates.y() - MACHINE_EPSILON && _point.y() <= m_maxCoordinates.y() + MACHINE_EPSILON
-	       && _point.z() >= m_minCoordinates.z() - MACHINE_EPSILON && _point.z() <= m_maxCoordinates.z() + MACHINE_EPSILON);
+	       && _point.z() >= m_minCoordinates.z() - MACHINE_EPSILON && _point.z() <= m_maxCoordinates.z() + MACHINE_EPSILON;
 }
 
 AABB& AABB::operator=(const AABB& _aabb) {

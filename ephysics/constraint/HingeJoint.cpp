@@ -18,13 +18,13 @@ const float HingeJoint::BETA = float(0.2);
 HingeJoint::HingeJoint(const HingeJointInfo& jointInfo)
 		   : Joint(jointInfo), m_impulseTranslation(0, 0, 0), m_impulseRotation(0, 0),
 			 m_impulseLowerLimit(0), m_impulseUpperLimit(0), m_impulseMotor(0),
-			 mIsLimitEnabled(jointInfo.isLimitEnabled), mIsMotorEnabled(jointInfo.isMotorEnabled),
-			 mLowerLimit(jointInfo.minAngleLimit), mUpperLimit(jointInfo.maxAngleLimit),
-			 mIsLowerLimitViolated(false), mIsUpperLimitViolated(false),
-			 mMotorSpeed(jointInfo.motorSpeed), mMaxMotorTorque(jointInfo.maxMotorTorque) {
+			 m_isLimitEnabled(jointInfo.isLimitEnabled), m_isMotorEnabled(jointInfo.isMotorEnabled),
+			 m_lowerLimit(jointInfo.minAngleLimit), m_upperLimit(jointInfo.maxAngleLimit),
+			 m_isLowerLimitViolated(false), m_isUpperLimitViolated(false),
+			 m_motorSpeed(jointInfo.motorSpeed), m_maxMotorTorque(jointInfo.maxMotorTorque) {
 
-	assert(mLowerLimit <= 0 && mLowerLimit >= -2.0 * PI);
-	assert(mUpperLimit >= 0 && mUpperLimit <= 2.0 * PI);
+	assert(m_lowerLimit <= 0 && m_lowerLimit >= -2.0 * PI);
+	assert(m_upperLimit >= 0 && m_upperLimit <= 2.0 * PI);
 
 	// Compute the local-space anchor point for each body
 	etk::Transform3D transform1 = m_body1->getTransform();
@@ -33,10 +33,10 @@ HingeJoint::HingeJoint(const HingeJointInfo& jointInfo)
 	m_localAnchorPointBody2 = transform2.getInverse() * jointInfo.m_anchorPointWorldSpace;
 
 	// Compute the local-space hinge axis
-	mHingeLocalAxisBody1 = transform1.getOrientation().getInverse() * jointInfo.rotationAxisWorld;
-	mHingeLocalAxisBody2 = transform2.getOrientation().getInverse() * jointInfo.rotationAxisWorld;
-	mHingeLocalAxisBody1.normalize();
-	mHingeLocalAxisBody2.normalize();
+	m_hingeLocalAxisBody1 = transform1.getOrientation().getInverse() * jointInfo.rotationAxisWorld;
+	m_hingeLocalAxisBody2 = transform2.getOrientation().getInverse() * jointInfo.rotationAxisWorld;
+	m_hingeLocalAxisBody1.normalize();
+	m_hingeLocalAxisBody2.normalize();
 
 	// Compute the inverse of the initial orientation difference between the two bodies
 	m_initOrientationDifferenceInv = transform2.getOrientation() *
@@ -75,28 +75,28 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 	float hingeAngle = computeCurrentHingeAngle(orientationBody1, orientationBody2);
 
 	// Check if the limit constraints are violated or not
-	float lowerLimitError = hingeAngle - mLowerLimit;
-	float upperLimitError = mUpperLimit - hingeAngle;
-	bool oldIsLowerLimitViolated = mIsLowerLimitViolated;
-	mIsLowerLimitViolated = lowerLimitError <= 0;
-	if (mIsLowerLimitViolated != oldIsLowerLimitViolated) {
+	float lowerLimitError = hingeAngle - m_lowerLimit;
+	float upperLimitError = m_upperLimit - hingeAngle;
+	bool oldIsLowerLimitViolated = m_isLowerLimitViolated;
+	m_isLowerLimitViolated = lowerLimitError <= 0;
+	if (m_isLowerLimitViolated != oldIsLowerLimitViolated) {
 		m_impulseLowerLimit = 0.0;
 	}
-	bool oldIsUpperLimitViolated = mIsUpperLimitViolated;
-	mIsUpperLimitViolated = upperLimitError <= 0;
-	if (mIsUpperLimitViolated != oldIsUpperLimitViolated) {
+	bool oldIsUpperLimitViolated = m_isUpperLimitViolated;
+	m_isUpperLimitViolated = upperLimitError <= 0;
+	if (m_isUpperLimitViolated != oldIsUpperLimitViolated) {
 		m_impulseUpperLimit = 0.0;
 	}
 
 	// Compute vectors needed in the Jacobian
-	mA1 = orientationBody1 * mHingeLocalAxisBody1;
-	vec3 a2 = orientationBody2 * mHingeLocalAxisBody2;
+	mA1 = orientationBody1 * m_hingeLocalAxisBody1;
+	vec3 a2 = orientationBody2 * m_hingeLocalAxisBody2;
 	mA1.normalize();
 	a2.normalize();
 	const vec3 b2 = a2.getOrthoVector();
 	const vec3 c2 = a2.cross(b2);
-	mB2CrossA1 = b2.cross(mA1);
-	mC2CrossA1 = c2.cross(mA1);
+	m_b2CrossA1 = b2.cross(mA1);
+	m_c2CrossA1 = c2.cross(mA1);
 
 	// Compute the corresponding skew-symmetric matrices
 	etk::Matrix3x3 skewSymmetricMatrixU1= etk::Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r1World);
@@ -115,25 +115,25 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 	}
 
 	// Compute the bias "b" of the translation constraints
-	mBTranslation.setZero();
+	m_bTranslation.setZero();
 	float biasFactor = (BETA / constraintSolverData.timeStep);
 	if (m_positionCorrectionTechnique == BAUMGARTE_JOINTS) {
-		mBTranslation = biasFactor * (x2 + m_r2World - x1 - m_r1World);
+		m_bTranslation = biasFactor * (x2 + m_r2World - x1 - m_r1World);
 	}
 
 	// Compute the inverse mass matrix K=JM^-1J^t for the 2 rotation constraints (2x2 matrix)
-	vec3 I1B2CrossA1 = m_i1 * mB2CrossA1;
-	vec3 I1C2CrossA1 = m_i1 * mC2CrossA1;
-	vec3 I2B2CrossA1 = m_i2 * mB2CrossA1;
-	vec3 I2C2CrossA1 = m_i2 * mC2CrossA1;
-	const float el11 = mB2CrossA1.dot(I1B2CrossA1) +
-						 mB2CrossA1.dot(I2B2CrossA1);
-	const float el12 = mB2CrossA1.dot(I1C2CrossA1) +
-						 mB2CrossA1.dot(I2C2CrossA1);
-	const float el21 = mC2CrossA1.dot(I1B2CrossA1) +
-						 mC2CrossA1.dot(I2B2CrossA1);
-	const float el22 = mC2CrossA1.dot(I1C2CrossA1) +
-						 mC2CrossA1.dot(I2C2CrossA1);
+	vec3 I1B2CrossA1 = m_i1 * m_b2CrossA1;
+	vec3 I1C2CrossA1 = m_i1 * m_c2CrossA1;
+	vec3 I2B2CrossA1 = m_i2 * m_b2CrossA1;
+	vec3 I2C2CrossA1 = m_i2 * m_c2CrossA1;
+	const float el11 = m_b2CrossA1.dot(I1B2CrossA1) +
+						 m_b2CrossA1.dot(I2B2CrossA1);
+	const float el12 = m_b2CrossA1.dot(I1C2CrossA1) +
+						 m_b2CrossA1.dot(I2C2CrossA1);
+	const float el21 = m_c2CrossA1.dot(I1B2CrossA1) +
+						 m_c2CrossA1.dot(I2B2CrossA1);
+	const float el22 = m_c2CrossA1.dot(I1C2CrossA1) +
+						 m_c2CrossA1.dot(I2C2CrossA1);
 	const etk::Matrix2x2 matrixKRotation(el11, el12, el21, el22);
 	m_inverseMassMatrixRotation.setZero();
 	if (m_body1->getType() == DYNAMIC || m_body2->getType() == DYNAMIC) {
@@ -141,9 +141,9 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 	}
 
 	// Compute the bias "b" of the rotation constraints
-	mBRotation.setZero();
+	m_bRotation.setZero();
 	if (m_positionCorrectionTechnique == BAUMGARTE_JOINTS) {
-		mBRotation = biasFactor * vec2(mA1.dot(b2), mA1.dot(c2));
+		m_bRotation = biasFactor * vec2(mA1.dot(b2), mA1.dot(c2));
 	}
 
 	// If warm-starting is not enabled
@@ -158,25 +158,25 @@ void HingeJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverDat
 	}
 
 	// If the motor or limits are enabled
-	if (mIsMotorEnabled || (mIsLimitEnabled && (mIsLowerLimitViolated || mIsUpperLimitViolated))) {
+	if (m_isMotorEnabled || (m_isLimitEnabled && (m_isLowerLimitViolated || m_isUpperLimitViolated))) {
 
 		// Compute the inverse of the mass matrix K=JM^-1J^t for the limits and motor (1x1 matrix)
 		m_inverseMassMatrixLimitMotor = mA1.dot(m_i1 * mA1) + mA1.dot(m_i2 * mA1);
 		m_inverseMassMatrixLimitMotor = (m_inverseMassMatrixLimitMotor > 0.0) ?
 								  1.0f / m_inverseMassMatrixLimitMotor : 0.0f;
 
-		if (mIsLimitEnabled) {
+		if (m_isLimitEnabled) {
 
 			// Compute the bias "b" of the lower limit constraint
-			mBLowerLimit = 0.0;
+			m_bLowerLimit = 0.0;
 			if (m_positionCorrectionTechnique == BAUMGARTE_JOINTS) {
-				mBLowerLimit = biasFactor * lowerLimitError;
+				m_bLowerLimit = biasFactor * lowerLimitError;
 			}
 
 			// Compute the bias "b" of the upper limit constraint
-			mBUpperLimit = 0.0;
+			m_bUpperLimit = 0.0;
 			if (m_positionCorrectionTechnique == BAUMGARTE_JOINTS) {
-				mBUpperLimit = biasFactor * upperLimitError;
+				m_bUpperLimit = biasFactor * upperLimitError;
 			}
 		}
 	}
@@ -196,7 +196,7 @@ void HingeJoint::warmstart(const ConstraintSolverData& constraintSolverData) {
 	const float inverseMassBody2 = m_body2->m_massInverse;
 
 	// Compute the impulse P=J^T * lambda for the 2 rotation constraints
-	vec3 rotationImpulse = -mB2CrossA1 * m_impulseRotation.x() - mC2CrossA1 * m_impulseRotation.y();
+	vec3 rotationImpulse = -m_b2CrossA1 * m_impulseRotation.x() - m_c2CrossA1 * m_impulseRotation.y();
 
 	// Compute the impulse P=J^T * lambda for the lower and upper limits constraints
 	const vec3 limitsImpulse = (m_impulseUpperLimit - m_impulseLowerLimit) * mA1;
@@ -258,7 +258,7 @@ void HingeJoint::solveVelocityConstraint(const ConstraintSolverData& constraintS
 
 	// Compute the Lagrange multiplier lambda
 	const vec3 deltaLambdaTranslation = m_inverseMassMatrixTranslation *
-										  (-JvTranslation - mBTranslation);
+										  (-JvTranslation - m_bTranslation);
 	m_impulseTranslation += deltaLambdaTranslation;
 
 	// Compute the impulse P=J^T * lambda of body 1
@@ -279,39 +279,39 @@ void HingeJoint::solveVelocityConstraint(const ConstraintSolverData& constraintS
 	// --------------- Rotation Constraints --------------- //
 
 	// Compute J*v for the 2 rotation constraints
-	const vec2 JvRotation(-mB2CrossA1.dot(w1) + mB2CrossA1.dot(w2),
-							 -mC2CrossA1.dot(w1) + mC2CrossA1.dot(w2));
+	const vec2 JvRotation(-m_b2CrossA1.dot(w1) + m_b2CrossA1.dot(w2),
+							 -m_c2CrossA1.dot(w1) + m_c2CrossA1.dot(w2));
 
 	// Compute the Lagrange multiplier lambda for the 2 rotation constraints
-	vec2 deltaLambdaRotation = m_inverseMassMatrixRotation * (-JvRotation - mBRotation);
+	vec2 deltaLambdaRotation = m_inverseMassMatrixRotation * (-JvRotation - m_bRotation);
 	m_impulseRotation += deltaLambdaRotation;
 
 	// Compute the impulse P=J^T * lambda for the 2 rotation constraints of body 1
-	angularImpulseBody1 = -mB2CrossA1 * deltaLambdaRotation.x() -
-										mC2CrossA1 * deltaLambdaRotation.y();
+	angularImpulseBody1 = -m_b2CrossA1 * deltaLambdaRotation.x() -
+										m_c2CrossA1 * deltaLambdaRotation.y();
 
 	// Apply the impulse to the body 1
 	w1 += m_i1 * angularImpulseBody1;
 
 	// Compute the impulse P=J^T * lambda for the 2 rotation constraints of body 2
-	angularImpulseBody2 = mB2CrossA1 * deltaLambdaRotation.x() +
-			mC2CrossA1 * deltaLambdaRotation.y();
+	angularImpulseBody2 = m_b2CrossA1 * deltaLambdaRotation.x() +
+			m_c2CrossA1 * deltaLambdaRotation.y();
 
 	// Apply the impulse to the body 2
 	w2 += m_i2 * angularImpulseBody2;
 
 	// --------------- Limits Constraints --------------- //
 
-	if (mIsLimitEnabled) {
+	if (m_isLimitEnabled) {
 
 		// If the lower limit is violated
-		if (mIsLowerLimitViolated) {
+		if (m_isLowerLimitViolated) {
 
 			// Compute J*v for the lower limit constraint
 			const float JvLowerLimit = (w2 - w1).dot(mA1);
 
 			// Compute the Lagrange multiplier lambda for the lower limit constraint
-			float deltaLambdaLower = m_inverseMassMatrixLimitMotor * (-JvLowerLimit -mBLowerLimit);
+			float deltaLambdaLower = m_inverseMassMatrixLimitMotor * (-JvLowerLimit -m_bLowerLimit);
 			float lambdaTemp = m_impulseLowerLimit;
 			m_impulseLowerLimit = std::max(m_impulseLowerLimit + deltaLambdaLower, 0.0f);
 			deltaLambdaLower = m_impulseLowerLimit - lambdaTemp;
@@ -330,13 +330,13 @@ void HingeJoint::solveVelocityConstraint(const ConstraintSolverData& constraintS
 		}
 
 		// If the upper limit is violated
-		if (mIsUpperLimitViolated) {
+		if (m_isUpperLimitViolated) {
 
 			// Compute J*v for the upper limit constraint
 			const float JvUpperLimit = -(w2 - w1).dot(mA1);
 
 			// Compute the Lagrange multiplier lambda for the upper limit constraint
-			float deltaLambdaUpper = m_inverseMassMatrixLimitMotor * (-JvUpperLimit -mBUpperLimit);
+			float deltaLambdaUpper = m_inverseMassMatrixLimitMotor * (-JvUpperLimit -m_bUpperLimit);
 			float lambdaTemp = m_impulseUpperLimit;
 			m_impulseUpperLimit = std::max(m_impulseUpperLimit + deltaLambdaUpper, 0.0f);
 			deltaLambdaUpper = m_impulseUpperLimit - lambdaTemp;
@@ -358,14 +358,14 @@ void HingeJoint::solveVelocityConstraint(const ConstraintSolverData& constraintS
 	// --------------- Motor --------------- //
 
 	// If the motor is enabled
-	if (mIsMotorEnabled) {
+	if (m_isMotorEnabled) {
 
 		// Compute J*v for the motor
 		const float JvMotor = mA1.dot(w1 - w2);
 
 		// Compute the Lagrange multiplier lambda for the motor
-		const float maxMotorImpulse = mMaxMotorTorque * constraintSolverData.timeStep;
-		float deltaLambdaMotor = m_inverseMassMatrixLimitMotor * (-JvMotor - mMotorSpeed);
+		const float maxMotorImpulse = m_maxMotorTorque * constraintSolverData.timeStep;
+		float deltaLambdaMotor = m_inverseMassMatrixLimitMotor * (-JvMotor - m_motorSpeed);
 		float lambdaTemp = m_impulseMotor;
 		m_impulseMotor = clamp(m_impulseMotor + deltaLambdaMotor, -maxMotorImpulse, maxMotorImpulse);
 		deltaLambdaMotor = m_impulseMotor - lambdaTemp;
@@ -413,20 +413,20 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 	float hingeAngle = computeCurrentHingeAngle(q1, q2);
 
 	// Check if the limit constraints are violated or not
-	float lowerLimitError = hingeAngle - mLowerLimit;
-	float upperLimitError = mUpperLimit - hingeAngle;
-	mIsLowerLimitViolated = lowerLimitError <= 0;
-	mIsUpperLimitViolated = upperLimitError <= 0;
+	float lowerLimitError = hingeAngle - m_lowerLimit;
+	float upperLimitError = m_upperLimit - hingeAngle;
+	m_isLowerLimitViolated = lowerLimitError <= 0;
+	m_isUpperLimitViolated = upperLimitError <= 0;
 
 	// Compute vectors needed in the Jacobian
-	mA1 = q1 * mHingeLocalAxisBody1;
-	vec3 a2 = q2 * mHingeLocalAxisBody2;
+	mA1 = q1 * m_hingeLocalAxisBody1;
+	vec3 a2 = q2 * m_hingeLocalAxisBody2;
 	mA1.normalize();
 	a2.normalize();
 	const vec3 b2 = a2.getOrthoVector();
 	const vec3 c2 = a2.cross(b2);
-	mB2CrossA1 = b2.cross(mA1);
-	mC2CrossA1 = c2.cross(mA1);
+	m_b2CrossA1 = b2.cross(mA1);
+	m_c2CrossA1 = c2.cross(mA1);
 
 	// Compute the corresponding skew-symmetric matrices
 	etk::Matrix3x3 skewSymmetricMatrixU1= etk::Matrix3x3::computeSkewSymmetricMatrixForCrossProduct(m_r1World);
@@ -480,18 +480,18 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 	// --------------- Rotation Constraints --------------- //
 
 	// Compute the inverse mass matrix K=JM^-1J^t for the 2 rotation constraints (2x2 matrix)
-	vec3 I1B2CrossA1 = m_i1 * mB2CrossA1;
-	vec3 I1C2CrossA1 = m_i1 * mC2CrossA1;
-	vec3 I2B2CrossA1 = m_i2 * mB2CrossA1;
-	vec3 I2C2CrossA1 = m_i2 * mC2CrossA1;
-	const float el11 = mB2CrossA1.dot(I1B2CrossA1) +
-						 mB2CrossA1.dot(I2B2CrossA1);
-	const float el12 = mB2CrossA1.dot(I1C2CrossA1) +
-						 mB2CrossA1.dot(I2C2CrossA1);
-	const float el21 = mC2CrossA1.dot(I1B2CrossA1) +
-						 mC2CrossA1.dot(I2B2CrossA1);
-	const float el22 = mC2CrossA1.dot(I1C2CrossA1) +
-						 mC2CrossA1.dot(I2C2CrossA1);
+	vec3 I1B2CrossA1 = m_i1 * m_b2CrossA1;
+	vec3 I1C2CrossA1 = m_i1 * m_c2CrossA1;
+	vec3 I2B2CrossA1 = m_i2 * m_b2CrossA1;
+	vec3 I2C2CrossA1 = m_i2 * m_c2CrossA1;
+	const float el11 = m_b2CrossA1.dot(I1B2CrossA1) +
+						 m_b2CrossA1.dot(I2B2CrossA1);
+	const float el12 = m_b2CrossA1.dot(I1C2CrossA1) +
+						 m_b2CrossA1.dot(I2C2CrossA1);
+	const float el21 = m_c2CrossA1.dot(I1B2CrossA1) +
+						 m_c2CrossA1.dot(I2B2CrossA1);
+	const float el22 = m_c2CrossA1.dot(I1C2CrossA1) +
+						 m_c2CrossA1.dot(I2C2CrossA1);
 	const etk::Matrix2x2 matrixKRotation(el11, el12, el21, el22);
 	m_inverseMassMatrixRotation.setZero();
 	if (m_body1->getType() == DYNAMIC || m_body2->getType() == DYNAMIC) {
@@ -505,7 +505,7 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 	vec2 lambdaRotation = m_inverseMassMatrixRotation * (-errorRotation);
 
 	// Compute the impulse P=J^T * lambda for the 3 rotation constraints of body 1
-	angularImpulseBody1 = -mB2CrossA1 * lambdaRotation.x() - mC2CrossA1 * lambdaRotation.y();
+	angularImpulseBody1 = -m_b2CrossA1 * lambdaRotation.x() - m_c2CrossA1 * lambdaRotation.y();
 
 	// Compute the pseudo velocity of body 1
 	w1 = m_i1 * angularImpulseBody1;
@@ -515,7 +515,7 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 	q1.normalize();
 
 	// Compute the impulse of body 2
-	angularImpulseBody2 = mB2CrossA1 * lambdaRotation.x() + mC2CrossA1 * lambdaRotation.y();
+	angularImpulseBody2 = m_b2CrossA1 * lambdaRotation.x() + m_c2CrossA1 * lambdaRotation.y();
 
 	// Compute the pseudo velocity of body 2
 	w2 = m_i2 * angularImpulseBody2;
@@ -526,9 +526,9 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 
 	// --------------- Limits Constraints --------------- //
 
-	if (mIsLimitEnabled) {
+	if (m_isLimitEnabled) {
 
-		if (mIsLowerLimitViolated || mIsUpperLimitViolated) {
+		if (m_isLowerLimitViolated || m_isUpperLimitViolated) {
 
 			// Compute the inverse of the mass matrix K=JM^-1J^t for the limits (1x1 matrix)
 			m_inverseMassMatrixLimitMotor = mA1.dot(m_i1 * mA1) + mA1.dot(m_i2 * mA1);
@@ -537,7 +537,7 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 		}
 
 		// If the lower limit is violated
-		if (mIsLowerLimitViolated) {
+		if (m_isLowerLimitViolated) {
 
 			// Compute the Lagrange multiplier lambda for the lower limit constraint
 			float lambdaLowerLimit = m_inverseMassMatrixLimitMotor * (-lowerLimitError );
@@ -564,7 +564,7 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
 		}
 
 		// If the upper limit is violated
-		if (mIsUpperLimitViolated) {
+		if (m_isUpperLimitViolated) {
 
 			// Compute the Lagrange multiplier lambda for the upper limit constraint
 			float lambdaUpperLimit = m_inverseMassMatrixLimitMotor * (-upperLimitError);
@@ -600,9 +600,9 @@ void HingeJoint::solvePositionConstraint(const ConstraintSolverData& constraintS
  */
 void HingeJoint::enableLimit(bool isLimitEnabled) {
 
-	if (isLimitEnabled != mIsLimitEnabled) {
+	if (isLimitEnabled != m_isLimitEnabled) {
 
-		mIsLimitEnabled = isLimitEnabled;
+		m_isLimitEnabled = isLimitEnabled;
 
 		// Reset the limits
 		resetLimits();
@@ -616,7 +616,7 @@ void HingeJoint::enableLimit(bool isLimitEnabled) {
  */
 void HingeJoint::enableMotor(bool isMotorEnabled) {
 
-	mIsMotorEnabled = isMotorEnabled;
+	m_isMotorEnabled = isMotorEnabled;
 	m_impulseMotor = 0.0;
 
 	// Wake up the two bodies of the joint
@@ -630,11 +630,11 @@ void HingeJoint::enableMotor(bool isMotorEnabled) {
  */
 void HingeJoint::setMinAngleLimit(float lowerLimit) {
 
-	assert(mLowerLimit <= 0 && mLowerLimit >= -2.0 * PI);
+	assert(m_lowerLimit <= 0 && m_lowerLimit >= -2.0 * PI);
 
-	if (lowerLimit != mLowerLimit) {
+	if (lowerLimit != m_lowerLimit) {
 
-		mLowerLimit = lowerLimit;
+		m_lowerLimit = lowerLimit;
 
 		// Reset the limits
 		resetLimits();
@@ -649,9 +649,9 @@ void HingeJoint::setMaxAngleLimit(float upperLimit) {
 
 	assert(upperLimit >= 0 && upperLimit <= 2.0 * PI);
 
-	if (upperLimit != mUpperLimit) {
+	if (upperLimit != m_upperLimit) {
 
-		mUpperLimit = upperLimit;
+		m_upperLimit = upperLimit;
 
 		// Reset the limits
 		resetLimits();
@@ -673,9 +673,9 @@ void HingeJoint::resetLimits() {
 // Set the motor speed
 void HingeJoint::setMotorSpeed(float motorSpeed) {
 
-	if (motorSpeed != mMotorSpeed) {
+	if (motorSpeed != m_motorSpeed) {
 
-		mMotorSpeed = motorSpeed;
+		m_motorSpeed = motorSpeed;
 
 		// Wake up the two bodies of the joint
 		m_body1->setIsSleeping(false);
@@ -689,10 +689,10 @@ void HingeJoint::setMotorSpeed(float motorSpeed) {
  */
 void HingeJoint::setMaxMotorTorque(float maxMotorTorque) {
 
-	if (maxMotorTorque != mMaxMotorTorque) {
+	if (maxMotorTorque != m_maxMotorTorque) {
 
-		assert(mMaxMotorTorque >= 0.0);
-		mMaxMotorTorque = maxMotorTorque;
+		assert(m_maxMotorTorque >= 0.0);
+		m_maxMotorTorque = maxMotorTorque;
 
 		// Wake up the two bodies of the joint
 		m_body1->setIsSleeping(false);
@@ -780,6 +780,70 @@ float HingeJoint::computeCurrentHingeAngle(const etk::Quaternion& orientationBod
 	hingeAngle = computeNormalizedAngle(hingeAngle);
 
 	// Compute and return the corresponding angle near one the two limits
-	return computeCorrespondingAngleNearLimits(hingeAngle, mLowerLimit, mUpperLimit);
+	return computeCorrespondingAngleNearLimits(hingeAngle, m_lowerLimit, m_upperLimit);
 }
+
+
+// Return true if the limits of the joint are enabled
+/**
+ * @return True if the limits of the joint are enabled and false otherwise
+ */
+bool HingeJoint::isLimitEnabled() const {
+	return m_isLimitEnabled;
+}
+
+// Return true if the motor of the joint is enabled
+/**
+ * @return True if the motor of joint is enabled and false otherwise
+ */
+bool HingeJoint::isMotorEnabled() const {
+	return m_isMotorEnabled;
+}
+
+// Return the minimum angle limit
+/**
+ * @return The minimum limit angle of the joint (in radian)
+ */
+float HingeJoint::getMinAngleLimit() const {
+	return m_lowerLimit;
+}
+
+// Return the maximum angle limit
+/**
+ * @return The maximum limit angle of the joint (in radian)
+ */
+float HingeJoint::getMaxAngleLimit() const {
+	return m_upperLimit;
+}
+
+// Return the motor speed
+/**
+ * @return The current speed of the joint motor (in radian per second)
+ */
+float HingeJoint::getMotorSpeed() const {
+	return m_motorSpeed;
+}
+
+// Return the maximum motor torque
+/**
+ * @return The maximum torque of the joint motor (in Newtons)
+ */
+float HingeJoint::getMaxMotorTorque() const {
+	return m_maxMotorTorque;
+}
+
+// Return the int32_tensity of the current torque applied for the joint motor
+/**
+ * @param timeStep The current time step (in seconds)
+ * @return The int32_tensity of the current torque (in Newtons) of the joint motor
+ */
+float HingeJoint::getMotorTorque(float timeStep) const {
+	return m_impulseMotor / timeStep;
+}
+
+// Return the number of bytes used by the joint
+size_t HingeJoint::getSizeInBytes() const {
+	return sizeof(HingeJoint);
+}
+
 

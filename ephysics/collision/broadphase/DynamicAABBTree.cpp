@@ -4,7 +4,6 @@
  * @license BSD 3 clauses (see license file)
  */
 
-// Libraries
 #include <ephysics/collision/broadphase/DynamicAABBTree.hpp>
 #include <ephysics/collision/broadphase/BroadPhaseAlgorithm.hpp>
 #include <ephysics/memory/Stack.hpp>
@@ -13,19 +12,15 @@
 
 using namespace ephysics;
 
-// Initialization of static variables
 const int32_t TreeNode::NULL_TREE_NODE = -1;
 
-// Constructor
 DynamicAABBTree::DynamicAABBTree(float extraAABBGap) : m_extraAABBGap(extraAABBGap) {
 
 	init();
 }
 
-// Destructor
 DynamicAABBTree::~DynamicAABBTree() {
 
-	// Free the allocated memory for the nodes
 	free(m_nodes);
 }
 
@@ -672,6 +667,60 @@ void DynamicAABBTree::raycast(const Ray& ray, DynamicAABBTreeRaycastCallback &ca
 		}
 	}
 }
+
+// Return true if the node is a leaf of the tree
+bool TreeNode::isLeaf() const {
+	return (height == 0);
+}
+
+// Return the fat AABB corresponding to a given node ID
+const AABB& DynamicAABBTree::getFatAABB(int32_t nodeID) const {
+	assert(nodeID >= 0 && nodeID < m_numberAllocatedNodes);
+	return m_nodes[nodeID].aabb;
+}
+
+// Return the pointer to the data array of a given leaf node of the tree
+int32_t* DynamicAABBTree::getNodeDataInt(int32_t nodeID) const {
+	assert(nodeID >= 0 && nodeID < m_numberAllocatedNodes);
+	assert(m_nodes[nodeID].isLeaf());
+	return m_nodes[nodeID].dataInt;
+}
+
+// Return the pointer to the data pointer of a given leaf node of the tree
+void* DynamicAABBTree::getNodeDataPointer(int32_t nodeID) const {
+	assert(nodeID >= 0 && nodeID < m_numberAllocatedNodes);
+	assert(m_nodes[nodeID].isLeaf());
+	return m_nodes[nodeID].dataPointer;
+}
+
+// Return the root AABB of the tree
+AABB DynamicAABBTree::getRootAABB() const {
+	return getFatAABB(m_rootNodeID);
+}
+
+// Add an object int32_to the tree. This method creates a new leaf node in the tree and
+// returns the ID of the corresponding node.
+int32_t DynamicAABBTree::addObject(const AABB& aabb, int32_t data1, int32_t data2) {
+
+	int32_t nodeId = addObjectInternal(aabb);
+
+	m_nodes[nodeId].dataInt[0] = data1;
+	m_nodes[nodeId].dataInt[1] = data2;
+
+	return nodeId;
+}
+
+// Add an object int32_to the tree. This method creates a new leaf node in the tree and
+// returns the ID of the corresponding node.
+int32_t DynamicAABBTree::addObject(const AABB& aabb, void* data) {
+
+	int32_t nodeId = addObjectInternal(aabb);
+
+	m_nodes[nodeId].dataPointer = data;
+
+	return nodeId;
+}
+
 
 #ifndef NDEBUG
 

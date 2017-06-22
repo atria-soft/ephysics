@@ -216,3 +216,70 @@ bool CylinderShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape
 
 	return true;
 }
+
+// Return the radius
+/**
+ * @return Radius of the cylinder (in meters)
+ */
+float CylinderShape::getRadius() const {
+	return mRadius;
+}
+
+// Return the height
+/**
+ * @return Height of the cylinder (in meters)
+ */
+float CylinderShape::getHeight() const {
+	return m_halfHeight + m_halfHeight;
+}
+
+// Set the scaling vector of the collision shape
+void CylinderShape::setLocalScaling(const vec3& scaling) {
+
+	m_halfHeight = (m_halfHeight / m_scaling.y()) * scaling.y();
+	mRadius = (mRadius / m_scaling.x()) * scaling.x();
+
+	CollisionShape::setLocalScaling(scaling);
+}
+
+// Return the number of bytes used by the collision shape
+size_t CylinderShape::getSizeInBytes() const {
+	return sizeof(CylinderShape);
+}
+
+// Return the local bounds of the shape in x, y and z directions
+/**
+ * @param min The minimum bounds of the shape in local-space coordinates
+ * @param max The maximum bounds of the shape in local-space coordinates
+ */
+void CylinderShape::getLocalBounds(vec3& min, vec3& max) const {
+	// Maximum bounds
+	max.setX(mRadius + m_margin);
+	max.setY(m_halfHeight + m_margin);
+	max.setZ(max.x());
+	// Minimum bounds
+	min.setX(-max.x());
+	min.setY(-max.y());
+	min.setZ(min.x());
+}
+
+// Return the local inertia tensor of the cylinder
+/**
+ * @param[out] tensor The 3x3 inertia tensor matrix of the shape in local-space
+ *					coordinates
+ * @param mass Mass to use to compute the inertia tensor of the collision shape
+ */
+void CylinderShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
+	float height = float(2.0) * m_halfHeight;
+	float diag = (1.0f / float(12.0)) * mass * (3 * mRadius * mRadius + height * height);
+	tensor.setValue(diag, 0.0, 0.0, 0.0,
+						0.5f * mass * mRadius * mRadius, 0.0,
+						0.0, 0.0, diag);
+}
+
+// Return true if a point is inside the collision shape
+bool CylinderShape::testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const{
+	return (    (localPoint.x() * localPoint.x() + localPoint.z() * localPoint.z()) < mRadius * mRadius
+	         && localPoint.y() < m_halfHeight
+	         && localPoint.y() > -m_halfHeight);
+}

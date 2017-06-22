@@ -58,53 +58,5 @@ namespace ephysics {
 			friend class DynamicsWorld;
 	};
 
-// Add a body int32_to the island
-void Island::addBody(RigidBody* body) {
-	assert(!body->isSleeping());
-	m_bodies[m_numberBodies] = body;
-	m_numberBodies++;
-}
-
-// Add a contact manifold int32_to the island
-void Island::addContactManifold(ContactManifold* contactManifold) {
-	m_contactManifolds[m_numberContactManifolds] = contactManifold;
-	m_numberContactManifolds++;
-}
-
-// Add a joint int32_to the island
-void Island::addJoint(Joint* joint) {
-	m_joints[m_numberJoints] = joint;
-	m_numberJoints++;
-}
-
-// Return the number of bodies in the island
-uint32_t Island::getNbBodies() const {
-	return m_numberBodies;
-}
-
-// Return the number of contact manifolds in the island
-uint32_t Island::getNbContactManifolds() const {
-	return m_numberContactManifolds;
-}
-
-// Return the number of joints in the island
-uint32_t Island::getNbJoints() const {
-	return m_numberJoints;
-}
-
-// Return a pointer to the array of bodies
-RigidBody** Island::getBodies() {
-	return m_bodies;
-}
-
-// Return a pointer to the array of contact manifolds
-ContactManifold** Island::getContactManifold() {
-	return m_contactManifolds;
-}
-
-// Return a pointer to the array of joints
-Joint** Island::getJoints() {
-	return m_joints;
-}
 
 }

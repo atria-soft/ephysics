@@ -25,7 +25,7 @@ void ephysics::SphereVsSphereAlgorithm::testCollision(const ephysics::CollisionS
 	vec3 vectorBetweenCenters = transform2.getPosition() - transform1.getPosition();
 	float squaredDistanceBetweenCenters = vectorBetweenCenters.length2();
 	// Compute the sum of the radius
-	float sumRadius = _sphereShape1->getRadius() + sphereShape2->getRadius();
+	float sumRadius = sphereShape1->getRadius() + sphereShape2->getRadius();
 	// If the sphere collision shapes intersect
 	if (squaredDistanceBetweenCenters <= sumRadius * sumRadius) {
 		vec3 centerSphere2InBody1LocalSpace = transform1.getInverse() * transform2.getPosition();
@@ -44,6 +44,6 @@ void ephysics::SphereVsSphereAlgorithm::testCollision(const ephysics::CollisionS
 		                                       intersectionOnBody1,
 		                                       intersectionOnBody2);
 		// Notify about the new contact
-		_narrowPhaseCallback->notifyContact(shape1Info.overlappingPair, contactInfo);
+		_narrowPhaseCallback->notifyContact(_shape1Info.overlappingPair, contactInfo);
 	}
 }

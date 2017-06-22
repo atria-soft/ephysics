@@ -107,3 +107,59 @@ bool BoxShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pro
 
 	return true;
 }
+
+
+
+
+// Return the extents of the box
+/**
+ * @return The vector with the three extents of the box shape (in meters)
+ */
+vec3 BoxShape::getExtent() const {
+	return m_extent + vec3(m_margin, m_margin, m_margin);
+}
+
+// Set the scaling vector of the collision shape
+void BoxShape::setLocalScaling(const vec3& scaling) {
+
+	m_extent = (m_extent / m_scaling) * scaling;
+
+	CollisionShape::setLocalScaling(scaling);
+}
+
+// Return the local bounds of the shape in x, y and z directions
+/// This method is used to compute the AABB of the box
+/**
+ * @param min The minimum bounds of the shape in local-space coordinates
+ * @param max The maximum bounds of the shape in local-space coordinates
+ */
+void BoxShape::getLocalBounds(vec3& _min, vec3& _max) const {
+
+	// Maximum bounds
+	_max = m_extent + vec3(m_margin, m_margin, m_margin);
+
+	// Minimum bounds
+	_min = -_max;
+}
+
+// Return the number of bytes used by the collision shape
+size_t BoxShape::getSizeInBytes() const {
+	return sizeof(BoxShape);
+}
+
+// Return a local support point in a given direction without the objec margin
+vec3 BoxShape::getLocalSupportPointWithoutMargin(const vec3& direction,
+														   void** cachedCollisionData) const {
+
+	return vec3(direction.x() < 0.0 ? -m_extent.x() : m_extent.x(),
+				   direction.y() < 0.0 ? -m_extent.y() : m_extent.y(),
+				   direction.z() < 0.0 ? -m_extent.z() : m_extent.z());
+}
+
+// Return true if a point is inside the collision shape
+bool BoxShape::testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const {
+	return (localPoint.x() < m_extent[0] && localPoint.x() > -m_extent[0] &&
+			localPoint.y() < m_extent[1] && localPoint.y() > -m_extent[1] &&
+			localPoint.z() < m_extent[2] && localPoint.z() > -m_extent[2]);
+}
+

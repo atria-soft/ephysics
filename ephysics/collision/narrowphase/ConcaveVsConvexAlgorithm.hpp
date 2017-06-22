@@ -122,9 +122,8 @@ namespace ephysics {
 			                                std::vector<SmoothMeshContactInfo> _contactPoints,
 			                                NarrowPhaseCallback* _narrowPhaseCallback);
 			/// Add a triangle vertex int32_to the set of processed triangles
-			void addProcessedVertex(std::unordered_multimap<int32_t, vec3>& _processTriangleVertices,
-			                        const vec3& _vertex) {
-				processTriangleVertices.insert(std::make_pair(int32_t(vertex.x() * vertex.y() * vertex.z()), vertex));
+			void addProcessedVertex(std::unordered_multimap<int32_t, vec3>& _processTriangleVertices, const vec3& _vertex) {
+				_processTriangleVertices.insert(std::make_pair(int32_t(_vertex.x() * _vertex.y() * _vertex.z()), _vertex));
 			}
 			/// Return true if the vertex is in the set of already processed vertices
 			bool hasVertexBeenProcessed(const std::unordered_multimap<int32_t, vec3>& _processTriangleVertices,

@@ -60,35 +60,5 @@ namespace ephysics {
 			int32_t getTotalNbContactPoints() const;
 	};
 
-// Return the first proxy shape
-ProxyShape* ContactManifoldSet::getShape1() const {
-	return m_shape1;
-}
-
-// Return the second proxy shape
-ProxyShape* ContactManifoldSet::getShape2() const {
-	return m_shape2;
-}
-
-// Return the number of manifolds in the set
-int32_t ContactManifoldSet::getNbContactManifolds() const {
-	return m_nbManifolds;
-}
-
-// Return a given contact manifold
-ContactManifold* ContactManifoldSet::getContactManifold(int32_t index) const {
-	assert(index >= 0 && index < m_nbManifolds);
-	return m_manifolds[index];
-}
-
-// Return the total number of contact points in the set of manifolds
-int32_t ContactManifoldSet::getTotalNbContactPoints() const {
-	int32_t nbPoints = 0;
-	for (int32_t i=0; i<m_nbManifolds; i++) {
-		nbPoints += m_manifolds[i]->getNbContactPoints();
-	}
-	return nbPoints;
-}
-
 }
 

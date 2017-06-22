@@ -40,3 +40,43 @@ TriangleVertexArray::TriangleVertexArray(uint32_t nbVertices, void* verticesStar
 TriangleVertexArray::~TriangleVertexArray() {
 
 }
+
+// Return the vertex data type
+TriangleVertexArray::VertexDataType TriangleVertexArray::getVertexDataType() const {
+	return m_vertexDataType;
+}
+
+// Return the index data type
+TriangleVertexArray::IndexDataType TriangleVertexArray::getIndexDataType() const {
+   return m_indexDataType;
+}
+
+// Return the number of vertices
+uint32_t TriangleVertexArray::getNbVertices() const {
+	return m_numberVertices;
+}
+
+// Return the number of triangles
+uint32_t TriangleVertexArray::getNbTriangles() const {
+	return m_numberTriangles;
+}
+
+// Return the vertices stride (number of bytes)
+int32_t TriangleVertexArray::getVerticesStride() const {
+	return m_verticesStride;
+}
+
+// Return the indices stride (number of bytes)
+int32_t TriangleVertexArray::getIndicesStride() const {
+	return m_indicesStride;
+}
+
+// Return the pointer to the start of the vertices array
+unsigned char* TriangleVertexArray::getVerticesStart() const {
+	return m_verticesStart;
+}
+
+// Return the pointer to the start of the indices array
+unsigned char* TriangleVertexArray::getIndicesStart() const {
+	return m_indicesStart;
+}

@@ -182,3 +182,69 @@ void ConcaveMeshRaycastCallback::raycastTriangles() {
 		}
 	}
 }
+
+// Return the number of bytes used by the collision shape
+size_t ConcaveMeshShape::getSizeInBytes() const {
+	return sizeof(ConcaveMeshShape);
+}
+
+// Return the local bounds of the shape in x, y and z directions.
+// This method is used to compute the AABB of the box
+/**
+ * @param min The minimum bounds of the shape in local-space coordinates
+ * @param max The maximum bounds of the shape in local-space coordinates
+ */
+void ConcaveMeshShape::getLocalBounds(vec3& min, vec3& max) const {
+
+	// Get the AABB of the whole tree
+	AABB treeAABB = m_dynamicAABBTree.getRootAABB();
+
+	min = treeAABB.getMin();
+	max = treeAABB.getMax();
+}
+
+// Set the local scaling vector of the collision shape
+void ConcaveMeshShape::setLocalScaling(const vec3& scaling) {
+
+	CollisionShape::setLocalScaling(scaling);
+
+	// Reset the Dynamic AABB Tree
+	m_dynamicAABBTree.reset();
+
+	// Rebuild Dynamic AABB Tree here
+	initBVHTree();
+}
+
+// Return the local inertia tensor of the shape
+/**
+ * @param[out] tensor The 3x3 inertia tensor matrix of the shape in local-space
+ *					coordinates
+ * @param mass Mass to use to compute the inertia tensor of the collision shape
+ */
+void ConcaveMeshShape::computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const {
+
+	// Default inertia tensor
+	// Note that this is not very realistic for a concave triangle mesh.
+	// However, in most cases, it will only be used static bodies and therefore,
+	// the inertia tensor is not used.
+	_tensor.setValue(_mass, 0,     0,
+	                 0,     _mass, 0,
+	                 0,     0,     _mass);
+}
+
+// Called when a overlapping node has been found during the call to
+// DynamicAABBTree:reportAllShapesOverlappingWithAABB()
+void ConvexTriangleAABBOverlapCallback::notifyOverlappingNode(int32_t _nodeId) {
+
+	// Get the node data (triangle index and mesh subpart index)
+	int32_t* data = m_dynamicAABBTree.getNodeDataInt(_nodeId);
+
+	// Get the triangle vertices for this node from the concave mesh shape
+	vec3 trianglePoints[3];
+	m_concaveMeshShape.getTriangleVerticesWithIndexPointer(data[0], data[1], trianglePoints);
+
+	// Call the callback to test narrow-phase collision with this triangle
+	m_triangleTestCallback.testTriangle(trianglePoints);
+}
+
+
