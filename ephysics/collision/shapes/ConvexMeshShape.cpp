@@ -38,76 +38,29 @@ ConvexMeshShape::ConvexMeshShape(const float* arrayVertices, uint32_t nbVertices
 	recalculateBounds();
 }
 
-// Constructor to initialize with a triangle mesh
-/// This method creates an int32_ternal copy of the input vertices.
-/**
- * @param triangleVertexArray Array with the vertices and indices of the vertices and triangles of the mesh
- * @param isEdgesInformationUsed True if you want to use edges information for collision detection (faster but requires more memory)
- * @param margin Collision margin (in meters) around the collision shape
- */
-ConvexMeshShape::ConvexMeshShape(TriangleVertexArray* triangleVertexArray, bool isEdgesInformationUsed, float margin)
-				: ConvexShape(CONVEX_MESH, margin), m_minBounds(0, 0, 0),
-				  m_maxBounds(0, 0, 0), m_isEdgesInformationUsed(isEdgesInformationUsed) {
-
-	TriangleVertexArray::VertexDataType vertexType = triangleVertexArray->getVertexDataType();
-	TriangleVertexArray::IndexDataType indexType = triangleVertexArray->getIndexDataType();
-	unsigned char* verticesStart = triangleVertexArray->getVerticesStart();
-	unsigned char* indicesStart = triangleVertexArray->getIndicesStart();
-	int32_t vertexStride = triangleVertexArray->getVerticesStride();
-	int32_t indexStride = triangleVertexArray->getIndicesStride();
-
+ConvexMeshShape::ConvexMeshShape(TriangleVertexArray* _triangleVertexArray, bool _isEdgesInformationUsed, float _margin):
+  ConvexShape(CONVEX_MESH, _margin),
+  m_minBounds(0, 0, 0),
+  m_maxBounds(0, 0, 0),
+  m_isEdgesInformationUsed(_isEdgesInformationUsed) {
 	// For each vertex of the mesh
-	for (uint32_t v = 0; v < triangleVertexArray->getNbVertices(); v++) {
-
-		// Get the vertices components of the triangle
-		if (vertexType == TriangleVertexArray::VERTEX_FLOAT_TYPE) {
-			const float* vertices = (float*)(verticesStart + v * vertexStride);
-
-			vec3 vertex(vertices[0], vertices[1], vertices[2] );
-			vertex = vertex * m_scaling;
-			m_vertices.push_back(vertex);
-		}
-		else if (vertexType == TriangleVertexArray::VERTEX_DOUBLE_TYPE) {
-			const double* vertices = (double*)(verticesStart + v * vertexStride);
-
-			vec3 vertex(vertices[0], vertices[1], vertices[2] );
-			vertex = vertex * m_scaling;
-			m_vertices.push_back(vertex);
-		}
+	for (auto &it: _triangleVertexArray->getVertices()) {
+		m_vertices.push_back(it*m_scaling);
 	}
-
 	// If we need to use the edges information of the mesh
 	if (m_isEdgesInformationUsed) {
-
 		// For each triangle of the mesh
-		for (uint32_t triangleIndex=0; triangleIndex<triangleVertexArray->getNbTriangles(); triangleIndex++) {
-
-			void* vertexIndexPointer = (indicesStart + triangleIndex * 3 * indexStride);
-
+		for (size_t iii=0; iii<_triangleVertexArray->getNbTriangles(); iii++) {
 			uint32_t vertexIndex[3] = {0, 0, 0};
-
-			// For each vertex of the triangle
-			for (int32_t k=0; k < 3; k++) {
-
-				// Get the index of the current vertex in the triangle
-				if (indexType == TriangleVertexArray::INDEX_INTEGER_TYPE) {
-					vertexIndex[k] = ((uint32_t*)vertexIndexPointer)[k];
-				}
-				else if (indexType == TriangleVertexArray::INDEX_SHORT_TYPE) {
-					vertexIndex[k] = ((unsigned short*)vertexIndexPointer)[k];
-				}
-				else {
-					assert(false);
-				}
-			}
-
+			vertexIndex[0] = _triangleVertexArray->getIndices()[iii*3];
+			vertexIndex[1] = _triangleVertexArray->getIndices()[iii*3+1];
+			vertexIndex[2] = _triangleVertexArray->getIndices()[iii*3+2];
 			// Add information about the edges
 			addEdge(vertexIndex[0], vertexIndex[1]);
 			addEdge(vertexIndex[0], vertexIndex[2]);
 			addEdge(vertexIndex[1], vertexIndex[2]);
 		}
 	}
-
 	m_numberVertices = m_vertices.size();
 	recalculateBounds();
 }
@@ -115,9 +68,12 @@ ConvexMeshShape::ConvexMeshShape(TriangleVertexArray* triangleVertexArray, bool 
 // Constructor.
 /// If you use this constructor, you will need to set the vertices manually one by one using
 /// the addVertex() method.
-ConvexMeshShape::ConvexMeshShape(float margin)
-				: ConvexShape(CONVEX_MESH, margin), m_numberVertices(0), m_minBounds(0, 0, 0),
-				  m_maxBounds(0, 0, 0), m_isEdgesInformationUsed(false) {
+ConvexMeshShape::ConvexMeshShape(float _margin):
+  ConvexShape(CONVEX_MESH, _margin),
+  m_numberVertices(0),
+  m_minBounds(0, 0, 0),
+  m_maxBounds(0, 0, 0),
+  m_isEdgesInformationUsed(false) {
 
 }
 // Return a local support point in a given direction without the object margin.

@@ -6,8 +6,16 @@
 #pragma once
 
 #include <ephysics/configuration.hpp>
+#include <etk/math/Vector3D.hpp>
 
 namespace ephysics {
+	class Triangle {
+		public:
+			vec3 value[3];
+			vec3& operator[] (size_t _id) {
+				return value[_id];
+			}
+	};
 	/**
 	 * This class is used to describe the vertices and faces of a triangular mesh.
 	 * A TriangleVertexArray represents a continuous array of vertices and indexes
@@ -18,43 +26,42 @@ namespace ephysics {
 	 * remains valid during the TriangleVertexArray life.
 	 */
 	class TriangleVertexArray {
-		public:
-			/// Data type for the vertices in the array
-			enum VertexDataType {VERTEX_FLOAT_TYPE, VERTEX_DOUBLE_TYPE};
-			/// Data type for the indices in the array
-			enum IndexDataType {INDEX_INTEGER_TYPE, INDEX_SHORT_TYPE};
 		protected:
-			uint32_t m_numberVertices; //!< Number of vertices in the array
-			unsigned char* m_verticesStart; //!< Pointer to the first vertex value in the array
-			int32_t m_verticesStride; //!< Stride (number of bytes) between the beginning of two vertices values in the array
-			uint32_t m_numberTriangles; //!< Number of triangles in the array
-			unsigned char* m_indicesStart; //!< Pointer to the first vertex index of the array
-			int32_t m_indicesStride; //!< Stride (number of bytes) between the beginning of two indices in the array
-			VertexDataType m_vertexDataType; //!< Data type of the vertices in the array
-			IndexDataType m_indexDataType; //!< Data type of the indices in the array
+			std::vector<vec3> m_vertices; //!< Vertice list
+			std::vector<size_t> m_triangles; //!< List of triangle (3 pos for each triangle)
 		public:
-			/// Constructor
-			TriangleVertexArray(uint32_t nbVertices, void* verticesStart, int32_t verticesStride,
-								uint32_t nbTriangles, void* indexesStart, int32_t indexesStride,
-								VertexDataType vertexDataType, IndexDataType indexDataType);
-			/// Destructor
-			virtual ~TriangleVertexArray();
-			/// Return the vertex data type
-			VertexDataType getVertexDataType() const;
-			/// Return the index data type
-			IndexDataType getIndexDataType() const;
-			/// Return the number of vertices
-			uint32_t getNbVertices() const;
-			/// Return the number of triangles
-			uint32_t getNbTriangles() const;
-			/// Return the vertices stride (number of bytes)
-			int32_t getVerticesStride() const;
-			/// Return the indices stride (number of bytes)
-			int32_t getIndicesStride() const;
-			/// Return the pointer to the start of the vertices array
-			unsigned char* getVerticesStart() const;
-			/// Return the pointer to the start of the indices array
-			unsigned char* getIndicesStart() const;
+			/**
+			 * @brief Constructor
+			 * @param[in] _vertices List Of all vertices
+			 * @param[in] _triangles List of all linked points
+			 */
+			TriangleVertexArray(const std::vector<vec3>& _vertices,
+			                    std::vector<size_t> _triangles);
+			/**
+			 * @brief Get the number of vertices
+			 * @return Number of vertices
+			 */
+			size_t getNbVertices() const;
+			/**
+			 * @brief Get the number of triangle
+			 * @return Number of triangles
+			 */
+			size_t getNbTriangles() const;
+			/**
+			 * @brief Get The table of the vertices
+			 * @return reference on the vertices
+			 */
+			const std::vector<vec3>& getVertices() const;
+			/**
+			 * @brief Get The table of the triangle indice
+			 * @return reference on the triangle indice
+			 */
+			const std::vector<size_t>& getIndices() const;
+			/**
+			 * @brief Get a triangle at the specific ID
+			 * @return Buffer of 3 points
+			 */
+			ephysics::Triangle getTriangle(size_t _id) const;
 	};
 
 

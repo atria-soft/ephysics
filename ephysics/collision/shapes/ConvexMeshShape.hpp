@@ -56,7 +56,13 @@ namespace ephysics {
 			                uint32_t _nbVertices,
 			                int32_t _stride,
 			                float _margin = OBJECT_MARGIN);
-			/// Constructor to initialize with a triangle vertex array
+			/**
+			 * @brief Constructor to initialize with a triangle mesh
+			 * This method creates an internal copy of the input vertices.
+			 * @param _triangleVertexArray Array with the vertices and indices of the vertices and triangles of the mesh
+			 * @param _isEdgesInformationUsed True if you want to use edges information for collision detection (faster but requires more memory)
+			 * @param _margin Collision margin (in meters) around the collision shape
+			 */
 			ConvexMeshShape(TriangleVertexArray* _triangleVertexArray,
 			                bool _isEdgesInformationUsed = true,
 			                float _margin = OBJECT_MARGIN);

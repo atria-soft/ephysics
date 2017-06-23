@@ -111,23 +111,27 @@ namespace ephysics {
 			ConstraintSolverData m_constraintSolverData; //!< Constraint solver data used to initialize and solve the constraints
 		public :
 			/// Constructor
-			ConstraintSolver(const std::map<RigidBody*, uint32_t>& mapBodyToVelocityIndex);
+			ConstraintSolver(const std::map<RigidBody*, uint32_t>& _mapBodyToVelocityIndex);
 			/// Initialize the constraint solver for a given island
-			void initializeForIsland(float dt, Island* island);
+			void initializeForIsland(float _dt, Island* _island);
 			/// Solve the constraints
-			void solveVelocityConstraints(Island* island);
+			void solveVelocityConstraints(Island* _island);
 			/// Solve the position constraints
-			void solvePositionConstraints(Island* island);
+			void solvePositionConstraints(Island* _island);
 			/// Return true if the Non-Linear-Gauss-Seidel position correction technique is active
-			bool getIsNonLinearGaussSeidelPositionCorrectionActive() const;
+			bool getIsNonLinearGaussSeidelPositionCorrectionActive() const {
+				return m_isWarmStartingActive;
+			}
 			/// Enable/Disable the Non-Linear-Gauss-Seidel position correction technique.
-			void setIsNonLinearGaussSeidelPositionCorrectionActive(bool isActive);
+			void setIsNonLinearGaussSeidelPositionCorrectionActive(bool _isActive) {
+				m_isWarmStartingActive = _isActive;
+			}
 			/// Set the constrained velocities arrays
-			void setConstrainedVelocitiesArrays(vec3* constrainedLinearVelocities,
-												vec3* constrainedAngularVelocities);
+			void setConstrainedVelocitiesArrays(vec3* _constrainedLinearVelocities,
+			                                    vec3* _constrainedAngularVelocities);
 			/// Set the constrained positions/orientations arrays
-			void setConstrainedPositionsArrays(vec3* constrainedPositions,
-											   etk::Quaternion* constrainedOrientations);
+			void setConstrainedPositionsArrays(vec3* _constrainedPositions,
+			                                   etk::Quaternion* _constrainedOrientations);
 	};
 
 }

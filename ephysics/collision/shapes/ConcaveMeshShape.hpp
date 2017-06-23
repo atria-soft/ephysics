@@ -79,10 +79,8 @@ namespace ephysics {
 			ConcaveMeshShape(const ConcaveMeshShape& _shape) = delete;
 			/// Private assignment operator
 			ConcaveMeshShape& operator=(const ConcaveMeshShape& _shape) = delete;
-			/// Raycast method with feedback information
-			virtual bool raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const;
-			/// Return the number of bytes used by the collision shape
-			virtual size_t getSizeInBytes() const;
+			virtual bool raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const override;
+			virtual size_t getSizeInBytes() const override;
 			/// Insert all the triangles int32_to the dynamic AABB tree
 			void initBVHTree();
 			/// Return the three vertices coordinates (in the array outTriangleVertices) of a triangle
@@ -93,16 +91,11 @@ namespace ephysics {
 		public:
 			/// Constructor
 			ConcaveMeshShape(TriangleMesh* triangleMesh);
-			/// Destructor
-			~ConcaveMeshShape();
-			/// Return the local bounds of the shape in x, y and z directions.
-			virtual void getLocalBounds(vec3& min, vec3& max) const;
-			/// Set the local scaling vector of the collision shape
-			virtual void setLocalScaling(const vec3& scaling);
-			/// Return the local inertia tensor of the collision shape
-			virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const;
+			virtual void getLocalBounds(vec3& min, vec3& max) const override;
+			virtual void setLocalScaling(const vec3& scaling) override;
+			virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const override;
 			/// Use a callback method on all triangles of the concave shape inside a given AABB
-			virtual void testAllTriangles(TriangleCallback& callback, const AABB& localAABB) const;
+			virtual void testAllTriangles(TriangleCallback& callback, const AABB& localAABB) const override;
 			friend class ConvexTriangleAABBOverlapCallback;
 			friend class ConcaveMeshRaycastCallback;
 	};
