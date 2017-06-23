@@ -75,13 +75,11 @@ namespace ephysics {
 			const void*	m_heightFieldData; //!< Array of data with all the height values of the height field
 			AABB m_AABB; //!< Local AABB of the height field (without scaling)
 			/// Private copy-constructor
-			HeightFieldShape(const HeightFieldShape& _shape);
+			HeightFieldShape(const HeightFieldShape&) = delete;
 			/// Private assignment operator
-			HeightFieldShape& operator=(const HeightFieldShape& _shape);
-			/// Raycast method with feedback information
-			virtual bool raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const;
-			/// Return the number of bytes used by the collision shape
-			virtual size_t getSizeInBytes() const;
+			HeightFieldShape& operator=(const HeightFieldShape&) = delete;
+			bool raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const override;
+			size_t getSizeInBytes() const override;
 			/// Insert all the triangles int32_to the dynamic AABB tree
 			void initBVHTree();
 			/// Return the three vertices coordinates (in the array outTriangleVertices) of a triangle
@@ -106,22 +104,16 @@ namespace ephysics {
 			                 const void* _heightFieldData,
 			                 HeightDataType _dataType,
 			                 int32_t _upAxis = 1, float _integerHeightScale = 1.0f);
-			/// Destructor
-			~HeightFieldShape();
 			/// Return the number of rows in the height field
 			int32_t getNbRows() const;
 			/// Return the number of columns in the height field
 			int32_t getNbColumns() const;
 			/// Return the type of height value in the height field
 			HeightDataType getHeightDataType() const;
-			/// Return the local bounds of the shape in x, y and z directions.
-			virtual void getLocalBounds(vec3& _min, vec3& _max) const;
-			/// Set the local scaling vector of the collision shape
-			virtual void setLocalScaling(const vec3& _scaling);
-			/// Return the local inertia tensor of the collision shape
-			virtual void computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const;
-			/// Use a callback method on all triangles of the concave shape inside a given AABB
-			virtual void testAllTriangles(TriangleCallback& _callback, const AABB& _localAABB) const;
+			void getLocalBounds(vec3& _min, vec3& _max) const override;
+			void setLocalScaling(const vec3& _scaling) override;
+			void computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const override;
+			virtual void testAllTriangles(TriangleCallback& _callback, const AABB& _localAABB) const override;
 			friend class ConvexTriangleAABBOverlapCallback;
 			friend class ConcaveMeshRaycastCallback;
 	};

@@ -56,10 +56,7 @@ namespace ephysics {
 				// Translate the body according to the translation of the center of mass position
 				m_transform.setPosition(m_centerOfMassWorld - m_transform.getOrientation() * m_centerOfMassLocal);
 			}
-			/**
-			 * @brief Update the broad-phase state for this body (because it has moved for instance)
-			 */
-			virtual void updateBroadPhaseState() const;
+			void updateBroadPhaseState() const override;
 		public :
 			/**
 			 * @brief Constructor
@@ -72,7 +69,7 @@ namespace ephysics {
 			 * @brief Virtual Destructor
 			 */
 			virtual ~RigidBody();
-			void setType(BodyType _type); // TODO: override
+			void setType(BodyType _type) override;
 			/**
 			 * @brief Set the current position and orientation
 			 * @param[in] _transform The transformation of the body that transforms the local-space of the body int32_to world-space
@@ -279,15 +276,10 @@ namespace ephysics {
 			 * @param[in] _mass Mass (in kilograms) of the collision shape you want to add
 			 * @return A pointer to the proxy shape that has been created to link the body to the new collision shape you have added.
 			 */
-			virtual ProxyShape* addCollisionShape(CollisionShape* _collisionShape,
-			                                      const etk::Transform3D& _transform,
-			                                      float _mass);
-			/**
-			 * @brief Remove a collision shape from the body
-			 * To remove a collision shape, you need to specify the pointer to the proxy shape that has been returned when you have added the collision shape to the body
-			 * @param[in] _proxyShape The pointer of the proxy shape you want to remove
-			 */
-			virtual void removeCollisionShape(const ProxyShape* _proxyShape);
+			ProxyShape* addCollisionShape(CollisionShape* _collisionShape,
+			                              const etk::Transform3D& _transform,
+			                              float _mass);
+			virtual void removeCollisionShape(const ProxyShape* _proxyShape) override;
 			/**
 			 * @brief Recompute the center of mass, total mass and inertia tensor of the body using all the collision shapes attached to the body.
 			 */

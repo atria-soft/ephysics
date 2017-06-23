@@ -33,15 +33,10 @@ namespace ephysics {
 			ConeShape(const ConeShape& _shape) = delete;
 			/// Private assignment operator
 			ConeShape& operator=(const ConeShape& _shape) = delete;
-			/// Return a local support point in a given direction without the object margin
-			virtual vec3 getLocalSupportPointWithoutMargin(const vec3& _direction,
-			                                               void** _cachedCollisionData) const;
-			/// Return true if a point is inside the collision shape
-			virtual bool testPointInside(const vec3& _localPoint, ProxyShape* _proxyShape) const;
-			/// Raycast method with feedback information
-			virtual bool raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const;
-			/// Return the number of bytes used by the collision shape
-			virtual size_t getSizeInBytes() const;
+			virtual vec3 getLocalSupportPointWithoutMargin(const vec3& _direction, void** _cachedCollisionData) const override;
+			bool testPointInside(const vec3& _localPoint, ProxyShape* _proxyShape) const override;
+			bool raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const override;
+			size_t getSizeInBytes() const override;
 		public :
 			/// Constructor
 			ConeShape(float _radius, float _height, float _margin = OBJECT_MARGIN);
@@ -49,11 +44,9 @@ namespace ephysics {
 			float getRadius() const;
 			/// Return the height
 			float getHeight() const;
-			/// Set the scaling vector of the collision shape
-			virtual void setLocalScaling(const vec3& _scaling);
-			/// Return the local bounds of the shape in x, y and z directions
-			virtual void getLocalBounds(vec3& _min, vec3& _max) const;
-			/// Return the local inertia tensor of the collision shape
-			virtual void computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const;
+			
+			void setLocalScaling(const vec3& _scaling) override;
+			void getLocalBounds(vec3& _min, vec3& _max) const override;
+			void computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const override;
 	};
 }

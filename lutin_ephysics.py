@@ -159,8 +159,8 @@ def configure(target, my_module):
 		'ememory'
 		])
 	# TODO: Remove this ...
-	my_module.add_flag('c++', "-Wno-overloaded-virtual", export=True)
-	my_module.add_path(".")
+	#my_module.add_flag('c++', "-Wno-overloaded-virtual", export=True)
+	#my_module.add_path(".")
 	return True
 
 

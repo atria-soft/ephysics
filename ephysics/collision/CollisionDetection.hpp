@@ -133,7 +133,7 @@ namespace ephysics {
 			/// Return a reference to the world memory allocator
 			MemoryAllocator& getWorldMemoryAllocator();
 			/// Called by a narrow-phase collision algorithm when a new contact has been found
-			virtual void notifyContact(OverlappingPair* _overlappingPair, const ContactPointInfo& _contactInfo);
+			virtual void notifyContact(OverlappingPair* _overlappingPair, const ContactPointInfo& _contactInfo) override;
 			/// Create a new contact
 			void createContact(OverlappingPair* _overlappingPair, const ContactPointInfo& _contactInfo);
 			friend class DynamicsWorld;

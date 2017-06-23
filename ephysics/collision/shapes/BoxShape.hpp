@@ -29,31 +29,21 @@ class BoxShape : public ConvexShape {
 	protected :
 		vec3 m_extent; //!< Extent sizes of the box in the x, y and z direction
 		/// Private copy-constructor
-		BoxShape(const BoxShape& shape);
+		BoxShape(const BoxShape& _shape) = delete;
 		/// Private assignment operator
-		BoxShape& operator=(const BoxShape& shape);
-		/// Return a local support point in a given direction without the object margin
-		virtual vec3 getLocalSupportPointWithoutMargin(const vec3& direction,
-														  void** cachedCollisionData) const;
-		/// Return true if a point is inside the collision shape
-		virtual bool testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const;
-		/// Raycast method with feedback information
-		virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
-		/// Return the number of bytes used by the collision shape
-		virtual size_t getSizeInBytes() const;
+		BoxShape& operator=(const BoxShape& _shape) = delete;
+		vec3 getLocalSupportPointWithoutMargin(const vec3& _direction, void** _cachedCollisionData) const override;
+		bool testPointInside(const vec3& _localPoint, ProxyShape* _proxyShape) const override;
+		bool raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const override;
+		size_t getSizeInBytes() const override;
 	public :
 		/// Constructor
-		BoxShape(const vec3& extent, float margin = OBJECT_MARGIN);
-		/// Destructor
-		virtual ~BoxShape() = default;
+		BoxShape(const vec3& _extent, float _margin = OBJECT_MARGIN);
 		/// Return the extents of the box
 		vec3 getExtent() const;
-		/// Set the scaling vector of the collision shape
-		virtual void setLocalScaling(const vec3& scaling);
-		/// Return the local bounds of the shape in x, y and z directions
-		virtual void getLocalBounds(vec3& _min, vec3& _max) const;
-		/// Return the local inertia tensor of the collision shape
-		virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const;
+		void setLocalScaling(const vec3& _scaling) override;
+		void getLocalBounds(vec3& _min, vec3& _max) const override;
+		void computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const override;
 };
 
 }

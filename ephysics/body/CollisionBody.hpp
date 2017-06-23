@@ -122,7 +122,7 @@ namespace ephysics {
 			 * @param[in] transform The transformation of the collision shape that transforms the local-space of the collision shape int32_to the local-space of the body
 			 * @return A pointer to the proxy shape that has been created to link the body to the new collision shape you have added.
 			 */
-			virtual ProxyShape* addCollisionShape(CollisionShape* _collisionShape, const etk::Transform3D& _transform);
+			ProxyShape* addCollisionShape(CollisionShape* _collisionShape, const etk::Transform3D& _transform);
 			/**
 			 * @brief Remove a collision shape from the body
 			 * To remove a collision shape, you need to specify the pointer to the proxy shape that has been returned when you have added the collision shape to the body

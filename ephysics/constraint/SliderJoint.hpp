@@ -156,16 +156,11 @@ namespace ephysics {
 			SliderJoint& operator=(const SliderJoint& _constraint);
 			/// Reset the limits
 			void resetLimits();
-			/// Return the number of bytes used by the joint
-			virtual size_t getSizeInBytes() const;
-			/// Initialize before solving the constraint
-			virtual void initBeforeSolve(const ConstraintSolverData& _constraintSolverData);
-			/// Warm start the constraint (apply the previous impulse at the beginning of the step)
-			virtual void warmstart(const ConstraintSolverData& _constraintSolverData);
-			/// Solve the velocity constraint
-			virtual void solveVelocityConstraint(const ConstraintSolverData& _constraintSolverData);
-			/// Solve the position constraint (for position error correction)
-			virtual void solvePositionConstraint(const ConstraintSolverData& _constraintSolverData);
+			size_t getSizeInBytes() const override;
+			void initBeforeSolve(const ConstraintSolverData& _constraintSolverData) override;
+			void warmstart(const ConstraintSolverData& _constraintSolverData) override;
+			void solveVelocityConstraint(const ConstraintSolverData& _constraintSolverData) override;
+			void solvePositionConstraint(const ConstraintSolverData& _constraintSolverData) override;
 		public :
 			/// Constructor
 			SliderJoint(const SliderJointInfo& _jointInfo);

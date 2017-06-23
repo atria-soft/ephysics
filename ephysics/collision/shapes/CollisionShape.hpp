@@ -58,19 +58,34 @@ class CollisionShape {
 		 * @return false If it is concave
 		 */
 		virtual bool isConvex() const = 0;
-		/// Return the local bounds of the shape in x, y and z directions
+		/**
+		 * @brief Get the local bounds of the shape in x, y and z directions.
+		 * This method is used to compute the AABB of the box
+		 * @param _min The minimum bounds of the shape in local-space coordinates
+		 * @param _max The maximum bounds of the shape in local-space coordinates
+		 */
 		virtual void getLocalBounds(vec3& _min, vec3& _max) const=0;
 		/// Return the scaling vector of the collision shape
 		vec3 getScaling() const {
 			return m_scaling;
 		}
-		/// Set the local scaling vector of the collision shape
+		/**
+		 * @brief Set the scaling vector of the collision shape
+		 */
 		virtual void setLocalScaling(const vec3& _scaling) {
 			m_scaling = _scaling;
 		}
-		/// Return the local inertia tensor of the collision shapes
+		/**
+		 * @brief Compute the local inertia tensor of the sphere
+		 * @param[out] _tensor The 3x3 inertia tensor matrix of the shape in local-space coordinates
+		 * @param[in] _mass Mass to use to compute the inertia tensor of the collision shape
+		 */
 		virtual void computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const=0;
-		/// Compute the world-space AABB of the collision shape given a transform
+		/**
+		 * @brief Update the AABB of a body using its collision shape
+		 * @param[out] _aabb The axis-aligned bounding box (AABB) of the collision shape computed in world-space coordinates
+		 * @param[in] _transform etk::Transform3D used to compute the AABB of the collision shape
+		 */
 		virtual void computeAABB(AABB& _aabb, const etk::Transform3D& _transform) const;
 		/**
 		 * @brief Check if the shape is convex

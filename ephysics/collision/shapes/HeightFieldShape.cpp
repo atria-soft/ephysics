@@ -55,10 +55,6 @@ HeightFieldShape::HeightFieldShape(int32_t nbGridColumns, int32_t nbGridRows, fl
 	}
 }
 
-// Destructor
-HeightFieldShape::~HeightFieldShape() {
-
-}
 
 // Return the local bounds of the shape in x, y and z directions.
 // This method is used to compute the AABB of the box

@@ -33,8 +33,7 @@ namespace ephysics {
 			ConcaveShape(const ConcaveShape& _shape) = delete;
 			/// Private assignment operator
 			ConcaveShape& operator=(const ConcaveShape& _shape) = delete;
-			/// Return true if a point is inside the collision shape
-			virtual bool testPointInside(const vec3& _localPoint, ProxyShape* _proxyShape) const;
+			virtual bool testPointInside(const vec3& _localPoint, ProxyShape* _proxyShape) const override;
 		public :
 			/// Constructor
 			ConcaveShape(CollisionShapeType _type);
@@ -47,7 +46,7 @@ namespace ephysics {
 			// Set the raycast test type (front, back, front-back)
 			void setRaycastTestType(TriangleRaycastSide _testType);
 			/// Return true if the collision shape is convex, false if it is concave
-			virtual bool isConvex() const;
+			virtual bool isConvex() const override;
 			/// Use a callback method on all triangles of the concave shape inside a given AABB
 			virtual void testAllTriangles(TriangleCallback& _callback, const AABB& _localAABB) const=0;
 			/// Return true if the smooth mesh collision is enabled

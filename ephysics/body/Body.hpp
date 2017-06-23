@@ -32,9 +32,9 @@ namespace ephysics {
 			float m_sleepTime; //!< Elapsed time since the body velocity was bellow the sleep velocity
 			void* m_userData; //!< Pointer that can be used to attach user data to the body
 			/// Private copy-constructor
-			Body(const Body& body);
+			Body(const Body& body) = delete;
 			/// Private assignment operator
-			Body& operator=(const Body& body);
+			Body& operator=(const Body& body) = delete;
 		public :
 			/**
 			 * @brief Constructor

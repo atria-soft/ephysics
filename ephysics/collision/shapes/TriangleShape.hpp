@@ -30,29 +30,20 @@ namespace ephysics {
 			TriangleShape(const TriangleShape& shape);
 			/// Private assignment operator
 			TriangleShape& operator=(const TriangleShape& shape);
-			/// Return a local support point in a given direction without the object margin
-			virtual vec3 getLocalSupportPointWithoutMargin(const vec3& direction,
-															  void** cachedCollisionData) const;
-			/// Return true if a point is inside the collision shape
-			virtual bool testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const;
-			/// Raycast method with feedback information
-			virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
-			/// Return the number of bytes used by the collision shape
-			virtual size_t getSizeInBytes() const;
+			vec3 getLocalSupportPointWithoutMargin(const vec3& _direction, void** _cachedCollisionData) const override;
+			bool testPointInside(const vec3& _localPoint, ProxyShape* _proxyShape) const override;
+			bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const override;
+			size_t getSizeInBytes() const override;
 		public:
 			/// Constructor
 			TriangleShape(const vec3& point1, const vec3& point2, const vec3& point3,
 						  float margin = OBJECT_MARGIN);
 			/// Destructor
 			virtual ~TriangleShape();
-			/// Return the local bounds of the shape in x, y and z directions.
-			virtual void getLocalBounds(vec3& min, vec3& max) const;
-			/// Set the local scaling vector of the collision shape
-			virtual void setLocalScaling(const vec3& scaling);
-			/// Return the local inertia tensor of the collision shape
-			virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const;
-			/// Update the AABB of a body using its collision shape
-			virtual void computeAABB(AABB& aabb, const etk::Transform3D& transform) const;
+			void getLocalBounds(vec3& min, vec3& max) const override;
+			void setLocalScaling(const vec3& scaling) override;
+			void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const override;
+			void computeAABB(AABB& aabb, const etk::Transform3D& transform) const override;
 			/// Return the raycast test type (front, back, front-back)
 			TriangleRaycastSide getRaycastTestType() const;
 			// Set the raycast test type (front, back, front-back)

@@ -120,12 +120,6 @@ ConvexMeshShape::ConvexMeshShape(float margin)
 				  m_maxBounds(0, 0, 0), m_isEdgesInformationUsed(false) {
 
 }
-
-// Destructor
-ConvexMeshShape::~ConvexMeshShape() {
-
-}
-
 // Return a local support point in a given direction without the object margin.
 /// If the edges information is not used for collision detection, this method will go through
 /// the whole vertices list and pick up the vertex with the largest dot product in the support

@@ -40,46 +40,39 @@ namespace ephysics {
 			bool m_isEdgesInformationUsed; //!< True if the shape contains the edges of the convex mesh in order to make the collision detection faster
 			std::map<uint32_t, std::set<uint32_t> > m_edgesAdjacencyList; //!< Adjacency list representing the edges of the mesh
 			/// Private copy-constructor
-			ConvexMeshShape(const ConvexMeshShape& shape);
+			ConvexMeshShape(const ConvexMeshShape& _shape);
 			/// Private assignment operator
-			ConvexMeshShape& operator=(const ConvexMeshShape& shape);
+			ConvexMeshShape& operator=(const ConvexMeshShape& _shape);
 			/// Recompute the bounds of the mesh
 			void recalculateBounds();
-			/// Set the scaling vector of the collision shape
-			virtual void setLocalScaling(const vec3& scaling);
-			/// Return a local support point in a given direction without the object margin.
-			virtual vec3 getLocalSupportPointWithoutMargin(const vec3& direction,
-															  void** cachedCollisionData) const;
-			/// Return true if a point is inside the collision shape
-			virtual bool testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const;
-			/// Raycast method with feedback information
-			virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
-			/// Return the number of bytes used by the collision shape
-			virtual size_t getSizeInBytes() const;
+			void setLocalScaling(const vec3& _scaling) override;
+			vec3 getLocalSupportPointWithoutMargin(const vec3& _direction, void** _cachedCollisionData) const override;
+			bool testPointInside(const vec3& _localPoint, ProxyShape* _proxyShape) const override;
+			bool raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const override;
+			size_t getSizeInBytes() const override;
 		public :
 			/// Constructor to initialize with an array of 3D vertices.
-			ConvexMeshShape(const float* arrayVertices, uint32_t nbVertices, int32_t stride,
-							float margin = OBJECT_MARGIN);
+			ConvexMeshShape(const float* _arrayVertices,
+			                uint32_t _nbVertices,
+			                int32_t _stride,
+			                float _margin = OBJECT_MARGIN);
 			/// Constructor to initialize with a triangle vertex array
-			ConvexMeshShape(TriangleVertexArray* triangleVertexArray, bool isEdgesInformationUsed = true,
-							float margin = OBJECT_MARGIN);
+			ConvexMeshShape(TriangleVertexArray* _triangleVertexArray,
+			                bool _isEdgesInformationUsed = true,
+			                float _margin = OBJECT_MARGIN);
 			/// Constructor.
-			ConvexMeshShape(float margin = OBJECT_MARGIN);
-			/// Destructor
-			virtual ~ConvexMeshShape();
-			/// Return the local bounds of the shape in x, y and z directions
-			virtual void getLocalBounds(vec3& min, vec3& max) const;
-			/// Return the local inertia tensor of the collision shape.
-			virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const;
+			ConvexMeshShape(float _margin = OBJECT_MARGIN);
+			void getLocalBounds(vec3& _min, vec3& _max) const override;
+			void computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const override;
 			/// Add a vertex int32_to the convex mesh
-			void addVertex(const vec3& vertex);
+			void addVertex(const vec3& _vertex);
 			/// Add an edge int32_to the convex mesh by specifying the two vertex indices of the edge.
-			void addEdge(uint32_t v1, uint32_t v2);
+			void addEdge(uint32_t _v1, uint32_t _v2);
 			/// Return true if the edges information is used to speed up the collision detection
 			bool isEdgesInformationUsed() const;
 			/// Set the variable to know if the edges information is used to speed up the
 			/// collision detection
-			void setIsEdgesInformationUsed(bool isEdgesUsed);
+			void setIsEdgesInformationUsed(bool _isEdgesUsed);
 	};
 }
 

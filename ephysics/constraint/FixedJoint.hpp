@@ -38,7 +38,7 @@ namespace ephysics {
 	 * between two bodies.
 	 */
 	class FixedJoint : public Joint {
-		private :
+		private:
 			static const float BETA; //!< Beta value for the bias factor of position correction
 			vec3 m_localAnchorPointBody1; //!< Anchor point of body 1 (in local-space coordinates of body 1)
 			vec3 m_localAnchorPointBody2; //!< Anchor point of body 2 (in local-space coordinates of body 2)
@@ -54,24 +54,20 @@ namespace ephysics {
 			vec3 m_biasRotation; //!< Bias vector for the 3 rotation constraints
 			etk::Quaternion m_initOrientationDifferenceInv; //!< Inverse of the initial orientation difference between the two bodies
 			/// Private copy-constructor
-			FixedJoint(const FixedJoint& constraint);
+			FixedJoint(const FixedJoint& _constraint) = delete;
 			/// Private assignment operator
-			FixedJoint& operator=(const FixedJoint& constraint);
-			/// Return the number of bytes used by the joint
-			virtual size_t getSizeInBytes() const override {
+			FixedJoint& operator=(const FixedJoint& _constraint) = delete;
+			
+			size_t getSizeInBytes() const override {
 				return sizeof(FixedJoint);
 			}
-			/// Initialize before solving the constraint
-			virtual void initBeforeSolve(const ConstraintSolverData& constraintSolverData);
-			/// Warm start the constraint (apply the previous impulse at the beginning of the step)
-			virtual void warmstart(const ConstraintSolverData& constraintSolverData);
-			/// Solve the velocity constraint
-			virtual void solveVelocityConstraint(const ConstraintSolverData& constraintSolverData);
-			/// Solve the position constraint (for position error correction)
-			virtual void solvePositionConstraint(const ConstraintSolverData& constraintSolverData);
-		public :
+			void initBeforeSolve(const ConstraintSolverData& _constraintSolverData) override;
+			void warmstart(const ConstraintSolverData& _constraintSolverData) override;
+			void solveVelocityConstraint(const ConstraintSolverData& _constraintSolverData) override;
+			void solvePositionConstraint(const ConstraintSolverData& _constraintSolverData) override;
+		public:
 			/// Constructor
-			FixedJoint(const FixedJointInfo& jointInfo);
+			FixedJoint(const FixedJointInfo& _jointInfo);
 			/// Destructor
 			virtual ~FixedJoint();
 	};

@@ -22,11 +22,6 @@ BallAndSocketJoint::BallAndSocketJoint(const BallAndSocketJointInfo& jointInfo)
 	m_localAnchorPointBody2 = m_body2->getTransform().getInverse() * jointInfo.m_anchorPointWorldSpace;
 }
 
-// Destructor
-BallAndSocketJoint::~BallAndSocketJoint() {
-
-}
-
 // Initialize before solving the constraint
 void BallAndSocketJoint::initBeforeSolve(const ConstraintSolverData& constraintSolverData) {
 

@@ -4,14 +4,12 @@
  * @license BSD 3 clauses (see license file)
  */
 
-// Libraries
 #include <ephysics/collision/shapes/CylinderShape.hpp>
 #include <ephysics/collision/ProxyShape.hpp>
 #include <ephysics/configuration.hpp>
 
 using namespace ephysics;
 
-// Constructor
 /**
  * @param radius Radius of the cylinder (in meters)
  * @param height Height of the cylinder (in meters)
@@ -24,10 +22,6 @@ CylinderShape::CylinderShape(float radius, float height, float margin)
 	assert(height > 0.0f);
 }
 
-// Destructor
-CylinderShape::~CylinderShape() {
-
-}
 
 // Return a local support point in a given direction without the object margin
 vec3 CylinderShape::getLocalSupportPointWithoutMargin(const vec3& _direction, void** _cachedCollisionData) const {

@@ -20,11 +20,6 @@ SphereShape::SphereShape(float radius) : ConvexShape(SPHERE, radius) {
 	assert(radius > 0.0f);
 }
 
-// Destructor
-SphereShape::~SphereShape() {
-
-}
-
 
 void SphereShape::setLocalScaling(const vec3& _scaling) {
 	m_margin = (m_margin / m_scaling.x()) * _scaling.x();

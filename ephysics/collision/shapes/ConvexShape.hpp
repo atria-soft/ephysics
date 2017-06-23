@@ -15,17 +15,14 @@ class ConvexShape : public CollisionShape {
 	protected :
 		float m_margin; //!< Margin used for the GJK collision detection algorithm
 		/// Private copy-constructor
-		ConvexShape(const ConvexShape& shape);
+		ConvexShape(const ConvexShape& shape) = delete;
 		/// Private assignment operator
-		ConvexShape& operator=(const ConvexShape& shape);
+		ConvexShape& operator=(const ConvexShape& shape) = delete;
 		// Return a local support point in a given direction with the object margin
-		vec3 getLocalSupportPointWithMargin(const vec3& direction,
-											   void** cachedCollisionData) const;
+		virtual vec3 getLocalSupportPointWithMargin(const vec3& _direction, void** _cachedCollisionData) const;
 		/// Return a local support point in a given direction without the object margin
-		virtual vec3 getLocalSupportPointWithoutMargin(const vec3& direction,
-														  void** cachedCollisionData) const=0;
-		/// Return true if a point is inside the collision shape
-		virtual bool testPointInside(const vec3& worldPoint, ProxyShape* proxyShape) const=0;
+		virtual vec3 getLocalSupportPointWithoutMargin(const vec3& _direction, void** _cachedCollisionData) const=0;
+		bool testPointInside(const vec3& _worldPoint, ProxyShape* _proxyShape) const override = 0;
 	public :
 		/// Constructor
 		ConvexShape(CollisionShapeType type, float margin);

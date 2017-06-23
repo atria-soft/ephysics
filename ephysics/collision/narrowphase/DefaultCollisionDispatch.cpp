@@ -15,11 +15,6 @@ DefaultCollisionDispatch::DefaultCollisionDispatch() {
 
 }
 
-// Destructor
-DefaultCollisionDispatch::~DefaultCollisionDispatch() {
-
-}
-
 /// Initialize the collision dispatch configuration
 void DefaultCollisionDispatch::init(CollisionDetection* collisionDetection,
 									MemoryAllocator* memoryAllocator) {

@@ -28,33 +28,23 @@ class CylinderShape : public ConvexShape {
 		float mRadius; //!< Radius of the base
 		float m_halfHeight; //!< Half height of the cylinder
 		/// Private copy-constructor
-		CylinderShape(const CylinderShape& shape);
+		CylinderShape(const CylinderShape&) = delete;
 		/// Private assignment operator
-		CylinderShape& operator=(const CylinderShape& shape);
-		/// Return a local support point in a given direction without the object margin
-		virtual vec3 getLocalSupportPointWithoutMargin(const vec3& direction,
-														  void** cachedCollisionData) const;
-		/// Return true if a point is inside the collision shape
-		virtual bool testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const;
-		/// Raycast method with feedback information
-		virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const;
-		/// Return the number of bytes used by the collision shape
-		virtual size_t getSizeInBytes() const;
+		CylinderShape& operator=(const CylinderShape&) = delete;
+		vec3 getLocalSupportPointWithoutMargin(const vec3& _direction, void** _cachedCollisionData) const override;
+		bool testPointInside(const vec3& _localPoint, ProxyShape* _proxyShape) const override;
+		bool raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const override;
+		size_t getSizeInBytes() const override;
 	public :
 		/// Constructor
-		CylinderShape(float radius, float height, float margin = OBJECT_MARGIN);
-		/// Destructor
-		virtual ~CylinderShape();
+		CylinderShape(float _radius, float _height, float _margin = OBJECT_MARGIN);
 		/// Return the radius
 		float getRadius() const;
 		/// Return the height
 		float getHeight() const;
-		/// Set the scaling vector of the collision shape
-		virtual void setLocalScaling(const vec3& scaling);
-		/// Return the local bounds of the shape in x, y and z directions
-		virtual void getLocalBounds(vec3& min, vec3& max) const;
-		/// Return the local inertia tensor of the collision shape
-		virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const;
+		void setLocalScaling(const vec3& _scaling) override;
+		void getLocalBounds(vec3& _min, vec3& _max) const override;
+		void computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const override;
 };
 
 }

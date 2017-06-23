@@ -4,7 +4,6 @@
  * @license BSD 3 clauses (see license file)
  */
 
-// Libraries
 #include <ephysics/constraint/FixedJoint.hpp>
 #include <ephysics/engine/ConstraintSolver.hpp>
 
