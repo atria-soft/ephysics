@@ -344,26 +344,26 @@ void Simplex::backupClosestPointInSimplex(vec3& v) {
 
 // Return the closest point "v" in the convex hull of the points in the subset
 // represented by the bits "subset"
-vec3 Simplex::computeClosestPointForSubset(Bits subset) {
-	vec3 v(0.0, 0.0, 0.0);	  // Closet point v = sum(lambda_i * points[i])
+vec3 Simplex::computeClosestPointForSubset(Bits _subset) {
+	vec3 v(0.0, 0.0, 0.0); // Closet point v = sum(lambda_i * points[i])
 	mMaxLengthSquare = 0.0;
-	float deltaX = 0.0;			// deltaX = sum of all det[subset][i]
+	float deltaX = 0.0; // deltaX = sum of all det[subset][i]
 	int32_t i;
 	Bits bit;
 
 	// For each four point in the possible simplex set
 	for (i=0, bit=0x1; i<4; i++, bit <<= 1) {
 		// If the current point is in the subset
-		if (overlap(subset, bit)) {
+		if (overlap(_subset, bit)) {
 			// deltaX = sum of all det[subset][i]
-			deltaX += mDet[subset][i];
+			deltaX += mDet[_subset][i];
 
 			if (mMaxLengthSquare < mPointsLengthSquare[i]) {
 				mMaxLengthSquare = mPointsLengthSquare[i];
 			}
 
 			// Closest point v = sum(lambda_i * points[i])
-			v += mDet[subset][i] * mPoints[i];
+			v += mDet[_subset][i] * mPoints[i];
 		}
 	}
 
