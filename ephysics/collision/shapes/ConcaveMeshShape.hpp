@@ -35,7 +35,7 @@ namespace ephysics {
 	
 	class ConcaveMeshRaycastCallback : public DynamicAABBTreeRaycastCallback {
 		private :
-			std::vector<int32_t> m_hitAABBNodes;
+			etk::Vector<int32_t> m_hitAABBNodes;
 			const DynamicAABBTree& m_dynamicAABBTree;
 			const ConcaveMeshShape& m_concaveMeshShape;
 			ProxyShape* m_proxyShape;

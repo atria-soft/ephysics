@@ -63,7 +63,7 @@ class ConcaveMeshScene : public SceneDemo {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		ConcaveMeshScene(const std::string& name);
+		ConcaveMeshScene(const etk::String& name);
 
 		/// Destructor
 		virtual ~ConcaveMeshScene();
@@ -83,11 +83,11 @@ class ConcaveMeshScene : public SceneDemo {
 		virtual void reset();
 
 		/// Return all the contact points of the scene
-		virtual std::vector<ContactPoint> getContactPoints() const;
+		virtual etk::Vector<ContactPoint> getContactPoints() const;
 };
 
 // Return all the contact points of the scene
-inline std::vector<ContactPoint> ConcaveMeshScene::getContactPoints() const {
+inline etk::Vector<ContactPoint> ConcaveMeshScene::getContactPoints() const {
 	return computeContactPointsOfWorld(mDynamicsWorld);
 }
 

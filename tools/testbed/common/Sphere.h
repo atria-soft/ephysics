@@ -80,11 +80,11 @@ class Sphere : public openglframework::Mesh, public PhysicsObject {
 
 		/// Constructor
 		Sphere(float radius, const openglframework::vec3& position,
-			   ephysics::CollisionWorld* world, const std::string& meshFolderPath);
+			   ephysics::CollisionWorld* world, const etk::String& meshFolderPath);
 
 		/// Constructor
 		Sphere(float radius, const openglframework::vec3& position,
-			   float mass, ephysics::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath);
+			   float mass, ephysics::DynamicsWorld* dynamicsWorld, const etk::String& meshFolderPath);
 
 		/// Destructor
 		~Sphere();

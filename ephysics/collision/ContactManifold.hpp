@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include <vector>
+#include <etk/Vector.hpp>
 #include <ephysics/body/CollisionBody.hpp>
 #include <ephysics/collision/ProxyShape.hpp>
 #include <ephysics/constraint/ContactPoint.hpp>

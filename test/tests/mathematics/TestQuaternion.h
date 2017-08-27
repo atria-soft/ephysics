@@ -54,7 +54,7 @@ class Testetk::Quaternion : public Test {
 		// ---------- Methods ---------- //
 
 		/// Constructor
-		Testetk::Quaternion(const std::string& name) : Test(name), mIdentity(Quaternion::identity()) {
+		Testetk::Quaternion(const etk::String& name) : Test(name), mIdentity(Quaternion::identity()) {
 
 			float sinA = sin(float(PI/8.0));
 			float cosA = cos(float(PI/8.0));

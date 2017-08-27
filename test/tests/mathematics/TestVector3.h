@@ -54,7 +54,7 @@ class Testvec3 : public Test {
 		// ---------- Methods ---------- //
 
 		/// Constructor
-		Testvec3(const std::string& name): Test(name),mVectorZero(0, 0, 0),mvec345(3, 4, 5) {}
+		Testvec3(const etk::String& name): Test(name),mVectorZero(0, 0, 0),mvec345(3, 4, 5) {}
 
 		/// Run the tests
 		void run() {

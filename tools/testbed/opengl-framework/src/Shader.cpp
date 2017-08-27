@@ -39,7 +39,7 @@ Shader::Shader() : mProgramObjectID(0) {
 }
 
 // Constructor with arguments
-Shader::Shader(const std::string vertexShaderFilename, const std::string fragmentShaderFilename)
+Shader::Shader(const etk::String vertexShaderFilename, const etk::String fragmentShaderFilename)
 	: mProgramObjectID(0) {
 
 	// Create the shader
@@ -52,8 +52,8 @@ Shader::~Shader() {
 }
 
 // Create the shader
-bool Shader::create(const std::string vertexShaderFilename,
-					const std::string fragmentShaderFilename) {
+bool Shader::create(const etk::String vertexShaderFilename,
+					const etk::String fragmentShaderFilename) {
 
 	// Set the shader filenames
 	mFilenameVertexShader = vertexShaderFilename;

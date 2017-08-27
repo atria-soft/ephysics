@@ -53,7 +53,7 @@ class TestAABB : public Test {
 		// ---------- Methods ---------- //
 
 		/// Constructor
-		TestAABB(const std::string& name) : Test(name) {
+		TestAABB(const etk::String& name) : Test(name) {
 
 			m_AABB1.setMin(vec3(-10, -10, -10));
 			m_AABB1.setMax(vec3(10, 10, 10));

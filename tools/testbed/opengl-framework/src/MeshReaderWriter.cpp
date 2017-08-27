@@ -29,7 +29,7 @@
 #include <sstream>
 #include <locale>
 #include <cctype>
-#include <map>
+#include <etk/Map.hpp>
 #include <algorithm>
 
 using namespace openglframework;
@@ -41,7 +41,7 @@ MeshReaderWriter::MeshReaderWriter() {
 }
 
 // Load a mesh from a file and returns true if the mesh has been sucessfully loaded
-void MeshReaderWriter::loadMeshFromFile(const std::string& filename, Mesh& meshToCreate) {
+void MeshReaderWriter::loadMeshFromFile(const etk::String& filename, Mesh& meshToCreate) {
 
 	// Get the extension of the file
 	uint32_t startPosExtension = filename.find_last_of(".");
@@ -62,7 +62,7 @@ void MeshReaderWriter::loadMeshFromFile(const std::string& filename, Mesh& meshT
 }
 
 // Write a mesh to a file
-void MeshReaderWriter::writeMeshToFile(const std::string& filename, const Mesh& meshToWrite) {
+void MeshReaderWriter::writeMeshToFile(const etk::String& filename, const Mesh& meshToWrite) {
 
 	// Get the extension of the file
 	uint32_t startPosExtension = filename.find_last_of(".");
@@ -97,20 +97,20 @@ void MeshReaderWriter::loadOBJFile(const string &filename, Mesh& meshToCreate) {
 		throw runtime_error(errorMessage);
 	}
 
-	std::string buffer;
+	etk::String buffer;
 	string line, tmp;
 	int32_t id1, id2, id3, id4;
 	int32_t nId1, nId2, nId3, nId4;
 	int32_t tId1, tId2, tId3, tId4;
 	float v1, v2, v3;
 	size_t found1, found2;
-	std::vector<bool> isQuad;
-	std::vector<vec3> vertices;
-	std::vector<vec3> normals;
-	std::vector<vec2> uvs;
-	std::vector<uint32_t> verticesIndices;
-	std::vector<uint32_t> normalsIndices;
-	std::vector<uint32_t> uvsIndices;
+	etk::Vector<bool> isQuad;
+	etk::Vector<vec3> vertices;
+	etk::Vector<vec3> normals;
+	etk::Vector<vec2> uvs;
+	etk::Vector<uint32_t> verticesIndices;
+	etk::Vector<uint32_t> normalsIndices;
+	etk::Vector<uint32_t> uvsIndices;
 
 	// ---------- Collect the data from the file ---------- //
 
@@ -118,7 +118,7 @@ void MeshReaderWriter::loadOBJFile(const string &filename, Mesh& meshToCreate) {
 	while(std::getline(meshFile, buffer)) {
 
 		std::istringstream lineStream(buffer);
-		std::string word;
+		etk::String word;
 		lineStream >> word;
 		std::transform(word.begin(), word.end(), word.begin(), ::tolower);
 		if(word == "usemtl") {  // Material definition
@@ -128,15 +128,15 @@ void MeshReaderWriter::loadOBJFile(const string &filename, Mesh& meshToCreate) {
 		}
 		else if(word == "v") {  // Vertex position
 			sscanf(buffer.c_str(), "%*s %f %f %f", &v1, &v2, &v3);
-			vertices.push_back(vec3(v1, v2, v3));
+			vertices.pushBack(vec3(v1, v2, v3));
 		}
 		else if(word == "vt") { // Vertex texture coordinate
 			sscanf(buffer.c_str(), "%*s %f %f", &v1, &v2);
-			uvs.push_back(vec2(v1,v2));
+			uvs.pushBack(vec2(v1,v2));
 		}
 		else if(word == "vn") { // Vertex normal
 			sscanf(buffer.c_str(), "%*s %f %f %f", &v1, &v2, &v3);
-			normals.push_back(vec3(v1 ,v2, v3));
+			normals.pushBack(vec3(v1 ,v2, v3));
 		}
 		else if (word == "f") { // Face
 			line = buffer;
@@ -166,10 +166,10 @@ void MeshReaderWriter::loadOBJFile(const string &filename, Mesh& meshToCreate) {
 				if(found2 == string::npos) {
 					int32_t n = sscanf(buffer.c_str(), "%*s %d/%d %d/%d %d/%d %d/%d", &id1, &tId1, &id2, &tId2, &id3, &tId3, &id4, &tId4);
 					if (n == 8) isFaceQuad = true;
-					uvsIndices.push_back(tId1-1);
-					uvsIndices.push_back(tId2-1);
-					uvsIndices.push_back(tId3-1);
-					if (isFaceQuad) uvsIndices.push_back(tId4-1);
+					uvsIndices.pushBack(tId1-1);
+					uvsIndices.pushBack(tId2-1);
+					uvsIndices.pushBack(tId3-1);
+					if (isFaceQuad) uvsIndices.pushBack(tId4-1);
 				}
 				else {
 					tmp = line.substr(found1+1);
@@ -184,22 +184,22 @@ void MeshReaderWriter::loadOBJFile(const string &filename, Mesh& meshToCreate) {
 					else {
 						int32_t n = sscanf(buffer.c_str(), "%*s %d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d", &id1, &tId1, &nId1, &id2, &tId2, &nId2, &id3, &tId3, &nId3, &id4, &tId4, &nId4);
 						if (n == 12) isFaceQuad = true;
-						uvsIndices.push_back(tId1-1);
-						uvsIndices.push_back(tId2-1);
-						uvsIndices.push_back(tId3-1);
-						if (isFaceQuad) uvsIndices.push_back(tId4-1);
+						uvsIndices.pushBack(tId1-1);
+						uvsIndices.pushBack(tId2-1);
+						uvsIndices.pushBack(tId3-1);
+						if (isFaceQuad) uvsIndices.pushBack(tId4-1);
 					}
-					normalsIndices.push_back(nId1-1);
-					normalsIndices.push_back(nId2-1);
-					normalsIndices.push_back(nId3-1);
-					if (isFaceQuad) normalsIndices.push_back(nId4-1);
+					normalsIndices.pushBack(nId1-1);
+					normalsIndices.pushBack(nId2-1);
+					normalsIndices.pushBack(nId3-1);
+					if (isFaceQuad) normalsIndices.pushBack(nId4-1);
 				}
 			}
-			verticesIndices.push_back(id1-1);
-			verticesIndices.push_back(id2-1);
-			verticesIndices.push_back(id3-1);
-			if (isFaceQuad) verticesIndices.push_back((id4-1));
-			isQuad.push_back(isFaceQuad);
+			verticesIndices.pushBack(id1-1);
+			verticesIndices.pushBack(id2-1);
+			verticesIndices.pushBack(id3-1);
+			if (isFaceQuad) verticesIndices.pushBack((id4-1));
+			isQuad.pushBack(isFaceQuad);
 		}
 	}
 
@@ -214,7 +214,7 @@ void MeshReaderWriter::loadOBJFile(const string &filename, Mesh& meshToCreate) {
 	meshToCreate.destroy();
 
 	// Mesh data
-	vector<std::vector<uint32_t> > meshIndices;
+	vector<etk::Vector<uint32_t> > meshIndices;
 	vector<vec3> meshNormals;
 	if (!normals.empty()) meshNormals = vector<vec3>(vertices.size(), vec3(0, 0, 0));
 	vector<vec2> meshUVs;
@@ -225,7 +225,7 @@ void MeshReaderWriter::loadOBJFile(const string &filename, Mesh& meshToCreate) {
 
 	// Fill in the vertex indices
 	// We also triangulate each quad face
-	meshIndices.push_back(std::vector<uint32_t>());
+	meshIndices.pushBack(etk::Vector<uint32_t>());
 	for(size_t i = 0, j = 0; i < verticesIndices.size(); j++) {
 
 		// Get the current vertex IDs
@@ -251,9 +251,9 @@ void MeshReaderWriter::loadOBJFile(const string &filename, Mesh& meshToCreate) {
 		if (!isQuad[j]) {
 
 			// Add the vertex indices
-			meshIndices[meshPart].push_back(i1);
-			meshIndices[meshPart].push_back(i2);
-			meshIndices[meshPart].push_back(i3);
+			meshIndices[meshPart].pushBack(i1);
+			meshIndices[meshPart].pushBack(i2);
+			meshIndices[meshPart].pushBack(i3);
 
 			i+=3;
 		}
@@ -272,20 +272,20 @@ void MeshReaderWriter::loadOBJFile(const string &filename, Mesh& meshToCreate) {
 			float a1 = v13.dot(v12);
 			float a2 = v13.dot(v14);
 			if((a1 >= 0 && a2 <= 0) || (a1 <= 0 && a2 >= 0)) {
-				meshIndices[meshPart].push_back(i1);
-				meshIndices[meshPart].push_back(i2);
-				meshIndices[meshPart].push_back(i3);
-				meshIndices[meshPart].push_back(i1);
-				meshIndices[meshPart].push_back(i3);
-				meshIndices[meshPart].push_back(i4);
+				meshIndices[meshPart].pushBack(i1);
+				meshIndices[meshPart].pushBack(i2);
+				meshIndices[meshPart].pushBack(i3);
+				meshIndices[meshPart].pushBack(i1);
+				meshIndices[meshPart].pushBack(i3);
+				meshIndices[meshPart].pushBack(i4);
 			}
 			else {
-				meshIndices[meshPart].push_back(i1);
-				meshIndices[meshPart].push_back(i2);
-				meshIndices[meshPart].push_back(i4);
-				meshIndices[meshPart].push_back(i2);
-				meshIndices[meshPart].push_back(i3);
-				meshIndices[meshPart].push_back(i4);
+				meshIndices[meshPart].pushBack(i1);
+				meshIndices[meshPart].pushBack(i2);
+				meshIndices[meshPart].pushBack(i4);
+				meshIndices[meshPart].pushBack(i2);
+				meshIndices[meshPart].pushBack(i3);
+				meshIndices[meshPart].pushBack(i4);
 			}
 
 			// Add the vertex normal
@@ -313,13 +313,13 @@ void MeshReaderWriter::loadOBJFile(const string &filename, Mesh& meshToCreate) {
 }
 
 // Store a mesh int32_to a OBJ file
-void MeshReaderWriter::writeOBJFile(const std::string& filename, const Mesh& meshToWrite) {
+void MeshReaderWriter::writeOBJFile(const etk::String& filename, const Mesh& meshToWrite) {
 	std::ofstream file(filename.c_str());
 
 	// Geth the mesh data
-	const std::vector<vec3>& vertices = meshToWrite.getVertices();
-	const std::vector<vec3>& normals = meshToWrite.getNormals();
-	const std::vector<vec2>& uvs = meshToWrite.getUVs();
+	const etk::Vector<vec3>& vertices = meshToWrite.getVertices();
+	const etk::Vector<vec3>& normals = meshToWrite.getNormals();
+	const etk::Vector<vec2>& uvs = meshToWrite.getUVs();
 
 	// If we can open the file
 	if (file.is_open()) {
@@ -363,7 +363,7 @@ void MeshReaderWriter::writeOBJFile(const std::string& filename, const Mesh& mes
 		for (uint32_t p=0; p<meshToWrite.getNbParts(); p++) {
 
 			// Get the indices of the part
-			const std::vector<uint32_t>& indices = meshToWrite.getIndices(p);
+			const etk::Vector<uint32_t>& indices = meshToWrite.getIndices(p);
 
 			// For each index of the part
 			for (uint32_t i=0; i<indices.size(); i+=3) {

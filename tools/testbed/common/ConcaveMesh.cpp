@@ -29,7 +29,7 @@
 // Constructor
 ConcaveMesh::ConcaveMesh(const openglframework::vec3 &position,
 					   ephysics::CollisionWorld* world,
-					   const std::string& meshPath)
+					   const etk::String& meshPath)
 		   : openglframework::Mesh(), mVBOVertices(GL_ARRAY_BUFFER),
 			 mVBONormals(GL_ARRAY_BUFFER), mVBOTextureCoords(GL_ARRAY_BUFFER),
 			 mVBOIndices(GL_ELEMENT_ARRAY_BUFFER) {
@@ -86,7 +86,7 @@ ConcaveMesh::ConcaveMesh(const openglframework::vec3 &position,
 // Constructor
 ConcaveMesh::ConcaveMesh(const openglframework::vec3 &position, float mass,
 					   ephysics::DynamicsWorld* dynamicsWorld,
-					   const std::string& meshPath)
+					   const etk::String& meshPath)
 		   : openglframework::Mesh(), mVBOVertices(GL_ARRAY_BUFFER),
 			 mVBONormals(GL_ARRAY_BUFFER), mVBOTextureCoords(GL_ARRAY_BUFFER),
 			 mVBOIndices(GL_ELEMENT_ARRAY_BUFFER) {

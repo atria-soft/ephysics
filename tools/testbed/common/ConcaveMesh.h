@@ -77,11 +77,11 @@ class ConcaveMesh : public openglframework::Mesh, public PhysicsObject {
 
 		/// Constructor
 		ConcaveMesh(const openglframework::vec3& position,
-				   ephysics::CollisionWorld* world, const std::string& meshPath);
+				   ephysics::CollisionWorld* world, const etk::String& meshPath);
 
 		/// Constructor
 		ConcaveMesh(const openglframework::vec3& position, float mass,
-				   ephysics::DynamicsWorld* dynamicsWorld, const std::string& meshPath);
+				   ephysics::DynamicsWorld* dynamicsWorld, const etk::String& meshPath);
 
 		/// Destructor
 		~ConcaveMesh();

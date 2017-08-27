@@ -133,7 +133,7 @@ class TestCollisionWorld : public Test {
 		// ---------- Methods ---------- //
 
 		/// Constructor
-		TestCollisionWorld(const std::string& name) : Test(name) {
+		TestCollisionWorld(const etk::String& name) : Test(name) {
 
 			// Create the world
 			m_world = new CollisionWorld();

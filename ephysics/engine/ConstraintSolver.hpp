@@ -9,7 +9,7 @@
 #include <ephysics/mathematics/mathematics.hpp>
 #include <ephysics/constraint/Joint.hpp>
 #include <ephysics/engine/Island.hpp>
-#include <map>
+#include <etk/Map.hpp>
 #include <set>
 
 namespace ephysics {
@@ -24,10 +24,10 @@ namespace ephysics {
 			vec3* angularVelocities; //!< Array with the bodies angular velocities
 			vec3* positions; //!< Reference to the bodies positions
 			etk::Quaternion* orientations; //!< Reference to the bodies orientations
-			const std::map<RigidBody*, uint32_t>& mapBodyToConstrainedVelocityIndex; //!< Reference to the map that associates rigid body to their index in the constrained velocities array
+			const etk::Map<RigidBody*, uint32_t>& mapBodyToConstrainedVelocityIndex; //!< Reference to the map that associates rigid body to their index in the constrained velocities array
 			bool isWarmStartingActive; //!< True if warm starting of the solver is active
 			/// Constructor
-			ConstraintSolverData(const std::map<RigidBody*, uint32_t>& refMapBodyToConstrainedVelocityIndex)
+			ConstraintSolverData(const etk::Map<RigidBody*, uint32_t>& refMapBodyToConstrainedVelocityIndex)
 							   :linearVelocities(NULL), angularVelocities(NULL),
 								positions(NULL), orientations(NULL),
 								mapBodyToConstrainedVelocityIndex(refMapBodyToConstrainedVelocityIndex){
@@ -105,13 +105,13 @@ namespace ephysics {
 	 */
 	class ConstraintSolver {
 		private :
-			const std::map<RigidBody*, uint32_t>& m_mapBodyToConstrainedVelocityIndex; //!< Reference to the map that associates rigid body to their index in the constrained velocities array
+			const etk::Map<RigidBody*, uint32_t>& m_mapBodyToConstrainedVelocityIndex; //!< Reference to the map that associates rigid body to their index in the constrained velocities array
 			float m_timeStep; //!< Current time step
 			bool m_isWarmStartingActive; //!< True if the warm starting of the solver is active
 			ConstraintSolverData m_constraintSolverData; //!< Constraint solver data used to initialize and solve the constraints
 		public :
 			/// Constructor
-			ConstraintSolver(const std::map<RigidBody*, uint32_t>& _mapBodyToVelocityIndex);
+			ConstraintSolver(const etk::Map<RigidBody*, uint32_t>& _mapBodyToVelocityIndex);
 			/// Initialize the constraint solver for a given island
 			void initializeForIsland(float _dt, Island* _island);
 			/// Solve the constraints

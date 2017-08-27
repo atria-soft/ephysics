@@ -52,26 +52,26 @@ class TextureReaderWriter {
 		TextureReaderWriter();
 
 		// Read a TGA picture
-		static void readTGAPicture(const std::string& filename, Texture2D& textureToCreate);
+		static void readTGAPicture(const etk::String& filename, Texture2D& textureToCreate);
 
 		// Write a TGA picture
-		static void writeTGAPicture(const std::string& filename, const Texture2D& texture);
+		static void writeTGAPicture(const etk::String& filename, const Texture2D& texture);
 
 		// Read a JPEG picture
-		static void readJPEGPicture(const std::string& filename, Texture2D& textureToCreate);
+		static void readJPEGPicture(const etk::String& filename, Texture2D& textureToCreate);
 
 		// Write a JPEG picture
-		static void writeJPEGPicture(const std::string& filename, const Texture2D& texture);
+		static void writeJPEGPicture(const etk::String& filename, const Texture2D& texture);
 
 	public :
 
 		// -------------------- Methods -------------------- //
 
 		// Load a texture from a file
-		static void loadTextureFromFile(const std::string& filename, Texture2D& textureToCreate);
+		static void loadTextureFromFile(const etk::String& filename, Texture2D& textureToCreate);
 
 		// Write a texture to a file
-		static void writeTextureToFile(const std::string& filename, const Texture2D& texture);
+		static void writeTextureToFile(const etk::String& filename, const Texture2D& texture);
 };
 
 }

@@ -60,7 +60,7 @@ class HeightFieldScene : public SceneDemo {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		HeightFieldScene(const std::string& name);
+		HeightFieldScene(const etk::String& name);
 
 		/// Destructor
 		virtual ~HeightFieldScene();
@@ -80,11 +80,11 @@ class HeightFieldScene : public SceneDemo {
 		virtual void reset();
 
 		/// Return all the contact points of the scene
-		virtual std::vector<ContactPoint> getContactPoints() const;
+		virtual etk::Vector<ContactPoint> getContactPoints() const;
 };
 
 // Return all the contact points of the scene
-inline std::vector<ContactPoint> HeightFieldScene::getContactPoints() const {
+inline etk::Vector<ContactPoint> HeightFieldScene::getContactPoints() const {
 	return computeContactPointsOfWorld(mDynamicsWorld);
 }
 

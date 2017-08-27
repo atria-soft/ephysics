@@ -64,8 +64,8 @@ overlappingpairid OverlappingPair::computeID(ProxyShape* _shape1, ProxyShape* _s
 
 	// Construct the pair of body index
 	overlappingpairid pairID = _shape1->m_broadPhaseID < _shape2->m_broadPhaseID ?
-							 std::make_pair(_shape1->m_broadPhaseID, _shape2->m_broadPhaseID) :
-							 std::make_pair(_shape2->m_broadPhaseID, _shape1->m_broadPhaseID);
+							 etk::makePair(_shape1->m_broadPhaseID, _shape2->m_broadPhaseID) :
+							 etk::makePair(_shape2->m_broadPhaseID, _shape1->m_broadPhaseID);
 	assert(pairID.first != pairID.second);
 	return pairID;
 }
@@ -76,8 +76,8 @@ bodyindexpair OverlappingPair::computeBodiesIndexPair(CollisionBody* _body1,
 
 	// Construct the pair of body index
 	bodyindexpair indexPair = _body1->getID() < _body2->getID() ?
-								 std::make_pair(_body1->getID(), _body2->getID()) :
-								 std::make_pair(_body2->getID(), _body1->getID());
+								 etk::makePair(_body1->getID(), _body2->getID()) :
+								 etk::makePair(_body2->getID(), _body1->getID());
 	assert(indexPair.first != indexPair.second);
 	return indexPair;
 }

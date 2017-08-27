@@ -83,12 +83,12 @@ class Capsule : public openglframework::Mesh, public PhysicsObject {
 
 		/// Constructor
 		Capsule(float radius, float height, const openglframework::vec3& position,
-				ephysics::CollisionWorld* world, const std::string& meshFolderPath);
+				ephysics::CollisionWorld* world, const etk::String& meshFolderPath);
 
 		/// Constructor
 		Capsule(float radius, float height, const openglframework::vec3& position,
 				float mass, ephysics::DynamicsWorld* dynamicsWorld,
-				const std::string& meshFolderPath);
+				const etk::String& meshFolderPath);
 
 		/// Destructor
 		~Capsule();

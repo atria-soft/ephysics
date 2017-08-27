@@ -35,7 +35,7 @@ int32_t Dumbbell::totalNbDumbbells = 0;
 
 // Constructor
 Dumbbell::Dumbbell(const openglframework::vec3 &position,
-				   ephysics::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath)
+				   ephysics::DynamicsWorld* dynamicsWorld, const etk::String& meshFolderPath)
 		 : openglframework::Mesh() {
 
 	// Load the mesh from a file
@@ -106,7 +106,7 @@ Dumbbell::Dumbbell(const openglframework::vec3 &position,
 
 // Constructor
 Dumbbell::Dumbbell(const openglframework::vec3 &position,
-				   ephysics::CollisionWorld* world, const std::string& meshFolderPath)
+				   ephysics::CollisionWorld* world, const etk::String& meshFolderPath)
 		 : openglframework::Mesh() {
 
 	// Load the mesh from a file

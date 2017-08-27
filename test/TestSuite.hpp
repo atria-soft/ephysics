@@ -28,7 +28,7 @@
 
 // Libraries
 #include <test/Test.hpp>
-#include <vector>
+#include <etk/Vector.hpp>
 #include <stdexcept>
 
 /// Reactphysics3D namespace
@@ -48,13 +48,13 @@ class TestSuite {
 		// ---------- Attributes ---------- //
 
 		/// Name of the test suite
-		std::string m_name;
+		etk::String m_name;
 
 		/// Output stream
-		std::ostream* mOutputStream;
+		etk::Stream* mOutputStream;
 
 		/// All the tests of the test suite
-		std::vector<Test*> mTests;
+		etk::Vector<Test*> mTests;
 
 		// ---------- Methods ---------- //
 
@@ -72,10 +72,10 @@ class TestSuite {
 		// ---------- Methods ---------- //
 
 		/// Constructor
-		TestSuite(const std::string& name, std::ostream* outputStream = &std::cout);
+		TestSuite(const etk::String& name, etk::Stream* outputStream = &std::cout);
 
 		/// Return the name of the test suite
-		std::string getName() const;
+		etk::String getName() const;
 
 		/// Return the number of passed tests
 		long getNbPassedTests() const;
@@ -84,10 +84,10 @@ class TestSuite {
 		long getNbFailedTests() const;
 
 		/// Return the output stream
-		const std::ostream* getOutputStream() const;
+		const etk::Stream* getOutputStream() const;
 
 		/// Set the output stream
-		void setOutputStream(std::ostream* outputStream);
+		void setOutputStream(etk::Stream* outputStream);
 
 		/// Add a unit test in the test suite
 		void addTest(Test* test);
@@ -107,17 +107,17 @@ class TestSuite {
 };
 
 // Return the name of the test suite
-inline std::string TestSuite::getName() const {
+inline etk::String TestSuite::getName() const {
 	return m_name;
 }
 
 // Return the output stream
-inline const std::ostream* TestSuite::getOutputStream() const {
+inline const etk::Stream* TestSuite::getOutputStream() const {
 	return mOutputStream;
 }
 
 // Set the output stream
-inline void TestSuite::setOutputStream(std::ostream* outputStream) {
+inline void TestSuite::setOutputStream(etk::Stream* outputStream) {
 	mOutputStream = outputStream;
 }
 

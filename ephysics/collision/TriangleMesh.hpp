@@ -4,7 +4,7 @@
  * @license BSD 3 clauses (see license file)
  */
 #pragma once
-#include <vector>
+#include <etk/Vector.hpp>
 #include <cassert>
 #include <ephysics/collision/TriangleVertexArray.hpp>
 
@@ -18,7 +18,7 @@ namespace ephysics {
 	 */
 	class TriangleMesh {
 		protected:
-			std::vector<TriangleVertexArray*> m_triangleArrays; //!< All the triangle arrays of the mesh (one triangle array per part)
+			etk::Vector<TriangleVertexArray*> m_triangleArrays; //!< All the triangle arrays of the mesh (one triangle array per part)
 		public:
 			/**
 			 * @brief Constructor
@@ -32,7 +32,7 @@ namespace ephysics {
 			 * @brief Add a subpart of the mesh
 			 */
 			void addSubpart(TriangleVertexArray* _triangleVertexArray) {
-				m_triangleArrays.push_back(_triangleVertexArray );
+				m_triangleArrays.pushBack(_triangleVertexArray );
 			}
 			/**
 			 * @brief Get a pointer to a given subpart (triangle vertex array) of the mesh

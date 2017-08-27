@@ -117,7 +117,7 @@ class JointsScene : public SceneDemo {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		JointsScene(const std::string& name);
+		JointsScene(const etk::String& name);
 
 		/// Destructor
 		virtual ~JointsScene();
@@ -137,11 +137,11 @@ class JointsScene : public SceneDemo {
 		virtual void reset();
 
 		/// Return all the contact points of the scene
-		virtual std::vector<ContactPoint> getContactPoints() const;
+		virtual etk::Vector<ContactPoint> getContactPoints() const;
 };
 
 // Return all the contact points of the scene
-inline std::vector<ContactPoint> JointsScene::getContactPoints() const {
+inline etk::Vector<ContactPoint> JointsScene::getContactPoints() const {
 	return computeContactPointsOfWorld(mDynamicsWorld);
 }
 

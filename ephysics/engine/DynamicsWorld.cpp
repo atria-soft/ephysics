@@ -267,7 +267,7 @@ void DynamicsWorld::initVelocityArrays() {
 	for (it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
 
 		// Add the body int32_to the map
-		m_mapBodyToConstrainedVelocityIndex.insert(std::make_pair(*it, indexBody));
+		m_mapBodyToConstrainedVelocityIndex.insert(etk::makePair(*it, indexBody));
 		indexBody++;
 	}
 }
@@ -457,7 +457,7 @@ void DynamicsWorld::destroyRigidBody(RigidBody* rigidBody) {
 	rigidBody->removeAllCollisionShapes();
 
 	// Add the body ID to the list of free IDs
-	m_freeBodiesIDs.push_back(rigidBody->getID());
+	m_freeBodiesIDs.pushBack(rigidBody->getID());
 
 	// Destroy all the joints in which the rigid body to be destroyed is involved
 	JointListElement* element;
@@ -960,12 +960,12 @@ void DynamicsWorld::testCollision(CollisionCallback* callback) {
 }
 
 /// Return the list of all contacts of the world
-std::vector<const ContactManifold*> DynamicsWorld::getContactsList() const {
+etk::Vector<const ContactManifold*> DynamicsWorld::getContactsList() const {
 
-	std::vector<const ContactManifold*> contactManifolds;
+	etk::Vector<const ContactManifold*> contactManifolds;
 
 	// For each currently overlapping pair of bodies
-	std::map<overlappingpairid, OverlappingPair*>::const_iterator it;
+	etk::Map<overlappingpairid, OverlappingPair*>::const_iterator it;
 	for (it = m_collisionDetection.m_overlappingPairs.begin();
 		 it != m_collisionDetection.m_overlappingPairs.end(); ++it) {
 
@@ -978,7 +978,7 @@ std::vector<const ContactManifold*> DynamicsWorld::getContactsList() const {
 			ContactManifold* manifold = manifoldSet.getContactManifold(i);
 
 			// Get the contact manifold
-			contactManifolds.push_back(manifold);
+			contactManifolds.pushBack(manifold);
 		}
 	}
 

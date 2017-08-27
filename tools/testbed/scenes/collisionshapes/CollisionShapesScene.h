@@ -76,21 +76,21 @@ class CollisionShapesScene : public SceneDemo {
 		// -------------------- Attributes -------------------- //
 
 		/// All the spheres of the scene
-		std::vector<Box*> mBoxes;
+		etk::Vector<Box*> mBoxes;
 
-		std::vector<Sphere*> mSpheres;
+		etk::Vector<Sphere*> mSpheres;
 
-		std::vector<Cone*> mCones;
+		etk::Vector<Cone*> mCones;
 
-		std::vector<Cylinder*> mCylinders;
+		etk::Vector<Cylinder*> mCylinders;
 
-		std::vector<Capsule*> mCapsules;
+		etk::Vector<Capsule*> mCapsules;
 
 		/// All the convex meshes of the scene
-		std::vector<ConvexMesh*> mConvexMeshes;
+		etk::Vector<ConvexMesh*> mConvexMeshes;
 
 		/// All the dumbbell of the scene
-		std::vector<Dumbbell*> mDumbbells;
+		etk::Vector<Dumbbell*> mDumbbells;
 
 		/// Box for the floor
 		Box* mFloor;
@@ -103,7 +103,7 @@ class CollisionShapesScene : public SceneDemo {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		CollisionShapesScene(const std::string& name);
+		CollisionShapesScene(const etk::String& name);
 
 		/// Destructor
 		virtual ~CollisionShapesScene();
@@ -123,11 +123,11 @@ class CollisionShapesScene : public SceneDemo {
 		virtual void reset();
 
 		/// Return all the contact points of the scene
-		virtual std::vector<ContactPoint> getContactPoints() const;
+		virtual etk::Vector<ContactPoint> getContactPoints() const;
 };
 
 // Return all the contact points of the scene
-inline std::vector<ContactPoint> CollisionShapesScene::getContactPoints() const {
+inline etk::Vector<ContactPoint> CollisionShapesScene::getContactPoints() const {
 	return computeContactPointsOfWorld(mDynamicsWorld);
 }
 

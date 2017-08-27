@@ -37,7 +37,7 @@ bool VisualContactPoint::mStaticDataCreated = false;
 
 // Constructor
 VisualContactPoint::VisualContactPoint(const openglframework::vec3& position,
-									   const std::string& meshFolderPath)
+									   const etk::String& meshFolderPath)
 	: mColor(1.0f, 0.0f, 0.0f, 1.0f) {
 
 	// Initialize the position where the mesh will be rendered
@@ -50,7 +50,7 @@ VisualContactPoint::~VisualContactPoint() {
 }
 
 // Load and initialize the mesh for all the contact points
-void VisualContactPoint::createStaticData(const std::string& meshFolderPath) {
+void VisualContactPoint::createStaticData(const etk::String& meshFolderPath) {
 
 	if (mStaticDataCreated) return;
 

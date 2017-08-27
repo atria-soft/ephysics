@@ -31,7 +31,7 @@ using namespace openglframework;
 using namespace heightfieldscene;
 
 // Constructor
-HeightFieldScene::HeightFieldScene(const std::string& name) : SceneDemo(name, SCENE_RADIUS) {
+HeightFieldScene::HeightFieldScene(const etk::String& name) : SceneDemo(name, SCENE_RADIUS) {
 
 	// Compute the radius and the center of the scene
 	openglframework::vec3 center(0, 5, 0);

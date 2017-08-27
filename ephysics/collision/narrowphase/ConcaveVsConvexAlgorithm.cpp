@@ -63,7 +63,7 @@ void ConcaveVsConvexAlgorithm::testCollision(const CollisionShapeInfo& shape1Inf
 	// If smooth mesh collision is enabled for the concave mesh
 	if (concaveShape->getIsSmoothMeshCollisionEnabled()) {
 
-		std::vector<SmoothMeshContactInfo> contactPoints;
+		etk::Vector<SmoothMeshContactInfo> contactPoints;
 
 		SmoothCollisionNarrowPhaseCallback smoothNarrowPhaseCallback(contactPoints);
 
@@ -116,7 +116,7 @@ void ConvexVsTriangleCallback::testTriangle(const vec3* trianglePoints) {
 // by Pierre Terdiman (http://www.codercorner.com/MeshContacts.pdf). This is used to avoid the collision
 // issue with some int32_ternal edges.
 void ConcaveVsConvexAlgorithm::processSmoothMeshCollision(OverlappingPair* overlappingPair,
-														  std::vector<SmoothMeshContactInfo> contactPoints,
+														  etk::Vector<SmoothMeshContactInfo> contactPoints,
 														  NarrowPhaseCallback* narrowPhaseCallback) {
 
 	// Set with the triangle vertices already processed to void further contacts with same triangle
@@ -126,7 +126,7 @@ void ConcaveVsConvexAlgorithm::processSmoothMeshCollision(OverlappingPair* overl
 	std::sort(contactPoints.begin(), contactPoints.end(), ContactsDepthCompare());
 
 	// For each contact point (from smaller penetration depth to larger)
-	std::vector<SmoothMeshContactInfo>::const_iterator it;
+	etk::Vector<SmoothMeshContactInfo>::const_iterator it;
 	for (it = contactPoints.begin(); it != contactPoints.end(); ++it) {
 
 		const SmoothMeshContactInfo info = *it;
@@ -268,5 +268,5 @@ void SmoothCollisionNarrowPhaseCallback::notifyContact(OverlappingPair* overlapp
 
 	// Add the narrow-phase contact int32_to the list of contact to process for
 	// smooth mesh collision
-	m_contactPoints.push_back(smoothContactInfo);
+	m_contactPoints.pushBack(smoothContactInfo);
 }

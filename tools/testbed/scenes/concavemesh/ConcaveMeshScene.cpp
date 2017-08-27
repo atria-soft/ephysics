@@ -31,10 +31,10 @@ using namespace openglframework;
 using namespace trianglemeshscene;
 
 // Constructor
-ConcaveMeshScene::ConcaveMeshScene(const std::string& name)
+ConcaveMeshScene::ConcaveMeshScene(const etk::String& name)
 	  : SceneDemo(name, SCENE_RADIUS) {
 
-	std::string meshFolderPath("meshes/");
+	etk::String meshFolderPath("meshes/");
 
 	// Compute the radius and the center of the scene
 	openglframework::vec3 center(0, 5, 0);

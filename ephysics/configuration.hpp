@@ -15,7 +15,7 @@
 namespace ephysics {
 	// ------------------- Type definitions ------------------- //
 	typedef uint64_t bodyindex;
-	typedef std::pair<bodyindex, bodyindex> bodyindexpair;
+	typedef etk::Pair<bodyindex, bodyindex> bodyindexpair;
 	
 	// ------------------- Enumerations ------------------- //
 	

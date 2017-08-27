@@ -69,7 +69,7 @@ void CollisionWorld::destroyCollisionBody(CollisionBody* collisionBody) {
 	collisionBody->removeAllCollisionShapes();
 
 	// Add the body ID to the list of free IDs
-	m_freeBodiesIDs.push_back(collisionBody->getID());
+	m_freeBodiesIDs.pushBack(collisionBody->getID());
 
 	// Call the destructor of the collision body
 	collisionBody->~CollisionBody();
@@ -88,7 +88,7 @@ bodyindex CollisionWorld::computeNextAvailableBodyID() {
 	bodyindex bodyID;
 	if (!m_freeBodiesIDs.empty()) {
 		bodyID = m_freeBodiesIDs.back();
-		m_freeBodiesIDs.pop_back();
+		m_freeBodiesIDs.popBack();
 	}
 	else {
 		bodyID = m_currentBodyID;

@@ -377,7 +377,7 @@ void EPAAlgorithm::computePenetrationDepthAndContactPoints(const Simplex& simple
 
 			// Compute the error
 			float error = wDotv - triangle->getDistSquare();
-			if (error <= std::max(tolerance, REL_ERROR_SQUARE * wDotv) ||
+			if (error <= etk::max(tolerance, REL_ERROR_SQUARE * wDotv) ||
 				points[indexNewVertex] == points[(*triangle)[0]] ||
 				points[indexNewVertex] == points[(*triangle)[1]] ||
 				points[indexNewVertex] == points[(*triangle)[2]]) {

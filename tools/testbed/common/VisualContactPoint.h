@@ -73,13 +73,13 @@ class VisualContactPoint : public openglframework::Object3D {
 
 		/// Constructor
 		VisualContactPoint(const openglframework::vec3& position,
-						   const std::string &meshFolderPath);
+						   const etk::String &meshFolderPath);
 
 		/// Destructor
 		~VisualContactPoint();
 
 		/// Load and initialize the mesh for all the contact points
-		static void createStaticData(const std::string& meshFolderPath);
+		static void createStaticData(const etk::String& meshFolderPath);
 
 		/// Destroy the mesh for the contact points
 		static void destroyStaticData();

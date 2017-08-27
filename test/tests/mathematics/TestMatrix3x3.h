@@ -54,7 +54,7 @@ class Testetk::Matrix3x3 : public Test {
 		// ---------- Methods ---------- //
 
 		/// Constructor
-		Testetk::Matrix3x3(const std::string& name)
+		Testetk::Matrix3x3(const etk::String& name)
 			: Test(name), mIdentity(etk::Matrix3x3::identity()),
 			  mMatrix1(2, 24, 4, 5, -6, 234, -15, 11, 66) {
 

@@ -30,7 +30,7 @@ ConvexMeshShape::ConvexMeshShape(const float* arrayVertices, uint32_t nbVertices
 	// Copy all the vertices int32_to the int32_ternal array
 	for (uint32_t i=0; i<m_numberVertices; i++) {
 		const float* newPoint = (const float*) vertexPointer;
-		m_vertices.push_back(vec3(newPoint[0], newPoint[1], newPoint[2]));
+		m_vertices.pushBack(vec3(newPoint[0], newPoint[1], newPoint[2]));
 		vertexPointer += stride;
 	}
 
@@ -45,7 +45,7 @@ ConvexMeshShape::ConvexMeshShape(TriangleVertexArray* _triangleVertexArray, bool
   m_isEdgesInformationUsed(_isEdgesInformationUsed) {
 	// For each vertex of the mesh
 	for (auto &it: _triangleVertexArray->getVertices()) {
-		m_vertices.push_back(it*m_scaling);
+		m_vertices.pushBack(it*m_scaling);
 	}
 	// If we need to use the edges information of the mesh
 	if (m_isEdgesInformationUsed) {
@@ -256,7 +256,7 @@ void ConvexMeshShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float ma
 void ConvexMeshShape::addVertex(const vec3& vertex) {
 
 	// Add the vertex in to vertices array
-	m_vertices.push_back(vertex);
+	m_vertices.pushBack(vertex);
 	m_numberVertices++;
 
 	// Update the bounds of the mesh
@@ -292,12 +292,12 @@ void ConvexMeshShape::addEdge(uint32_t v1, uint32_t v2) {
 
 	// If the entry for vertex v1 does not exist in the adjacency list
 	if (m_edgesAdjacencyList.count(v1) == 0) {
-		m_edgesAdjacencyList.insert(std::make_pair(v1, std::set<uint32_t>()));
+		m_edgesAdjacencyList.insert(etk::makePair(v1, std::set<uint32_t>()));
 	}
 
 	// If the entry for vertex v2 does not exist in the adjacency list
 	if (m_edgesAdjacencyList.count(v2) == 0) {
-		m_edgesAdjacencyList.insert(std::make_pair(v2, std::set<uint32_t>()));
+		m_edgesAdjacencyList.insert(etk::makePair(v2, std::set<uint32_t>()));
 	}
 
 	// Add the edge in the adjacency list

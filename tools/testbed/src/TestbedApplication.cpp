@@ -95,27 +95,27 @@ void TestbedApplication::createScenes() {
 
 	// Cubes scene
 	CubesScene* cubeScene = new CubesScene("Cubes");
-	mScenes.push_back(cubeScene);
+	mScenes.pushBack(cubeScene);
 
 	// Joints scene
 	JointsScene* jointsScene = new JointsScene("Joints");
-	mScenes.push_back(jointsScene);
+	mScenes.pushBack(jointsScene);
 
 	// Collision shapes scene
 	CollisionShapesScene* collisionShapesScene = new CollisionShapesScene("Collision Shapes");
-	mScenes.push_back(collisionShapesScene);
+	mScenes.pushBack(collisionShapesScene);
 
 	// Heightfield shape scene
 	HeightFieldScene* heightFieldScene = new HeightFieldScene("Heightfield");
-	mScenes.push_back(heightFieldScene);
+	mScenes.pushBack(heightFieldScene);
 
 	// Raycast scene
 	RaycastScene* raycastScene = new RaycastScene("Raycast");
-	mScenes.push_back(raycastScene);
+	mScenes.pushBack(raycastScene);
 
 	// Raycast scene
 	ConcaveMeshScene* concaveMeshScene = new ConcaveMeshScene("Concave Mesh");
-	mScenes.push_back(concaveMeshScene);
+	mScenes.pushBack(concaveMeshScene);
 
 	assert(mScenes.size() > 0);
 	mCurrentScene = mScenes[0];
@@ -270,7 +270,7 @@ void TestbedApplication::checkOpenGLErrorsInternal(const char* file, int32_t lin
 	// While there are errors
 	while (glError != GL_NO_ERROR) {
 
-		std::string error;
+		etk::String error;
 
 		switch(glError) {
 				case GL_INVALID_OPERATION:	  error="INVALID_OPERATION";	  break;

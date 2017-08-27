@@ -8,7 +8,7 @@
 #include <ephysics/collision/TriangleVertexArray.hpp>
 
 
-ephysics::TriangleVertexArray::TriangleVertexArray(const std::vector<vec3>& _vertices, std::vector<size_t> _triangles):
+ephysics::TriangleVertexArray::TriangleVertexArray(const etk::Vector<vec3>& _vertices, etk::Vector<size_t> _triangles):
   m_vertices(_vertices),
   m_triangles(_triangles) {
 	
@@ -22,11 +22,11 @@ size_t ephysics::TriangleVertexArray::getNbTriangles() const {
 	return m_triangles.size()/3;
 }
 
-const std::vector<vec3>& ephysics::TriangleVertexArray::getVertices() const {
+const etk::Vector<vec3>& ephysics::TriangleVertexArray::getVertices() const {
 	return m_vertices;
 }
 
-const std::vector<size_t>& ephysics::TriangleVertexArray::getIndices() const{
+const etk::Vector<size_t>& ephysics::TriangleVertexArray::getIndices() const{
 	return m_triangles;
 }
 

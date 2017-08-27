@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include <vector>
+#include <etk/Vector.hpp>
 #include <set>
 #include <list>
 #include <algorithm>
@@ -32,7 +32,7 @@ namespace ephysics {
 			CollisionDetection m_collisionDetection; //!< Reference to the collision detection
 			std::set<CollisionBody*> m_bodies; //!< All the bodies (rigid and soft) of the world
 			bodyindex m_currentBodyID; //!< Current body ID
-			std::vector<uint64_t> m_freeBodiesIDs; //!< List of free ID for rigid bodies
+			etk::Vector<uint64_t> m_freeBodiesIDs; //!< List of free ID for rigid bodies
 			MemoryAllocator m_memoryAllocator; //!< Memory allocator
 			EventListener* m_eventListener; //!< Pointer to an event listener object
 			/// Private copy-constructor

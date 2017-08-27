@@ -155,8 +155,8 @@ class TestRaycast : public Test {
 		// Triangle meshes
 		TriangleMesh mConcaveTriangleMesh;
 
-		std::vector<vec3> mConcaveMeshVertices;
-		std::vector<uint32_t> mConcaveMeshIndices;
+		etk::Vector<vec3> mConcaveMeshVertices;
+		etk::Vector<uint32_t> mConcaveMeshIndices;
 		TriangleVertexArray* mConcaveMeshVertexArray;
 		float m_heightFieldData[100];
 
@@ -165,7 +165,7 @@ class TestRaycast : public Test {
 		// ---------- Methods ---------- //
 
 		/// Constructor
-		TestRaycast(const std::string& name) : Test(name) {
+		TestRaycast(const etk::String& name) : Test(name) {
 
 			epsilon = float(0.0001);
 
@@ -267,27 +267,27 @@ class TestRaycast : public Test {
 			mCompoundSphereProxyShape = mCompoundBody->addCollisionShape(mSphereShape, shapeTransform2);
 
 			// Concave Mesh shape
-			mConcaveMeshVertices.push_back(vec3(-2, -3, -4));
-			mConcaveMeshVertices.push_back(vec3(2, -3, -4));
-			mConcaveMeshVertices.push_back(vec3(2, -3, 4));
-			mConcaveMeshVertices.push_back(vec3(-2, -3, 4));
-			mConcaveMeshVertices.push_back(vec3(-2, 3, -4));
-			mConcaveMeshVertices.push_back(vec3(2, 3, -4));
-			mConcaveMeshVertices.push_back(vec3(2, 3, 4));
-			mConcaveMeshVertices.push_back(vec3(-2, 3, 4));
+			mConcaveMeshVertices.pushBack(vec3(-2, -3, -4));
+			mConcaveMeshVertices.pushBack(vec3(2, -3, -4));
+			mConcaveMeshVertices.pushBack(vec3(2, -3, 4));
+			mConcaveMeshVertices.pushBack(vec3(-2, -3, 4));
+			mConcaveMeshVertices.pushBack(vec3(-2, 3, -4));
+			mConcaveMeshVertices.pushBack(vec3(2, 3, -4));
+			mConcaveMeshVertices.pushBack(vec3(2, 3, 4));
+			mConcaveMeshVertices.pushBack(vec3(-2, 3, 4));
 
-			mConcaveMeshIndices.push_back(0); mConcaveMeshIndices.push_back(1); mConcaveMeshIndices.push_back(2);
-			mConcaveMeshIndices.push_back(0); mConcaveMeshIndices.push_back(2); mConcaveMeshIndices.push_back(3);
-			mConcaveMeshIndices.push_back(1); mConcaveMeshIndices.push_back(5); mConcaveMeshIndices.push_back(2);
-			mConcaveMeshIndices.push_back(2); mConcaveMeshIndices.push_back(5); mConcaveMeshIndices.push_back(6);
-			mConcaveMeshIndices.push_back(2); mConcaveMeshIndices.push_back(7); mConcaveMeshIndices.push_back(3);
-			mConcaveMeshIndices.push_back(2); mConcaveMeshIndices.push_back(6); mConcaveMeshIndices.push_back(7);
-			mConcaveMeshIndices.push_back(0); mConcaveMeshIndices.push_back(3); mConcaveMeshIndices.push_back(4);
-			mConcaveMeshIndices.push_back(3); mConcaveMeshIndices.push_back(7); mConcaveMeshIndices.push_back(4);
-			mConcaveMeshIndices.push_back(0); mConcaveMeshIndices.push_back(4); mConcaveMeshIndices.push_back(1);
-			mConcaveMeshIndices.push_back(1); mConcaveMeshIndices.push_back(4); mConcaveMeshIndices.push_back(5);
-			mConcaveMeshIndices.push_back(5); mConcaveMeshIndices.push_back(7); mConcaveMeshIndices.push_back(6);
-			mConcaveMeshIndices.push_back(4); mConcaveMeshIndices.push_back(7); mConcaveMeshIndices.push_back(5);
+			mConcaveMeshIndices.pushBack(0); mConcaveMeshIndices.pushBack(1); mConcaveMeshIndices.push_back(2);
+			mConcaveMeshIndices.pushBack(0); mConcaveMeshIndices.pushBack(2); mConcaveMeshIndices.push_back(3);
+			mConcaveMeshIndices.pushBack(1); mConcaveMeshIndices.pushBack(5); mConcaveMeshIndices.push_back(2);
+			mConcaveMeshIndices.pushBack(2); mConcaveMeshIndices.pushBack(5); mConcaveMeshIndices.push_back(6);
+			mConcaveMeshIndices.pushBack(2); mConcaveMeshIndices.pushBack(7); mConcaveMeshIndices.push_back(3);
+			mConcaveMeshIndices.pushBack(2); mConcaveMeshIndices.pushBack(6); mConcaveMeshIndices.push_back(7);
+			mConcaveMeshIndices.pushBack(0); mConcaveMeshIndices.pushBack(3); mConcaveMeshIndices.push_back(4);
+			mConcaveMeshIndices.pushBack(3); mConcaveMeshIndices.pushBack(7); mConcaveMeshIndices.push_back(4);
+			mConcaveMeshIndices.pushBack(0); mConcaveMeshIndices.pushBack(4); mConcaveMeshIndices.push_back(1);
+			mConcaveMeshIndices.pushBack(1); mConcaveMeshIndices.pushBack(4); mConcaveMeshIndices.push_back(5);
+			mConcaveMeshIndices.pushBack(5); mConcaveMeshIndices.pushBack(7); mConcaveMeshIndices.push_back(6);
+			mConcaveMeshIndices.pushBack(4); mConcaveMeshIndices.pushBack(7); mConcaveMeshIndices.push_back(5);
 			TriangleVertexArray::VertexDataType vertexType = sizeof(float) == 4 ? TriangleVertexArray::VERTEX_FLOAT_TYPE :
 																					TriangleVertexArray::VERTEX_DOUBLE_TYPE;
 			mConcaveMeshVertexArray =

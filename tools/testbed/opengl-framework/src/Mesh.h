@@ -27,9 +27,9 @@
 #define MESH_H
 
 // Libraries
-#include <string>
-#include <vector>
-#include <map>
+#include <etk/String.hpp>
+#include <etk/Vector.hpp>
+#include <etk/Map.hpp>
 #include <ephysics/definitions.hpp>
 #include <ephysics/maths/vec2.hpp>
 #include <ephysics/maths/vec3.hpp>
@@ -49,25 +49,25 @@ class Mesh : public Object3D {
 		// -------------------- Attributes -------------------- //
 
 		// A triplet of vertex indices for each triangle
-		std::vector<std::vector<uint32_t> > mIndices;
+		etk::Vector<etk::Vector<uint32_t> > mIndices;
 
 		// Vertices coordinates (local space)
-		std::vector<vec3> m_vertices;
+		etk::Vector<vec3> m_vertices;
 
 		// Normals coordinates
-		std::vector<vec3> mNormals;
+		etk::Vector<vec3> mNormals;
 
 		// Tangents coordinates
-		std::vector<vec3> mTangents;
+		etk::Vector<vec3> mTangents;
 
 		// Color for each vertex
-		std::vector<Color> mColors;
+		etk::Vector<Color> mColors;
 
 		// UV texture coordinates
-		std::vector<vec2> mUVs;
+		etk::Vector<vec2> mUVs;
 
 		// Textures of the mesh (one for each part of the mesh)
-		std::map<uint32_t, Texture2D> mTextures;
+		etk::Map<uint32_t, Texture2D> mTextures;
 
 	public:
 
@@ -104,28 +104,28 @@ class Mesh : public Object3D {
 		uint32_t getNbParts() const;
 
 		// Return a reference to the vertices
-		const std::vector<vec3>& getVertices() const;
+		const etk::Vector<vec3>& getVertices() const;
 
 		// Set the vertices of the mesh
-		void setVertices(std::vector<vec3>& vertices);
+		void setVertices(etk::Vector<vec3>& vertices);
 
 		// Return a reference to the normals
-		const std::vector<vec3>& getNormals() const;
+		const etk::Vector<vec3>& getNormals() const;
 
 		// set the normals of the mesh
-		void setNormals(std::vector<vec3>& normals);
+		void setNormals(etk::Vector<vec3>& normals);
 
 		// Return a reference to the UVs
-		const std::vector<vec2>& getUVs() const;
+		const etk::Vector<vec2>& getUVs() const;
 
 		// Set the UV texture coordinates of the mesh
-		void setUVs(std::vector<vec2>& uvs);
+		void setUVs(etk::Vector<vec2>& uvs);
 
 		// Return a reference to the vertex indices
-		const std::vector<uint32_t>& getIndices(uint32_t part = 0) const;
+		const etk::Vector<uint32_t>& getIndices(uint32_t part = 0) const;
 
 		// Set the vertices indices of the mesh
-		void setIndices(std::vector<std::vector<uint32_t> >& indices);
+		void setIndices(etk::Vector<etk::Vector<uint32_t> >& indices);
 
 		// Return the coordinates of a given vertex
 		const vec3& getVertex(uint32_t i) const;
@@ -218,42 +218,42 @@ inline uint32_t Mesh::getNbParts() const {
 }
 
 // Return a reference to the vertices
-inline const std::vector<vec3>& Mesh::getVertices() const {
+inline const etk::Vector<vec3>& Mesh::getVertices() const {
 	return m_vertices;
 }
 
 // Set the vertices of the mesh
-inline void Mesh::setVertices(std::vector<vec3>& vertices) {
+inline void Mesh::setVertices(etk::Vector<vec3>& vertices) {
 	m_vertices = vertices;
 }
 
 // Return a reference to the normals
-inline const std::vector<vec3>& Mesh::getNormals() const {
+inline const etk::Vector<vec3>& Mesh::getNormals() const {
 	return mNormals;
 }
 
 // set the normals of the mesh
-inline void Mesh::setNormals(std::vector<vec3>& normals) {
+inline void Mesh::setNormals(etk::Vector<vec3>& normals) {
 	mNormals = normals;
 }
 
 // Return a reference to the UVs
-inline const std::vector<vec2>& Mesh::getUVs() const {
+inline const etk::Vector<vec2>& Mesh::getUVs() const {
 	return mUVs;
 }
 
 // Set the UV texture coordinates of the mesh
-inline void Mesh::setUVs(std::vector<vec2>& uvs) {
+inline void Mesh::setUVs(etk::Vector<vec2>& uvs) {
 	mUVs = uvs;
 }
 
 // Return a reference to the vertex indices
-inline const std::vector<uint32_t>& Mesh::getIndices(uint32_t part) const {
+inline const etk::Vector<uint32_t>& Mesh::getIndices(uint32_t part) const {
 	return mIndices[part];
 }
 
 // Set the vertices indices of the mesh
-inline void Mesh::setIndices(std::vector<std::vector<uint32_t> >& indices) {
+inline void Mesh::setIndices(etk::Vector<etk::Vector<uint32_t> >& indices) {
 	mIndices = indices;
 }
 
@@ -295,7 +295,7 @@ inline void Mesh::setVertexColor(uint32_t i, const Color& color) {
 	if (mColors.size() != m_vertices.size()) {
 
 		// Create the color array with the same size
-		mColors = std::vector<Color>(m_vertices.size());
+		mColors = etk::Vector<Color>(m_vertices.size());
 	}
 
 	mColors[i] = color;
@@ -309,7 +309,7 @@ inline void Mesh::setColorToAllVertices(const Color& color) {
 	if (mColors.size() != m_vertices.size()) {
 
 		// Create the color array with the same size
-		mColors = std::vector<Color>(m_vertices.size());
+		mColors = etk::Vector<Color>(m_vertices.size());
 	}
 
 	for (size_t v=0; v<m_vertices.size(); v++) {

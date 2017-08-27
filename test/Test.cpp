@@ -31,7 +31,7 @@
 using namespace ephysics;
 
 /// Constructor
-Test::Test(const std::string& name, std::ostream* stream)
+Test::Test(const etk::String& name, etk::Stream* stream)
 	 : m_name(name), mNbPassedTests(0), mNbFailedTests(0), mOutputStream(stream) {
 
 }
@@ -43,7 +43,7 @@ Test::~Test() {
 
 // Called to test a boolean condition.
 // This method should not be called directly in your test but you should call test() instead (macro)
-void Test::applyTest(bool condition, const std::string& testText,
+void Test::applyTest(bool condition, const etk::String& testText,
 					 const char* filename, long lineNumber) {
 
 	// If the boolean condition is true
@@ -61,7 +61,7 @@ void Test::applyTest(bool condition, const std::string& testText,
 
 // Called when a test has failed.
 // This method should not be called directly in your test buy you should call fail() instead (macro)
-void Test::applyFail(const std::string& testText, const char* filename, long lineNumber) {
+void Test::applyFail(const etk::String& testText, const char* filename, long lineNumber) {
 
 	if (mOutputStream) {
 

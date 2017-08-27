@@ -27,7 +27,7 @@
 #define TEST_H
 
 // Libraries
-#include <string>
+#include <etk/String.hpp>
 #include <iostream>
 #include <cassert>
 
@@ -51,7 +51,7 @@ class Test {
 		// ---------- Attributes ---------- //
 
 		/// Name of the test
-		std::string m_name;
+		etk::String m_name;
 
 		/// Number of tests that passed
 		long mNbPassedTests;
@@ -60,7 +60,7 @@ class Test {
 		long mNbFailedTests;
 
 		/// Output stream
-		std::ostream* mOutputStream;
+		etk::Stream* mOutputStream;
 
 		// ---------- Methods ---------- //
 
@@ -77,20 +77,20 @@ class Test {
 		/// Called to test a boolean condition.
 		/// This method should not be called directly in your test but you should
 		/// call test() instead (macro)
-		void applyTest(bool condition, const std::string& testText,
+		void applyTest(bool condition, const etk::String& testText,
 					   const char* filename, long lineNumber);
 
 		/// Called when a test has failed.
 		/// This method should not be called directly in your test buy you should
 		/// call fail() instead (macro)
-		void applyFail(const std::string& testText, const char* filename, long lineNumber);
+		void applyFail(const etk::String& testText, const char* filename, long lineNumber);
 
 	public :
 
 		// ---------- Methods ---------- //
 
 		/// Constructor
-		Test(const std::string& name, std::ostream* stream = &std::cout);
+		Test(const etk::String& name, etk::Stream* stream = &std::cout);
 
 		/// Destructor
 		virtual ~Test();
@@ -102,10 +102,10 @@ class Test {
 		long getNbFailedTests() const;
 
 		/// Return the output stream
-		const std::ostream* getOutputStream() const;
+		const etk::Stream* getOutputStream() const;
 
 		/// Set the output stream
-		void setOutputStream(std::ostream *stream);
+		void setOutputStream(etk::Stream *stream);
 
 		/// Run the unit test
 		virtual void run() = 0;
@@ -142,12 +142,12 @@ inline long Test::getNbFailedTests() const {
 }
 
 // Return the output stream
-inline const std::ostream* Test::getOutputStream() const {
+inline const etk::Stream* Test::getOutputStream() const {
 	return mOutputStream;
 }
 
 // Set the output stream
-inline void Test::setOutputStream(std::ostream* stream) {
+inline void Test::setOutputStream(etk::Stream* stream) {
 	mOutputStream = stream;
 }
 

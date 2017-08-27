@@ -27,7 +27,7 @@
 #define TEXTURE2D_H
 
 // Libraries
-#include <string>
+#include <etk/String.hpp>
 #include <cassert>
 #include <ephysics/definitions.hpp>
 #include <nanogui/opengl.hpp>

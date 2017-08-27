@@ -91,7 +91,7 @@ void Mesh::calculateNormals() {
 // Compute the tangents of the mesh
 void Mesh::calculateTangents() {
 
-	mTangents = std::vector<vec3>(getNbVertices(), vec3(0, 0, 0));
+	mTangents = etk::Vector<vec3>(getNbVertices(), vec3(0, 0, 0));
 
 	// For each face
 	for (uint32_t i=0; i<getNbFaces(); i++) {
@@ -144,7 +144,7 @@ void Mesh::calculateBoundingBox(vec3& min, vec3& max) const {
 		min = m_vertices[0];
 		max = m_vertices[0];
 
-		std::vector<vec3>::const_iterator  it(m_vertices.begin());
+		etk::Vector<vec3>::const_iterator  it(m_vertices.begin());
 
 		// For each vertex of the mesh
 		for (; it != m_vertices.end(); ++it) {

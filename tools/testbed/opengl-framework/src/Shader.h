@@ -32,7 +32,7 @@
 #include <ephysics/maths/vec2.hpp>
 #include <ephysics/maths/vec3.hpp>
 #include <ephysics/maths/Vector4.hpp>
-#include <string>
+#include <etk/String.hpp>
 #include <iostream>
 #include <stdexcept>
 #include <exception>
@@ -51,7 +51,7 @@ class Shader {
 		GLuint32_t mProgramObjectID;
 
 		// Filenames of the vertex and fragment shaders
-		std::string mFilenameVertexShader, mFilenameFragmentShader;
+		etk::String mFilenameVertexShader, mFilenameFragmentShader;
 
 	public :
 
@@ -61,14 +61,14 @@ class Shader {
 		Shader();
 
 		// Constructor with arguments
-		Shader(const std::string vertexShaderFilename, const std::string fragmentShaderFilename);
+		Shader(const etk::String vertexShaderFilename, const etk::String fragmentShaderFilename);
 
 		// Destructor
 		~Shader();
 
 		// Create the shader
-		bool create(const std::string vertexShaderFilename,
-					const std::string fragmentShaderFilename);
+		bool create(const etk::String vertexShaderFilename,
+					const etk::String fragmentShaderFilename);
 
 		// Clear the shader
 		void destroy();
@@ -80,57 +80,57 @@ class Shader {
 		void unbind() const;
 
 		// Return the location of a uniform variable inside a shader program
-		GLint32_t getUniformLocation(const std::string& variableName, bool errorIfMissing = true) const;
+		GLint32_t getUniformLocation(const etk::String& variableName, bool errorIfMissing = true) const;
 
 		// Return the location of an attribute variable inside a shader program
-		GLint32_t getAttribLocation(const std::string& variableName, bool errorIfMissing = true) const;
+		GLint32_t getAttribLocation(const etk::String& variableName, bool errorIfMissing = true) const;
 
 		// Set a float uniform value to this shader (be careful if the uniform is not
 		// used in the shader, the compiler will remove it, then when you will try
 		// to set it, an assert will occur)
-		void setFloatUniform(const std::string& variableName, float value, bool errorIfMissing = true) const;
+		void setFloatUniform(const etk::String& variableName, float value, bool errorIfMissing = true) const;
 
 		// Set an int32_t uniform value to this shader (be careful if the uniform is not
 		// used in the shader, the compiler will remove it, then when you will try
 		// to set it, an assert will occur)
-		void setIntUniform(const std::string& variableName, int32_t value, bool errorIfMissing = true) const;
+		void setIntUniform(const etk::String& variableName, int32_t value, bool errorIfMissing = true) const;
 
 		// Set a vector 2 uniform value to this shader (be careful if the uniform is not
 		// used in the shader, the compiler will remove it, then when you will try
 		// to set it, an assert will occur)
-		void setvec2Uniform(const std::string& variableName, const vec2& v, bool errorIfMissing = true) const;
+		void setvec2Uniform(const etk::String& variableName, const vec2& v, bool errorIfMissing = true) const;
 
 		// Set a vector 3 uniform value to this shader (be careful if the uniform is not
 		// used in the shader, the compiler will remove it, then when you will try
 		// to set it, an assert will occur)
-		void setvec3Uniform(const std::string& variableName, const vec3& v, bool errorIfMissing = true) const;
+		void setvec3Uniform(const etk::String& variableName, const vec3& v, bool errorIfMissing = true) const;
 
 		// Set a vector 4 uniform value to this shader (be careful if the uniform is not
 		// used in the shader, the compiler will remove it, then when you will try
 		// to set it, an assert will occur)
-		void setVector4Uniform(const std::string& variableName, const Vector4 &v, bool errorIfMissing = true) const;
+		void setVector4Uniform(const etk::String& variableName, const Vector4 &v, bool errorIfMissing = true) const;
 
 		// Set a 3x3 matrix uniform value to this shader (be careful if the uniform is not
 		// used in the shader, the compiler will remove it, then when you will try
 		// to set it, an assert will occur)
-		void setetk::Matrix3x3Uniform(const std::string& variableName, const float* matrix,
+		void setetk::Matrix3x3Uniform(const etk::String& variableName, const float* matrix,
 								 bool transpose = false, bool errorIfMissing = true) const;
 
 		// Set a 3x3 matrix uniform value to this shader (be careful if the uniform is not
 		// used in the shader, the compiler will remove it, then when you will try
 		// to set it, an assert will occur)
-		void setetk::Matrix3x3Uniform(const std::string& variableName, const Matrix3& matrix, bool errorIfMissing = true) const;
+		void setetk::Matrix3x3Uniform(const etk::String& variableName, const Matrix3& matrix, bool errorIfMissing = true) const;
 
 		// Set a 4x4 matrix uniform value to this shader (be careful if the uniform is not
 		// used in the shader, the compiler will remove it, then when you will try
 		// to set it, an assert will occur)
-		void setMatrix4x4Uniform(const std::string& variableName, const float* matrix,
+		void setMatrix4x4Uniform(const etk::String& variableName, const float* matrix,
 								 bool transpose = false, bool errorIfMissing = true) const;
 
 		// Set a 4x4 matrix uniform value to this shader (be careful if the uniform is not
 		// used in the shader, the compiler will remove it, then when you will try
 		// to set it, an assert will occur)
-		void setMatrix4x4Uniform(const std::string& variableName, const Matrix4& matrix, bool errorIfMissing = true) const;
+		void setMatrix4x4Uniform(const etk::String& variableName, const Matrix4& matrix, bool errorIfMissing = true) const;
 
 		// Return the shader object program ID
 		GLuint32_t getProgramObjectId() const;
@@ -152,7 +152,7 @@ inline void Shader::unbind() const {
 }
 
 // Return the location of a uniform variable inside a shader program
-inline GLint32_t Shader::getUniformLocation(const std::string& variableName, bool errorIfMissing) const {
+inline GLint32_t Shader::getUniformLocation(const etk::String& variableName, bool errorIfMissing) const {
 	assert(mProgramObjectID != 0);
 	GLint32_t location = glGetUniformLocation(mProgramObjectID, variableName.c_str());
 	if (location == -1 && errorIfMissing) {
@@ -166,7 +166,7 @@ inline GLint32_t Shader::getUniformLocation(const std::string& variableName, boo
 }
 
 // Return the location of an attribute variable inside a shader program
-inline GLint32_t Shader::getAttribLocation(const std::string& variableName, bool errorIfMissing) const {
+inline GLint32_t Shader::getAttribLocation(const etk::String& variableName, bool errorIfMissing) const {
 	assert(mProgramObjectID != 0);
 	GLint32_t location = glGetAttribLocation(mProgramObjectID, variableName.c_str());
 	if (location == -1 && errorIfMissing) {
@@ -190,7 +190,7 @@ inline void Shader::destroy() {
 // Set a float uniform value to this shader (be careful if the uniform is not
 // used in the shader, the compiler will remove it, then when you will try
 // to set it, an assert will occur)
-inline void Shader::setFloatUniform(const std::string& variableName, float value, bool errorIfMissing) const {
+inline void Shader::setFloatUniform(const etk::String& variableName, float value, bool errorIfMissing) const {
 	assert(mProgramObjectID != 0);
 	GLint32_t location = getUniformLocation(variableName, errorIfMissing);
 	if (location != -1) {
@@ -201,7 +201,7 @@ inline void Shader::setFloatUniform(const std::string& variableName, float value
 // Set an int32_t uniform value to this shader (be careful if the uniform is not
 // used in the shader, the compiler will remove it, then when you will try
 // to set it, an assert will occur)
-inline void Shader::setIntUniform(const std::string& variableName, int32_t value, bool errorIfMissing) const {
+inline void Shader::setIntUniform(const etk::String& variableName, int32_t value, bool errorIfMissing) const {
 	assert(mProgramObjectID != 0);
 	GLint32_t location = getUniformLocation(variableName, errorIfMissing);
 	if (location != -1) {
@@ -212,7 +212,7 @@ inline void Shader::setIntUniform(const std::string& variableName, int32_t value
 // Set a vector 2 uniform value to this shader (be careful if the uniform is not
 // used in the shader, the compiler will remove it, then when you will try
 // to set it, an assert will occur)
-inline void Shader::setvec2Uniform(const std::string& variableName, const vec2& v, bool errorIfMissing) const {
+inline void Shader::setvec2Uniform(const etk::String& variableName, const vec2& v, bool errorIfMissing) const {
 	assert(mProgramObjectID != 0);
 	GLint32_t location = getUniformLocation(variableName, errorIfMissing);
 	if (location != -1) {
@@ -223,7 +223,7 @@ inline void Shader::setvec2Uniform(const std::string& variableName, const vec2& 
 // Set a vector 3 uniform value to this shader (be careful if the uniform is not
 // used in the shader, the compiler will remove it, then when you will try
 // to set it, an assert will occur)
-inline void Shader::setvec3Uniform(const std::string& variableName, const vec3 &v, bool errorIfMissing) const {
+inline void Shader::setvec3Uniform(const etk::String& variableName, const vec3 &v, bool errorIfMissing) const {
 	assert(mProgramObjectID != 0);
 	GLint32_t location = getUniformLocation(variableName, errorIfMissing);
 	if (location != -1) {
@@ -234,7 +234,7 @@ inline void Shader::setvec3Uniform(const std::string& variableName, const vec3 &
 // Set a vector 4 uniform value to this shader (be careful if the uniform is not
 // used in the shader, the compiler will remove it, then when you will try
 // to set it, an assert will occur)
-inline void Shader::setVector4Uniform(const std::string& variableName, const Vector4& v, bool errorIfMissing) const {
+inline void Shader::setVector4Uniform(const etk::String& variableName, const Vector4& v, bool errorIfMissing) const {
 	assert(mProgramObjectID != 0);
 	GLint32_t location = getUniformLocation(variableName, errorIfMissing);
 	if (location != -1) {
@@ -245,7 +245,7 @@ inline void Shader::setVector4Uniform(const std::string& variableName, const Vec
 // Set a 4x4 matrix uniform value to this shader (be careful if the uniform is not
 // used in the shader, the compiler will remove it, then when you will try
 // to set it, an assert will occur)
-inline void Shader::setetk::Matrix3x3Uniform(const std::string& variableName, const float* matrix,
+inline void Shader::setetk::Matrix3x3Uniform(const etk::String& variableName, const float* matrix,
 										bool transpose, bool errorIfMissing) const {
 	assert(mProgramObjectID != 0);
 	GLint32_t location = getUniformLocation(variableName, errorIfMissing);
@@ -257,7 +257,7 @@ inline void Shader::setetk::Matrix3x3Uniform(const std::string& variableName, co
 // Set a 3x3 matrix uniform value to this shader (be careful if the uniform is not
 // used in the shader, the compiler will remove it, then when you will try
 // to set it, an assert will occur)
-inline void Shader::setetk::Matrix3x3Uniform(const std::string& variableName, const Matrix3& matrix, bool errorIfMissing) const {
+inline void Shader::setetk::Matrix3x3Uniform(const etk::String& variableName, const Matrix3& matrix, bool errorIfMissing) const {
 	assert(mProgramObjectID != 0);
 	GLfloat mat[9];
 	for (int32_t i=0; i<3; i++) {
@@ -274,7 +274,7 @@ inline void Shader::setetk::Matrix3x3Uniform(const std::string& variableName, co
 // Set a 4x4 matrix uniform value to this shader (be careful if the uniform is not
 // used in the shader, the compiler will remove it, then when you will try
 // to set it, an assert will occur)
-inline void Shader::setMatrix4x4Uniform(const std::string& variableName, const float* matrix,
+inline void Shader::setMatrix4x4Uniform(const etk::String& variableName, const float* matrix,
 										bool transpose, bool errorIfMissing) const {
 	assert(mProgramObjectID != 0);
 	GLint32_t location = getUniformLocation(variableName, errorIfMissing);
@@ -286,7 +286,7 @@ inline void Shader::setMatrix4x4Uniform(const std::string& variableName, const f
 // Set a 4x4 matrix uniform value to this shader (be careful if the uniform is not
 // used in the shader, the compiler will remove it, then when you will try
 // to set it, an assert will occur)
-inline void Shader::setMatrix4x4Uniform(const std::string& variableName, const Matrix4& matrix, bool errorIfMissing) const {
+inline void Shader::setMatrix4x4Uniform(const etk::String& variableName, const Matrix4& matrix, bool errorIfMissing) const {
 	assert(mProgramObjectID != 0);
 	GLfloat mat[16];
 	for (int32_t i=0; i<4; i++) {

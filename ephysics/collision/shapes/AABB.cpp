@@ -32,21 +32,21 @@ AABB::AABB(const AABB& _aabb):
 }
 
 void AABB::mergeWithAABB(const AABB& _aabb) {
-	m_minCoordinates.setX(std::min(m_minCoordinates.x(), _aabb.m_minCoordinates.x()));
-	m_minCoordinates.setY(std::min(m_minCoordinates.y(), _aabb.m_minCoordinates.y()));
-	m_minCoordinates.setZ(std::min(m_minCoordinates.z(), _aabb.m_minCoordinates.z()));
-	m_maxCoordinates.setX(std::max(m_maxCoordinates.x(), _aabb.m_maxCoordinates.x()));
-	m_maxCoordinates.setY(std::max(m_maxCoordinates.y(), _aabb.m_maxCoordinates.y()));
-	m_maxCoordinates.setZ(std::max(m_maxCoordinates.z(), _aabb.m_maxCoordinates.z()));
+	m_minCoordinates.setX(etk::min(m_minCoordinates.x(), _aabb.m_minCoordinates.x()));
+	m_minCoordinates.setY(etk::min(m_minCoordinates.y(), _aabb.m_minCoordinates.y()));
+	m_minCoordinates.setZ(etk::min(m_minCoordinates.z(), _aabb.m_minCoordinates.z()));
+	m_maxCoordinates.setX(etk::max(m_maxCoordinates.x(), _aabb.m_maxCoordinates.x()));
+	m_maxCoordinates.setY(etk::max(m_maxCoordinates.y(), _aabb.m_maxCoordinates.y()));
+	m_maxCoordinates.setZ(etk::max(m_maxCoordinates.z(), _aabb.m_maxCoordinates.z()));
 }
 
 void AABB::mergeTwoAABBs(const AABB& _aabb1, const AABB& _aabb2) {
-	m_minCoordinates.setX(std::min(_aabb1.m_minCoordinates.x(), _aabb2.m_minCoordinates.x()));
-	m_minCoordinates.setY(std::min(_aabb1.m_minCoordinates.y(), _aabb2.m_minCoordinates.y()));
-	m_minCoordinates.setZ(std::min(_aabb1.m_minCoordinates.z(), _aabb2.m_minCoordinates.z()));
-	m_maxCoordinates.setX(std::max(_aabb1.m_maxCoordinates.x(), _aabb2.m_maxCoordinates.x()));
-	m_maxCoordinates.setY(std::max(_aabb1.m_maxCoordinates.y(), _aabb2.m_maxCoordinates.y()));
-	m_maxCoordinates.setZ(std::max(_aabb1.m_maxCoordinates.z(), _aabb2.m_maxCoordinates.z()));
+	m_minCoordinates.setX(etk::min(_aabb1.m_minCoordinates.x(), _aabb2.m_minCoordinates.x()));
+	m_minCoordinates.setY(etk::min(_aabb1.m_minCoordinates.y(), _aabb2.m_minCoordinates.y()));
+	m_minCoordinates.setZ(etk::min(_aabb1.m_minCoordinates.z(), _aabb2.m_minCoordinates.z()));
+	m_maxCoordinates.setX(etk::max(_aabb1.m_maxCoordinates.x(), _aabb2.m_maxCoordinates.x()));
+	m_maxCoordinates.setY(etk::max(_aabb1.m_maxCoordinates.y(), _aabb2.m_maxCoordinates.y()));
+	m_maxCoordinates.setZ(etk::max(_aabb1.m_maxCoordinates.z(), _aabb2.m_maxCoordinates.z()));
 }
 
 bool AABB::contains(const AABB& _aabb) const {

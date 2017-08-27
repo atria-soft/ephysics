@@ -168,7 +168,7 @@ void CollisionDetection::computeNarrowPhase() {
 			 (shape1->getCollisionCategoryBits() & shape2->getCollideWithMaskBits()) == 0) ||
 			 !m_broadPhaseAlgorithm.testOverlappingShapes(shape1, shape2)) {
 
-			std::map<overlappingpairid, OverlappingPair*>::iterator itToRemove = it;
+			etk::Map<overlappingpairid, OverlappingPair*>::iterator itToRemove = it;
 			++it;
 
 			// TODO : Remove all the contact manifold of the overlapping pair from the contact manifolds list of the two bodies involved
@@ -271,7 +271,7 @@ void CollisionDetection::computeNarrowPhaseBetweenShapes(CollisionCallback* call
 			 (shape1->getCollisionCategoryBits() & shape2->getCollideWithMaskBits()) == 0) ||
 			 !m_broadPhaseAlgorithm.testOverlappingShapes(shape1, shape2)) {
 
-			std::map<overlappingpairid, OverlappingPair*>::iterator itToRemove = it;
+			etk::Map<overlappingpairid, OverlappingPair*>::iterator itToRemove = it;
 			++it;
 
 			// TODO : Remove all the contact manifold of the overlapping pair from the contact manifolds list of the two bodies involved
@@ -357,7 +357,7 @@ void CollisionDetection::broadPhaseNotifyOverlappingPair(ProxyShape* shape1, Pro
 	assert(newPair != NULL);
 
 #ifndef NDEBUG
-	std::pair<map<overlappingpairid, OverlappingPair*>::iterator, bool> check =
+	etk::Pair<map<overlappingpairid, OverlappingPair*>::iterator, bool> check =
 #endif
 	m_overlappingPairs.insert(make_pair(pairID, newPair));
 	assert(check.second);
@@ -371,11 +371,11 @@ void CollisionDetection::broadPhaseNotifyOverlappingPair(ProxyShape* shape1, Pro
 void CollisionDetection::removeProxyCollisionShape(ProxyShape* proxyShape) {
 
 	// Remove all the overlapping pairs involving this proxy shape
-	std::map<overlappingpairid, OverlappingPair*>::iterator it;
+	etk::Map<overlappingpairid, OverlappingPair*>::iterator it;
 	for (it = m_overlappingPairs.begin(); it != m_overlappingPairs.end(); ) {
 		if (it->second->getShape1()->m_broadPhaseID == proxyShape->m_broadPhaseID||
 			it->second->getShape2()->m_broadPhaseID == proxyShape->m_broadPhaseID) {
-			std::map<overlappingpairid, OverlappingPair*>::iterator itToRemove = it;
+			etk::Map<overlappingpairid, OverlappingPair*>::iterator itToRemove = it;
 			++it;
 
 			// TODO : Remove all the contact manifold of the overlapping pair from the contact manifolds list of the two bodies involved
@@ -431,7 +431,7 @@ void CollisionDetection::createContact(OverlappingPair* overlappingPair,
 void CollisionDetection::addAllContactManifoldsToBodies() {
 
 	// For each overlapping pairs in contact during the narrow-phase
-	std::map<overlappingpairid, OverlappingPair*>::iterator it;
+	etk::Map<overlappingpairid, OverlappingPair*>::iterator it;
 	for (it = m_contactOverlappingPairs.begin(); it != m_contactOverlappingPairs.end(); ++it) {
 
 		// Add all the contact manifolds of the pair int32_to the list of contact manifolds
@@ -479,7 +479,7 @@ void CollisionDetection::addContactManifoldToBody(OverlappingPair* pair) {
 void CollisionDetection::clearContactPoints() {
 
 	// For each overlapping pair
-	std::map<overlappingpairid, OverlappingPair*>::iterator it;
+	etk::Map<overlappingpairid, OverlappingPair*>::iterator it;
 	for (it = m_overlappingPairs.begin(); it != m_overlappingPairs.end(); ++it) {
 		it->second->clearContactPoints();
 	}

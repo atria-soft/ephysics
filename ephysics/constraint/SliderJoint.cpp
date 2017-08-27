@@ -330,7 +330,7 @@ void SliderJoint::solveVelocityConstraint(const ConstraintSolverData& constraint
 			// Compute the Lagrange multiplier lambda for the lower limit constraint
 			float deltaLambdaLower = m_inverseMassMatrixLimit * (-JvLowerLimit -m_bLowerLimit);
 			float lambdaTemp = m_impulseLowerLimit;
-			m_impulseLowerLimit = std::max(m_impulseLowerLimit + deltaLambdaLower, 0.0f);
+			m_impulseLowerLimit = etk::max(m_impulseLowerLimit + deltaLambdaLower, 0.0f);
 			deltaLambdaLower = m_impulseLowerLimit - lambdaTemp;
 
 			// Compute the impulse P=J^T * lambda for the lower limit constraint of body 1
@@ -360,7 +360,7 @@ void SliderJoint::solveVelocityConstraint(const ConstraintSolverData& constraint
 			// Compute the Lagrange multiplier lambda for the upper limit constraint
 			float deltaLambdaUpper = m_inverseMassMatrixLimit * (-JvUpperLimit -m_bUpperLimit);
 			float lambdaTemp = m_impulseUpperLimit;
-			m_impulseUpperLimit = std::max(m_impulseUpperLimit + deltaLambdaUpper, 0.0f);
+			m_impulseUpperLimit = etk::max(m_impulseUpperLimit + deltaLambdaUpper, 0.0f);
 			deltaLambdaUpper = m_impulseUpperLimit - lambdaTemp;
 
 			// Compute the impulse P=J^T * lambda for the upper limit constraint of body 1

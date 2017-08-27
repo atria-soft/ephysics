@@ -99,7 +99,7 @@ namespace ephysics {
 		private:
 			static void print32_tRecursiveNodeReport(ProfileNodeIterator* iterator,
 			                                         int32_t spacing,
-			                                         std::ostream& outputStream);
+			                                         etk::Stream& outputStream);
 		public :
 			/// Method called when we want to start profiling a block of code.
 			static void startProfilingBlock(const char *name);
@@ -117,7 +117,7 @@ namespace ephysics {
 			/// Return an iterator over the profiler tree starting at the root
 			static ProfileNodeIterator* getIterator();
 			/// Print32_t the report of the profiler in a given output stream
-			static void print32_tReport(std::ostream& outputStream);
+			static void print32_tReport(etk::Stream& outputStream);
 			/// Destroy a previously allocated iterator
 			static void destroyIterator(ProfileNodeIterator* iterator);
 			/// Destroy the profiler (release the memory)

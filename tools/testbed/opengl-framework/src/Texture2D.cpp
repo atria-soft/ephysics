@@ -27,7 +27,7 @@
 #include <ephysics/Texture2D.hpp>
 #include <fstream>
 #include <iostream>
-#include <string>
+#include <etk/String.hpp>
 
 // Namespaces
 using namespace openglframework;

@@ -25,7 +25,7 @@
 
 // Librairies
 #include <ephysics/TextureReaderWriter.hpp>
-#include <string>
+#include <etk/String.hpp>
 #ifdef USE_JPEG_TEXTURE
 	#include <jpeglib.hpp>
 	#include <jerror.hpp>
@@ -60,7 +60,7 @@ typedef struct {
 #pragma pack(pop)
 
 // Load a texture from a file
-void TextureReaderWriter::loadTextureFromFile(const std::string& filename,
+void TextureReaderWriter::loadTextureFromFile(const etk::String& filename,
 											  Texture2D& textureToCreate) {
 
 	// Get the extension of the file
@@ -87,7 +87,7 @@ void TextureReaderWriter::loadTextureFromFile(const std::string& filename,
 }
 
 // Write a texture to a file
-void TextureReaderWriter::writeTextureToFile(const std::string& filename,const Texture2D& texture) {
+void TextureReaderWriter::writeTextureToFile(const etk::String& filename,const Texture2D& texture) {
 
 	// Get the extension of the file
 	uint32_t startPosExtension = filename.find_last_of(".");
@@ -113,7 +113,7 @@ void TextureReaderWriter::writeTextureToFile(const std::string& filename,const T
 }
 
 // Load a TGA picture
-void TextureReaderWriter::readTGAPicture(const std::string &filename, Texture2D& textureToCreate) {
+void TextureReaderWriter::readTGAPicture(const etk::String &filename, Texture2D& textureToCreate) {
 
 	// Open the file
 	std::ifstream stream(filename.c_str(), std::ios::binary);
@@ -158,7 +158,7 @@ void TextureReaderWriter::readTGAPicture(const std::string &filename, Texture2D&
 
 
 // Write a TGA picture
-void TextureReaderWriter::writeTGAPicture(const std::string& filename, const Texture2D& texture) {
+void TextureReaderWriter::writeTGAPicture(const etk::String& filename, const Texture2D& texture) {
 	assert(texture.getID() != 0);
 
 	// Bind the corresponding texture
@@ -223,7 +223,7 @@ void TextureReaderWriter::writeTGAPicture(const std::string& filename, const Tex
 #ifdef USE_JPEG_TEXTURE
 
 // Read a JPEG picture
-void TextureReaderWriter::readJPEGPicture(const std::string& filename, Texture2D& textureToCreate) {
+void TextureReaderWriter::readJPEGPicture(const etk::String& filename, Texture2D& textureToCreate) {
 
 	struct jpeg_decompress_struct info;
 	struct jpeg_error_mgr error;
@@ -278,7 +278,7 @@ void TextureReaderWriter::readJPEGPicture(const std::string& filename, Texture2D
 }
 
 // Write a JPEG picture
-void TextureReaderWriter::writeJPEGPicture(const std::string& filename, const Texture2D& texture) {
+void TextureReaderWriter::writeJPEGPicture(const etk::String& filename, const Texture2D& texture) {
 
 	struct jpeg_compress_struct info;
 	struct jpeg_error_mgr error;

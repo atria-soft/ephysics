@@ -90,7 +90,7 @@ class TestPointInside : public Test {
 		// ---------- Methods ---------- //
 
 		/// Constructor
-		TestPointInside(const std::string& name) : Test(name) {
+		TestPointInside(const etk::String& name) : Test(name) {
 
 			// Create the world
 			m_world = new CollisionWorld();

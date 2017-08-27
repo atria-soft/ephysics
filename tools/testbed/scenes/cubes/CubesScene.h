@@ -44,14 +44,14 @@ namespace cubesscene {
 	class CubesScene : public SceneDemo {
 		protected :
 			/// All the boxes of the scene
-			std::vector<Box*> mBoxes;
+			etk::Vector<Box*> mBoxes;
 			/// Box for the floor
 			Box* mFloor;
 			/// Dynamics world used for the physics simulation
 			ephysics::DynamicsWorld* m_dynamicsWorld;
 		public:
 			/// Constructor
-			CubesScene(const std::string& name);
+			CubesScene(const etk::String& name);
 			/// Destructor
 			virtual ~CubesScene();
 			/// Update the physics world (take a simulation step)
@@ -65,7 +65,7 @@ namespace cubesscene {
 			/// Reset the scene
 			virtual void reset();
 			/// Return all the contact points of the scene
-			virtual std::vector<ContactPoint> getContactPoints() const {
+			virtual etk::Vector<ContactPoint> getContactPoints() const {
 				return computeContactPointsOfWorld(m_dynamicsWorld);
 			}
 	};

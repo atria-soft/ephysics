@@ -57,7 +57,7 @@ class Testetk::Transform3D : public Test {
 		// ---------- Methods ---------- //
 
 		/// Constructor
-		Testetk::Transform3D(const std::string& name) : Test(name) {
+		Testetk::Transform3D(const etk::String& name) : Test(name) {
 
 			mIdentityetk::Transform3D.setToIdentity();
 

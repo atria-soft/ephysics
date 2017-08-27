@@ -31,10 +31,10 @@ using namespace openglframework;
 using namespace collisionshapesscene;
 
 // Constructor
-CollisionShapesScene::CollisionShapesScene(const std::string& name)
+CollisionShapesScene::CollisionShapesScene(const etk::String& name)
 	   : SceneDemo(name, SCENE_RADIUS) {
 
-	std::string meshFolderPath("meshes/");
+	etk::String meshFolderPath("meshes/");
 
 	// Compute the radius and the center of the scene
 	openglframework::vec3 center(0, 5, 0);
@@ -73,7 +73,7 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 		material.setBounciness(ephysics::float(0.2));
 
 		// Add the mesh the list of dumbbells in the scene
-		mDumbbells.push_back(dumbbell);
+		mDumbbells.pushBack(dumbbell);
 	}
 
 	// Create all the boxes of the scene
@@ -97,7 +97,7 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 		material.setBounciness(ephysics::float(0.2));
 
 		// Add the sphere the list of sphere in the scene
-		mBoxes.push_back(box);
+		mBoxes.pushBack(box);
 	}
 
 	// Create all the spheres of the scene
@@ -125,7 +125,7 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 		material.setBounciness(ephysics::float(0.2));
 
 		// Add the sphere the list of sphere in the scene
-		mSpheres.push_back(sphere);
+		mSpheres.pushBack(sphere);
 	}
 
 	// Create all the cones of the scene
@@ -153,7 +153,7 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 		material.setBounciness(ephysics::float(0.2));
 
 		// Add the cone the list of sphere in the scene
-		mCones.push_back(cone);
+		mCones.pushBack(cone);
 	}
 
 	// Create all the cylinders of the scene
@@ -181,7 +181,7 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 		material.setBounciness(ephysics::float(0.2));
 
 		// Add the cylinder the list of sphere in the scene
-		mCylinders.push_back(cylinder);
+		mCylinders.pushBack(cylinder);
 	}
 
 	// Create all the capsules of the scene
@@ -208,7 +208,7 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 		material.setBounciness(ephysics::float(0.2));
 
 		// Add the cylinder the list of sphere in the scene
-		mCapsules.push_back(capsule);
+		mCapsules.pushBack(capsule);
 	}
 
 	// Create all the convex meshes of the scene
@@ -232,7 +232,7 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 		material.setBounciness(ephysics::float(0.2));
 
 		// Add the mesh the list of sphere in the scene
-		mConvexMeshes.push_back(mesh);
+		mConvexMeshes.pushBack(mesh);
 	}
 
 	// ---------- Create the floor ---------
@@ -290,7 +290,7 @@ CollisionShapesScene::CollisionShapesScene(const std::string& name)
 CollisionShapesScene::~CollisionShapesScene() {
 
 	// Destroy all the boxes of the scene
-	for (std::vector<Box*>::iterator it = mBoxes.begin(); it != mBoxes.end(); ++it) {
+	for (etk::Vector<Box*>::iterator it = mBoxes.begin(); it != mBoxes.end(); ++it) {
 
 		// Destroy the corresponding rigid body from the dynamics world
 		mDynamicsWorld->destroyRigidBody((*it)->getRigidBody());
@@ -300,7 +300,7 @@ CollisionShapesScene::~CollisionShapesScene() {
 	}
 
 	// Destroy all the sphere of the scene
-	for (std::vector<Sphere*>::iterator it = mSpheres.begin(); it != mSpheres.end(); ++it) {
+	for (etk::Vector<Sphere*>::iterator it = mSpheres.begin(); it != mSpheres.end(); ++it) {
 
 		// Destroy the corresponding rigid body from the dynamics world
 		mDynamicsWorld->destroyRigidBody((*it)->getRigidBody());
@@ -310,7 +310,7 @@ CollisionShapesScene::~CollisionShapesScene() {
 	}
 
 	// Destroy all the cones of the scene
-	for (std::vector<Cone*>::iterator it = mCones.begin(); it != mCones.end(); ++it) {
+	for (etk::Vector<Cone*>::iterator it = mCones.begin(); it != mCones.end(); ++it) {
 
 		// Destroy the corresponding rigid body from the dynamics world
 		mDynamicsWorld->destroyRigidBody((*it)->getRigidBody());
@@ -320,7 +320,7 @@ CollisionShapesScene::~CollisionShapesScene() {
 	}
 
 	// Destroy all the cylinders of the scene
-	for (std::vector<Cylinder*>::iterator it = mCylinders.begin(); it != mCylinders.end(); ++it) {
+	for (etk::Vector<Cylinder*>::iterator it = mCylinders.begin(); it != mCylinders.end(); ++it) {
 
 		// Destroy the corresponding rigid body from the dynamics world
 		mDynamicsWorld->destroyRigidBody((*it)->getRigidBody());
@@ -330,7 +330,7 @@ CollisionShapesScene::~CollisionShapesScene() {
 	}
 
 	// Destroy all the capsules of the scene
-	for (std::vector<Capsule*>::iterator it = mCapsules.begin(); it != mCapsules.end(); ++it) {
+	for (etk::Vector<Capsule*>::iterator it = mCapsules.begin(); it != mCapsules.end(); ++it) {
 
 		// Destroy the corresponding rigid body from the dynamics world
 		mDynamicsWorld->destroyRigidBody((*it)->getRigidBody());
@@ -340,7 +340,7 @@ CollisionShapesScene::~CollisionShapesScene() {
 	}
 
 	// Destroy all the convex meshes of the scene
-	for (std::vector<ConvexMesh*>::iterator it = mConvexMeshes.begin();
+	for (etk::Vector<ConvexMesh*>::iterator it = mConvexMeshes.begin();
 		 it != mConvexMeshes.end(); ++it) {
 
 		// Destroy the corresponding rigid body from the dynamics world
@@ -351,7 +351,7 @@ CollisionShapesScene::~CollisionShapesScene() {
 	}
 
 	// Destroy all the dumbbell of the scene
-	for (std::vector<Dumbbell*>::iterator it = mDumbbells.begin();
+	for (etk::Vector<Dumbbell*>::iterator it = mDumbbells.begin();
 		 it != mDumbbells.end(); ++it) {
 
 		// Destroy the corresponding rigid body from the dynamics world
@@ -400,42 +400,42 @@ void CollisionShapesScene::update() {
 	SceneDemo::update();
 
 	// Update the position and orientation of the boxes
-	for (std::vector<Box*>::iterator it = mBoxes.begin(); it != mBoxes.end(); ++it) {
+	for (etk::Vector<Box*>::iterator it = mBoxes.begin(); it != mBoxes.end(); ++it) {
 
 		// Update the transform used for the rendering
 		(*it)->updateetk::Transform3D(mInterpolationFactor);
 	}
 
 	// Update the position and orientation of the sphere
-	for (std::vector<Sphere*>::iterator it = mSpheres.begin(); it != mSpheres.end(); ++it) {
+	for (etk::Vector<Sphere*>::iterator it = mSpheres.begin(); it != mSpheres.end(); ++it) {
 
 		// Update the transform used for the rendering
 		(*it)->updateetk::Transform3D(mInterpolationFactor);
 	}
 
 	// Update the position and orientation of the cones
-	for (std::vector<Cone*>::iterator it = mCones.begin(); it != mCones.end(); ++it) {
+	for (etk::Vector<Cone*>::iterator it = mCones.begin(); it != mCones.end(); ++it) {
 
 		// Update the transform used for the rendering
 		(*it)->updateetk::Transform3D(mInterpolationFactor);
 	}
 
 	// Update the position and orientation of the cylinders
-	for (std::vector<Cylinder*>::iterator it = mCylinders.begin(); it != mCylinders.end(); ++it) {
+	for (etk::Vector<Cylinder*>::iterator it = mCylinders.begin(); it != mCylinders.end(); ++it) {
 
 		// Update the transform used for the rendering
 		(*it)->updateetk::Transform3D(mInterpolationFactor);
 	}
 
 	// Update the position and orientation of the capsules
-	for (std::vector<Capsule*>::iterator it = mCapsules.begin(); it != mCapsules.end(); ++it) {
+	for (etk::Vector<Capsule*>::iterator it = mCapsules.begin(); it != mCapsules.end(); ++it) {
 
 		// Update the transform used for the rendering
 		(*it)->updateetk::Transform3D(mInterpolationFactor);
 	}
 
 	// Update the position and orientation of the convex meshes
-	for (std::vector<ConvexMesh*>::iterator it = mConvexMeshes.begin();
+	for (etk::Vector<ConvexMesh*>::iterator it = mConvexMeshes.begin();
 		 it != mConvexMeshes.end(); ++it) {
 
 		// Update the transform used for the rendering
@@ -443,7 +443,7 @@ void CollisionShapesScene::update() {
 	}
 
 	// Update the position and orientation of the dumbbells
-	for (std::vector<Dumbbell*>::iterator it = mDumbbells.begin();
+	for (etk::Vector<Dumbbell*>::iterator it = mDumbbells.begin();
 		 it != mDumbbells.end(); ++it) {
 
 		// Update the transform used for the rendering
@@ -463,38 +463,38 @@ void CollisionShapesScene::renderSinglePass(openglframework::Shader& shader,
 	shader.bind();
 
 	// Render all the boxes of the scene
-	for (std::vector<Box*>::iterator it = mBoxes.begin(); it != mBoxes.end(); ++it) {
+	for (etk::Vector<Box*>::iterator it = mBoxes.begin(); it != mBoxes.end(); ++it) {
 		(*it)->render(shader, worldToCameraMatrix);
 	}
 
 	// Render all the sphere of the scene
-	for (std::vector<Sphere*>::iterator it = mSpheres.begin(); it != mSpheres.end(); ++it) {
+	for (etk::Vector<Sphere*>::iterator it = mSpheres.begin(); it != mSpheres.end(); ++it) {
 		(*it)->render(shader, worldToCameraMatrix);
 	}
 
 	// Render all the cones of the scene
-	for (std::vector<Cone*>::iterator it = mCones.begin(); it != mCones.end(); ++it) {
+	for (etk::Vector<Cone*>::iterator it = mCones.begin(); it != mCones.end(); ++it) {
 		(*it)->render(shader, worldToCameraMatrix);
 	}
 
 	// Render all the cylinders of the scene
-	for (std::vector<Cylinder*>::iterator it = mCylinders.begin(); it != mCylinders.end(); ++it) {
+	for (etk::Vector<Cylinder*>::iterator it = mCylinders.begin(); it != mCylinders.end(); ++it) {
 		(*it)->render(shader, worldToCameraMatrix);
 	}
 
 	// Render all the capsules of the scene
-	for (std::vector<Capsule*>::iterator it = mCapsules.begin(); it != mCapsules.end(); ++it) {
+	for (etk::Vector<Capsule*>::iterator it = mCapsules.begin(); it != mCapsules.end(); ++it) {
 		(*it)->render(shader, worldToCameraMatrix);
 	}
 
 	// Render all the convex meshes of the scene
-	for (std::vector<ConvexMesh*>::iterator it = mConvexMeshes.begin();
+	for (etk::Vector<ConvexMesh*>::iterator it = mConvexMeshes.begin();
 		 it != mConvexMeshes.end(); ++it) {
 		(*it)->render(shader, worldToCameraMatrix);
 	}
 
 	// Render all the dumbbells of the scene
-	for (std::vector<Dumbbell*>::iterator it = mDumbbells.begin();
+	for (etk::Vector<Dumbbell*>::iterator it = mDumbbells.begin();
 		 it != mDumbbells.end(); ++it) {
 		(*it)->render(shader, worldToCameraMatrix);
 	}

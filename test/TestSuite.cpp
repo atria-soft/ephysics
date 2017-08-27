@@ -29,7 +29,7 @@
 using namespace ephysics;
 
 // Constructor
-TestSuite::TestSuite(const std::string& name, std::ostream* outputStream)
+TestSuite::TestSuite(const etk::String& name, etk::Stream* outputStream)
 		  : m_name(name), mOutputStream(outputStream) {
 
 }
@@ -69,7 +69,7 @@ void TestSuite::addTest(Test* test) {
 	}
 
 	// Add the test to the suite
-	mTests.push_back(test);
+	mTests.pushBack(test);
 
 	// Reset the added test
 	test->reset();

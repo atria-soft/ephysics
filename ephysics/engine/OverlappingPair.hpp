@@ -10,7 +10,7 @@
 
 namespace ephysics {
 	// Type for the overlapping pair ID
-	typedef std::pair<uint32_t, uint32_t> overlappingpairid;
+	typedef etk::Pair<uint32_t, uint32_t> overlappingpairid;
 	/**
 	 * @brief This class represents a pair of two proxy collision shapes that are overlapping
 	 * during the broad-phase collision detection. It is created when

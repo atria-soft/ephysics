@@ -83,11 +83,11 @@ class Cylinder : public openglframework::Mesh, public PhysicsObject {
 
 		/// Constructor
 		Cylinder(float radius, float height, const openglframework::vec3& position,
-				 ephysics::CollisionWorld* world, const std::string &meshFolderPath);
+				 ephysics::CollisionWorld* world, const etk::String &meshFolderPath);
 
 		/// Constructor
 		Cylinder(float radius, float height, const openglframework::vec3& position,
-				 float mass, ephysics::DynamicsWorld* dynamicsWorld, const std::string &meshFolderPath);
+				 float mass, ephysics::DynamicsWorld* dynamicsWorld, const etk::String &meshFolderPath);
 
 		/// Destructor
 		~Cylinder();

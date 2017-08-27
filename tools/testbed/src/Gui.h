@@ -71,7 +71,7 @@ class Gui {
 		Label* mFrameTimeLabel;
 		Label* mPhysicsTimeLabel;
 
-		std::vector<CheckBox*> mCheckboxesScenes;
+		etk::Vector<CheckBox*> mCheckboxesScenes;
 
 		// -------------------- Methods -------------------- //
 
@@ -98,7 +98,7 @@ class Gui {
 		void createProfilingPanel();
 
 		// Convert float value to string
-		std::string floatToString(float value, int32_t precision);
+		etk::String floatToString(float value, int32_t precision);
 
 	public :
 
@@ -132,8 +132,8 @@ inline void Gui::setScroll(double scrollX, double scrollY) {
 	mScrollY = scrollY;
 }
 
-inline std::string Gui::floatToString(float value, int32_t precision) {
-	std::stringstream ss;
+inline etk::String Gui::floatToString(float value, int32_t precision) {
+	etk::Stringstream ss;
 	ss << std::fixed << std::setprecision(precision) << value;
 	return ss.str();
 }

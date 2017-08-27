@@ -36,7 +36,7 @@ int32_t Capsule::totalNbCapsules = 0;
 // Constructor
 Capsule::Capsule(float radius, float height, const openglframework::vec3& position,
 				 ephysics::CollisionWorld* world,
-				 const std::string& meshFolderPath)
+				 const etk::String& meshFolderPath)
 		: openglframework::Mesh(), mRadius(radius), mHeight(height) {
 
 	// Load the mesh from a file
@@ -85,7 +85,7 @@ Capsule::Capsule(float radius, float height, const openglframework::vec3& positi
 // Constructor
 Capsule::Capsule(float radius, float height, const openglframework::vec3& position,
 				 float mass, ephysics::DynamicsWorld* dynamicsWorld,
-				 const std::string& meshFolderPath)
+				 const etk::String& meshFolderPath)
 		: openglframework::Mesh(), mRadius(radius), mHeight(height) {
 
 	// Load the mesh from a file

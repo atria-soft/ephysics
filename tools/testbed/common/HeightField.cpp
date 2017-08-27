@@ -224,7 +224,7 @@ void HeightField::generateHeightField() {
 // Generate the graphics mesh to render the height field
 void HeightField::generateGraphicsMesh() {
 
-	std::vector<uint32_t> indices;
+	etk::Vector<uint32_t> indices;
 	int32_t vertexId = 0;
 
 	for (int32_t i=0; i<NB_POINTS_WIDTH; i++) {
@@ -234,7 +234,7 @@ void HeightField::generateGraphicsMesh() {
 			float height = originHeight + mHeightData[j * NB_POINTS_WIDTH + i];
 			openglframework::vec3 vertex(-(NB_POINTS_WIDTH - 1) * 0.5f + i, height, -(NB_POINTS_LENGTH - 1) * 0.5f + j);
 
-			m_vertices.push_back(vertex);
+			m_vertices.pushBack(vertex);
 
 			// Triangle indices
 			if ((i < NB_POINTS_WIDTH - 1) && (j < NB_POINTS_LENGTH - 1)) {
@@ -245,21 +245,21 @@ void HeightField::generateGraphicsMesh() {
 				uint32_t v4 = vertexId + NB_POINTS_LENGTH + 1;
 
 				// First triangle
-				indices.push_back(v1);
-				indices.push_back(v2);
-				indices.push_back(v3);
+				indices.pushBack(v1);
+				indices.pushBack(v2);
+				indices.pushBack(v3);
 
 				// Second triangle
-				indices.push_back(v2);
-				indices.push_back(v4);
-				indices.push_back(v3);
+				indices.pushBack(v2);
+				indices.pushBack(v4);
+				indices.pushBack(v3);
 			}
 
 			vertexId++;
 		}
 	}
 
-	mIndices.push_back(indices);
+	mIndices.pushBack(indices);
 
 	calculateNormals();
 }

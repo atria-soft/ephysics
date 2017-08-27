@@ -12,8 +12,8 @@
 #include <ephysics/collision/narrowphase/DefaultCollisionDispatch.hpp>
 #include <ephysics/memory/MemoryAllocator.hpp>
 #include <ephysics/constraint/ContactPoint.hpp>
-#include <vector>
-#include <map>
+#include <etk/Vector.hpp>
+#include <etk/Map.hpp>
 #include <set>
 #include <utility>
 
@@ -51,8 +51,8 @@ namespace ephysics {
 			NarrowPhaseAlgorithm* m_collisionMatrix[NB_COLLISION_SHAPE_TYPES][NB_COLLISION_SHAPE_TYPES]; //!< Collision detection matrix (algorithms to use)
 			MemoryAllocator& m_memoryAllocator; //!< Reference to the memory allocator
 			CollisionWorld* m_world; //!< Pointer to the physics world
-			std::map<overlappingpairid, OverlappingPair*> m_overlappingPairs; //!< Broad-phase overlapping pairs
-			std::map<overlappingpairid, OverlappingPair*> m_contactOverlappingPairs; //!< Overlapping pairs in contact (during the current Narrow-phase collision detection)
+			etk::Map<overlappingpairid, OverlappingPair*> m_overlappingPairs; //!< Broad-phase overlapping pairs
+			etk::Map<overlappingpairid, OverlappingPair*> m_contactOverlappingPairs; //!< Overlapping pairs in contact (during the current Narrow-phase collision detection)
 			BroadPhaseAlgorithm m_broadPhaseAlgorithm; //!< Broad-phase algorithm
 			// TODO : Delete this
 			GJKAlgorithm m_narrowPhaseGJKAlgorithm; //!< Narrow-phase GJK algorithm

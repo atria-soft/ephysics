@@ -50,7 +50,7 @@ class TestMathematicsFunctions : public Test {
 		// ---------- Methods ---------- //
 
 		/// Constructor
-		TestMathematicsFunctions(const std::string& name): Test(name)  {}
+		TestMathematicsFunctions(const etk::String& name): Test(name)  {}
 
 		/// Run the tests
 		void run() {

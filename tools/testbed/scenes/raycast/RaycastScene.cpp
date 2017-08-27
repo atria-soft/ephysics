@@ -31,7 +31,7 @@ using namespace openglframework;
 using namespace raycastscene;
 
 // Constructor
-RaycastScene::RaycastScene(const std::string& name)
+RaycastScene::RaycastScene(const etk::String& name)
 	   : SceneDemo(name, SCENE_RADIUS, false), mMeshFolderPath("meshes/"),
 		 m_raycastManager(mPhongShader, mMeshFolderPath), mCurrentBodyIndex(-1),
 		 mAreNormalsDisplayed(false), mVBOVertices(GL_ARRAY_BUFFER) {
@@ -172,10 +172,10 @@ void RaycastScene::createLines() {
 			  openglframework::vec3 point1(x, y, z);
 			  openglframework::vec3 point2(0.0f, 0.0f, 0.0f);
 			  Line* line = new Line(point1, point2);
-			  mLines.push_back(line);
+			  mLines.pushBack(line);
 
-			  mLinePoints.push_back(point1);
-			  mLinePoints.push_back(point2);
+			  mLinePoints.pushBack(point1);
+			  mLinePoints.pushBack(point2);
 		  }
 	  }
 }
@@ -287,7 +287,7 @@ RaycastScene::~RaycastScene() {
 	delete mCollisionWorld;
 
 	// Destroy the lines
-	for (std::vector<Line*>::iterator it = mLines.begin(); it != mLines.end();
+	for (etk::Vector<Line*>::iterator it = mLines.begin(); it != mLines.end();
 		 ++it) {
 		delete (*it);
 	}
@@ -309,7 +309,7 @@ void RaycastScene::update() {
 	m_raycastManager.resetPoints();
 
 	// For each line of the scene
-	for (std::vector<Line*>::iterator it = mLines.begin(); it != mLines.end();
+	for (etk::Vector<Line*>::iterator it = mLines.begin(); it != mLines.end();
 		 ++it) {
 
 		Line* line = *it;

@@ -41,7 +41,7 @@ openglframework::Color SceneDemo::mDemoColors[] = {SceneDemo::mYellowColorDemo, 
 												   SceneDemo::mOrangeColorDemo, SceneDemo::mPinkColorDemo};
 
 // Constructor
-SceneDemo::SceneDemo(const std::string& name, float sceneRadius, bool isShadowMappingEnabled)
+SceneDemo::SceneDemo(const etk::String& name, float sceneRadius, bool isShadowMappingEnabled)
 		  : Scene(name, isShadowMappingEnabled), mIsShadowMappingInitialized(false),
 					 mDepthShader("shaders/depth.vert", "shaders/depth.frag"),
 					 mPhongShader("shaders/phong.vert", "shaders/phong.frag"),
@@ -282,15 +282,15 @@ void SceneDemo::updateContactPoints() {
 	if (mIsContactPointsDisplayed) {
 
 		// Get the current contact points of the scene
-		std::vector<ContactPoint> contactPoints = getContactPoints();
+		etk::Vector<ContactPoint> contactPoints = getContactPoints();
 
 		// For each contact point
-		std::vector<ContactPoint>::const_iterator it;
+		etk::Vector<ContactPoint>::const_iterator it;
 		for (it = contactPoints.begin(); it != contactPoints.end(); ++it) {
 
 			// Create a visual contact point for rendering
 			VisualContactPoint* point = new VisualContactPoint(it->point, mMeshFolderPath);
-			m_contactPoints.push_back(point);
+			m_contactPoints.pushBack(point);
 		}
 	}
 }
@@ -300,7 +300,7 @@ void SceneDemo::renderContactPoints(openglframework::Shader& shader,
 									const openglframework::Matrix4& worldToCameraMatrix) {
 
 	// Render all the raycast hit points
-	for (std::vector<VisualContactPoint*>::iterator it = m_contactPoints.begin();
+	for (etk::Vector<VisualContactPoint*>::iterator it = m_contactPoints.begin();
 		 it != m_contactPoints.end(); ++it) {
 		(*it)->render(shader, worldToCameraMatrix);
 	}
@@ -309,7 +309,7 @@ void SceneDemo::renderContactPoints(openglframework::Shader& shader,
 void SceneDemo::removeAllContactPoints() {
 
 	// Destroy all the visual contact points
-	for (std::vector<VisualContactPoint*>::iterator it = m_contactPoints.begin();
+	for (etk::Vector<VisualContactPoint*>::iterator it = m_contactPoints.begin();
 		 it != m_contactPoints.end(); ++it) {
 		delete (*it);
 	}
@@ -317,15 +317,15 @@ void SceneDemo::removeAllContactPoints() {
 }
 
 // Return all the contact points of the scene
-std::vector<ContactPoint> SceneDemo::computeContactPointsOfWorld(const ephysics::DynamicsWorld* world) const {
+etk::Vector<ContactPoint> SceneDemo::computeContactPointsOfWorld(const ephysics::DynamicsWorld* world) const {
 
-	std::vector<ContactPoint> contactPoints;
+	etk::Vector<ContactPoint> contactPoints;
 
 	// Get the list of contact manifolds from the world
-	std::vector<const ephysics::ContactManifold*> manifolds = world->getContactsList();
+	etk::Vector<const ephysics::ContactManifold*> manifolds = world->getContactsList();
 
 	// For each contact manifold
-	std::vector<const ephysics::ContactManifold*>::const_iterator it;
+	etk::Vector<const ephysics::ContactManifold*>::const_iterator it;
 	for (it = manifolds.begin(); it != manifolds.end(); ++it) {
 
 		const ephysics::ContactManifold* manifold = *it;
@@ -336,7 +336,7 @@ std::vector<ContactPoint> SceneDemo::computeContactPointsOfWorld(const ephysics:
 			ephysics::ContactPoint* contactPoint = manifold->getContactPoint(i);
 			ephysics::vec3 point = contactPoint->getWorldPointOnBody1();
 			ContactPoint contact(openglframework::vec3(point.x(), point.y(), point.z()));
-			contactPoints.push_back(contact);
+			contactPoints.pushBack(contact);
 		}
 
 	}

@@ -79,13 +79,13 @@ void Gui::update() {
 	}
 
 	// Framerate (FPS)
-	mFPSLabel->setCaption(std::string("FPS : ") + floatToString(mCachedFPS, 0));
+	mFPSLabel->setCaption(etk::String("FPS : ") + floatToString(mCachedFPS, 0));
 
 	// Frame time
-	mFrameTimeLabel->setCaption(std::string("Frame time : ") + floatToString(mCachedUpdateTime * 1000.0, 1) + std::string(" ms"));
+	mFrameTimeLabel->setCaption(etk::String("Frame time : ") + floatToString(mCachedUpdateTime * 1000.0, 1) + etk::String(" ms"));
 
 	// Physics time
-	mPhysicsTimeLabel->setCaption(std::string("Physics time : ") + floatToString(mCachedPhysicsUpdateTime * 1000.0, 1) + std::string(" ms"));
+	mPhysicsTimeLabel->setCaption(etk::String("Physics time : ") + floatToString(mCachedPhysicsUpdateTime * 1000.0, 1) + etk::String(" ms"));
 }
 
 void Gui::createSimulationPanel() {
@@ -122,10 +122,10 @@ void Gui::createSimulationPanel() {
 	});
 
 	// Scenes
-	std::vector<Scene*> scenes = mApp->getScenes();
-	std::vector<std::string> scenesNames;
+	etk::Vector<Scene*> scenes = mApp->getScenes();
+	etk::Vector<etk::String> scenesNames;
 	for (uint32_t i=0; i<scenes.size(); i++) {
-		scenesNames.push_back(scenes[i]->getName().c_str());
+		scenesNames.pushBack(scenes[i]->getName().c_str());
 	}
 	new Label(mSimulationPanel, "Scene","sans-bold");
 	ComboBox* comboBoxScenes = new ComboBox(mSimulationPanel, scenesNames, [&, scenes](int32_t index) {
@@ -191,7 +191,7 @@ void Gui::createSettingsPanel() {
 	out << std::setprecision(1) << std::fixed << (mApp->mEngineSettings.timeStep * 1000);
 	textboxTimeStep->setValue(out.str());
 	textboxTimeStep->setUnits("ms");
-	textboxTimeStep->setCallback([&, textboxTimeStep](const std::string &str) {
+	textboxTimeStep->setCallback([&, textboxTimeStep](const etk::String &str) {
 
 		try {
 			float value = std::stof(str);
@@ -221,9 +221,9 @@ void Gui::createSettingsPanel() {
 	TextBox* textboxVelocityIterations = new TextBox(panelVelocityIterations);
 	textboxVelocityIterations->setFixedSize(vec2i(70, 25));
 	textboxVelocityIterations->setEditable(true);
-	textboxVelocityIterations->setValue(std::to_string(mApp->mEngineSettings.nbVelocitySolverIterations));
+	textboxVelocityIterations->setValue(etk::toString(mApp->mEngineSettings.nbVelocitySolverIterations));
 	textboxVelocityIterations->setUnits("iter");
-	textboxVelocityIterations->setCallback([&, textboxVelocityIterations](const std::string &str) {
+	textboxVelocityIterations->setCallback([&, textboxVelocityIterations](const etk::String &str) {
 
 		try {
 			float value = std::stof(str);
@@ -252,9 +252,9 @@ void Gui::createSettingsPanel() {
 	TextBox* textboxPositionIterations = new TextBox(panelPositionIterations);
 	textboxPositionIterations->setFixedSize(vec2i(70, 25));
 	textboxPositionIterations->setEditable(true);
-	textboxPositionIterations->setValue(std::to_string(mApp->mEngineSettings.nbPositionSolverIterations));
+	textboxPositionIterations->setValue(etk::toString(mApp->mEngineSettings.nbPositionSolverIterations));
 	textboxPositionIterations->setUnits("iter");
-	textboxPositionIterations->setCallback([&, textboxPositionIterations](const std::string &str) {
+	textboxPositionIterations->setCallback([&, textboxPositionIterations](const etk::String &str) {
 
 		try {
 			float value = std::stof(str);
@@ -287,7 +287,7 @@ void Gui::createSettingsPanel() {
 	textboxTimeSleep->setEditable(true);
 	textboxTimeSleep->setValue(out.str());
 	textboxTimeSleep->setUnits("ms");
-	textboxTimeSleep->setCallback([&, textboxTimeSleep](const std::string &str) {
+	textboxTimeSleep->setCallback([&, textboxTimeSleep](const etk::String &str) {
 
 		try {
 			float value = std::stof(str);
@@ -321,7 +321,7 @@ void Gui::createSettingsPanel() {
 	textboxSleepLinearVel->setEditable(true);
 	textboxSleepLinearVel->setValue(out.str());
 	textboxSleepLinearVel->setUnits("m/s");
-	textboxSleepLinearVel->setCallback([&, textboxSleepLinearVel](const std::string &str) {
+	textboxSleepLinearVel->setCallback([&, textboxSleepLinearVel](const etk::String &str) {
 
 		try {
 			float value = std::stof(str);
@@ -355,7 +355,7 @@ void Gui::createSettingsPanel() {
 	textboxSleepAngularVel->setEditable(true);
 	textboxSleepAngularVel->setValue(out.str());
 	textboxSleepAngularVel->setUnits("rad/s");
-	textboxSleepAngularVel->setCallback([&, textboxSleepAngularVel](const std::string &str) {
+	textboxSleepAngularVel->setCallback([&, textboxSleepAngularVel](const etk::String &str) {
 
 		try {
 			float value = std::stof(str);
@@ -415,13 +415,13 @@ void Gui::createProfilingPanel() {
 	profilingPanel->setFixedWidth(220);
 
 	// Framerate (FPS)
-	mFPSLabel = new Label(profilingPanel, std::string("FPS : ") + floatToString(mCachedFPS, 0),"sans-bold");
+	mFPSLabel = new Label(profilingPanel, etk::String("FPS : ") + floatToString(mCachedFPS, 0),"sans-bold");
 
 	// Update time
-	mFrameTimeLabel = new Label(profilingPanel, std::string("Frame time : ") + floatToString(mCachedUpdateTime * 1000.0, 1) + std::string(" ms"),"sans-bold");
+	mFrameTimeLabel = new Label(profilingPanel, etk::String("Frame time : ") + floatToString(mCachedUpdateTime * 1000.0, 1) + etk::String(" ms"),"sans-bold");
 
 	// Update time
-	mPhysicsTimeLabel = new Label(profilingPanel, std::string("Physics time : ") + floatToString(mCachedPhysicsUpdateTime * 1000.0, 1) + std::string(" ms"),"sans-bold");
+	mPhysicsTimeLabel = new Label(profilingPanel, etk::String("Physics time : ") + floatToString(mCachedPhysicsUpdateTime * 1000.0, 1) + etk::String(" ms"),"sans-bold");
 
 	profilingPanel->setVisible(true);
 }

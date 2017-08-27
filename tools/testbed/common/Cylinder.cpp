@@ -36,7 +36,7 @@ int32_t Cylinder::totalNbCylinders = 0;
 // Constructor
 Cylinder::Cylinder(float radius, float height, const openglframework::vec3& position,
 				   ephysics::CollisionWorld* world,
-				   const std::string& meshFolderPath)
+				   const etk::String& meshFolderPath)
 	 : openglframework::Mesh(), mRadius(radius), mHeight(height) {
 
 	// Load the mesh from a file
@@ -84,7 +84,7 @@ Cylinder::Cylinder(float radius, float height, const openglframework::vec3& posi
 // Constructor
 Cylinder::Cylinder(float radius, float height, const openglframework::vec3& position,
 		   float mass, ephysics::DynamicsWorld* dynamicsWorld,
-				   const std::string& meshFolderPath)
+				   const etk::String& meshFolderPath)
 	 : openglframework::Mesh(), mRadius(radius), mHeight(height) {
 
 	// Load the mesh from a file

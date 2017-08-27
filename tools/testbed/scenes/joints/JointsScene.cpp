@@ -32,7 +32,7 @@ using namespace openglframework;
 using namespace jointsscene;
 
 // Constructor
-JointsScene::JointsScene(const std::string& name)
+JointsScene::JointsScene(const etk::String& name)
 	  : SceneDemo(name, SCENE_RADIUS) {
 
 	// Compute the radius and the center of the scene

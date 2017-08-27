@@ -11,7 +11,7 @@
 #include <ephysics/collision/ContactManifold.hpp>
 #include <ephysics/engine/Island.hpp>
 #include <ephysics/engine/Impulse.hpp>
-#include <map>
+#include <etk/Map.hpp>
 #include <set>
 
 namespace ephysics {
@@ -168,7 +168,7 @@ namespace ephysics {
 			uint32_t m_numberContactManifolds; //!< Number of contact constraints
 			vec3* m_linearVelocities; //!< Array of linear velocities
 			vec3* m_angularVelocities; //!< Array of angular velocities
-			const std::map<RigidBody*, uint32_t>& m_mapBodyToConstrainedVelocityIndex; //!< Reference to the map of rigid body to their index in the constrained velocities array
+			const etk::Map<RigidBody*, uint32_t>& m_mapBodyToConstrainedVelocityIndex; //!< Reference to the map of rigid body to their index in the constrained velocities array
 			bool m_isWarmStartingActive; //!< True if the warm starting of the solver is active
 			bool m_isSplitImpulseActive; //!< True if the split impulse position correction is active
 			bool m_isSolveFrictionAtContactManifoldCenterActive; //!< True if we solve 3 friction constraints at the contact manifold center only instead of 2 friction constraints at each contact point
@@ -208,7 +208,7 @@ namespace ephysics {
 												  const ContactPointSolver& contactPoint) const;
 		public:
 			/// Constructor
-			ContactSolver(const std::map<RigidBody*, uint32_t>& mapBodyToVelocityIndex);
+			ContactSolver(const etk::Map<RigidBody*, uint32_t>& mapBodyToVelocityIndex);
 			/// Destructor
 			virtual ~ContactSolver();
 			/// Initialize the constraint solver for a given island

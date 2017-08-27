@@ -60,7 +60,7 @@ class TestbedApplication : public Screen {
 		Timer mTimer;
 
 		/// List of 3D scenes
-		std::vector<Scene*> mScenes;
+		etk::Vector<Scene*> mScenes;
 
 		/// Current 3D scene
 		Scene* mCurrentScene;
@@ -142,7 +142,7 @@ class TestbedApplication : public Screen {
 		void destroyScenes();
 
 		/// Return the list of the scenes
-		std::vector<Scene*> getScenes();
+		etk::Vector<Scene*> getScenes();
 
 		/// Start/stop the simulation
 		void togglePlayPauseSimulation();
@@ -208,7 +208,7 @@ class TestbedApplication : public Screen {
 };
 
 // Return the list of the scenes
-inline std::vector<Scene*> TestbedApplication::getScenes() {
+inline etk::Vector<Scene*> TestbedApplication::getScenes() {
 	return mScenes;
 }
 

@@ -225,8 +225,8 @@ void BroadPhaseAlgorithm::notifyOverlappingNodes(int32_t node1ID, int32_t node2I
 	}
 
 	// Add the new potential pair int32_to the array of potential overlapping pairs
-	m_potentialPairs[m_numberPotentialPairs].collisionShape1ID = std::min(node1ID, node2ID);
-	m_potentialPairs[m_numberPotentialPairs].collisionShape2ID = std::max(node1ID, node2ID);
+	m_potentialPairs[m_numberPotentialPairs].collisionShape1ID = etk::min(node1ID, node2ID);
+	m_potentialPairs[m_numberPotentialPairs].collisionShape2ID = etk::max(node1ID, node2ID);
 	m_numberPotentialPairs++;
 }
 

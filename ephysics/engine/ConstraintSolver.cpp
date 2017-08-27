@@ -9,7 +9,7 @@
 
 using namespace ephysics;
 
-ConstraintSolver::ConstraintSolver(const std::map<RigidBody*, uint32_t>& _mapBodyToVelocityIndex):
+ConstraintSolver::ConstraintSolver(const etk::Map<RigidBody*, uint32_t>& _mapBodyToVelocityIndex):
   m_mapBodyToConstrainedVelocityIndex(_mapBodyToVelocityIndex),
   m_isWarmStartingActive(true),
   m_constraintSolverData(_mapBodyToVelocityIndex) {

@@ -29,7 +29,7 @@
 // Libraries
 #include <test/Test.hpp>
 #include <ephysics/collision/broadphase/DynamicAABBTree.hpp>
-#include <vector>
+#include <etk/Vector.hpp>
 
 /// Reactphysics3D namespace
 namespace ephysics {
@@ -38,12 +38,12 @@ class OverlapCallback : public DynamicAABBTreeOverlapCallback {
 
 	public :
 
-		std::vector<int32_t> mOverlapNodes;
+		etk::Vector<int32_t> mOverlapNodes;
 
 		// Called when a overlapping node has been found during the call to
 		// DynamicAABBTree:reportAllShapesOverlappingWithAABB()
 		virtual void notifyOverlappingNode(int32_t nodeId) {
-			mOverlapNodes.push_back(nodeId);
+			mOverlapNodes.pushBack(nodeId);
 		}
 
 		void reset() {
@@ -59,11 +59,11 @@ class DynamicTreeRaycastCallback : public DynamicAABBTreeRaycastCallback {
 
 	public:
 
-		std::vector<int32_t> mHitNodes;
+		etk::Vector<int32_t> mHitNodes;
 
 		// Called when the AABB of a leaf node is hit by a ray
 		virtual float raycastBroadPhaseShape(int32_t nodeId, const Ray& ray) {
-			mHitNodes.push_back(nodeId);
+			mHitNodes.pushBack(nodeId);
 			return 1.0;
 		}
 
@@ -96,7 +96,7 @@ class TestDynamicAABBTree : public Test {
 		// ---------- Methods ---------- //
 
 		/// Constructor
-		TestDynamicAABBTree(const std::string& name): Test(name)  {
+		TestDynamicAABBTree(const etk::String& name): Test(name)  {
 
 
 		}

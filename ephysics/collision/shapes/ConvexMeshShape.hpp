@@ -10,9 +10,9 @@
 #include <ephysics/mathematics/mathematics.hpp>
 #include <ephysics/collision/TriangleMesh.hpp>
 #include <ephysics/collision/narrowphase/GJK/GJKAlgorithm.hpp>
-#include <vector>
+#include <etk/Vector.hpp>
 #include <set>
-#include <map>
+#include <etk/Map.hpp>
 
 namespace ephysics {
 	class CollisionWorld;
@@ -33,12 +33,12 @@ namespace ephysics {
 	 */
 	class ConvexMeshShape : public ConvexShape {
 		protected :
-			std::vector<vec3> m_vertices; //!< Array with the vertices of the mesh
+			etk::Vector<vec3> m_vertices; //!< Array with the vertices of the mesh
 			uint32_t m_numberVertices; //!< Number of vertices in the mesh
 			vec3 m_minBounds; //!< Mesh minimum bounds in the three local x, y and z directions
 			vec3 m_maxBounds; //!< Mesh maximum bounds in the three local x, y and z directions
 			bool m_isEdgesInformationUsed; //!< True if the shape contains the edges of the convex mesh in order to make the collision detection faster
-			std::map<uint32_t, std::set<uint32_t> > m_edgesAdjacencyList; //!< Adjacency list representing the edges of the mesh
+			etk::Map<uint32_t, std::set<uint32_t> > m_edgesAdjacencyList; //!< Adjacency list representing the edges of the mesh
 			/// Private copy-constructor
 			ConvexMeshShape(const ConvexMeshShape& _shape);
 			/// Private assignment operator

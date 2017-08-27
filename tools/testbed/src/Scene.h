@@ -73,7 +73,7 @@ class Scene {
 		// -------------------- Attributes -------------------- //
 
 		/// Scene name
-		std::string m_name;
+		etk::String m_name;
 
 		/// Physics engine settings
 		EngineSettings mEngineSettings;
@@ -134,7 +134,7 @@ class Scene {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		Scene(const std::string& name, bool isShadowMappingEnabled = false);
+		Scene(const etk::String& name, bool isShadowMappingEnabled = false);
 
 		/// Destructor
 		virtual ~Scene();
@@ -188,7 +188,7 @@ class Scene {
 		void setInterpolationFactor(float int32_terpolationFactor);
 
 		/// Return the name of the scene
-		std::string getName() const;
+		etk::String getName() const;
 
 		/// Return true if the shadow mapping is enabled
 		bool getIsShadowMappingEnabled() const;
@@ -200,7 +200,7 @@ class Scene {
 		void virtual setIsContactPointsDisplayed(bool display);
 
 		/// Return all the contact points of the scene
-		std::vector<ContactPoint> virtual getContactPoints() const;
+		etk::Vector<ContactPoint> virtual getContactPoints() const;
 };
 
 // Called when a keyboard event occurs
@@ -248,7 +248,7 @@ inline void Scene::setInterpolationFactor(float int32_terpolationFactor) {
 }
 
 // Return the name of the scene
-inline std::string Scene::getName() const {
+inline etk::String Scene::getName() const {
 	return m_name;
 }
 
@@ -268,10 +268,10 @@ inline void Scene::setIsContactPointsDisplayed(bool display) {
 }
 
 // Return all the contact points of the scene
-inline std::vector<ContactPoint> Scene::getContactPoints() const {
+inline etk::Vector<ContactPoint> Scene::getContactPoints() const {
 
 	// Return an empty list of contact points
-	return std::vector<ContactPoint>();
+	return etk::Vector<ContactPoint>();
 }
 
 #endif

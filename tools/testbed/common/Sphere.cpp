@@ -36,7 +36,7 @@ int32_t Sphere::totalNbSpheres = 0;
 // Constructor
 Sphere::Sphere(float radius, const openglframework::vec3 &position,
 			   ephysics::CollisionWorld* world,
-			   const std::string& meshFolderPath)
+			   const etk::String& meshFolderPath)
 	   : openglframework::Mesh(), mRadius(radius) {
 
 	// Load the mesh from a file
@@ -85,7 +85,7 @@ Sphere::Sphere(float radius, const openglframework::vec3 &position,
 // Constructor
 Sphere::Sphere(float radius, const openglframework::vec3 &position,
 			   float mass, ephysics::DynamicsWorld* world,
-			   const std::string& meshFolderPath)
+			   const etk::String& meshFolderPath)
 	   : openglframework::Mesh(), mRadius(radius) {
 
 	// Load the mesh from a file

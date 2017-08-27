@@ -74,12 +74,12 @@ bool ConcaveMeshShape::raycast(const Ray& _ray, RaycastInfo& _raycastInfo, Proxy
 
 float ConcaveMeshRaycastCallback::raycastBroadPhaseShape(int32_t _nodeId, const Ray& _ray) {
 	// Add the id of the hit AABB node int32_to
-	m_hitAABBNodes.push_back(_nodeId);
+	m_hitAABBNodes.pushBack(_nodeId);
 	return _ray.maxFraction;
 }
 
 void ConcaveMeshRaycastCallback::raycastTriangles() {
-	std::vector<int32_t>::const_iterator it;
+	etk::Vector<int32_t>::const_iterator it;
 	float smallestHitFraction = m_ray.maxFraction;
 	for (it = m_hitAABBNodes.begin(); it != m_hitAABBNodes.end(); ++it) {
 		// Get the node data (triangle index and mesh subpart index)

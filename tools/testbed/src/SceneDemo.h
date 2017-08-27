@@ -59,7 +59,7 @@ class SceneDemo : public Scene {
 		static int32_t shadowMapTextureLevel;
 
 		/// All the visual contact points
-		std::vector<VisualContactPoint*> m_contactPoints;
+		etk::Vector<VisualContactPoint*> m_contactPoints;
 
 		/// Shadow map bias matrix
 		openglframework::Matrix4 mShadowMapBiasMatrix;
@@ -90,7 +90,7 @@ class SceneDemo : public Scene {
 		static openglframework::Color mDemoColors[];
 		static int32_t mNbDemoColors;
 
-		std::string mMeshFolderPath;
+		etk::String mMeshFolderPath;
 
 		// -------------------- Methods -------------------- //
 
@@ -117,7 +117,7 @@ class SceneDemo : public Scene {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		SceneDemo(const std::string& name, float sceneRadius, bool isShadowMappingEnabled = true);
+		SceneDemo(const etk::String& name, float sceneRadius, bool isShadowMappingEnabled = true);
 
 		/// Destructor
 		virtual ~SceneDemo();
@@ -136,7 +136,7 @@ class SceneDemo : public Scene {
 		void virtual setIsShadowMappingEnabled(bool isShadowMappingEnabled);
 
 		/// Return all the contact points of the scene
-		std::vector<ContactPoint> computeContactPointsOfWorld(const ephysics::DynamicsWorld* world) const;
+		etk::Vector<ContactPoint> computeContactPointsOfWorld(const ephysics::DynamicsWorld* world) const;
 };
 
 // Enabled/Disable the shadow mapping

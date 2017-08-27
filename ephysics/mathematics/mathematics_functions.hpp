@@ -28,24 +28,24 @@ inline bool approxEqual(float a, float b, float epsilon = MACHINE_EPSILON) {
 /// two others values "lowerLimit" and "upperLimit"
 inline int32_t clamp(int32_t value, int32_t lowerLimit, int32_t upperLimit) {
 	assert(lowerLimit <= upperLimit);
-	return std::min(std::max(value, lowerLimit), upperLimit);
+	return etk::min(etk::max(value, lowerLimit), upperLimit);
 }
 
 /// Function that returns the result of the "value" clamped by
 /// two others values "lowerLimit" and "upperLimit"
 inline float clamp(float value, float lowerLimit, float upperLimit) {
 	assert(lowerLimit <= upperLimit);
-	return std::min(std::max(value, lowerLimit), upperLimit);
+	return etk::min(etk::max(value, lowerLimit), upperLimit);
 }
 
 /// Return the minimum value among three values
 inline float min3(float a, float b, float c) {
-	return std::min(std::min(a, b), c);
+	return etk::min(etk::min(a, b), c);
 }
 
 /// Return the maximum value among three values
 inline float max3(float a, float b, float c) {
-	return std::max(std::max(a, b), c);
+	return etk::max(etk::max(a, b), c);
 }
 
 /// Return true if two values have the same sign

@@ -83,11 +83,11 @@ class Dumbbell : public openglframework::Mesh, public PhysicsObject {
 
 		/// Constructor
 		Dumbbell(const openglframework::vec3& position, ephysics::DynamicsWorld* dynamicsWorld,
-				 const std::string& meshFolderPath);
+				 const etk::String& meshFolderPath);
 
 		/// Constructor
 		Dumbbell(const openglframework::vec3& position, ephysics::CollisionWorld* world,
-				 const std::string& meshFolderPath);
+				 const etk::String& meshFolderPath);
 
 
 		/// Destructor

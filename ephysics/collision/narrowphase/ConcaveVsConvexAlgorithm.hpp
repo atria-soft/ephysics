@@ -94,10 +94,10 @@ namespace ephysics {
 	 */
 	class SmoothCollisionNarrowPhaseCallback : public NarrowPhaseCallback {
 		private:
-			std::vector<SmoothMeshContactInfo>& m_contactPoints;
+			etk::Vector<SmoothMeshContactInfo>& m_contactPoints;
 		public:
 			// Constructor
-			SmoothCollisionNarrowPhaseCallback(std::vector<SmoothMeshContactInfo>& _contactPoints):
+			SmoothCollisionNarrowPhaseCallback(etk::Vector<SmoothMeshContactInfo>& _contactPoints):
 			  m_contactPoints(_contactPoints) {
 				
 			}
@@ -119,11 +119,11 @@ namespace ephysics {
 			ConcaveVsConvexAlgorithm& operator=(const ConcaveVsConvexAlgorithm& _algorithm);
 			/// Process the concave triangle mesh collision using the smooth mesh collision algorithm
 			void processSmoothMeshCollision(OverlappingPair* _overlappingPair,
-			                                std::vector<SmoothMeshContactInfo> _contactPoints,
+			                                etk::Vector<SmoothMeshContactInfo> _contactPoints,
 			                                NarrowPhaseCallback* _narrowPhaseCallback);
 			/// Add a triangle vertex int32_to the set of processed triangles
 			void addProcessedVertex(std::unordered_multimap<int32_t, vec3>& _processTriangleVertices, const vec3& _vertex) {
-				_processTriangleVertices.insert(std::make_pair(int32_t(_vertex.x() * _vertex.y() * _vertex.z()), _vertex));
+				_processTriangleVertices.insert(etk::makePair(int32_t(_vertex.x() * _vertex.y() * _vertex.z()), _vertex));
 			}
 			/// Return true if the vertex is in the set of already processed vertices
 			bool hasVertexBeenProcessed(const std::unordered_multimap<int32_t, vec3>& _processTriangleVertices,

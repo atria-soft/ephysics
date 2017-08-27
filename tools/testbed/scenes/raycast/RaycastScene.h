@@ -67,18 +67,18 @@ class RaycastManager : public ephysics::RaycastCallback {
 	private:
 
 		/// All the visual contact points
-		std::vector<ContactPoint> mHitPoints;
+		etk::Vector<ContactPoint> mHitPoints;
 
 		/// All the normals at hit points
-		std::vector<Line*> mNormals;
+		etk::Vector<Line*> mNormals;
 
 		/// Contact point mesh folder path
-		std::string mMeshFolderPath;
+		etk::String mMeshFolderPath;
 
    public:
 
 		RaycastManager(openglframework::Shader& shader,
-					   const std::string& meshFolderPath)
+					   const etk::String& meshFolderPath)
 			: mMeshFolderPath(meshFolderPath) {
 
 		}
@@ -86,13 +86,13 @@ class RaycastManager : public ephysics::RaycastCallback {
 		virtual ephysics::float notifyRaycastHit(const ephysics::RaycastInfo& raycastInfo) {
 			ephysics::vec3 hitPos = raycastInfo.worldPoint;
 			openglframework::vec3 position(hitPos.x(), hitPos.y(), hitPos.z());
-			mHitPoints.push_back(ContactPoint(position));
+			mHitPoints.pushBack(ContactPoint(position));
 
 			// Create a line to display the normal at hit point
 			ephysics::vec3 n = raycastInfo.worldNormal;
 			openglframework::vec3 normal(n.x(), n.y(), n.z());
 			Line* normalLine = new Line(position, position + normal);
-			mNormals.push_back(normalLine);
+			mNormals.pushBack(normalLine);
 
 			return raycastInfo.hitFraction;
 		}
@@ -102,14 +102,14 @@ class RaycastManager : public ephysics::RaycastCallback {
 			mHitPoints.clear();
 
 			// Destroy all the normals
-			for (std::vector<Line*>::iterator it = mNormals.begin();
+			for (etk::Vector<Line*>::iterator it = mNormals.begin();
 				 it != mNormals.end(); ++it) {
 				delete (*it);
 			}
 			mNormals.clear();
 		}
 
-		std::vector<ContactPoint> getHitPoints() const {
+		etk::Vector<ContactPoint> getHitPoints() const {
 			return mHitPoints;
 		}
 };
@@ -122,13 +122,13 @@ class RaycastScene : public SceneDemo {
 		// -------------------- Attributes -------------------- //
 
 		/// Contact point mesh folder path
-		std::string mMeshFolderPath;
+		etk::String mMeshFolderPath;
 
 		/// Raycast manager
 		RaycastManager m_raycastManager;
 
 		/// All the raycast lines
-		std::vector<Line*> mLines;
+		etk::Vector<Line*> mLines;
 
 		/// Current body index
 		int32_t mCurrentBodyIndex;
@@ -153,7 +153,7 @@ class RaycastScene : public SceneDemo {
 		ephysics::CollisionWorld* mCollisionWorld;
 
 		/// All the points to render the lines
-		std::vector<openglframework::vec3> mLinePoints;
+		etk::Vector<openglframework::vec3> mLinePoints;
 
 		/// Vertex Buffer Object for the vertices data
 		openglframework::VertexBufferObject mVBOVertices;
@@ -173,7 +173,7 @@ class RaycastScene : public SceneDemo {
 		// -------------------- Methods -------------------- //
 
 		/// Constructor
-		RaycastScene(const std::string& name);
+		RaycastScene(const etk::String& name);
 
 		/// Destructor
 		virtual ~RaycastScene();
@@ -208,7 +208,7 @@ class RaycastScene : public SceneDemo {
 		void virtual setIsContactPointsDisplayed(bool display);
 
 		/// Return all the contact points of the scene
-		virtual std::vector<ContactPoint> getContactPoints() const;
+		virtual etk::Vector<ContactPoint> getContactPoints() const;
 };
 
 // Display or not the surface normals at hit points
@@ -227,7 +227,7 @@ inline void RaycastScene::setIsContactPointsDisplayed(bool display) {
 }
 
 // Return all the contact points of the scene
-inline std::vector<ContactPoint> RaycastScene::getContactPoints() const {
+inline etk::Vector<ContactPoint> RaycastScene::getContactPoints() const {
 	return m_raycastManager.getHitPoints();
 }
 

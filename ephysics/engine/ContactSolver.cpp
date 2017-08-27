@@ -20,7 +20,7 @@ const float ContactSolver::BETA_SPLIT_IMPULSE = float(0.2);
 const float ContactSolver::SLOP= float(0.01);
 
 // Constructor
-ContactSolver::ContactSolver(const std::map<RigidBody*, uint32_t>& mapBodyToVelocityIndex)
+ContactSolver::ContactSolver(const etk::Map<RigidBody*, uint32_t>& mapBodyToVelocityIndex)
 			  :m_splitLinearVelocities(nullptr), m_splitAngularVelocities(nullptr),
 			   m_contactConstraints(nullptr), m_linearVelocities(nullptr), m_angularVelocities(nullptr),
 			   m_mapBodyToConstrainedVelocityIndex(mapBodyToVelocityIndex),
@@ -534,7 +534,7 @@ void ContactSolver::solve() {
 				deltaLambda = - (Jv + b) * contactPoint.inversePenetrationMass;
 			}
 			lambdaTemp = contactPoint.penetrationImpulse;
-			contactPoint.penetrationImpulse = std::max(contactPoint.penetrationImpulse +
+			contactPoint.penetrationImpulse = etk::max(contactPoint.penetrationImpulse +
 													   deltaLambda, 0.0f);
 			deltaLambda = contactPoint.penetrationImpulse - lambdaTemp;
 
@@ -561,7 +561,7 @@ void ContactSolver::solve() {
 				float deltaLambdaSplit = - (JvSplit + biasPenetrationDepth) *
 						contactPoint.inversePenetrationMass;
 				float lambdaTempSplit = contactPoint.penetrationSplitImpulse;
-				contactPoint.penetrationSplitImpulse = std::max(
+				contactPoint.penetrationSplitImpulse = etk::max(
 							contactPoint.penetrationSplitImpulse +
 							deltaLambdaSplit, 0.0f);
 				deltaLambda = contactPoint.penetrationSplitImpulse - lambdaTempSplit;
@@ -588,8 +588,8 @@ void ContactSolver::solve() {
 				float frictionLimit = contactManifold.frictionCoefficient *
 						contactPoint.penetrationImpulse;
 				lambdaTemp = contactPoint.friction1Impulse;
-				contactPoint.friction1Impulse = std::max(-frictionLimit,
-														 std::min(contactPoint.friction1Impulse
+				contactPoint.friction1Impulse = etk::max(-frictionLimit,
+														 etk::min(contactPoint.friction1Impulse
 																  + deltaLambda, frictionLimit));
 				deltaLambda = contactPoint.friction1Impulse - lambdaTemp;
 
@@ -612,8 +612,8 @@ void ContactSolver::solve() {
 				frictionLimit = contactManifold.frictionCoefficient *
 						contactPoint.penetrationImpulse;
 				lambdaTemp = contactPoint.friction2Impulse;
-				contactPoint.friction2Impulse = std::max(-frictionLimit,
-														 std::min(contactPoint.friction2Impulse
+				contactPoint.friction2Impulse = etk::max(-frictionLimit,
+														 etk::min(contactPoint.friction2Impulse
 																  + deltaLambda, frictionLimit));
 				deltaLambda = contactPoint.friction2Impulse - lambdaTemp;
 
@@ -663,8 +663,8 @@ void ContactSolver::solve() {
 			float deltaLambda = -Jv * contactManifold.inverseFriction1Mass;
 			float frictionLimit = contactManifold.frictionCoefficient * sum_penetrationImpulse;
 			lambdaTemp = contactManifold.friction1Impulse;
-			contactManifold.friction1Impulse = std::max(-frictionLimit,
-														std::min(contactManifold.friction1Impulse +
+			contactManifold.friction1Impulse = etk::max(-frictionLimit,
+														etk::min(contactManifold.friction1Impulse +
 																 deltaLambda, frictionLimit));
 			deltaLambda = contactManifold.friction1Impulse - lambdaTemp;
 
@@ -690,8 +690,8 @@ void ContactSolver::solve() {
 			deltaLambda = -Jv * contactManifold.inverseFriction2Mass;
 			frictionLimit = contactManifold.frictionCoefficient * sum_penetrationImpulse;
 			lambdaTemp = contactManifold.friction2Impulse;
-			contactManifold.friction2Impulse = std::max(-frictionLimit,
-														std::min(contactManifold.friction2Impulse +
+			contactManifold.friction2Impulse = etk::max(-frictionLimit,
+														etk::min(contactManifold.friction2Impulse +
 																 deltaLambda, frictionLimit));
 			deltaLambda = contactManifold.friction2Impulse - lambdaTemp;
 
@@ -715,8 +715,8 @@ void ContactSolver::solve() {
 			deltaLambda = -Jv * (contactManifold.inverseTwistFrictionMass);
 			frictionLimit = contactManifold.frictionCoefficient * sum_penetrationImpulse;
 			lambdaTemp = contactManifold.frictionTwistImpulse;
-			contactManifold.frictionTwistImpulse = std::max(-frictionLimit,
-															std::min(contactManifold.frictionTwistImpulse
+			contactManifold.frictionTwistImpulse = etk::max(-frictionLimit,
+															etk::min(contactManifold.frictionTwistImpulse
 																	 + deltaLambda, frictionLimit));
 			deltaLambda = contactManifold.frictionTwistImpulse - lambdaTemp;
 

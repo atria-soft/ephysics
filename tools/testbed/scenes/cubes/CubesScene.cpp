@@ -31,7 +31,7 @@ using namespace openglframework;
 using namespace cubesscene;
 
 // Constructor
-CubesScene::CubesScene(const std::string& name)
+CubesScene::CubesScene(const etk::String& name)
 	  : SceneDemo(name, SCENE_RADIUS) {
 
 	// Compute the radius and the center of the scene
@@ -72,7 +72,7 @@ CubesScene::CubesScene(const std::string& name)
 		material.setBounciness(ephysics::float(0.4));
 
 		// Add the box the list of box in the scene
-		mBoxes.push_back(cube);
+		mBoxes.pushBack(cube);
 	}
 
 	// Create the floor
@@ -104,7 +104,7 @@ CubesScene::CubesScene(const std::string& name)
 CubesScene::~CubesScene() {
 
 	// Destroy all the cubes of the scene
-	for (std::vector<Box*>::iterator it = mBoxes.begin(); it != mBoxes.end(); ++it) {
+	for (etk::Vector<Box*>::iterator it = mBoxes.begin(); it != mBoxes.end(); ++it) {
 
 		// Destroy the corresponding rigid body from the dynamics world
 		m_dynamicsWorld->destroyRigidBody((*it)->getRigidBody());
@@ -148,7 +148,7 @@ void CubesScene::update() {
 	SceneDemo::update();
 
 	// Update the position and orientation of the boxes
-	for (std::vector<Box*>::iterator it = mBoxes.begin(); it != mBoxes.end(); ++it) {
+	for (etk::Vector<Box*>::iterator it = mBoxes.begin(); it != mBoxes.end(); ++it) {
 
 		// Update the transform used for the rendering
 		(*it)->updateetk::Transform3D(mInterpolationFactor);
@@ -164,7 +164,7 @@ void CubesScene::renderSinglePass(Shader& shader, const openglframework::Matrix4
 	shader.bind();
 
 	// Render all the cubes of the scene
-	for (std::vector<Box*>::iterator it = mBoxes.begin(); it != mBoxes.end(); ++it) {
+	for (etk::Vector<Box*>::iterator it = mBoxes.begin(); it != mBoxes.end(); ++it) {
 		(*it)->render(shader, worldToCameraMatrix);
 	}
 

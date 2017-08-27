@@ -314,7 +314,7 @@ void DynamicAABBTree::insertLeafNode(int32_t _nodeID) {
 		assert(rightChild != TreeNode::NULL_TREE_NODE);
 
 		// Recompute the height of the node in the tree
-		m_nodes[currentNodeID].height = std::max(m_nodes[leftChild].height,
+		m_nodes[currentNodeID].height = etk::max(m_nodes[leftChild].height,
 												m_nodes[rightChild].height) + 1;
 		assert(m_nodes[currentNodeID].height > 0);
 
@@ -380,7 +380,7 @@ void DynamicAABBTree::removeLeafNode(int32_t _nodeID) {
 			// Recompute the AABB and the height of the current node
 			m_nodes[currentNodeID].aabb.mergeTwoAABBs(m_nodes[leftChildID].aabb,
 													 m_nodes[rightChildID].aabb);
-			m_nodes[currentNodeID].height = std::max(m_nodes[leftChildID].height,
+			m_nodes[currentNodeID].height = etk::max(m_nodes[leftChildID].height,
 													m_nodes[rightChildID].height) + 1;
 			assert(m_nodes[currentNodeID].height > 0);
 
@@ -468,8 +468,8 @@ int32_t DynamicAABBTree::balanceSubTreeAtNode(int32_t _nodeID) {
 			nodeC->aabb.mergeTwoAABBs(nodeA->aabb, nodeF->aabb);
 
 			// Recompute the height of node A and C
-			nodeA->height = std::max(nodeB->height, nodeG->height) + 1;
-			nodeC->height = std::max(nodeA->height, nodeF->height) + 1;
+			nodeA->height = etk::max(nodeB->height, nodeG->height) + 1;
+			nodeC->height = etk::max(nodeA->height, nodeF->height) + 1;
 			assert(nodeA->height > 0);
 			assert(nodeC->height > 0);
 		}
@@ -483,8 +483,8 @@ int32_t DynamicAABBTree::balanceSubTreeAtNode(int32_t _nodeID) {
 			nodeC->aabb.mergeTwoAABBs(nodeA->aabb, nodeG->aabb);
 
 			// Recompute the height of node A and C
-			nodeA->height = std::max(nodeB->height, nodeF->height) + 1;
-			nodeC->height = std::max(nodeA->height, nodeG->height) + 1;
+			nodeA->height = etk::max(nodeB->height, nodeF->height) + 1;
+			nodeC->height = etk::max(nodeA->height, nodeG->height) + 1;
 			assert(nodeA->height > 0);
 			assert(nodeC->height > 0);
 		}
@@ -538,8 +538,8 @@ int32_t DynamicAABBTree::balanceSubTreeAtNode(int32_t _nodeID) {
 			nodeB->aabb.mergeTwoAABBs(nodeA->aabb, nodeF->aabb);
 
 			// Recompute the height of node A and B
-			nodeA->height = std::max(nodeC->height, nodeG->height) + 1;
-			nodeB->height = std::max(nodeA->height, nodeF->height) + 1;
+			nodeA->height = etk::max(nodeC->height, nodeG->height) + 1;
+			nodeB->height = etk::max(nodeA->height, nodeF->height) + 1;
 			assert(nodeA->height > 0);
 			assert(nodeB->height > 0);
 		}
@@ -553,8 +553,8 @@ int32_t DynamicAABBTree::balanceSubTreeAtNode(int32_t _nodeID) {
 			nodeB->aabb.mergeTwoAABBs(nodeA->aabb, nodeG->aabb);
 
 			// Recompute the height of node A and B
-			nodeA->height = std::max(nodeC->height, nodeF->height) + 1;
-			nodeB->height = std::max(nodeA->height, nodeG->height) + 1;
+			nodeA->height = etk::max(nodeC->height, nodeF->height) + 1;
+			nodeB->height = etk::max(nodeA->height, nodeG->height) + 1;
 			assert(nodeA->height > 0);
 			assert(nodeB->height > 0);
 		}
@@ -781,7 +781,7 @@ void DynamicAABBTree::checkNode(int32_t _nodeID) const {
 		assert(m_nodes[rightChild].parentID == _nodeID);
 
 		// Check the height of node
-		int32_t height = 1 + std::max(m_nodes[leftChild].height, m_nodes[rightChild].height);
+		int32_t height = 1 + etk::max(m_nodes[leftChild].height, m_nodes[rightChild].height);
 		assert(m_nodes[_nodeID].height == height);
 
 		// Check the AABB of the node
@@ -816,7 +816,7 @@ int32_t DynamicAABBTree::computeHeight(int32_t _nodeID) {
 	int32_t rightHeight = computeHeight(node->children[1]);
 
 	// Return the height of the node
-	return 1 + std::max(leftHeight, rightHeight);
+	return 1 + etk::max(leftHeight, rightHeight);
 }
 
 #endif

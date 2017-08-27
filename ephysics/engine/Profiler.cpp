@@ -171,7 +171,7 @@ void Profiler::reset() {
 }
 
 // Print32_t the report of the profiler in a given output stream
-void Profiler::print32_tReport(std::ostream& outputStream) {
+void Profiler::print32_tReport(etk::Stream& outputStream) {
 	ProfileNodeIterator* iterator = Profiler::getIterator();
 
 	// Recursively print32_t the report of each node of the profiler tree
@@ -184,7 +184,7 @@ void Profiler::print32_tReport(std::ostream& outputStream) {
 // Recursively print32_t the report of a given node of the profiler tree
 void Profiler::print32_tRecursiveNodeReport(ProfileNodeIterator* iterator,
 										int32_t spacing,
-										std::ostream& outputStream) {
+										etk::Stream& outputStream) {
 	iterator->first();
 
 	// If we are at the end of a branch in the profiler tree

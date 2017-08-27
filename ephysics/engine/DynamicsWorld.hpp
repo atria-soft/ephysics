@@ -37,7 +37,7 @@ namespace ephysics {
 			vec3* m_splitAngularVelocities; //!< Split angular velocities for the position contact solver (split impulse)
 			vec3* m_constrainedPositions; //!< Array of constrained rigid bodies position (for position error correction)
 			etk::Quaternion* m_constrainedOrientations; //!< Array of constrained rigid bodies orientation (for position error correction)
-			std::map<RigidBody*, uint32_t> m_mapBodyToConstrainedVelocityIndex; //!< Map body to their index in the constrained velocities array
+			etk::Map<RigidBody*, uint32_t> m_mapBodyToConstrainedVelocityIndex; //!< Map body to their index in the constrained velocities array
 			uint32_t m_numberIslands; //!< Number of islands in the world
 			uint32_t m_numberIslandsCapacity; //!< Current allocated capacity for the islands
 			Island** m_islands; //!< Array with all the islands of awaken bodies
@@ -155,7 +155,7 @@ namespace ephysics {
 			/// Test and report collisions between all shapes of the world
 			virtual void testCollision(CollisionCallback* _callback) override;
 			/// Return the list of all contacts of the world
-			std::vector<const ContactManifold*> getContactsList() const;
+			etk::Vector<const ContactManifold*> getContactsList() const;
 			friend class RigidBody;
 	};
 

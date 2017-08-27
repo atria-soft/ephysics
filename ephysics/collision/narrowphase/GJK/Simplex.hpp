@@ -7,7 +7,7 @@
 
 // Libraries
 #include <ephysics/mathematics/mathematics.hpp>
-#include <vector>
+#include <etk/Vector.hpp>
 
 /// ReactPhysics3D namespace
 namespace ephysics {

@@ -27,7 +27,7 @@
 #define MESH_LOADER_H
 
 // Libraries
-#include <string>
+#include <etk/String.hpp>
 #include <stdexcept>
 #include <ephysics/Mesh.hpp>
 
@@ -47,20 +47,20 @@ class MeshReaderWriter {
 		MeshReaderWriter();
 
 		// Load an OBJ file with a triangular or quad mesh
-		static void loadOBJFile(const std::string& filename, Mesh& meshToCreate);
+		static void loadOBJFile(const etk::String& filename, Mesh& meshToCreate);
 
 		// Store a mesh int32_to a OBJ file
-		static void writeOBJFile(const std::string& filename, const Mesh &meshToWrite);
+		static void writeOBJFile(const etk::String& filename, const Mesh &meshToWrite);
 
 	public :
 
 		// -------------------- Methods -------------------- //
 
 		// Read a mesh from a file
-		static void loadMeshFromFile(const std::string& filename, Mesh& meshToCreate);
+		static void loadMeshFromFile(const etk::String& filename, Mesh& meshToCreate);
 
 		// Write a mesh to a file
-		static void writeMeshToFile(const std::string& filename, const Mesh& meshToWrite);
+		static void writeMeshToFile(const etk::String& filename, const Mesh& meshToWrite);
 };
 
 // Class VertexMergingData
