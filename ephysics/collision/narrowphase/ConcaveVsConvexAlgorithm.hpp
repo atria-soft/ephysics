@@ -8,7 +8,6 @@
 #include <ephysics/collision/narrowphase/NarrowPhaseAlgorithm.hpp>
 #include <ephysics/collision/shapes/ConvexShape.hpp>
 #include <ephysics/collision/shapes/ConcaveShape.hpp>
-#include <unordered_map>
 
 namespace ephysics {
 
@@ -79,13 +78,18 @@ namespace ephysics {
 				triangleVertices[1] = _trianglePoint2;
 				triangleVertices[2] = _trianglePoint3;
 			}
+			SmoothMeshContactInfo() {
+				// TODO: add it for etk::Vector
+			}
 	};
 
+	/*
 	struct ContactsDepthCompare {
 		bool operator()(const SmoothMeshContactInfo& _contact1, const SmoothMeshContactInfo& _contact2) {
 			return _contact1.contactInfo.penetrationDepth < _contact2.contactInfo.penetrationDepth;
 		}
 	};
+	*/
 
 	/**
 	 * @brief This class is used as a narrow-phase callback to get narrow-phase contacts
@@ -122,11 +126,11 @@ namespace ephysics {
 			                                etk::Vector<SmoothMeshContactInfo> _contactPoints,
 			                                NarrowPhaseCallback* _narrowPhaseCallback);
 			/// Add a triangle vertex int32_to the set of processed triangles
-			void addProcessedVertex(std::unordered_multimap<int32_t, vec3>& _processTriangleVertices, const vec3& _vertex) {
-				_processTriangleVertices.insert(etk::makePair(int32_t(_vertex.x() * _vertex.y() * _vertex.z()), _vertex));
+			void addProcessedVertex(etk::Vector<etk::Pair<int32_t, vec3>>& _processTriangleVertices, const vec3& _vertex) {
+				_processTriangleVertices.pushBack(etk::makePair(int32_t(_vertex.x() * _vertex.y() * _vertex.z()), _vertex));
 			}
 			/// Return true if the vertex is in the set of already processed vertices
-			bool hasVertexBeenProcessed(const std::unordered_multimap<int32_t, vec3>& _processTriangleVertices,
+			bool hasVertexBeenProcessed(const etk::Vector<etk::Pair<int32_t, vec3>>& _processTriangleVertices,
 			                            const vec3& _vertex) const;
 		public :
 			/// Constructor

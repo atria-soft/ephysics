@@ -29,7 +29,7 @@ vec3 CylinderShape::getLocalSupportPointWithoutMargin(const vec3& _direction, vo
 	float uDotv = _direction.y();
 	vec3 w(_direction.x(), 0.0, _direction.z());
 	float lengthW = sqrt(_direction.x() * _direction.x() + _direction.z() * _direction.z());
-	if (lengthW > MACHINE_EPSILON) {
+	if (lengthW > FLT_EPSILON) {
 		if (uDotv < 0.0) {
 			supportPoint.setY(-m_halfHeight);
 		} else {
@@ -76,7 +76,7 @@ bool CylinderShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape
 	float c = dDotD * k - mDotD * mDotD;
 
 	// If the ray is parallel to the cylinder axis
-	if (std::abs(a) < epsilon) {
+	if (etk::abs(a) < epsilon) {
 
 		// If the origin is outside the surface of the cylinder, we return no hit
 		if (c > 0.0f) return false;
@@ -133,7 +133,7 @@ bool CylinderShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape
 	if (discriminant < 0.0f) return false;
 
 	// Compute the smallest root (first int32_tersection along the ray)
-	float t0 = t = (-b - std::sqrt(discriminant)) / a;
+	float t0 = t = (-b - etk::sqrt(discriminant)) / a;
 
 	// If the int32_tersection is outside the cylinder on "p" endcap side
 	float value = mDotD + t * nDotD;

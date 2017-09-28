@@ -16,6 +16,4 @@
 #include <ephysics/configuration.hpp>
 #include <ephysics/mathematics/mathematics_functions.hpp>
 #include <etk/Vector.hpp>
-#include <cstdio>
-#include <cassert>
-#include <cmath>
+

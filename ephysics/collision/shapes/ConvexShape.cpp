@@ -33,7 +33,7 @@ vec3 ConvexShape::getLocalSupportPointWithMargin(const vec3& direction,
 
 		// Add the margin to the support point
 		vec3 unitVec(0.0, -1.0, 0.0);
-		if (direction.length2() > MACHINE_EPSILON * MACHINE_EPSILON) {
+		if (direction.length2() > FLT_EPSILON * FLT_EPSILON) {
 			unitVec = direction.safeNormalized();
 		}
 		supportPoint += unitVec * m_margin;

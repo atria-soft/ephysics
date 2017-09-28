@@ -5,7 +5,6 @@
  */
 
 // Libraries
-#include <complex>
 #include <ephysics/configuration.hpp>
 #include <ephysics/collision/shapes/ConeShape.hpp>
 #include <ephysics/collision/ProxyShape.hpp>
@@ -42,7 +41,7 @@ vec3 ConeShape::getLocalSupportPointWithoutMargin(const vec3& direction,
 	}
 	else {
 		float projectedLength = sqrt(v.x() * v.x() + v.z() * v.z());
-		if (projectedLength > MACHINE_EPSILON) {
+		if (projectedLength > FLT_EPSILON) {
 			float d = m_radius / projectedLength;
 			supportPoint = vec3(v.x() * d, -m_halfHeight, v.z() * d);
 		}
@@ -79,7 +78,7 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 	vec3 localNormal[3];
 
 	// If c2 is different from zero
-	if (std::abs(c2) > MACHINE_EPSILON) {
+	if (etk::abs(c2) > FLT_EPSILON) {
 		float gamma = c1 * c1 - c0 * c2;
 
 		// If there is no real roots in the quadratic equation
@@ -89,7 +88,7 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 		else if (gamma > 0.0f) {	// The equation has two real roots
 
 			// Compute two int32_tersections
-			float sqrRoot = std::sqrt(gamma);
+			float sqrRoot = etk::sqrt(gamma);
 			tHit[0] = (-c1 - sqrRoot) / c2;
 			tHit[1] = (-c1 + sqrRoot) / c2;
 		}
@@ -102,7 +101,7 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 	else {  // If c2 == 0
 
 		// If c2 = 0 and c1 != 0
-		if (std::abs(c1) > MACHINE_EPSILON) {
+		if (etk::abs(c1) > FLT_EPSILON) {
 			tHit[0] = -c0 / (float(2.0) * c1);
 		}
 		else {  // If c2 = c1 = 0
@@ -155,7 +154,7 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 
 	// Find the smallest positive t value
 	int32_t hitIndex = -1;
-	float t = DECIMAL_LARGEST;
+	float t = FLT_MAX;
 	for (int32_t i=0; i<3; i++) {
 		if (tHit[i] < 0.0f) continue;
 		if (tHit[i] < t) {
@@ -174,11 +173,11 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 						  localHitPoint[hitIndex].z() * localHitPoint[hitIndex].z());
 		float rOverH = m_radius / h;
 		float value2 = 1.0f + rOverH * rOverH;
-		float factor = 1.0f / std::sqrt(value1 * value2);
+		float factor = 1.0f / etk::sqrt(value1 * value2);
 		float x = localHitPoint[hitIndex].x() * factor;
 		float z = localHitPoint[hitIndex].z() * factor;
 		localNormal[hitIndex].setX(x);
-		localNormal[hitIndex].setY(std::sqrt(x * x + z * z) * rOverH);
+		localNormal[hitIndex].setY(etk::sqrt(x * x + z * z) * rOverH);
 		localNormal[hitIndex].setZ(z);
 	}
 

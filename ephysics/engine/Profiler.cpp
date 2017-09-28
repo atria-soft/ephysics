@@ -8,11 +8,12 @@
 
 // Libraries
 #include <ephysics/Profiler.hpp>
+#include <ephysics/debug.hpp>
 
 using namespace ephysics;
 
 // Initialization of static variables
-ProfileNode Profiler::m_rootNode("Root", NULL);
+ProfileNode Profiler::m_rootNode("Root", nullptr);
 ProfileNode* Profiler::m_currentNode = &Profiler::m_rootNode;
 long double Profiler::m_profilingStartTime = Timer::getCurrentSystemTime() * 1000.0;
 uint32_t Profiler::m_frameCounter = 0;
@@ -20,8 +21,8 @@ uint32_t Profiler::m_frameCounter = 0;
 // Constructor
 ProfileNode::ProfileNode(const char* name, ProfileNode* parentNode)
 	:m_name(name), m_numberTotalCalls(0), m_startTime(0), m_totalTime(0),
-	 m_recursionCounter(0), m_parentNode(parentNode), m_childNode(NULL),
-	 m_siblingNode(NULL) {
+	 m_recursionCounter(0), m_parentNode(parentNode), m_childNode(nullptr),
+	 m_siblingNode(nullptr) {
 	reset();
 }
 
@@ -37,7 +38,7 @@ ProfileNode* ProfileNode::findSubNode(const char* name) {
 
 	// Try to find the node among the child nodes
 	ProfileNode* child = m_childNode;
-	while (child != NULL) {
+	while (child != nullptr) {
 		if (child->m_name == name) {
 			return child;
 		}
@@ -91,12 +92,12 @@ void ProfileNode::reset() {
 	m_totalTime = 0.0;
 
 	// Reset the child node
-	if (m_childNode != NULL) {
+	if (m_childNode != nullptr) {
 		m_childNode->reset();
 	}
 
 	// Reset the sibling node
-	if (m_siblingNode != NULL) {
+	if (m_siblingNode != nullptr) {
 		m_siblingNode->reset();
 	}
 }
@@ -104,9 +105,9 @@ void ProfileNode::reset() {
 // Destroy the node
 void ProfileNode::destroy() {
 	delete m_childNode;
-	m_childNode = NULL;
+	m_childNode = nullptr;
 	delete m_siblingNode;
-	m_siblingNode = NULL;
+	m_siblingNode = nullptr;
 }
 
 // Constructor
@@ -119,12 +120,12 @@ ProfileNodeIterator::ProfileNodeIterator(ProfileNode* startingNode)
 // Enter a given child node
 void ProfileNodeIterator::enterChild(int32_t index) {
 	m_currentChildNode = m_currentParentNode->getChildNode();
-	while ((m_currentChildNode != NULL) && (index != 0)) {
+	while ((m_currentChildNode != nullptr) && (index != 0)) {
 		index--;
 		m_currentChildNode = m_currentChildNode->getSiblingNode();
 	}
 
-	if (m_currentChildNode != NULL) {
+	if (m_currentChildNode != nullptr) {
 		m_currentParentNode = m_currentChildNode;
 		m_currentChildNode = m_currentParentNode->getChildNode();
 	}
@@ -132,7 +133,7 @@ void ProfileNodeIterator::enterChild(int32_t index) {
 
 // Enter a given parent node
 void ProfileNodeIterator::enterParent() {
-	if (m_currentParentNode->getParentNode() != NULL) {
+	if (m_currentParentNode->getParentNode() != nullptr) {
 		m_currentParentNode = m_currentParentNode->getParentNode();
 	}
 	m_currentChildNode = m_currentParentNode->getChildNode();
@@ -171,11 +172,11 @@ void Profiler::reset() {
 }
 
 // Print32_t the report of the profiler in a given output stream
-void Profiler::print32_tReport(etk::Stream& outputStream) {
+void Profiler::print32_tReport(etk::Stream& _stream) {
 	ProfileNodeIterator* iterator = Profiler::getIterator();
 
 	// Recursively print32_t the report of each node of the profiler tree
-	print32_tRecursiveNodeReport(iterator, 0, outputStream);
+	print32_tRecursiveNodeReport(iterator, 0, _stream);
 
 	// Destroy the iterator
 	destroyIterator(iterator);
@@ -183,8 +184,8 @@ void Profiler::print32_tReport(etk::Stream& outputStream) {
 
 // Recursively print32_t the report of a given node of the profiler tree
 void Profiler::print32_tRecursiveNodeReport(ProfileNodeIterator* iterator,
-										int32_t spacing,
-										etk::Stream& outputStream) {
+                                            int32_t spacing,
+                                            etk::Stream& _stream) {
 	iterator->first();
 
 	// If we are at the end of a branch in the profiler tree
@@ -196,11 +197,13 @@ void Profiler::print32_tRecursiveNodeReport(ProfileNodeIterator* iterator,
 												  iterator->getCurrentParentTotalTime();
 	long double accumulatedTime = 0.0;
 	uint32_t nbFrames = Profiler::getNbFrames();
-	for (int32_t i=0; i<spacing; i++) outputStream << " ";
-	outputStream << "---------------" << std::endl;
-	for (int32_t i=0; i<spacing; i++) outputStream << " ";
-	outputStream << "| Profiling : " << iterator->getCurrentParentName() <<
-					" (total running time : " << parentTime << " ms) ---" << std::endl;
+	for (int32_t i=0; i<spacing; i++) {
+		_stream << " ";
+	}
+	_stream << "---------------\n";
+	for (int32_t i=0; i<spacing; i++) _stream << " ";
+	_stream << "| Profiling : " << iterator->getCurrentParentName() <<
+					" (total running time : " << parentTime << " ms) ---\n";
 	long double totalTime = 0.0;
 
 	// Recurse over the children of the current node
@@ -209,28 +212,27 @@ void Profiler::print32_tRecursiveNodeReport(ProfileNodeIterator* iterator,
 		nbChildren++;
 		long double currentTotalTime = iterator->getCurrentTotalTime();
 		accumulatedTime += currentTotalTime;
-		long double fraction = parentTime > std::numeric_limits<long double>::epsilon() ?
+		long double fraction = parentTime > DLB_EPSILON ?
 							   (currentTotalTime / parentTime) * 100.0 : 0.0;
-		for (int32_t j=0; j<spacing; j++) outputStream << " ";
-		outputStream << "|   " << i << " -- " << iterator->getCurrentName() << " : " <<
+		for (int32_t j=0; j<spacing; j++) _stream << " ";
+		_stream << "|   " << i << " -- " << iterator->getCurrentName() << " : " <<
 						fraction << " % | " << (currentTotalTime / (long double) (nbFrames)) <<
-						" ms/frame (" << iterator->getCurrentNbTotalCalls() << " calls)" <<
-						std::endl;
+						" ms/frame (" << iterator->getCurrentNbTotalCalls() << " calls)\n";
 		totalTime += currentTotalTime;
 	}
 
 	if (parentTime < accumulatedTime) {
-		outputStream << "Something is wrong !" << std::endl;
+		_stream << "Something is wrong !\n";
 	}
-	for (int32_t i=0; i<spacing; i++) outputStream << " ";
-	long double percentage = parentTime > std::numeric_limits<long double>::epsilon() ?
+	for (int32_t i=0; i<spacing; i++) _stream << " ";
+	long double percentage = parentTime > DLB_EPSILON ?
 				((parentTime - accumulatedTime) / parentTime) * 100.0 : 0.0;
 	long double difference = parentTime - accumulatedTime;
-	outputStream << "| Unaccounted : " << difference << " ms (" << percentage << " %)" << std::endl;
+	_stream << "| Unaccounted : " << difference << " ms (" << percentage << " %)\n";
 
 	for (int32_t i=0; i<nbChildren; i++){
 		iterator->enterChild(i);
-		print32_tRecursiveNodeReport(iterator, spacing + 3, outputStream);
+		print32_tRecursiveNodeReport(iterator, spacing + 3, _stream);
 		iterator->enterParent();
 	}
 }

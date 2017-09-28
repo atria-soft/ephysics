@@ -8,7 +8,6 @@
 #include <ephysics/collision/shapes/CapsuleShape.hpp>
 #include <ephysics/collision/ProxyShape.hpp>
 #include <ephysics/configuration.hpp>
-#include <cassert>
 
 using namespace ephysics;
 
@@ -101,7 +100,7 @@ bool CapsuleShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape*
 	float c = dDotD * k - mDotD * mDotD;
 
 	// If the ray is parallel to the capsule axis
-	if (std::abs(a) < epsilon) {
+	if (etk::abs(a) < epsilon) {
 
 		// If the origin is outside the surface of the capusle's cylinder, we return no hit
 		if (c > 0.0f) return false;
@@ -156,7 +155,7 @@ bool CapsuleShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape*
 	if (discriminant < 0.0f) return false;
 
 	// Compute the smallest root (first int32_tersection along the ray)
-	float t0 = t = (-b - std::sqrt(discriminant)) / a;
+	float t0 = t = (-b - etk::sqrt(discriminant)) / a;
 
 	// If the int32_tersection is outside the finite cylinder of the capsule on "p" endcap side
 	float value = mDotD + t * nDotD;
@@ -241,10 +240,10 @@ bool CapsuleShape::raycastWithSphereEndCap(const vec3& point1, const vec3& point
 	float discriminant = b * b - raySquareLength * c;
 
 	// If the discriminant is negative or the ray length is very small, there is no int32_tersection
-	if (discriminant < 0.0f || raySquareLength < MACHINE_EPSILON) return false;
+	if (discriminant < 0.0f || raySquareLength < FLT_EPSILON) return false;
 
 	// Compute the solution "t" closest to the origin
-	float t = -b - std::sqrt(discriminant);
+	float t = -b - etk::sqrt(discriminant);
 
 	assert(t >= 0.0f);
 

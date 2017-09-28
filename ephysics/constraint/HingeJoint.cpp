@@ -7,7 +7,6 @@
 // Libraries
 #include <ephysics/constraint/HingeJoint.hpp>
 #include <ephysics/engine/ConstraintSolver.hpp>
-#include <cmath>
 
 using namespace ephysics;
 
@@ -770,10 +769,10 @@ float HingeJoint::computeCurrentHingeAngle(const etk::Quaternion& orientationBod
 
 	// If the relative rotation axis and the hinge axis are pointing the same direction
 	if (dotProduct >= 0.0f) {
-		hingeAngle = float(2.0) * std::atan2(sinHalfAngleAbs, cosHalfAngle);
+		hingeAngle = float(2.0) * etk::atan2(sinHalfAngleAbs, cosHalfAngle);
 	}
 	else {
-		hingeAngle = float(2.0) * std::atan2(sinHalfAngleAbs, -cosHalfAngle);
+		hingeAngle = float(2.0) * etk::atan2(sinHalfAngleAbs, -cosHalfAngle);
 	}
 
 	// Convert the angle from range [-2*pi; 2*pi] int32_to the range [-pi; pi]

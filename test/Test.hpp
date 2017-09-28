@@ -28,8 +28,6 @@
 
 // Libraries
 #include <etk/String.hpp>
-#include <iostream>
-#include <cassert>
 
 /// Reactphysics3D namespace
 namespace ephysics {

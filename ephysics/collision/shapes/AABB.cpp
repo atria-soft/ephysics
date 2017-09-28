@@ -8,7 +8,6 @@
 // Libraries
 #include <ephysics/collision/shapes/AABB.hpp>
 #include <ephysics/configuration.hpp>
-#include <cassert>
 
 using namespace ephysics;
 using namespace std;
@@ -108,16 +107,16 @@ bool AABB::testRayIntersect(const Ray& _ray) const {
 	const vec3 d = point2 - _ray.point1;
 	const vec3 m = _ray.point1 + point2 - m_minCoordinates - m_maxCoordinates;
 	// Test if the AABB face normals are separating axis
-	float adx = std::abs(d.x());
-	if (std::abs(m.x()) > e.x() + adx) {
+	float adx = etk::abs(d.x());
+	if (etk::abs(m.x()) > e.x() + adx) {
 		return false;
 	}
-	float ady = std::abs(d.y());
-	if (std::abs(m.y()) > e.y() + ady) {
+	float ady = etk::abs(d.y());
+	if (etk::abs(m.y()) > e.y() + ady) {
 		return false;
 	}
-	float adz = std::abs(d.z());
-	if (std::abs(m.z()) > e.z() + adz) {
+	float adz = etk::abs(d.z());
+	if (etk::abs(m.z()) > e.z() + adz) {
 		return false;
 	}
 	// Add in an epsilon term to counteract arithmetic errors when segment is
@@ -128,13 +127,13 @@ bool AABB::testRayIntersect(const Ray& _ray) const {
 	adz += epsilon;
 	// Test if the cross products between face normals and ray direction are
 	// separating axis
-	if (std::abs(m.y() * d.z() - m.z() * d.y()) > e.y() * adz + e.z() * ady) {
+	if (etk::abs(m.y() * d.z() - m.z() * d.y()) > e.y() * adz + e.z() * ady) {
 		return false;
 	}
-	if (std::abs(m.z() * d.x() - m.x() * d.z()) > e.x() * adz + e.z() * adx) {
+	if (etk::abs(m.z() * d.x() - m.x() * d.z()) > e.x() * adz + e.z() * adx) {
 		return false;
 	}
-	if (std::abs(m.x() * d.y() - m.y() * d.x()) > e.x() * ady + e.y() * adx) {
+	if (etk::abs(m.x() * d.y() - m.y() * d.x()) > e.x() * ady + e.y() * adx) {
 		return false;
 	}
 	// No separating axis has been found
@@ -188,9 +187,9 @@ bool AABB::testCollisionTriangleAABB(const vec3* _trianglePoints) const {
 }
 
 bool AABB::contains(const vec3& _point) const {
-	return    _point.x() >= m_minCoordinates.x() - MACHINE_EPSILON && _point.x() <= m_maxCoordinates.x() + MACHINE_EPSILON
-	       && _point.y() >= m_minCoordinates.y() - MACHINE_EPSILON && _point.y() <= m_maxCoordinates.y() + MACHINE_EPSILON
-	       && _point.z() >= m_minCoordinates.z() - MACHINE_EPSILON && _point.z() <= m_maxCoordinates.z() + MACHINE_EPSILON;
+	return    _point.x() >= m_minCoordinates.x() - FLT_EPSILON && _point.x() <= m_maxCoordinates.x() + FLT_EPSILON
+	       && _point.y() >= m_minCoordinates.y() - FLT_EPSILON && _point.y() <= m_maxCoordinates.y() + FLT_EPSILON
+	       && _point.z() >= m_minCoordinates.z() - FLT_EPSILON && _point.z() <= m_maxCoordinates.z() + FLT_EPSILON;
 }
 
 AABB& AABB::operator=(const AABB& _aabb) {

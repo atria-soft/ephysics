@@ -8,7 +8,6 @@
 #include <ephysics/collision/shapes/SphereShape.hpp>
 #include <ephysics/collision/ProxyShape.hpp>
 #include <ephysics/configuration.hpp>
-#include <cassert>
 
 using namespace ephysics;
 
@@ -75,10 +74,10 @@ bool SphereShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* 
 	float discriminant = b * b - raySquareLength * c;
 
 	// If the discriminant is negative or the ray length is very small, there is no int32_tersection
-	if (discriminant < 0.0f || raySquareLength < MACHINE_EPSILON) return false;
+	if (discriminant < 0.0f || raySquareLength < FLT_EPSILON) return false;
 
 	// Compute the solution "t" closest to the origin
-	float t = -b - std::sqrt(discriminant);
+	float t = -b - etk::sqrt(discriminant);
 
 	assert(t >= 0.0f);
 

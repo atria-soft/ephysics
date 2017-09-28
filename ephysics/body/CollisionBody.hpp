@@ -6,8 +6,6 @@
 #pragma once
 
 // Libraries
-#include <stdexcept>
-#include <cassert>
 #include <ephysics/body/Body.hpp>
 #include <etk/math/Transform3D.hpp>
 #include <ephysics/collision/shapes/AABB.hpp>

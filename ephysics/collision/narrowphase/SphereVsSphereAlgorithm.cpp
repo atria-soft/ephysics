@@ -32,7 +32,7 @@ void ephysics::SphereVsSphereAlgorithm::testCollision(const ephysics::CollisionS
 		vec3 centerSphere1InBody2LocalSpace = transform2.getInverse() * transform1.getPosition();
 		vec3 intersectionOnBody1 = sphereShape1->getRadius() * centerSphere2InBody1LocalSpace.safeNormalized();
 		vec3 intersectionOnBody2 = sphereShape2->getRadius() * centerSphere1InBody2LocalSpace.safeNormalized();
-		float penetrationDepth = sumRadius - std::sqrt(squaredDistanceBetweenCenters);
+		float penetrationDepth = sumRadius - etk::sqrt(squaredDistanceBetweenCenters);
 		
 		// Create the contact info object
 		ephysics::ContactPointInfo contactInfo(_shape1Info.proxyShape,

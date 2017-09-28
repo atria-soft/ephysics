@@ -6,7 +6,6 @@
 
 #include <ephysics/collision/shapes/ConcaveMeshShape.hpp>
 #include <ephysics/debug.hpp>
-#include <iostream>
 
 using namespace ephysics;
 
@@ -45,7 +44,7 @@ void ConcaveMeshShape::getTriangleVerticesWithIndexPointer(int32_t _subPart, int
 	// Get the triangle vertex array of the current sub-part
 	TriangleVertexArray* triangleVertexArray = m_triangleMesh->getSubpart(_subPart);
 	if (triangleVertexArray == nullptr) {
-		std::cout << "get nullptr ..." << std::endl;
+		EPHY_ERROR("get nullptr ...");
 	}
 	ephysics::Triangle trianglePoints = triangleVertexArray->getTriangle(_triangleIndex);
 	_outTriangleVertices[0] = trianglePoints[0] * m_scaling;
@@ -79,7 +78,7 @@ float ConcaveMeshRaycastCallback::raycastBroadPhaseShape(int32_t _nodeId, const 
 }
 
 void ConcaveMeshRaycastCallback::raycastTriangles() {
-	etk::Vector<int32_t>::const_iterator it;
+	etk::Vector<int32_t>::Iterator it;
 	float smallestHitFraction = m_ray.maxFraction;
 	for (it = m_hitAABBNodes.begin(); it != m_hitAABBNodes.end(); ++it) {
 		// Get the node data (triangle index and mesh subpart index)

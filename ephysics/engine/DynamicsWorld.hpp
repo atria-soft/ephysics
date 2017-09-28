@@ -26,8 +26,8 @@ namespace ephysics {
 			uint32_t m_nbVelocitySolverIterations; //!< Number of iterations for the velocity solver of the Sequential Impulses technique
 			uint32_t m_nbPositionSolverIterations; //!< Number of iterations for the position solver of the Sequential Impulses technique
 			bool m_isSleepingEnabled; //!< True if the spleeping technique for inactive bodies is enabled
-			std::set<RigidBody*> m_rigidBodies; //!< All the rigid bodies of the physics world
-			std::set<Joint*> m_joints; //!< All the joints of the world
+			etk::Set<RigidBody*> m_rigidBodies; //!< All the rigid bodies of the physics world
+			etk::Set<Joint*> m_joints; //!< All the joints of the world
 			vec3 m_gravity; //!< Gravity vector of the world
 			float m_timeStep; //!< Current frame time step (in seconds)
 			bool m_isGravityEnabled; //!< True if the gravity force is on
@@ -121,9 +121,9 @@ namespace ephysics {
 			/// Return the number of joints in the world
 			uint32_t getNbJoints() const;
 			/// Return an iterator to the beginning of the rigid bodies of the physics world
-			std::set<RigidBody*>::iterator getRigidBodiesBeginIterator();
+			etk::Set<RigidBody*>::Iterator getRigidBodiesBeginIterator();
 			/// Return an iterator to the end of the rigid bodies of the physics world
-			std::set<RigidBody*>::iterator getRigidBodiesEndIterator();
+			etk::Set<RigidBody*>::Iterator getRigidBodiesEndIterator();
 			/// Return true if the sleeping technique is enabled
 			bool isSleepingEnabled() const;
 			/// Enable/Disable the sleeping technique

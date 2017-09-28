@@ -6,8 +6,6 @@
 
 // Libraries
 #include <ephysics/memory/MemoryAllocator.hpp>
-#include <cstdlib>
-#include <cassert>
 
 using namespace ephysics;
 

@@ -163,9 +163,9 @@ void RaycastScene::createLines() {
 			  float phi = j * PI / float(nbRaysOneDimension);
 
 			  // Generate a point on a sphere with spherical coordinates
-			  float x = RAY_LENGTH * std::sin(phi) * std::cos(theta);
-			  float y = RAY_LENGTH * std::sin(phi) * std::sin(theta);
-			  float z = RAY_LENGTH * std::cos(phi);
+			  float x = RAY_LENGTH * etk::sin(phi) * etk::cos(theta);
+			  float y = RAY_LENGTH * etk::sin(phi) * etk::sin(theta);
+			  float z = RAY_LENGTH * etk::cos(phi);
 
 			  // Create a line from the point on the sphere to the center of
 			  // the scene

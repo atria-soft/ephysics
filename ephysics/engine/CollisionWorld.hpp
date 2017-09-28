@@ -6,9 +6,6 @@
 #pragma once
 
 #include <etk/Vector.hpp>
-#include <set>
-#include <list>
-#include <algorithm>
 #include <ephysics/mathematics/mathematics.hpp>
 #include <ephysics/engine/Profiler.hpp>
 #include <ephysics/body/CollisionBody.hpp>
@@ -30,7 +27,7 @@ namespace ephysics {
 	class CollisionWorld {
 		protected :
 			CollisionDetection m_collisionDetection; //!< Reference to the collision detection
-			std::set<CollisionBody*> m_bodies; //!< All the bodies (rigid and soft) of the world
+			etk::Set<CollisionBody*> m_bodies; //!< All the bodies (rigid and soft) of the world
 			bodyindex m_currentBodyID; //!< Current body ID
 			etk::Vector<uint64_t> m_freeBodiesIDs; //!< List of free ID for rigid bodies
 			MemoryAllocator m_memoryAllocator; //!< Memory allocator
@@ -52,14 +49,14 @@ namespace ephysics {
 			 * @brief Get an iterator to the beginning of the bodies of the physics world
 			 * @return An starting iterator to the set of bodies of the world
 			 */
-			std::set<CollisionBody*>::iterator getBodiesBeginIterator() {
+			etk::Set<CollisionBody*>::Iterator getBodiesBeginIterator() {
 				return m_bodies.begin();
 			}
 			/**
 			 * @brief Get an iterator to the end of the bodies of the physics world
 			 * @return An ending iterator to the set of bodies of the world
 			 */
-			std::set<CollisionBody*>::iterator getBodiesEndIterator() {
+			etk::Set<CollisionBody*>::Iterator getBodiesEndIterator() {
 				return m_bodies.end();
 			}
 			/// Create a collision body

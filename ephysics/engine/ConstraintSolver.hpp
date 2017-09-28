@@ -10,7 +10,6 @@
 #include <ephysics/constraint/Joint.hpp>
 #include <ephysics/engine/Island.hpp>
 #include <etk/Map.hpp>
-#include <set>
 
 namespace ephysics {
 	/**

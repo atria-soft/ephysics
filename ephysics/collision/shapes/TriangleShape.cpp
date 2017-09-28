@@ -9,7 +9,6 @@
 #include <ephysics/collision/ProxyShape.hpp>
 #include <ephysics/engine/Profiler.hpp>
 #include <ephysics/configuration.hpp>
-#include <cassert>
 
 using namespace ephysics;
 

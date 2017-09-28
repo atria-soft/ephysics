@@ -9,7 +9,6 @@
 #include <ephysics/collision/ProxyShape.hpp>
 #include <ephysics/configuration.hpp>
 #include <etk/Vector.hpp>
-#include <cassert>
 
 using namespace ephysics;
 
@@ -47,8 +46,8 @@ void BoxShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) con
 bool BoxShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const {
 
 	vec3 rayDirection = ray.point2 - ray.point1;
-	float tMin = DECIMAL_SMALLEST;
-	float tMax = DECIMAL_LARGEST;
+	float tMin = FLT_MIN;
+	float tMax = FLT_MAX;
 	vec3 normalDirection(float(0), float(0), float(0));
 	vec3 currentNormal;
 
@@ -56,7 +55,7 @@ bool BoxShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pro
 	for (int32_t i=0; i<3; i++) {
 
 		// If ray is parallel to the slab
-		if (std::abs(rayDirection[i]) < MACHINE_EPSILON) {
+		if (etk::abs(rayDirection[i]) < FLT_EPSILON) {
 
 			// If the ray's origin is not inside the slab, there is no hit
 			if (ray.point1[i] > m_extent[i] || ray.point1[i] < -m_extent[i]) return false;
@@ -74,7 +73,7 @@ bool BoxShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pro
 			// Swap t1 and t2 if need so that t1 is int32_tersection with near plane and
 			// t2 with far plane
 			if (t1 > t2) {
-				std::swap(t1, t2);
+				etk::swap(t1, t2);
 				currentNormal = -currentNormal;
 			}
 

@@ -41,17 +41,17 @@ DynamicsWorld::DynamicsWorld(const vec3 &gravity)
 DynamicsWorld::~DynamicsWorld() {
 
 	// Destroy all the joints that have not been removed
-	std::set<Joint*>::iterator itJoints;
+	etk::Set<Joint*>::Iterator itJoints;
 	for (itJoints = m_joints.begin(); itJoints != m_joints.end();) {
-		std::set<Joint*>::iterator itToRemove = itJoints;
+		etk::Set<Joint*>::Iterator itToRemove = itJoints;
 		++itJoints;
 		destroyJoint(*itToRemove);
 	}
 
 	// Destroy all the rigid bodies that have not been removed
-	std::set<RigidBody*>::iterator itRigidBodies;
+	etk::Set<RigidBody*>::Iterator itRigidBodies;
 	for (itRigidBodies = m_rigidBodies.begin(); itRigidBodies != m_rigidBodies.end();) {
-		std::set<RigidBody*>::iterator itToRemove = itRigidBodies;
+		etk::Set<RigidBody*>::Iterator itToRemove = itRigidBodies;
 		++itRigidBodies;
 		destroyRigidBody(*itToRemove);
 	}
@@ -83,9 +83,10 @@ DynamicsWorld::~DynamicsWorld() {
 	assert(m_rigidBodies.size() == 0);
 
 #ifdef IS_PROFILING_ACTIVE
-
 	// Print32_t the profiling report
-	Profiler::print32_tReport(std::cout);
+	etk::Stream tmp;
+	Profiler::print32_tReport(tmp);
+	EPHYSIC_PRINT(tmp.str());
 
 	// Destroy the profiler (release the allocated memory)
 	Profiler::destroy();
@@ -262,7 +263,7 @@ void DynamicsWorld::initVelocityArrays() {
 
 	// Initialize the map of body indexes in the velocity arrays
 	m_mapBodyToConstrainedVelocityIndex.clear();
-	std::set<RigidBody*>::const_iterator it;
+	etk::Set<RigidBody*>::Iterator it;
 	uint32_t indexBody = 0;
 	for (it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
 
@@ -641,11 +642,11 @@ void DynamicsWorld::computeIslands() {
 	int32_t nbContactManifolds = 0;
 
 	// Reset all the isAlreadyInIsland variables of bodies, joints and contact manifolds
-	for (std::set<RigidBody*>::iterator it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
+	for (etk::Set<RigidBody*>::Iterator it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
 		int32_t nbBodyManifolds = (*it)->resetIsAlreadyInIslandAndCountManifolds();
 		nbContactManifolds += nbBodyManifolds;
 	}
-	for (std::set<Joint*>::iterator it = m_joints.begin(); it != m_joints.end(); ++it) {
+	for (etk::Set<Joint*>::Iterator it = m_joints.begin(); it != m_joints.end(); ++it) {
 		(*it)->m_isAlreadyInIsland = false;
 	}
 
@@ -654,7 +655,7 @@ void DynamicsWorld::computeIslands() {
 	RigidBody** stackBodiesToVisit = (RigidBody**)m_memoryAllocator.allocate(nbBytesStack);
 
 	// For each rigid body of the world
-	for (std::set<RigidBody*>::iterator it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
+	for (etk::Set<RigidBody*>::Iterator it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
 
 		RigidBody* body = *it;
 
@@ -785,7 +786,7 @@ void DynamicsWorld::updateSleepingBodies() {
 	// For each island of the world
 	for (uint32_t i=0; i<m_numberIslands; i++) {
 
-		float minSleepTime = DECIMAL_LARGEST;
+		float minSleepTime = FLT_MAX;
 
 		// For each body of the island
 		RigidBody** bodies = m_islands[i]->getBodies();
@@ -839,7 +840,7 @@ void DynamicsWorld::enableSleeping(bool isSleepingEnabled) {
 	if (!m_isSleepingEnabled) {
 
 		// For each body of the world
-		std::set<RigidBody*>::iterator it;
+		etk::Set<RigidBody*>::Iterator it;
 		for (it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
 
 			// Wake up the rigid body
@@ -860,9 +861,9 @@ void DynamicsWorld::testCollision(const ProxyShape* shape,
 								   CollisionCallback* callback) {
 
 	// Create the sets of shapes
-	std::set<uint32_t> shapes;
+	etk::Set<uint32_t> shapes;
 	shapes.insert(shape->m_broadPhaseID);
-	std::set<uint32_t> emptySet;
+	etk::Set<uint32_t> emptySet;
 
 	// Perform the collision detection and report contacts
 	m_collisionDetection.reportCollisionBetweenShapes(callback, shapes, emptySet);
@@ -881,9 +882,9 @@ void DynamicsWorld::testCollision(const ProxyShape* shape1,
 								   CollisionCallback* callback) {
 
 	// Create the sets of shapes
-	std::set<uint32_t> shapes1;
+	etk::Set<uint32_t> shapes1;
 	shapes1.insert(shape1->m_broadPhaseID);
-	std::set<uint32_t> shapes2;
+	etk::Set<uint32_t> shapes2;
 	shapes2.insert(shape2->m_broadPhaseID);
 
 	// Perform the collision detection and report contacts
@@ -902,7 +903,7 @@ void DynamicsWorld::testCollision(const CollisionBody* body,
 								   CollisionCallback* callback) {
 
 	// Create the sets of shapes
-	std::set<uint32_t> shapes1;
+	etk::Set<uint32_t> shapes1;
 
 	// For each shape of the body
 	for (const ProxyShape* shape=body->getProxyShapesList(); shape != nullptr;
@@ -910,7 +911,7 @@ void DynamicsWorld::testCollision(const CollisionBody* body,
 		shapes1.insert(shape->m_broadPhaseID);
 	}
 
-	std::set<uint32_t> emptySet;
+	etk::Set<uint32_t> emptySet;
 
 	// Perform the collision detection and report contacts
 	m_collisionDetection.reportCollisionBetweenShapes(callback, shapes1, emptySet);
@@ -929,13 +930,13 @@ void DynamicsWorld::testCollision(const CollisionBody* body1,
 								   CollisionCallback* callback) {
 
 	// Create the sets of shapes
-	std::set<uint32_t> shapes1;
+	etk::Set<uint32_t> shapes1;
 	for (const ProxyShape* shape=body1->getProxyShapesList(); shape != nullptr;
 		 shape = shape->getNext()) {
 		shapes1.insert(shape->m_broadPhaseID);
 	}
 
-	std::set<uint32_t> shapes2;
+	etk::Set<uint32_t> shapes2;
 	for (const ProxyShape* shape=body2->getProxyShapesList(); shape != nullptr;
 		 shape = shape->getNext()) {
 		shapes2.insert(shape->m_broadPhaseID);
@@ -953,7 +954,7 @@ void DynamicsWorld::testCollision(const CollisionBody* body1,
  */
 void DynamicsWorld::testCollision(CollisionCallback* callback) {
 
-	std::set<uint32_t> emptySet;
+	etk::Set<uint32_t> emptySet;
 
 	// Perform the collision detection and report contacts
 	m_collisionDetection.reportCollisionBetweenShapes(callback, emptySet, emptySet);
@@ -965,7 +966,7 @@ etk::Vector<const ContactManifold*> DynamicsWorld::getContactsList() const {
 	etk::Vector<const ContactManifold*> contactManifolds;
 
 	// For each currently overlapping pair of bodies
-	etk::Map<overlappingpairid, OverlappingPair*>::const_iterator it;
+	etk::Map<overlappingpairid, OverlappingPair*>::Iterator it;
 	for (it = m_collisionDetection.m_overlappingPairs.begin();
 		 it != m_collisionDetection.m_overlappingPairs.end(); ++it) {
 
@@ -990,7 +991,7 @@ etk::Vector<const ContactManifold*> DynamicsWorld::getContactsList() const {
 void DynamicsWorld::resetBodiesForceAndTorque() {
 
 	// For each body of the world
-	std::set<RigidBody*>::iterator it;
+	etk::Set<RigidBody*>::Iterator it;
 	for (it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
 		(*it)->m_externalForce.setZero();
 		(*it)->m_externalTorque.setZero();
@@ -1114,7 +1115,7 @@ uint32_t DynamicsWorld::getNbJoints() const {
 /**
  * @return Starting iterator of the set of rigid bodies
  */
-std::set<RigidBody*>::iterator DynamicsWorld::getRigidBodiesBeginIterator() {
+etk::Set<RigidBody*>::Iterator DynamicsWorld::getRigidBodiesBeginIterator() {
 	return m_rigidBodies.begin();
 }
 
@@ -1122,7 +1123,7 @@ std::set<RigidBody*>::iterator DynamicsWorld::getRigidBodiesBeginIterator() {
 /**
  * @return Ending iterator of the set of rigid bodies
  */
-std::set<RigidBody*>::iterator DynamicsWorld::getRigidBodiesEndIterator() {
+etk::Set<RigidBody*>::Iterator DynamicsWorld::getRigidBodiesEndIterator() {
 	return m_rigidBodies.end();
 }
 

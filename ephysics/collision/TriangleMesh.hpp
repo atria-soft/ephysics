@@ -5,7 +5,6 @@
  */
 #pragma once
 #include <etk/Vector.hpp>
-#include <cassert>
 #include <ephysics/collision/TriangleVertexArray.hpp>
 
 namespace ephysics {

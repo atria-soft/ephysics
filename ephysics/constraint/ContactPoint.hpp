@@ -47,6 +47,13 @@ namespace ephysics {
 			  localPoint2(_localPoint2) {
 				
 			}
+			ContactPointInfo():
+			  shape1(nullptr),
+			  shape2(nullptr),
+			  collisionShape1(nullptr),
+			  collisionShape2(nullptr) {
+				// TODO: add it for etk::Vector
+			}
 	};
 
 	/**

@@ -6,7 +6,6 @@
 #pragma once
 
 // Libraries
-#include <cstring>
 #include <ephysics/configuration.hpp>
 
 /// ReactPhysics3D namespace

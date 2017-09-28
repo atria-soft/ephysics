@@ -5,7 +5,6 @@
  */
 #pragma once
 
-#include <cfloat>
 #include <ephysics/collision/shapes/ConvexShape.hpp>
 #include <ephysics/body/CollisionBody.hpp>
 #include <ephysics/mathematics/mathematics.hpp>

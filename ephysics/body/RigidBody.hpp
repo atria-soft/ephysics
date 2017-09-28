@@ -5,7 +5,6 @@
  */
 #pragma once
 
-#include <cassert>
 #include <ephysics/body/CollisionBody.hpp>
 #include <ephysics/engine/Material.hpp>
 #include <ephysics/mathematics/mathematics.hpp>

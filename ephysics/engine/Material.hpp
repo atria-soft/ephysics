@@ -4,7 +4,9 @@
  * @license BSD 3 clauses (see license file)
  */
 #pragma once
-#include <cassert>
+extern "C" {
+	#include <assert.h>
+}
 #include <ephysics/configuration.hpp>
 
 namespace ephysics {

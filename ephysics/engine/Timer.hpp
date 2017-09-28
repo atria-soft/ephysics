@@ -6,18 +6,8 @@
 #pragma once
 
 // Libraries
-#include <stdexcept>
-#include <iostream>
-#include <ctime>
-#include <cassert>
 #include <ephysics/configuration.hpp>
-
-#if defined(__TARGET_OS__Windows)
-   #define NOMINMAX	   // This is used to avoid definition of max() and min() macros
-   #include <windows.h>
-#else								   // For Mac OS or Linux platform
-   #include <sys/time.h>
-#endif
+#include <eechrono/echrono.hpp>
 
 
 namespace ephysics {

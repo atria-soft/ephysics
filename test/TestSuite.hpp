@@ -29,7 +29,6 @@
 // Libraries
 #include <test/Test.hpp>
 #include <etk/Vector.hpp>
-#include <stdexcept>
 
 /// Reactphysics3D namespace
 namespace ephysics {

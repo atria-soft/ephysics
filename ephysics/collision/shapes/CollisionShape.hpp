@@ -5,8 +5,7 @@
  */
 #pragma once
 
-#include <cassert>
-#include <typeinfo>
+#include <etk/typeInfo.hpp>
 #include <etk/math/Vector3D.hpp>
 #include <etk/math/Matrix3x3.hpp>
 #include <ephysics/mathematics/Ray.hpp>

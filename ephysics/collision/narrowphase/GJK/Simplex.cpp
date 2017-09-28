@@ -6,7 +6,6 @@
 
 // Libraries
 #include <ephysics/collision/narrowphase/GJK/Simplex.hpp>
-#include <cfloat>
 
 // We want to use the ReactPhysics3D namespace
 using namespace ephysics;
@@ -327,7 +326,7 @@ bool Simplex::computeClosestPoint(vec3& v) {
 
 // Backup the closest point
 void Simplex::backupClosestPointInSimplex(vec3& v) {
-	float minDistSquare = DECIMAL_LARGEST;
+	float minDistSquare = FLT_MAX;
 	Bits bit;
 
 	for (bit = mAllBits; bit != 0x0; bit--) {

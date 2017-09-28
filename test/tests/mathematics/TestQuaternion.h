@@ -95,7 +95,7 @@ class Testetk::Quaternion : public Test {
 			const float PI_OVER_2 = PI * 0.5f;
 			const float PI_OVER_4 = PI_OVER_2 * 0.5f;
 			etk::Quaternion quaternion5(PI_OVER_2, 0, 0);
-			etk::Quaternion quaternionTest5(std::sin(PI_OVER_4), 0, 0, std::cos(PI_OVER_4));
+			etk::Quaternion quaternionTest5(etk::sin(PI_OVER_4), 0, 0, etk::cos(PI_OVER_4));
 			quaternionTest5.normalize();
 			test(approxEqual(quaternion5.x(), quaternionTest5.x));
 			test(approxEqual(quaternion5.y(), quaternionTest5.y));
@@ -103,7 +103,7 @@ class Testetk::Quaternion : public Test {
 			test(approxEqual(quaternion5.w, quaternionTest5.w));
 
 			etk::Quaternion quaternion6(0, PI_OVER_2, 0);
-			etk::Quaternion quaternionTest6(0, std::sin(PI_OVER_4), 0, std::cos(PI_OVER_4));
+			etk::Quaternion quaternionTest6(0, etk::sin(PI_OVER_4), 0, etk::cos(PI_OVER_4));
 			quaternionTest6.normalize();
 			test(approxEqual(quaternion6.x(), quaternionTest6.x));
 			test(approxEqual(quaternion6.y(), quaternionTest6.y));
@@ -111,7 +111,7 @@ class Testetk::Quaternion : public Test {
 			test(approxEqual(quaternion6.w, quaternionTest6.w));
 
 			etk::Quaternion quaternion7(vec3(0, 0, PI_OVER_2));
-			etk::Quaternion quaternionTest7(0, 0, std::sin(PI_OVER_4), std::cos(PI_OVER_4));
+			etk::Quaternion quaternionTest7(0, 0, etk::sin(PI_OVER_4), etk::cos(PI_OVER_4));
 			quaternionTest7.normalize();
 			test(approxEqual(quaternion7.x(), quaternionTest7.x));
 			test(approxEqual(quaternion7.y(), quaternionTest7.y));

@@ -3,115 +3,89 @@
  * @copyright 2010-2016 Daniel Chappuis
  * @license BSD 3 clauses (see license file)
  */
-
-// Libraries
 #include <ephysics/collision/narrowphase/EPA/EdgeEPA.hpp>
 #include <ephysics/collision/narrowphase/EPA/TriangleEPA.hpp>
 #include <ephysics/collision/narrowphase/EPA/TrianglesStore.hpp>
-#include <cassert>
 
-// We want to use the ReactPhysics3D namespace
 using namespace ephysics;
 
 
-// Constructor
 EdgeEPA::EdgeEPA() {
 	
 }
 
-// Constructor
 EdgeEPA::EdgeEPA(TriangleEPA* ownerTriangle, int32_t index)
-		: mOwnerTriangle(ownerTriangle), mIndex(index) {
+		: m_ownerTriangle(ownerTriangle), m_index(index) {
 	assert(index >= 0 && index < 3);
 }
 
-// Copy-constructor
 EdgeEPA::EdgeEPA(const EdgeEPA& edge) {
-	mOwnerTriangle = edge.mOwnerTriangle;
-	mIndex = edge.mIndex;
+	m_ownerTriangle = edge.m_ownerTriangle;
+	m_index = edge.m_index;
 }
 
-// Destructor
 EdgeEPA::~EdgeEPA() {
-
+	
 }
 
-// Return the index of the source vertex of the edge (vertex starting the edge)
 uint32_t EdgeEPA::getSourceVertexIndex() const {
-	return (*mOwnerTriangle)[mIndex];
+	return (*m_ownerTriangle)[m_index];
 }
 
-// Return the index of the target vertex of the edge (vertex ending the edge)
 uint32_t EdgeEPA::getTargetVertexIndex() const {
-	return (*mOwnerTriangle)[indexOfNextCounterClockwiseEdge(mIndex)];
+	return (*m_ownerTriangle)[indexOfNextCounterClockwiseEdge(m_index)];
 }
 
-// Execute the recursive silhouette algorithm from this edge
 bool EdgeEPA::computeSilhouette(const vec3* vertices, uint32_t indexNewVertex,
 								TrianglesStore& triangleStore) {
 	// If the edge has not already been visited
-	if (!mOwnerTriangle->getIsObsolete()) {
-
+	if (!m_ownerTriangle->getIsObsolete()) {
 		// If the triangle of this edge is not visible from the given point
-		if (!mOwnerTriangle->isVisibleFromVertex(vertices, indexNewVertex)) {
+		if (!m_ownerTriangle->isVisibleFromVertex(vertices, indexNewVertex)) {
 			TriangleEPA* triangle = triangleStore.newTriangle(vertices, indexNewVertex,
 															  getTargetVertexIndex(),
 															  getSourceVertexIndex());
-
 			// If the triangle has been created
-			if (triangle != NULL) {
+			if (triangle != nullptr) {
 				halfLink(EdgeEPA(triangle, 1), *this);
 				return true;
 			}
-
 			return false;
-		}
-		else {
-
+		} else {
 			// The current triangle is visible and therefore obsolete
-			mOwnerTriangle->setIsObsolete(true);
-
+			m_ownerTriangle->setIsObsolete(true);
 			int32_t backup = triangleStore.getNbTriangles();
-
-			if(!mOwnerTriangle->getAdjacentEdge(indexOfNextCounterClockwiseEdge(
-												this->mIndex)).computeSilhouette(vertices,
+			if(!m_ownerTriangle->getAdjacentEdge(indexOfNextCounterClockwiseEdge(
+												this->m_index)).computeSilhouette(vertices,
 																				 indexNewVertex,
 																				 triangleStore)) {
-				mOwnerTriangle->setIsObsolete(false);
-
+				m_ownerTriangle->setIsObsolete(false);
 				TriangleEPA* triangle = triangleStore.newTriangle(vertices, indexNewVertex,
 																  getTargetVertexIndex(),
 																  getSourceVertexIndex());
-
 				// If the triangle has been created
-				if (triangle != NULL) {
+				if (triangle != nullptr) {
 					halfLink(EdgeEPA(triangle, 1), *this);
 					return true;
 				}
-
 				return false;
-			}
-			else if (!mOwnerTriangle->getAdjacentEdge(indexOfPreviousCounterClockwiseEdge(
-												  this->mIndex)).computeSilhouette(vertices,
+			} else if (!m_ownerTriangle->getAdjacentEdge(indexOfPreviousCounterClockwiseEdge(
+												  this->m_index)).computeSilhouette(vertices,
 																				   indexNewVertex,
 																				   triangleStore)) {
-				mOwnerTriangle->setIsObsolete(false);
-
+				m_ownerTriangle->setIsObsolete(false);
 				triangleStore.setNbTriangles(backup);
-
 				TriangleEPA* triangle = triangleStore.newTriangle(vertices, indexNewVertex,
 																  getTargetVertexIndex(),
 																  getSourceVertexIndex());
-
 				if (triangle != NULL) {
 					halfLink(EdgeEPA(triangle, 1), *this);
 					return true;
 				}
-
 				return false;
 			}
 		}
 	}
-
 	return true;
 }
+

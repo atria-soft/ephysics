@@ -9,7 +9,6 @@
 #include <ephysics/engine/DynamicsWorld.hpp>
 #include <ephysics/body/RigidBody.hpp>
 #include <ephysics/engine/Profiler.hpp>
-#include <limits>
 
 using namespace ephysics;
 using namespace std;
@@ -839,7 +838,7 @@ void ContactSolver::computeFrictionVectors(const vec3& deltaVelocity,
 
 	// If the velocty difference in the tangential plane is not zero
 	float lengthTangenVelocity = tangentVelocity.length();
-	if (lengthTangenVelocity > MACHINE_EPSILON) {
+	if (lengthTangenVelocity > FLT_EPSILON) {
 
 		// Compute the first friction vector in the direction of the tangent
 		// velocity difference
@@ -869,7 +868,7 @@ void ContactSolver::computeFrictionVectors(const vec3& deltaVelocity,
 
 	// If the velocty difference in the tangential plane is not zero
 	float lengthTangenVelocity = tangentVelocity.length();
-	if (lengthTangenVelocity > MACHINE_EPSILON) {
+	if (lengthTangenVelocity > FLT_EPSILON) {
 
 		// Compute the first friction vector in the direction of the tangent
 		// velocity difference

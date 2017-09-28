@@ -5,8 +5,9 @@
  */
 #pragma once
 
-#include <stdexcept>
-#include <cassert>
+extern "C" {
+	#include <assert.h>
+}
 #include <ephysics/configuration.hpp>
 
 namespace ephysics {

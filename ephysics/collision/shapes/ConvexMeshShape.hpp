@@ -11,7 +11,6 @@
 #include <ephysics/collision/TriangleMesh.hpp>
 #include <ephysics/collision/narrowphase/GJK/GJKAlgorithm.hpp>
 #include <etk/Vector.hpp>
-#include <set>
 #include <etk/Map.hpp>
 
 namespace ephysics {
@@ -38,7 +37,7 @@ namespace ephysics {
 			vec3 m_minBounds; //!< Mesh minimum bounds in the three local x, y and z directions
 			vec3 m_maxBounds; //!< Mesh maximum bounds in the three local x, y and z directions
 			bool m_isEdgesInformationUsed; //!< True if the shape contains the edges of the convex mesh in order to make the collision detection faster
-			etk::Map<uint32_t, std::set<uint32_t> > m_edgesAdjacencyList; //!< Adjacency list representing the edges of the mesh
+			etk::Map<uint32_t, etk::Set<uint32_t> > m_edgesAdjacencyList; //!< Adjacency list representing the edges of the mesh
 			/// Private copy-constructor
 			ConvexMeshShape(const ConvexMeshShape& _shape);
 			/// Private assignment operator
@@ -51,7 +50,14 @@ namespace ephysics {
 			bool raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const override;
 			size_t getSizeInBytes() const override;
 		public :
-			/// Constructor to initialize with an array of 3D vertices.
+			/**
+			 * @brief  Constructor to initialize with an array of 3D vertices.
+			 * This method creates an int32_ternal copy of the input vertices.
+			 * @param[in] _arrayVertices Array with the vertices of the convex mesh
+			 * @param[in] _nbVertices Number of vertices in the convex mesh
+			 * @param[in] _stride Stride between the beginning of two elements in the vertices array
+			 * @param[in] _margin Collision margin (in meters) around the collision shape
+			 */
 			ConvexMeshShape(const float* _arrayVertices,
 			                uint32_t _nbVertices,
 			                int32_t _stride,
@@ -70,14 +76,30 @@ namespace ephysics {
 			ConvexMeshShape(float _margin = OBJECT_MARGIN);
 			void getLocalBounds(vec3& _min, vec3& _max) const override;
 			void computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const override;
-			/// Add a vertex int32_to the convex mesh
+			/**
+			 * @brief Add a vertex int32_to the convex mesh
+			 * @param vertex Vertex to be added
+			 */
 			void addVertex(const vec3& _vertex);
-			/// Add an edge int32_to the convex mesh by specifying the two vertex indices of the edge.
+			/**
+			 * @brief Add an edge int32_to the convex mesh by specifying the two vertex indices of the edge.
+			 * Note that the vertex indices start at zero and need to correspond to the order of
+			 * the vertices in the vertices array in the constructor or the order of the calls
+			 * of the addVertex() methods that you use to add vertices int32_to the convex mesh.
+			 * @param[in] _v1 Index of the first vertex of the edge to add
+			 * @param[in] _v2 Index of the second vertex of the edge to add
+			 */
 			void addEdge(uint32_t _v1, uint32_t _v2);
-			/// Return true if the edges information is used to speed up the collision detection
+			/**
+			 * @brief Return true if the edges information is used to speed up the collision detection
+			 * @return True if the edges information is used and false otherwise
+			 */
 			bool isEdgesInformationUsed() const;
-			/// Set the variable to know if the edges information is used to speed up the
-			/// collision detection
+			/**
+			 * @brief Set the variable to know if the edges information is used to speed up the
+			 * collision detection
+			 * @param[in] isEdgesUsed True if you want to use the edges information to speed up the collision detection with the convex mesh shape
+			 */
 			void setIsEdgesInformationUsed(bool _isEdgesUsed);
 	};
 }

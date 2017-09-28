@@ -32,7 +32,7 @@ def configure(target, my_module):
 		])
 	my_module.add_depend([
 		'ephysics',
-		'gtest',
+		'etest',
 		'test-debug'
 		])
 	my_module.add_path(".")

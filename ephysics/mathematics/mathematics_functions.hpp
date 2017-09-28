@@ -9,10 +9,6 @@
 #include <ephysics/configuration.hpp>
 #include <etk/math/Vector3D.hpp>
 
-#include <algorithm>
-#include <cassert>
-#include <cmath>
-
 /// ReactPhysics3D namespace
 namespace ephysics {
 
@@ -20,8 +16,8 @@ namespace ephysics {
 
 /// Function to test if two real numbers are (almost) equal
 /// We test if two numbers a and b are such that (a-b) are in [-EPSILON; EPSILON]
-inline bool approxEqual(float a, float b, float epsilon = MACHINE_EPSILON) {
-	return (std::fabs(a - b) < epsilon);
+inline bool approxEqual(float a, float b, float epsilon = FLT_EPSILON) {
+	return (etk::abs(a - b) < epsilon);
 }
 
 /// Function that returns the result of the "value" clamped by

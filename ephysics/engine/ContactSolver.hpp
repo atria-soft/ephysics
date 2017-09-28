@@ -12,7 +12,6 @@
 #include <ephysics/engine/Island.hpp>
 #include <ephysics/engine/Impulse.hpp>
 #include <etk/Map.hpp>
-#include <set>
 
 namespace ephysics {
 	/**

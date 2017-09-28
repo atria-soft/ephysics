@@ -14,8 +14,7 @@
 #include <ephysics/constraint/ContactPoint.hpp>
 #include <etk/Vector.hpp>
 #include <etk/Map.hpp>
-#include <set>
-#include <utility>
+#include <etk/Set.hpp>
 
 namespace ephysics {
 
@@ -56,7 +55,7 @@ namespace ephysics {
 			BroadPhaseAlgorithm m_broadPhaseAlgorithm; //!< Broad-phase algorithm
 			// TODO : Delete this
 			GJKAlgorithm m_narrowPhaseGJKAlgorithm; //!< Narrow-phase GJK algorithm
-			std::set<bodyindexpair> m_noCollisionPairs; //!< Set of pair of bodies that cannot collide between each other
+			etk::Set<bodyindexpair> m_noCollisionPairs; //!< Set of pair of bodies that cannot collide between each other
 			bool m_isCollisionShapesAdded; //!< True if some collision shapes have been added previously
 			/// Private copy-constructor
 			CollisionDetection(const CollisionDetection& _collisionDetection);
@@ -98,18 +97,20 @@ namespace ephysics {
 			void addNoCollisionPair(CollisionBody* _body1, CollisionBody* _body2);
 			/// Remove a pair of bodies that cannot collide with each other
 			void removeNoCollisionPair(CollisionBody* _body1, CollisionBody* _body2);
-			/// Ask for a collision shape to be tested again during broad-phase.
+			// Ask for a collision shape to be tested again during broad-phase.
+			/// We simply put the shape in the list of collision shape that have moved in the
+			/// previous frame so that it is tested for collision again in the broad-phase.
 			void askForBroadPhaseCollisionCheck(ProxyShape* _shape);
 			/// Compute the collision detection
 			void computeCollisionDetection();
 			/// Compute the collision detection
 			void testCollisionBetweenShapes(CollisionCallback* _callback,
-			                                const std::set<uint32_t>& _shapes1,
-			                                const std::set<uint32_t>& _shapes2);
+			                                const etk::Set<uint32_t>& _shapes1,
+			                                const etk::Set<uint32_t>& _shapes2);
 			/// Report collision between two sets of shapes
 			void reportCollisionBetweenShapes(CollisionCallback* _callback,
-			                                  const std::set<uint32_t>& _shapes1,
-			                                  const std::set<uint32_t>& _shapes2) ;
+			                                  const etk::Set<uint32_t>& _shapes1,
+			                                  const etk::Set<uint32_t>& _shapes2) ;
 			/// Ray casting method
 			void raycast(RaycastCallback* _raycastCallback,
 			             const Ray& _ray,
@@ -121,11 +122,12 @@ namespace ephysics {
 			bool testAABBOverlap(const ProxyShape* _shape1,
 			                     const ProxyShape* _shape2) const;
 			/// Allow the broadphase to notify the collision detection about an overlapping pair.
+			/// This method is called by the broad-phase collision detection algorithm
 			void broadPhaseNotifyOverlappingPair(ProxyShape* _shape1, ProxyShape* _shape2);
 			/// Compute the narrow-phase collision detection
 			void computeNarrowPhaseBetweenShapes(CollisionCallback* _callback,
-			                                     const std::set<uint32_t>& _shapes1,
-			                                     const std::set<uint32_t>& _shapes2);
+			                                     const etk::Set<uint32_t>& _shapes1,
+			                                     const etk::Set<uint32_t>& _shapes2);
 			/// Return a pointer to the world
 			CollisionWorld* getWorld();
 			/// Return the world event listener

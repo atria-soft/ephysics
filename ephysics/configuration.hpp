@@ -6,10 +6,8 @@
 #pragma once
 
 // Libraries
-#include <limits>
-#include <cfloat>
-#include <utility>
-#include <cstdint>
+#include <etk/types.hpp>
+#include <etk/Pair.hpp>
 
 /// Namespace ephysics
 namespace ephysics {
@@ -33,16 +31,6 @@ namespace ephysics {
 	enum ContactsPositionCorrectionTechnique {BAUMGARTE_CONTACTS, SPLIT_IMPULSES};
 	
 	// ------------------- Constants ------------------- //
-	
-	/// Smallest float value (negative)
-	const float DECIMAL_SMALLEST = - std::numeric_limits<float>::max();
-	
-	/// Maximum float value
-	const float DECIMAL_LARGEST = std::numeric_limits<float>::max();
-	
-	/// Machine epsilon
-	const float MACHINE_EPSILON = std::numeric_limits<float>::epsilon();
-	
 	/// Pi constant
 	const float PI = float(3.14159265);
 	

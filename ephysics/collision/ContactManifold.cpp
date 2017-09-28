@@ -6,7 +6,6 @@
 
 
 // Libraries
-#include <iostream>
 #include <ephysics/collision/ContactManifold.hpp>
 
 using namespace ephysics;
