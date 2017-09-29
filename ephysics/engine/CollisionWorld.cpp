@@ -4,24 +4,20 @@
  * @license BSD 3 clauses (see license file)
  */
 
-// Libraries
 #include <ephysics/engine/CollisionWorld.hpp>
 #include <ephysics/debug.hpp>
 
-// Namespaces
 using namespace ephysics;
 using namespace std;
 
-// Constructor
-CollisionWorld::CollisionWorld()
-			   : m_collisionDetection(this, m_memoryAllocator), m_currentBodyID(0),
-				 m_eventListener(nullptr) {
-
+CollisionWorld::CollisionWorld() :
+  m_collisionDetection(this),
+  m_currentBodyID(0),
+  m_eventListener(nullptr) {
+	
 }
 
-// Destructor
 CollisionWorld::~CollisionWorld() {
-
 	// Destroy all the collision bodies that have not been removed
 	etk::Set<CollisionBody*>::Iterator itBodies;
 	for (itBodies = m_bodies.begin(); itBodies != m_bodies.end(); ) {
@@ -29,38 +25,30 @@ CollisionWorld::~CollisionWorld() {
 		 ++itBodies;
 		destroyCollisionBody(*itToRemove);
 	}
-
 	assert(m_bodies.empty());
 }
 
-// Create a collision body and add it to the world
 /**
+ * @brief Create a collision body and add it to the world
  * @param transform etk::Transform3Dation mapping the local-space of the body to world-space
  * @return A pointer to the body that has been created in the world
  */
 CollisionBody* CollisionWorld::createCollisionBody(const etk::Transform3D& transform) {
-
 	// Get the next available body ID
 	bodyindex bodyID = computeNextAvailableBodyID();
-
 	// Largest index cannot be used (it is used for invalid index)
 	EPHY_ASSERT(bodyID < std::numeric_limits<ephysics::bodyindex>::max(), "index too big");
-
 	// Create the collision body
-	CollisionBody* collisionBody = new (m_memoryAllocator.allocate(sizeof(CollisionBody)))
-										CollisionBody(transform, *this, bodyID);
-
+	CollisionBody* collisionBody = new CollisionBody(transform, *this, bodyID);
 	EPHY_ASSERT(collisionBody != nullptr, "empty Body collision");
-
 	// Add the collision body to the world
 	m_bodies.add(collisionBody);
-
 	// Return the pointer to the rigid body
 	return collisionBody;
 }
 
-// Destroy a collision body
 /**
+ * @brief Destroy a collision body
  * @param collisionBody Pointer to the body to destroy
  */
 void CollisionWorld::destroyCollisionBody(CollisionBody* collisionBody) {
@@ -71,14 +59,11 @@ void CollisionWorld::destroyCollisionBody(CollisionBody* collisionBody) {
 	// Add the body ID to the list of free IDs
 	m_freeBodiesIDs.pushBack(collisionBody->getID());
 
-	// Call the destructor of the collision body
-	collisionBody->~CollisionBody();
-
 	// Remove the collision body from the list of bodies
 	m_bodies.erase(m_bodies.find(collisionBody));
 
-	// Free the object from the memory allocator
-	m_memoryAllocator.release(collisionBody, sizeof(CollisionBody));
+	delete collisionBody;
+	collisionBody = nullptr;
 }
 
 // Return the next available body ID

@@ -8,11 +8,14 @@
 
 using namespace ephysics;
 
-ContactManifoldSet::ContactManifoldSet(ProxyShape* shape1, ProxyShape* shape2,
-									   MemoryAllocator& memoryAllocator, int32_t nbMaxManifolds)
-				   : m_nbMaxManifolds(nbMaxManifolds), m_nbManifolds(0), m_shape1(shape1),
-					 m_shape2(shape2), m_memoryAllocator(memoryAllocator) {
-	assert(nbMaxManifolds >= 1);
+ContactManifoldSet::ContactManifoldSet(ProxyShape* _shape1,
+                                       ProxyShape* _shape2,
+                                       int32_t _nbMaxManifolds):
+  m_nbMaxManifolds(_nbMaxManifolds),
+  m_nbManifolds(0),
+  m_shape1(_shape1),
+  m_shape2(_shape2) {
+	assert(_nbMaxManifolds >= 1);
 }
 
 ContactManifoldSet::~ContactManifoldSet() {
@@ -71,8 +74,8 @@ void ContactManifoldSet::addContactPoint(ContactPoint* contact) {
 	// new contact point
 	if (smallestDepthIndex == -1) {
 		// Delete the new contact
-		contact->~ContactPoint();
-		m_memoryAllocator.release(contact, sizeof(ContactPoint));
+		delete contact;
+		contact = nullptr;
 		return;
 	}
 	assert(smallestDepthIndex >= 0 && smallestDepthIndex < m_nbManifolds);
@@ -150,7 +153,7 @@ void ContactManifoldSet::clear() {
 
 void ContactManifoldSet::createManifold(int16_t normalDirectionId) {
 	assert(m_nbManifolds < m_nbMaxManifolds);
-	m_manifolds[m_nbManifolds] = new ContactManifold(m_shape1, m_shape2, m_memoryAllocator, normalDirectionId);
+	m_manifolds[m_nbManifolds] = new ContactManifold(m_shape1, m_shape2, normalDirectionId);
 	m_nbManifolds++;
 }
 

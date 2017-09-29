@@ -11,12 +11,17 @@
 using namespace ephysics;
 
 // Constructor
-ContactManifold::ContactManifold(ProxyShape* shape1, ProxyShape* shape2,
-								 MemoryAllocator& memoryAllocator, short normalDirectionId)
-				: m_shape1(shape1), m_shape2(shape2), m_normalDirectionId(normalDirectionId),
-				  m_nbContactPoints(0), m_frictionImpulse1(0.0), m_frictionImpulse2(0.0),
-				  m_frictionTwistImpulse(0.0), m_isAlreadyInIsland(false),
-				  m_memoryAllocator(memoryAllocator) {
+ContactManifold::ContactManifold(ProxyShape* _shape1,
+                                 ProxyShape* _shape2,
+                                 short _normalDirectionId):
+  m_shape1(_shape1),
+  m_shape2(_shape2),
+  m_normalDirectionId(_normalDirectionId),
+  m_nbContactPoints(0),
+  m_frictionImpulse1(0.0),
+  m_frictionImpulse2(0.0),
+  m_frictionTwistImpulse(0.0),
+  m_isAlreadyInIsland(false) {
 	
 }
 
@@ -36,13 +41,9 @@ void ContactManifold::addContactPoint(ContactPoint* contact) {
 		float distance = (m_contactPoints[i]->getWorldPointOnBody1() -
 							contact->getWorldPointOnBody1()).length2();
 		if (distance <= PERSISTENT_CONTACT_DIST_THRESHOLD*PERSISTENT_CONTACT_DIST_THRESHOLD) {
-
 			// Delete the new contact
-			contact->~ContactPoint();
-			m_memoryAllocator.release(contact, sizeof(ContactPoint));
-
+			delete contact;
 			assert(m_nbContactPoints > 0);
-
 			return;
 		}
 	}
@@ -68,9 +69,8 @@ void ContactManifold::removeContactPoint(uint32_t index) {
 	
 	// Call the destructor explicitly and tell the memory allocator that
 	// the corresponding memory block is now free
-	m_contactPoints[index]->~ContactPoint();
-	m_memoryAllocator.release(m_contactPoints[index], sizeof(ContactPoint));
-	
+	delete m_contactPoints[index];
+	m_contactPoints[index] = nullptr;
 	// If we don't remove the last index
 	if (index < m_nbContactPoints - 1) {
 		m_contactPoints[index] = m_contactPoints[m_nbContactPoints - 1];
@@ -233,12 +233,12 @@ int32_t ContactManifold::getMaxArea(float area0, float area1, float area2, float
 
 // Clear the contact manifold
 void ContactManifold::clear() {
-	for (uint32_t i=0; i<m_nbContactPoints; i++) {
+	for (uint32_t iii=0; iii<m_nbContactPoints; ++iii) {
 		
 		// Call the destructor explicitly and tell the memory allocator that
 		// the corresponding memory block is now free
-		m_contactPoints[i]->~ContactPoint();
-		m_memoryAllocator.release(m_contactPoints[i], sizeof(ContactPoint));
+		delete m_contactPoints[iii];
+		m_contactPoints[iii] = nullptr;
 	}
 	m_nbContactPoints = 0;
 }

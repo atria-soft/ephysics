@@ -11,7 +11,6 @@
 #include <ephysics/collision/narrowphase/NarrowPhaseAlgorithm.hpp>
 #include <ephysics/mathematics/mathematics.hpp>
 #include <ephysics/collision/narrowphase/EPA/TriangleEPA.hpp>
-#include <ephysics/memory/MemoryAllocator.hpp>
 #include <algorithm>
 
 namespace ephysics {
@@ -51,7 +50,6 @@ namespace ephysics {
 	 */
 	class EPAAlgorithm {
 		private:
-			MemoryAllocator* m_memoryAllocator; //!< Reference to the memory allocator
 			TriangleComparison m_triangleComparison; //!< Triangle comparison operator
 			/// Private copy-constructor
 			EPAAlgorithm(const EPAAlgorithm& _algorithm);
@@ -84,8 +82,8 @@ namespace ephysics {
 			/// Destructor
 			~EPAAlgorithm();
 			/// Initalize the algorithm
-			void init(MemoryAllocator* _memoryAllocator) {
-				m_memoryAllocator = _memoryAllocator;
+			void init() {
+				
 			}
 			// Compute the penetration depth with the EPA algorithm.
 			/// This method computes the penetration depth and contact points between two

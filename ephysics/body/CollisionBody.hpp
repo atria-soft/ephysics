@@ -11,7 +11,6 @@
 #include <ephysics/collision/shapes/AABB.hpp>
 #include <ephysics/collision/shapes/CollisionShape.hpp>
 #include <ephysics/collision/RaycastInfo.hpp>
-#include <ephysics/memory/MemoryAllocator.hpp>
 #include <ephysics/configuration.hpp>
 
 namespace ephysics {

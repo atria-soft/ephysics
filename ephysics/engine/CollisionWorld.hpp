@@ -14,7 +14,6 @@
 #include <ephysics/collision/CollisionDetection.hpp>
 #include <ephysics/constraint/Joint.hpp>
 #include <ephysics/constraint/ContactPoint.hpp>
-#include <ephysics/memory/MemoryAllocator.hpp>
 #include <ephysics/engine/EventListener.hpp>
 
 namespace ephysics {
@@ -30,7 +29,6 @@ namespace ephysics {
 			etk::Set<CollisionBody*> m_bodies; //!< All the bodies (rigid and soft) of the world
 			bodyindex m_currentBodyID; //!< Current body ID
 			etk::Vector<uint64_t> m_freeBodiesIDs; //!< List of free ID for rigid bodies
-			MemoryAllocator m_memoryAllocator; //!< Memory allocator
 			EventListener* m_eventListener; //!< Pointer to an event listener object
 			/// Private copy-constructor
 			CollisionWorld(const CollisionWorld& world);

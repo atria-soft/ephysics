@@ -38,9 +38,7 @@ namespace ephysics {
 			vec3* m_constrainedPositions; //!< Array of constrained rigid bodies position (for position error correction)
 			etk::Quaternion* m_constrainedOrientations; //!< Array of constrained rigid bodies orientation (for position error correction)
 			etk::Map<RigidBody*, uint32_t> m_mapBodyToConstrainedVelocityIndex; //!< Map body to their index in the constrained velocities array
-			uint32_t m_numberIslands; //!< Number of islands in the world
-			uint32_t m_numberIslandsCapacity; //!< Current allocated capacity for the islands
-			Island** m_islands; //!< Array with all the islands of awaken bodies
+			etk::Vector<Island*> m_islands; //!< Array with all the islands of awaken bodies
 			uint32_t m_numberBodiesCapacity; //!< Current allocated capacity for the bodies
 			float m_sleepLinearVelocity; //!< Sleep linear velocity threshold
 			float m_sleepAngularVelocity; //!< Sleep angular velocity threshold
@@ -56,8 +54,7 @@ namespace ephysics {
 			/// Reset the external force and torque applied to the bodies
 			void resetBodiesForceAndTorque();
 			/// Update the position and orientation of a body
-			void updatePositionAndOrientationOfBody(RigidBody* body, vec3 newLinVelocity,
-													vec3 newAngVelocity);
+			void updatePositionAndOrientationOfBody(RigidBody* _body, vec3 _newLinVelocity, vec3 _newAngVelocity);
 			/// Compute and set the int32_terpolation factor to all bodies
 			void setInterpolationFactorToAllBodies();
 			/// Initialize the bodies velocities arrays for the next simulation step.
@@ -79,7 +76,10 @@ namespace ephysics {
 			/// Add the joint to the list of joints of the two bodies involved in the joint
 			void addJointToBody(Joint* joint);
 		public :
-			/// Constructor
+			/**
+			 * @brief Constructor
+			 * @param gravity Gravity vector in the world (in meters per second squared)
+			 */
 			DynamicsWorld(const vec3& m_gravity);
 			/// Destructor
 			virtual ~DynamicsWorld();

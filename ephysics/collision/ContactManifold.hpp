@@ -9,7 +9,6 @@
 #include <ephysics/body/CollisionBody.hpp>
 #include <ephysics/collision/ProxyShape.hpp>
 #include <ephysics/constraint/ContactPoint.hpp>
-#include <ephysics/memory/MemoryAllocator.hpp>
 
 namespace ephysics {
 
@@ -60,7 +59,6 @@ namespace ephysics {
 			float m_frictionTwistImpulse; //!< Twist friction constraint accumulated impulse
 			vec3 m_rollingResistanceImpulse; //!< Accumulated rolling resistance impulse
 			bool m_isAlreadyInIsland; //!< True if the contact manifold has already been added int32_to an island
-			MemoryAllocator& m_memoryAllocator; //!< Reference to the memory allocator
 			/// Private copy-constructor
 			ContactManifold(const ContactManifold& _contactManifold) = delete;
 			/// Private assignment operator
@@ -79,7 +77,6 @@ namespace ephysics {
 			/// Constructor
 			ContactManifold(ProxyShape* _shape1,
 			                ProxyShape* _shape2,
-			                MemoryAllocator& _memoryAllocator,
 			                int16_t _normalDirectionId);
 			/// Destructor
 			~ContactManifold();

@@ -11,7 +11,6 @@
 #include <ephysics/mathematics/Ray.hpp>
 #include <ephysics/collision/shapes/AABB.hpp>
 #include <ephysics/collision/RaycastInfo.hpp>
-#include <ephysics/memory/MemoryAllocator.hpp>
 
 namespace ephysics {
 enum CollisionShapeType {TRIANGLE, BOX, SPHERE, CONE, CYLINDER,

@@ -7,7 +7,6 @@
 
 #include <ephysics/body/Body.hpp>
 #include <ephysics/constraint/ContactPoint.hpp>
-#include <ephysics/memory/MemoryAllocator.hpp>
 #include <ephysics/engine/OverlappingPair.hpp>
 #include <ephysics/collision/CollisionShapeInfo.hpp>
 
@@ -36,7 +35,6 @@ namespace ephysics {
 	class NarrowPhaseAlgorithm {
 		protected :
 			CollisionDetection* m_collisionDetection; //!< Pointer to the collision detection object
-			MemoryAllocator* m_memoryAllocator; //!< Pointer to the memory allocator
 			OverlappingPair* m_currentOverlappingPair; //!< Overlapping pair of the bodies currently tested for collision
 			/// Private copy-constructor
 			NarrowPhaseAlgorithm(const NarrowPhaseAlgorithm& algorithm) = delete;
@@ -46,10 +44,9 @@ namespace ephysics {
 			/// Constructor
 			NarrowPhaseAlgorithm();
 			/// Destructor
-			virtual ~NarrowPhaseAlgorithm();
+			virtual ~NarrowPhaseAlgorithm() = default;
 			/// Initalize the algorithm
-			virtual void init(CollisionDetection* _collisionDetection,
-			                  MemoryAllocator* _memoryAllocator);
+			virtual void init(CollisionDetection* _collisionDetection);
 			/// Set the current overlapping pair of bodies
 			void setCurrentOverlappingPair(OverlappingPair* _overlappingPair);
 			/// Compute a contact info if the two bounding volume collide

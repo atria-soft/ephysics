@@ -43,7 +43,7 @@ inline void CollisionBody::setType(BodyType _type) {
 ProxyShape* CollisionBody::addCollisionShape(CollisionShape* _collisionShape,
                                              const etk::Transform3D& _transform) {
 	// Create a new proxy collision shape to attach the collision shape to the body
-	ProxyShape* proxyShape = new (m_world.m_memoryAllocator.allocate(sizeof(ProxyShape))) ProxyShape(this, _collisionShape,_transform, float(1));
+	ProxyShape* proxyShape = new ProxyShape(this, _collisionShape,_transform, float(1));
 	// Add it to the list of proxy collision shapes of the body
 	if (m_proxyCollisionShapes == nullptr) {
 		m_proxyCollisionShapes = proxyShape;
@@ -66,8 +66,8 @@ void CollisionBody::removeCollisionShape(const ProxyShape* _proxyShape) {
 		if (m_isActive) {
 			m_world.m_collisionDetection.removeProxyCollisionShape(current);
 		}
-		current->~ProxyShape();
-		m_world.m_memoryAllocator.release(current, sizeof(ProxyShape));
+		delete current;
+		current = nullptr;
 		m_numberCollisionShapes--;
 		return;
 	}
@@ -81,8 +81,8 @@ void CollisionBody::removeCollisionShape(const ProxyShape* _proxyShape) {
 			if (m_isActive) {
 				m_world.m_collisionDetection.removeProxyCollisionShape(elementToRemove);
 			}
-			elementToRemove->~ProxyShape();
-			m_world.m_memoryAllocator.release(elementToRemove, sizeof(ProxyShape));
+			delete elementToRemove;
+			elementToRemove = nullptr;
 			m_numberCollisionShapes--;
 			return;
 		}
@@ -101,8 +101,7 @@ void CollisionBody::removeAllCollisionShapes() {
 		if (m_isActive) {
 			m_world.m_collisionDetection.removeProxyCollisionShape(current);
 		}
-		current->~ProxyShape();
-		m_world.m_memoryAllocator.release(current, sizeof(ProxyShape));
+		delete current;
 		// Get the next element in the list
 		current = nextElement;
 	}
@@ -116,8 +115,7 @@ void CollisionBody::resetContactManifoldsList() {
 	while (currentElement != nullptr) {
 		ContactManifoldListElement* nextElement = currentElement->next;
 		// Delete the current element
-		currentElement->~ContactManifoldListElement();
-		m_world.m_memoryAllocator.release(currentElement, sizeof(ContactManifoldListElement));
+		delete currentElement;
 		currentElement = nextElement;
 	}
 	m_contactManifoldsList = nullptr;

@@ -30,8 +30,7 @@ namespace ephysics {
 			/// Constructor
 			OverlappingPair(ProxyShape* shape1,
 			                ProxyShape* shape2,
-			                int32_t nbMaxContactManifolds,
-			                MemoryAllocator& memoryAllocator);
+			                int32_t nbMaxContactManifolds);
 			/// Return the pointer to first proxy collision shape
 			ProxyShape* getShape1() const;
 			/// Return the pointer to second body

@@ -8,7 +8,6 @@
 #include <ephysics/body/CollisionBody.hpp>
 #include <ephysics/engine/Material.hpp>
 #include <ephysics/mathematics/mathematics.hpp>
-#include <ephysics/memory/MemoryAllocator.hpp>
 
 namespace ephysics {
 
@@ -47,7 +46,7 @@ namespace ephysics {
 			/**
 			 * @brief Remove a joint from the joints list
 			 */
-			void removeJointFrom_jointsList(MemoryAllocator& _memoryAllocator, const Joint* _joint);
+			void removeJointFrom_jointsList(const Joint* _joint);
 			/**
 			 * @brief Update the transform of the body after a change of the center of mass
 			 */

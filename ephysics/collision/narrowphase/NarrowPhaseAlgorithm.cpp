@@ -8,18 +8,13 @@
 
 using namespace ephysics;
 
-NarrowPhaseAlgorithm::NarrowPhaseAlgorithm()
-					 : m_memoryAllocator(NULL), m_currentOverlappingPair(NULL) {
-
+NarrowPhaseAlgorithm::NarrowPhaseAlgorithm():
+  m_currentOverlappingPair(nullptr) {
+	
 }
 
-NarrowPhaseAlgorithm::~NarrowPhaseAlgorithm() {
-
-}
-
-void NarrowPhaseAlgorithm::init(CollisionDetection* collisionDetection, MemoryAllocator* memoryAllocator) {
-	m_collisionDetection = collisionDetection;
-	m_memoryAllocator = memoryAllocator;
+void NarrowPhaseAlgorithm::init(CollisionDetection* _collisionDetection) {
+	m_collisionDetection = _collisionDetection;
 }
 
 void NarrowPhaseAlgorithm::setCurrentOverlappingPair(OverlappingPair* _overlappingPair) {

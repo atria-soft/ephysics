@@ -26,10 +26,12 @@ namespace ephysics {
 			const etk::Map<RigidBody*, uint32_t>& mapBodyToConstrainedVelocityIndex; //!< Reference to the map that associates rigid body to their index in the constrained velocities array
 			bool isWarmStartingActive; //!< True if warm starting of the solver is active
 			/// Constructor
-			ConstraintSolverData(const etk::Map<RigidBody*, uint32_t>& refMapBodyToConstrainedVelocityIndex)
-							   :linearVelocities(NULL), angularVelocities(NULL),
-								positions(NULL), orientations(NULL),
-								mapBodyToConstrainedVelocityIndex(refMapBodyToConstrainedVelocityIndex){
+			ConstraintSolverData(const etk::Map<RigidBody*, uint32_t>& refMapBodyToConstrainedVelocityIndex):
+			  linearVelocities(nullptr),
+			  angularVelocities(nullptr),
+			  positions(nullptr),
+			  orientations(nullptr),
+			  mapBodyToConstrainedVelocityIndex(refMapBodyToConstrainedVelocityIndex) {
 				
 			}
 	};

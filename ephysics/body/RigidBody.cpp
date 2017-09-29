@@ -95,15 +95,15 @@ void RigidBody::setMass(float _mass) {
 	}
 }
 
-void RigidBody::removeJointFrom_jointsList(MemoryAllocator& _memoryAllocator, const Joint* _joint) {
+void RigidBody::removeJointFrom_jointsList(const Joint* _joint) {
 	assert(_joint != nullptr);
 	assert(m_jointsList != nullptr);
 	// Remove the joint from the linked list of the joints of the first body
 	if (m_jointsList->joint == _joint) {   // If the first element is the one to remove
 		JointListElement* elementToRemove = m_jointsList;
 		m_jointsList = elementToRemove->next;
-		elementToRemove->~JointListElement();
-		_memoryAllocator.release(elementToRemove, sizeof(JointListElement));
+		delete elementToRemove;
+		elementToRemove = nullptr;
 	}
 	else {  // If the element to remove is not the first one in the list
 		JointListElement* currentElement = m_jointsList;
@@ -111,8 +111,8 @@ void RigidBody::removeJointFrom_jointsList(MemoryAllocator& _memoryAllocator, co
 			if (currentElement->next->joint == _joint) {
 				JointListElement* elementToRemove = currentElement->next;
 				currentElement->next = elementToRemove->next;
-				elementToRemove->~JointListElement();
-				_memoryAllocator.release(elementToRemove, sizeof(JointListElement));
+				delete elementToRemove;
+				elementToRemove = nullptr;
 				break;
 			}
 			currentElement = currentElement->next;
@@ -126,7 +126,7 @@ ProxyShape* RigidBody::addCollisionShape(CollisionShape* _collisionShape,
                                          float _mass) {
 	assert(_mass > 0.0f);
 	// Create a new proxy collision shape to attach the collision shape to the body
-	ProxyShape* proxyShape = new (m_world.m_memoryAllocator.allocate(sizeof(ProxyShape))) ProxyShape(this, _collisionShape, _transform, _mass);
+	ProxyShape* proxyShape = new ProxyShape(this, _collisionShape, _transform, _mass);
 	// Add it to the list of proxy collision shapes of the body
 	if (m_proxyCollisionShapes == nullptr) {
 		m_proxyCollisionShapes = proxyShape;

@@ -10,7 +10,6 @@
 #include <ephysics/engine/OverlappingPair.hpp>
 #include <ephysics/engine/EventListener.hpp>
 #include <ephysics/collision/narrowphase/DefaultCollisionDispatch.hpp>
-#include <ephysics/memory/MemoryAllocator.hpp>
 #include <ephysics/constraint/ContactPoint.hpp>
 #include <etk/Vector.hpp>
 #include <etk/Map.hpp>
@@ -31,7 +30,6 @@ namespace ephysics {
 			  m_collisionCallback(_callback) {
 				
 			}
-	
 			// Called by a narrow-phase collision algorithm when a new contact has been found
 			virtual void notifyContact(OverlappingPair* _overlappingPair,
 			                           const ContactPointInfo& _contactInfo);
@@ -48,7 +46,6 @@ namespace ephysics {
 			CollisionDispatch* m_collisionDispatch; //!< Collision Detection Dispatch configuration
 			DefaultCollisionDispatch m_defaultCollisionDispatch; //!< Default collision dispatch configuration
 			NarrowPhaseAlgorithm* m_collisionMatrix[NB_COLLISION_SHAPE_TYPES][NB_COLLISION_SHAPE_TYPES]; //!< Collision detection matrix (algorithms to use)
-			MemoryAllocator& m_memoryAllocator; //!< Reference to the memory allocator
 			CollisionWorld* m_world; //!< Pointer to the physics world
 			etk::Map<overlappingpairid, OverlappingPair*> m_overlappingPairs; //!< Broad-phase overlapping pairs
 			etk::Map<overlappingpairid, OverlappingPair*> m_contactOverlappingPairs; //!< Overlapping pairs in contact (during the current Narrow-phase collision detection)
@@ -76,7 +73,7 @@ namespace ephysics {
 			void addAllContactManifoldsToBodies();
 		public :
 			/// Constructor
-			CollisionDetection(CollisionWorld* _world, MemoryAllocator& _memoryAllocator);
+			CollisionDetection(CollisionWorld* _world);
 			/// Destructor
 			~CollisionDetection();
 			/// Set the collision dispatch configuration
@@ -132,8 +129,6 @@ namespace ephysics {
 			CollisionWorld* getWorld();
 			/// Return the world event listener
 			EventListener* getWorldEventListener();
-			/// Return a reference to the world memory allocator
-			MemoryAllocator& getWorldMemoryAllocator();
 			/// Called by a narrow-phase collision algorithm when a new contact has been found
 			virtual void notifyContact(OverlappingPair* _overlappingPair, const ContactPointInfo& _contactInfo) override;
 			/// Create a new contact

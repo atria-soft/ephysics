@@ -8,29 +8,29 @@
 
 using namespace ephysics;
 
-// Constructor
-Island::Island(uint32_t nbMaxBodies, uint32_t nbMaxContactManifolds, uint32_t nbMaxJoints,
-			   MemoryAllocator& memoryAllocator)
-	   : m_bodies(NULL), m_contactManifolds(NULL), m_joints(NULL), m_numberBodies(0),
-		 m_numberContactManifolds(0), m_numberJoints(0), m_memoryAllocator(memoryAllocator) {
-
+ephysics::Island::Island(uint32_t _nbMaxBodies,
+                         uint32_t _nbMaxContactManifolds,
+                         uint32_t _nbMaxJoints):
+  m_bodies(nullptr),
+  m_contactManifolds(nullptr),
+  m_joints(nullptr),
+  m_numberBodies(0),
+  m_numberContactManifolds(0),
+  m_numberJoints(0) {
 	// Allocate memory for the arrays
-	m_numberAllocatedBytesBodies = sizeof(RigidBody*) * nbMaxBodies;
-	m_bodies = (RigidBody**) m_memoryAllocator.allocate(m_numberAllocatedBytesBodies);
-	m_numberAllocatedBytesContactManifolds = sizeof(ContactManifold*) * nbMaxContactManifolds;
-	m_contactManifolds = (ContactManifold**) m_memoryAllocator.allocate(
-																m_numberAllocatedBytesContactManifolds);
-	m_numberAllocatedBytesJoints = sizeof(Joint*) * nbMaxJoints;
-	m_joints = (Joint**) m_memoryAllocator.allocate(m_numberAllocatedBytesJoints);
+	m_numberAllocatedBytesBodies = sizeof(RigidBody*) * _nbMaxBodies;
+	m_bodies = new RigidBody*[_nbMaxBodies];
+	m_numberAllocatedBytesContactManifolds = sizeof(ContactManifold*) * _nbMaxContactManifolds;
+	m_contactManifolds = new ContactManifold*[_nbMaxContactManifolds];
+	m_numberAllocatedBytesJoints = sizeof(Joint*) * _nbMaxJoints;
+	m_joints = new Joint*[_nbMaxJoints];
 }
 
-// Destructor
 Island::~Island() {
-
 	// Release the memory of the arrays
-	m_memoryAllocator.release(m_bodies, m_numberAllocatedBytesBodies);
-	m_memoryAllocator.release(m_contactManifolds, m_numberAllocatedBytesContactManifolds);
-	m_memoryAllocator.release(m_joints, m_numberAllocatedBytesJoints);
+	delete[] m_bodies;
+	delete[] m_contactManifolds;
+	delete[] m_joints;
 }
 
 // Add a body int32_to the island

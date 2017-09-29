@@ -9,59 +9,47 @@
 
 using namespace ephysics;
 
-
-// Constructor
-OverlappingPair::OverlappingPair(ProxyShape* shape1, ProxyShape* shape2, int32_t nbMaxContactManifolds, MemoryAllocator& memoryAllocator):
-  m_contactManifoldSet(shape1, shape2, memoryAllocator, nbMaxContactManifolds),
+OverlappingPair::OverlappingPair(ProxyShape* _shape1, ProxyShape* _shape2, int32_t _nbMaxContactManifolds):
+  m_contactManifoldSet(_shape1, _shape2, _nbMaxContactManifolds),
   m_cachedSeparatingAxis(1.0, 1.0, 1.0) {
 	
 }
 
-// Return the pointer to first body
 ProxyShape* OverlappingPair::getShape1() const {
 	return m_contactManifoldSet.getShape1();
 }
 
-// Return the pointer to second body
 ProxyShape* OverlappingPair::getShape2() const {
 	return m_contactManifoldSet.getShape2();
 }
 
-// Add a contact to the contact manifold
-void OverlappingPair::addContact(ContactPoint* contact) {
-	m_contactManifoldSet.addContactPoint(contact);
+void OverlappingPair::addContact(ContactPoint* _contact) {
+	m_contactManifoldSet.addContactPoint(_contact);
 }
 
-// Update the contact manifold
 void OverlappingPair::update() {
 	m_contactManifoldSet.update();
 }
 
-// Return the cached separating axis
 vec3 OverlappingPair::getCachedSeparatingAxis() const {
 	return m_cachedSeparatingAxis;
 }
 
-// Set the cached separating axis
 void OverlappingPair::setCachedSeparatingAxis(const vec3& _axis) {
 	m_cachedSeparatingAxis = _axis;
 }
 
-// Return the number of contact points in the contact manifold
 uint32_t OverlappingPair::getNbContactPoints() const {
 	return m_contactManifoldSet.getTotalNbContactPoints();
 }
 
-// Return the contact manifold
 const ContactManifoldSet& OverlappingPair::getContactManifoldSet() {
 	return m_contactManifoldSet;
 }
 
-// Return the pair of bodies index
 overlappingpairid OverlappingPair::computeID(ProxyShape* _shape1, ProxyShape* _shape2) {
 	assert(    _shape1->m_broadPhaseID >= 0
 	        && _shape2->m_broadPhaseID >= 0);
-
 	// Construct the pair of body index
 	overlappingpairid pairID = _shape1->m_broadPhaseID < _shape2->m_broadPhaseID ?
 							 etk::makePair(_shape1->m_broadPhaseID, _shape2->m_broadPhaseID) :
@@ -70,10 +58,8 @@ overlappingpairid OverlappingPair::computeID(ProxyShape* _shape1, ProxyShape* _s
 	return pairID;
 }
 
-// Return the pair of bodies index
 bodyindexpair OverlappingPair::computeBodiesIndexPair(CollisionBody* _body1,
 															 CollisionBody* _body2) {
-
 	// Construct the pair of body index
 	bodyindexpair indexPair = _body1->getID() < _body2->getID() ?
 								 etk::makePair(_body1->getID(), _body2->getID()) :
@@ -82,7 +68,7 @@ bodyindexpair OverlappingPair::computeBodiesIndexPair(CollisionBody* _body1,
 	return indexPair;
 }
 
-// Clear the contact points of the contact manifold
 void OverlappingPair::clearContactPoints() {
 	m_contactManifoldSet.clear();
 }
+

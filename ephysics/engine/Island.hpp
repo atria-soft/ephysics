@@ -5,7 +5,6 @@
  */
 #pragma once
 
-#include <ephysics/memory/MemoryAllocator.hpp>
 #include <ephysics/body/RigidBody.hpp>
 #include <ephysics/constraint/Joint.hpp>
 #include <ephysics/collision/ContactManifold.hpp>
@@ -23,7 +22,6 @@ namespace ephysics {
 			uint32_t m_numberBodies; //!< Current number of bodies in the island
 			uint32_t m_numberContactManifolds; //!< Current number of contact manifold in the island
 			uint32_t m_numberJoints; //!< Current number of joints in the island
-			MemoryAllocator& m_memoryAllocator; //!< Reference to the memory allocator
 			size_t m_numberAllocatedBytesBodies; //!< Number of bytes allocated for the bodies array
 			size_t m_numberAllocatedBytesContactManifolds; //!< Number of bytes allocated for the contact manifolds array
 			size_t m_numberAllocatedBytesJoints; //!< Number of bytes allocated for the joints array
@@ -33,8 +31,7 @@ namespace ephysics {
 			Island(const Island& island);
 		public:
 			/// Constructor
-			Island(uint32_t nbMaxBodies, uint32_t nbMaxContactManifolds, uint32_t nbMaxJoints,
-				   MemoryAllocator& memoryAllocator);
+			Island(uint32_t nbMaxBodies, uint32_t nbMaxContactManifolds, uint32_t nbMaxJoints);
 			/// Destructor
 			~Island();
 			/// Add a body int32_to the island

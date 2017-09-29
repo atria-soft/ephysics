@@ -20,8 +20,8 @@ namespace ephysics {
 			/// Destructor
 			virtual ~CollisionDispatch() = default;
 			/// Initialize the collision dispatch configuration
-			virtual void init(CollisionDetection* _collisionDetection,
-			                  MemoryAllocator* _memoryAllocator) {
+			virtual void init(CollisionDetection* _collisionDetection) {
+				// Nothing to do ...
 			}
 			/// Select and return the narrow-phase collision detection algorithm to
 			/// use between two types of collision shapes.

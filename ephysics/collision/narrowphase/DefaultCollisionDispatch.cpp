@@ -10,36 +10,35 @@
 
 using namespace ephysics;
 
-// Constructor
+
 DefaultCollisionDispatch::DefaultCollisionDispatch() {
-
+	
 }
 
-/// Initialize the collision dispatch configuration
-void DefaultCollisionDispatch::init(CollisionDetection* collisionDetection,
-									MemoryAllocator* memoryAllocator) {
 
+void DefaultCollisionDispatch::init(CollisionDetection* _collisionDetection) {
 	// Initialize the collision algorithms
-	mSphereVsSphereAlgorithm.init(collisionDetection, memoryAllocator);
-	mGJKAlgorithm.init(collisionDetection, memoryAllocator);
-	mConcaveVsConvexAlgorithm.init(collisionDetection, memoryAllocator);
+	m_sphereVsSphereAlgorithm.init(_collisionDetection);
+	m_GJKAlgorithm.init(_collisionDetection);
+	m_concaveVsConvexAlgorithm.init(_collisionDetection);
 }
 
-// Select and return the narrow-phase collision detection algorithm to
-// use between two types of collision shapes.
-NarrowPhaseAlgorithm* DefaultCollisionDispatch::selectAlgorithm(int32_t type1, int32_t type2) {
-	CollisionShapeType shape1Type = static_cast<CollisionShapeType>(type1);
-	CollisionShapeType shape2Type = static_cast<CollisionShapeType>(type2);
+
+NarrowPhaseAlgorithm* DefaultCollisionDispatch::selectAlgorithm(int32_t _type1, int32_t _type2) {
+	CollisionShapeType shape1Type = static_cast<CollisionShapeType>(_type1);
+	CollisionShapeType shape2Type = static_cast<CollisionShapeType>(_type2);
 	// Sphere vs Sphere algorithm
 	if (shape1Type == SPHERE && shape2Type == SPHERE) {
-		return &mSphereVsSphereAlgorithm;
-	} else if (    (!CollisionShape::isConvex(shape1Type) && CollisionShape::isConvex(shape2Type))
-	            || (!CollisionShape::isConvex(shape2Type) && CollisionShape::isConvex(shape1Type))) {
+		return &m_sphereVsSphereAlgorithm;
+	} else if (    (    !CollisionShape::isConvex(shape1Type)
+	                 && CollisionShape::isConvex(shape2Type) )
+	            || (    !CollisionShape::isConvex(shape2Type)
+	                 && CollisionShape::isConvex(shape1Type) ) ) {
 		// Concave vs Convex algorithm
-		return &mConcaveVsConvexAlgorithm;
+		return &m_concaveVsConvexAlgorithm;
 	} else if (CollisionShape::isConvex(shape1Type) && CollisionShape::isConvex(shape2Type)) {
 		// Convex vs Convex algorithm (GJK algorithm)
-		return &mGJKAlgorithm;
+		return &m_GJKAlgorithm;
 	} else {
 		return nullptr;
 	}

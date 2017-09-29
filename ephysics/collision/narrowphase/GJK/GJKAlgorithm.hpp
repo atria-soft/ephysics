@@ -53,9 +53,9 @@ namespace ephysics {
 			/// Destructor
 			~GJKAlgorithm();
 			/// Initalize the algorithm
-			virtual void init(CollisionDetection* _collisionDetection, MemoryAllocator* _memoryAllocator) {
-				NarrowPhaseAlgorithm::init(_collisionDetection, _memoryAllocator);
-				m_algoEPA.init(_memoryAllocator);
+			virtual void init(CollisionDetection* _collisionDetection) {
+				NarrowPhaseAlgorithm::init(_collisionDetection);
+				m_algoEPA.init();
 			};
 			// Compute a contact info if the two collision shapes collide.
 			/// This method implements the Hybrid Technique for computing the penetration depth by

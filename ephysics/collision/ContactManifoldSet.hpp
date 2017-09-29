@@ -22,7 +22,6 @@ namespace ephysics {
 			int32_t m_nbManifolds; //!< Current number of contact manifolds in the set
 			ProxyShape* m_shape1; //!< Pointer to the first proxy shape of the contact
 			ProxyShape* m_shape2; //!< Pointer to the second proxy shape of the contact
-			MemoryAllocator& m_memoryAllocator; //!< Reference to the memory allocator
 			ContactManifold* m_manifolds[MAX_MANIFOLDS_IN_CONTACT_MANIFOLD_SET]; //!< Contact manifolds of the set
 			/// Create a new contact manifold and add it to the set
 			void createManifold(short _normalDirectionId);
@@ -38,7 +37,6 @@ namespace ephysics {
 			/// Constructor
 			ContactManifoldSet(ProxyShape* _shape1,
 			                   ProxyShape* _shape2,
-			                   MemoryAllocator& _memoryAllocator,
 			                   int32_t _nbMaxManifolds);
 			/// Destructor
 			~ContactManifoldSet();
