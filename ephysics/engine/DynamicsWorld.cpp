@@ -4,21 +4,14 @@
  * @license BSD 3 clauses (see license file)
  */
 
-// Libraries
 #include <ephysics/engine/DynamicsWorld.hpp>
 #include <ephysics/constraint/BallAndSocketJoint.hpp>
 #include <ephysics/constraint/SliderJoint.hpp>
 #include <ephysics/constraint/HingeJoint.hpp>
 #include <ephysics/constraint/FixedJoint.hpp>
+#include <ephysics/debug.hpp>
 
-// Namespaces
-using namespace ephysics;
-using namespace std;
-
-/**
- * @param gravity Gravity vector in the world (in meters per second squared)
- */
-DynamicsWorld::DynamicsWorld(const vec3& _gravity):
+ephysics::DynamicsWorld::DynamicsWorld(const vec3& _gravity):
   CollisionWorld(),
   m_contactSolver(m_mapBodyToConstrainedVelocityIndex),
   m_constraintSolver(m_mapBodyToConstrainedVelocityIndex),
@@ -41,12 +34,11 @@ DynamicsWorld::DynamicsWorld(const vec3& _gravity):
 	
 }
 
-// Destructor
-DynamicsWorld::~DynamicsWorld() {
+ephysics::DynamicsWorld::~DynamicsWorld() {
 	// Destroy all the joints that have not been removed
-	etk::Set<Joint*>::Iterator itJoints;
+	etk::Set<ephysics::Joint*>::Iterator itJoints;
 	for (itJoints = m_joints.begin(); itJoints != m_joints.end();) {
-		etk::Set<Joint*>::Iterator itToRemove = itJoints;
+		etk::Set<ephysics::Joint*>::Iterator itToRemove = itJoints;
 		++itJoints;
 		destroyJoint(*itToRemove);
 	}
@@ -79,103 +71,74 @@ DynamicsWorld::~DynamicsWorld() {
 	// Print32_t the profiling report
 	etk::Stream tmp;
 	Profiler::print32_tReport(tmp);
-	EPHYSIC_PRINT(tmp.str());
+	EPHY_PRINT(tmp.str());
 	// Destroy the profiler (release the allocated memory)
 	Profiler::destroy();
 #endif
-
 }
 
-// Update the physics simulation
-/**
- * @param timeStep The amount of time to step the simulation by (in seconds)
- */
-void DynamicsWorld::update(float timeStep) {
-
+void ephysics::DynamicsWorld::update(float timeStep) {
 	#ifdef IS_PROFILING_ACTIVE
 		// Increment the frame counter of the profiler
 		Profiler::incrementFrameCounter();
 	#endif
-
-	PROFILE("DynamicsWorld::update()");
-	
+	PROFILE("ephysics::DynamicsWorld::update()");
 	m_timeStep = timeStep;
-	
 	// Notify the event listener about the beginning of an int32_ternal tick
 	if (m_eventListener != nullptr) {
 		m_eventListener->beginInternalTick();
 	}
-	
 	// Reset all the contact manifolds lists of each body
 	resetContactManifoldListsOfBodies();
-	
 	if (m_rigidBodies.size() == 0) {
 		// no rigid body ==> no process to do ...
 		return;
 	}
-	
 	// Compute the collision detection
 	m_collisionDetection.computeCollisionDetection();
-	
 	// Compute the islands (separate groups of bodies with constraints between each others)
 	computeIslands();
-	
 	// Integrate the velocities
-	int32_tegrateRigidBodiesVelocities();
-	
+	integrateRigidBodiesVelocities();
 	// Solve the contacts and constraints
 	solveContactsAndConstraints();
-	
 	// Integrate the position and orientation of each body
-	int32_tegrateRigidBodiesPositions();
-	
+	integrateRigidBodiesPositions();
 	// Solve the position correction for constraints
 	solvePositionCorrection();
-	
 	// Update the state (positions and velocities) of the bodies
 	updateBodiesState();
-	
-	if (m_isSleepingEnabled) updateSleepingBodies();
-	
+	if (m_isSleepingEnabled) {
+		updateSleepingBodies();
+	}
 	// Notify the event listener about the end of an int32_ternal tick
-	if (m_eventListener != nullptr) m_eventListener->endInternalTick();
-	
+	if (m_eventListener != nullptr) {
+		m_eventListener->endInternalTick();
+	}
 	// Reset the external force and torque applied to the bodies
 	resetBodiesForceAndTorque();
 }
 
-// Integrate position and orientation of the rigid bodies.
-/// The positions and orientations of the bodies are int32_tegrated using
-/// the sympletic Euler time stepping scheme.
-void DynamicsWorld::int32_tegrateRigidBodiesPositions() {
-
-	PROFILE("DynamicsWorld::int32_tegrateRigidBodiesPositions()");
-	
+void ephysics::DynamicsWorld::integrateRigidBodiesPositions() {
+	PROFILE("ephysics::DynamicsWorld::integrateRigidBodiesPositions()");
 	// For each island of the world
 	for (uint32_t i=0; i < m_islands.size(); i++) {
-
 		RigidBody** bodies = m_islands[i]->getBodies();
-
 		// For each body of the island
 		for (uint32_t b=0; b < m_islands[i]->getNbBodies(); b++) {
-
 			// Get the constrained velocity
 			uint32_t indexArray = m_mapBodyToConstrainedVelocityIndex.find(bodies[b])->second;
 			vec3 newLinVelocity = m_constrainedLinearVelocities[indexArray];
 			vec3 newAngVelocity = m_constrainedAngularVelocities[indexArray];
-
 			// Add the split impulse velocity from Contact Solver (only used
 			// to update the position)
 			if (m_contactSolver.isSplitImpulseActive()) {
-
 				newLinVelocity += m_splitLinearVelocities[indexArray];
 				newAngVelocity += m_splitAngularVelocities[indexArray];
 			}
-
 			// Get current position and orientation of the body
 			const vec3& currentPosition = bodies[b]->m_centerOfMassWorld;
 			const etk::Quaternion& currentOrientation = bodies[b]->getTransform().getOrientation();
-
 			// Update the new constrained position and orientation of the body
 			m_constrainedPositions[indexArray] = currentPosition + newLinVelocity * m_timeStep;
 			m_constrainedOrientations[indexArray] = currentOrientation;
@@ -187,43 +150,30 @@ void DynamicsWorld::int32_tegrateRigidBodiesPositions() {
 	}
 }
 
-// Update the postion/orientation of the bodies
-void DynamicsWorld::updateBodiesState() {
-
-	PROFILE("DynamicsWorld::updateBodiesState()");
-
+void ephysics::DynamicsWorld::updateBodiesState() {
+	PROFILE("ephysics::DynamicsWorld::updateBodiesState()");
 	// For each island of the world
 	for (uint32_t islandIndex = 0; islandIndex < m_islands.size(); islandIndex++) {
-
 		// For each body of the island
 		RigidBody** bodies = m_islands[islandIndex]->getBodies();
-
 		for (uint32_t b=0; b < m_islands[islandIndex]->getNbBodies(); b++) {
-
 			uint32_t index = m_mapBodyToConstrainedVelocityIndex.find(bodies[b])->second;
-
 			// Update the linear and angular velocity of the body
 			bodies[b]->m_linearVelocity = m_constrainedLinearVelocities[index];
 			bodies[b]->m_angularVelocity = m_constrainedAngularVelocities[index];
-
 			// Update the position of the center of mass of the body
 			bodies[b]->m_centerOfMassWorld = m_constrainedPositions[index];
-
 			// Update the orientation of the body
 			bodies[b]->m_transform.setOrientation(m_constrainedOrientations[index].safeNormalized());
-
 			// Update the transform of the body (using the new center of mass and new orientation)
 			bodies[b]->updateTransformWithCenterOfMass();
-
 			// Update the broad-phase state of the body
 			bodies[b]->updateBroadPhaseState();
 		}
 	}
 }
 
-// Initialize the bodies velocities arrays for the next simulation step.
-void DynamicsWorld::initVelocityArrays() {
-
+void ephysics::DynamicsWorld::initVelocityArrays() {
 	// Allocate memory for the bodies velocity arrays
 	uint32_t nbBodies = m_rigidBodies.size();
 	if (m_numberBodiesCapacity != nbBodies && nbBodies > 0) {
@@ -246,65 +196,45 @@ void DynamicsWorld::initVelocityArrays() {
 		assert(m_constrainedPositions != nullptr);
 		assert(m_constrainedOrientations != nullptr);
 	}
-
 	// Reset the velocities arrays
 	for (uint32_t i=0; i<m_numberBodiesCapacity; i++) {
 		m_splitLinearVelocities[i].setZero();
 		m_splitAngularVelocities[i].setZero();
 	}
-
 	// Initialize the map of body indexes in the velocity arrays
 	m_mapBodyToConstrainedVelocityIndex.clear();
 	etk::Set<RigidBody*>::Iterator it;
 	uint32_t indexBody = 0;
 	for (it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
-
 		// Add the body int32_to the map
 		m_mapBodyToConstrainedVelocityIndex.add(*it, indexBody);
 		indexBody++;
 	}
 }
 
-// Integrate the velocities of rigid bodies.
-/// This method only set the temporary velocities but does not update
-/// the actual velocitiy of the bodies. The velocities updated in this method
-/// might violate the constraints and will be corrected in the constraint and
-/// contact solver.
-void DynamicsWorld::int32_tegrateRigidBodiesVelocities() {
-
-	PROFILE("DynamicsWorld::int32_tegrateRigidBodiesVelocities()");
-
+void ephysics::DynamicsWorld::integrateRigidBodiesVelocities() {
+	PROFILE("ephysics::DynamicsWorld::integrateRigidBodiesVelocities()");
 	// Initialize the bodies velocity arrays
 	initVelocityArrays();
-
 	// For each island of the world
 	for (uint32_t i=0; i < m_islands.size(); i++) {
-
 		RigidBody** bodies = m_islands[i]->getBodies();
-
 		// For each body of the island
 		for (uint32_t b=0; b < m_islands[i]->getNbBodies(); b++) {
-
 			// Insert the body int32_to the map of constrained velocities
 			uint32_t indexBody = m_mapBodyToConstrainedVelocityIndex.find(bodies[b])->second;
-
 			assert(m_splitLinearVelocities[indexBody] == vec3(0, 0, 0));
 			assert(m_splitAngularVelocities[indexBody] == vec3(0, 0, 0));
-
 			// Integrate the external force to get the new velocity of the body
 			m_constrainedLinearVelocities[indexBody] = bodies[b]->getLinearVelocity();
 			m_constrainedLinearVelocities[indexBody] += bodies[b]->m_massInverse * bodies[b]->m_externalForce * m_timeStep;
 			m_constrainedAngularVelocities[indexBody] = bodies[b]->getAngularVelocity();
 			m_constrainedAngularVelocities[indexBody] += bodies[b]->getInertiaTensorInverseWorld() * bodies[b]->m_externalTorque * m_timeStep;
-
 			// If the gravity has to be applied to this rigid body
 			if (bodies[b]->isGravityEnabled() && m_isGravityEnabled) {
-
 				// Integrate the gravity force
-				m_constrainedLinearVelocities[indexBody] += m_timeStep * bodies[b]->m_massInverse *
-						bodies[b]->getMass() * m_gravity;
+				m_constrainedLinearVelocities[indexBody] += m_timeStep * bodies[b]->m_massInverse * bodies[b]->getMass() * m_gravity;
 			}
-
 			// Apply the velocity damping
 			// Damping force : F_c = -c' * v (c=damping factor)
 			// Equation	  : m * dv/dt = -c' * v
@@ -324,17 +254,13 @@ void DynamicsWorld::int32_tegrateRigidBodiesVelocities() {
 			float angularDamping = pow(1.0f - angDampingFactor, m_timeStep);
 			m_constrainedLinearVelocities[indexBody] *= linearDamping;
 			m_constrainedAngularVelocities[indexBody] *= angularDamping;
-
 			indexBody++;
 		}
 	}
 }
 
-// Solve the contacts and constraints
-void DynamicsWorld::solveContactsAndConstraints() {
-
-	PROFILE("DynamicsWorld::solveContactsAndConstraints()");
-
+void ephysics::DynamicsWorld::solveContactsAndConstraints() {
+	PROFILE("ephysics::DynamicsWorld::solveContactsAndConstraints()");
 	// Set the velocities arrays
 	m_contactSolver.setSplitVelocitiesArrays(m_splitLinearVelocities, m_splitAngularVelocities);
 	m_contactSolver.setConstrainedVelocitiesArrays(m_constrainedLinearVelocities,
@@ -343,46 +269,36 @@ void DynamicsWorld::solveContactsAndConstraints() {
 													 m_constrainedAngularVelocities);
 	m_constraintSolver.setConstrainedPositionsArrays(m_constrainedPositions,
 													m_constrainedOrientations);
-
 	// ---------- Solve velocity constraints for joints and contacts ---------- //
-
 	// For each island of the world
 	for (uint32_t islandIndex = 0; islandIndex < m_islands.size(); islandIndex++) {
-
 		// Check if there are contacts and constraints to solve
 		bool isConstraintsToSolve = m_islands[islandIndex]->getNbJoints() > 0;
 		bool isContactsToSolve = m_islands[islandIndex]->getNbContactManifolds() > 0;
-		if (!isConstraintsToSolve && !isContactsToSolve) continue;
-
+		if (!isConstraintsToSolve && !isContactsToSolve) {
+			continue;
+		}
 		// If there are contacts in the current island
 		if (isContactsToSolve) {
-
 			// Initialize the solver
 			m_contactSolver.initializeForIsland(m_timeStep, m_islands[islandIndex]);
-
 			// Warm start the contact solver
 			m_contactSolver.warmStart();
 		}
-
 		// If there are constraints
 		if (isConstraintsToSolve) {
-
 			// Initialize the constraint solver
 			m_constraintSolver.initializeForIsland(m_timeStep, m_islands[islandIndex]);
 		}
-
 		// For each iteration of the velocity solver
 		for (uint32_t i=0; i<m_nbVelocitySolverIterations; i++) {
-
 			// Solve the constraints
 			if (isConstraintsToSolve) {
 				m_constraintSolver.solveVelocityConstraints(m_islands[islandIndex]);
 			}
-
 			// Solve the contacts
 			if (isContactsToSolve) m_contactSolver.solve();
-		}		
-
+		}
 		// Cache the lambda values in order to use them in the next
 		// step and cleanup the contact solver
 		if (isContactsToSolve) {
@@ -392,200 +308,133 @@ void DynamicsWorld::solveContactsAndConstraints() {
 	}
 }
 
-// Solve the position error correction of the constraints
-void DynamicsWorld::solvePositionCorrection() {
-
-	PROFILE("DynamicsWorld::solvePositionCorrection()");
-
+void ephysics::DynamicsWorld::solvePositionCorrection() {
+	PROFILE("ephysics::DynamicsWorld::solvePositionCorrection()");
 	// Do not continue if there is no constraints
-	if (m_joints.empty()) return;
-
+	if (m_joints.empty()) {
+		return;
+	}
 	// For each island of the world
 	for (uint32_t islandIndex = 0; islandIndex < m_islands.size(); islandIndex++) {
-
 		// ---------- Solve the position error correction for the constraints ---------- //
-
 		// For each iteration of the position (error correction) solver
 		for (uint32_t i=0; i<m_nbPositionSolverIterations; i++) {
-
 			// Solve the position constraints
 			m_constraintSolver.solvePositionConstraints(m_islands[islandIndex]);
 		}
 	}
 }
 
-// Create a rigid body int32_to the physics world
-/**
- * @param transform etk::Transform3Dation from body local-space to world-space
- * @return A pointer to the body that has been created in the world
- */
-RigidBody* DynamicsWorld::createRigidBody(const etk::Transform3D& transform) {
-
+ephysics::RigidBody* ephysics::DynamicsWorld::createRigidBody(const etk::Transform3D& _transform) {
 	// Compute the body ID
-	bodyindex bodyID = computeNextAvailableBodyID();
-
+	ephysics::bodyindex bodyID = computeNextAvailableBodyID();
 	// Largest index cannot be used (it is used for invalid index)
 	assert(bodyID < std::numeric_limits<ephysics::bodyindex>::max());
-
 	// Create the rigid body
-	RigidBody* rigidBody = new RigidBody(transform, *this, bodyID);
+	ephysics::RigidBody* rigidBody = new RigidBody(_transform, *this, bodyID);
 	assert(rigidBody != nullptr);
-
 	// Add the rigid body to the physics world
 	m_bodies.add(rigidBody);
 	m_rigidBodies.add(rigidBody);
-
 	// Return the pointer to the rigid body
 	return rigidBody;
 }
 
-// Destroy a rigid body and all the joints which it belongs
-/**
- * @param rigidBody Pointer to the body you want to destroy
- */
-void DynamicsWorld::destroyRigidBody(RigidBody* rigidBody) {
+void ephysics::DynamicsWorld::destroyRigidBody(RigidBody* _rigidBody) {
 	// Remove all the collision shapes of the body
-	rigidBody->removeAllCollisionShapes();
+	_rigidBody->removeAllCollisionShapes();
 	// Add the body ID to the list of free IDs
-	m_freeBodiesIDs.pushBack(rigidBody->getID());
+	m_freeBodiesIDs.pushBack(_rigidBody->getID());
 	// Destroy all the joints in which the rigid body to be destroyed is involved
-	JointListElement* element;
-	for (element = rigidBody->m_jointsList; element != nullptr; element = element->next) {
+	for (ephysics::JointListElement* element = _rigidBody->m_jointsList;
+	     element != nullptr;
+	     element = element->next) {
 		destroyJoint(element->joint);
 	}
 	// Reset the contact manifold list of the body
-	rigidBody->resetContactManifoldsList();
+	_rigidBody->resetContactManifoldsList();
 	// Remove the rigid body from the list of rigid bodies
-	m_bodies.erase(m_bodies.find(rigidBody));
-	m_rigidBodies.erase(m_rigidBodies.find(rigidBody));
+	m_bodies.erase(m_bodies.find(_rigidBody));
+	m_rigidBodies.erase(m_rigidBodies.find(_rigidBody));
 	// Call the destructor of the rigid body
-	delete rigidBody;
-	rigidBody = nullptr;
+	delete _rigidBody;
+	_rigidBody = nullptr;
 }
 
-// Create a joint between two bodies in the world and return a pointer to the new joint
-/**
- * @param jointInfo The information that is necessary to create the joint
- * @return A pointer to the joint that has been created in the world
- */
-Joint* DynamicsWorld::createJoint(const JointInfo& jointInfo) {
-
+ephysics::Joint* ephysics::DynamicsWorld::createJoint(const ephysics::JointInfo& _jointInfo) {
 	Joint* newJoint = nullptr;
-
 	// Allocate memory to create the new joint
-	switch(jointInfo.type) {
-
+	switch(_jointInfo.type) {
 		// Ball-and-Socket joint
 		case BALLSOCKETJOINT:
-		{
-			const BallAndSocketJointInfo& info = static_cast<const BallAndSocketJointInfo&>(
-																						jointInfo);
-			newJoint = new BallAndSocketJoint(info);
+			newJoint = new BallAndSocketJoint(static_cast<const ephysics::BallAndSocketJointInfo&>(_jointInfo));
 			break;
-		}
-
 		// Slider joint
 		case SLIDERJOINT:
-		{
-			const SliderJointInfo& info = static_cast<const SliderJointInfo&>(jointInfo);
-			newJoint = new SliderJoint(info);
+			newJoint = new SliderJoint(static_cast<const ephysics::SliderJointInfo&>(_jointInfo));
 			break;
-		}
-
 		// Hinge joint
 		case HINGEJOINT:
-		{
-			const HingeJointInfo& info = static_cast<const HingeJointInfo&>(jointInfo);
-			newJoint = new HingeJoint(info);
+			newJoint = new HingeJoint(static_cast<const ephysics::HingeJointInfo&>(_jointInfo));
 			break;
-		}
-
 		// Fixed joint
 		case FIXEDJOINT:
-		{
-			const FixedJointInfo& info = static_cast<const FixedJointInfo&>(jointInfo);
-			newJoint = new FixedJoint(info);
+			newJoint = new FixedJoint(static_cast<const ephysics::FixedJointInfo&>(_jointInfo));
 			break;
-		}
-
 		default:
-		{
 			assert(false);
 			return nullptr;
-		}
 	}
-
 	// If the collision between the two bodies of the constraint is disabled
-	if (!jointInfo.isCollisionEnabled) {
-
+	if (!_jointInfo.isCollisionEnabled) {
 		// Add the pair of bodies in the set of body pairs that cannot collide with each other
-		m_collisionDetection.addNoCollisionPair(jointInfo.body1, jointInfo.body2);
+		m_collisionDetection.addNoCollisionPair(_jointInfo.body1, _jointInfo.body2);
 	}
-
 	// Add the joint int32_to the world
 	m_joints.add(newJoint);
-
 	// Add the joint int32_to the joint list of the bodies involved in the joint
 	addJointToBody(newJoint);
-
 	// Return the pointer to the created joint
 	return newJoint;
 }
 
-// Destroy a joint
-/**
- * @param joint Pointer to the joint you want to destroy
- */
-void DynamicsWorld::destroyJoint(Joint* joint) {
-
-	assert(joint != nullptr);
-
-	// If the collision between the two bodies of the constraint was disabled
-	if (!joint->isCollisionEnabled()) {
-
-		// Remove the pair of bodies from the set of body pairs that cannot collide with each other
-		m_collisionDetection.removeNoCollisionPair(joint->getBody1(), joint->getBody2());
+void ephysics::DynamicsWorld::destroyJoint(Joint* _joint) {
+	if (_joint == nullptr) {
+		EPHY_WARNING("Request destroy nullptr joint");
+		return;
 	}
-
+	// If the collision between the two bodies of the constraint was disabled
+	if (!_joint->isCollisionEnabled()) {
+		// Remove the pair of bodies from the set of body pairs that cannot collide with each other
+		m_collisionDetection.removeNoCollisionPair(_joint->getBody1(), _joint->getBody2());
+	}
 	// Wake up the two bodies of the joint
-	joint->getBody1()->setIsSleeping(false);
-	joint->getBody2()->setIsSleeping(false);
-
+	_joint->getBody1()->setIsSleeping(false);
+	_joint->getBody2()->setIsSleeping(false);
 	// Remove the joint from the world
-	m_joints.erase(m_joints.find(joint));
-
+	m_joints.erase(m_joints.find(_joint));
 	// Remove the joint from the joint list of the bodies involved in the joint
-	joint->m_body1->removeJointFrom_jointsList(joint);
-	joint->m_body2->removeJointFrom_jointsList(joint);
-
-	size_t nbBytes = joint->getSizeInBytes();
-
+	_joint->m_body1->removeJointFrom_jointsList(_joint);
+	_joint->m_body2->removeJointFrom_jointsList(_joint);
+	size_t nbBytes = _joint->getSizeInBytes();
 	// Call the destructor of the joint
-	delete joint;
-	joint = nullptr;
+	delete _joint;
+	_joint = nullptr;
 }
 
-// Add the joint to the list of joints of the two bodies involved in the joint
-void DynamicsWorld::addJointToBody(Joint* joint) {
-
-	assert(joint != nullptr);
-
+void ephysics::DynamicsWorld::addJointToBody(ephysics::Joint* _joint) {
+	if (_joint == nullptr) {
+		EPHY_WARNING("Request add nullptr joint");
+		return;
+	}
 	// Add the joint at the beginning of the linked list of joints of the first body
-	joint->m_body1->m_jointsList = new JointListElement(joint, joint->m_body1->m_jointsList);;
-
+	_joint->m_body1->m_jointsList = new JointListElement(_joint, _joint->m_body1->m_jointsList);
 	// Add the joint at the beginning of the linked list of joints of the second body
-	joint->m_body2->m_jointsList = new JointListElement(joint, joint->m_body2->m_jointsList);
+	_joint->m_body2->m_jointsList = new JointListElement(_joint, _joint->m_body2->m_jointsList);
 }
 
-// Compute the islands of awake bodies.
-/// An island is an isolated group of rigid bodies that have constraints (joints or contacts)
-/// between each other. This method computes the islands at each time step as follows: For each
-/// awake rigid body, we run a Depth First Search (DFS) through the constraint graph of that body
-/// (graph where nodes are the bodies and where the edges are the constraints between the bodies) to
-/// find all the bodies that are connected with it (the bodies that share joints or contacts with
-/// it). Then, we create an island with this group of connected bodies.
-void DynamicsWorld::computeIslands() {
-	PROFILE("DynamicsWorld::computeIslands()");
+void ephysics::DynamicsWorld::computeIslands() {
+	PROFILE("ephysics::DynamicsWorld::computeIslands()");
 	uint32_t nbBodies = m_rigidBodies.size();
 	// Clear all the islands
 	for (auto &it: m_islands) {
@@ -594,169 +443,135 @@ void DynamicsWorld::computeIslands() {
 	}
 	// Call the island destructor
 	m_islands.clear();
-
 	int32_t nbContactManifolds = 0;
-
 	// Reset all the isAlreadyInIsland variables of bodies, joints and contact manifolds
-	for (etk::Set<RigidBody*>::Iterator it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
+	for (etk::Set<ephysics::RigidBody*>::Iterator it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
 		int32_t nbBodyManifolds = (*it)->resetIsAlreadyInIslandAndCountManifolds();
 		nbContactManifolds += nbBodyManifolds;
 	}
-	for (etk::Set<Joint*>::Iterator it = m_joints.begin(); it != m_joints.end(); ++it) {
+	for (etk::Set<ephysics::Joint*>::Iterator it = m_joints.begin(); it != m_joints.end(); ++it) {
 		(*it)->m_isAlreadyInIsland = false;
 	}
-
 	// Create a stack (using an array) for the rigid bodies to visit during the Depth First Search
-	size_t nbBytesStack = sizeof(RigidBody*) * nbBodies;
-	RigidBody** stackBodiesToVisit = new RigidBody*[nbBodies];
-
+	etk::Vector<ephysics::RigidBody*> stackBodiesToVisit;
+	stackBodiesToVisit.resize(nbBodies, nullptr);
 	// For each rigid body of the world
-	for (etk::Set<RigidBody*>::Iterator it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
-
-		RigidBody* body = *it;
-
+	for (etk::Set<ephysics::RigidBody*>::Iterator it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
+		ephysics::RigidBody* body = *it;
 		// If the body has already been added to an island, we go to the next body
-		if (body->m_isAlreadyInIsland) continue;
-
+		if (body->m_isAlreadyInIsland) {
+			continue;
+		}
 		// If the body is static, we go to the next body
-		if (body->getType() == STATIC) continue;
-
+		if (body->getType() == STATIC) {
+			continue;
+		}
 		// If the body is sleeping or inactive, we go to the next body
-		if (body->isSleeping() || !body->isActive()) continue;
-
+		if (body->isSleeping() || !body->isActive()) {
+			continue;
+		}
 		// Reset the stack of bodies to visit
 		uint32_t stackIndex = 0;
 		stackBodiesToVisit[stackIndex] = body;
 		stackIndex++;
 		body->m_isAlreadyInIsland = true;
-
 		// Create the new island
 		m_islands.pushBack(new Island(nbBodies, nbContactManifolds, m_joints.size()));
-
 		// While there are still some bodies to visit in the stack
 		while (stackIndex > 0) {
-
 			// Get the next body to visit from the stack
 			stackIndex--;
-			RigidBody* bodyToVisit = stackBodiesToVisit[stackIndex];
+			ephysics::RigidBody* bodyToVisit = stackBodiesToVisit[stackIndex];
 			assert(bodyToVisit->isActive());
-
 			// Awake the body if it is slepping
 			bodyToVisit->setIsSleeping(false);
-
 			// Add the body int32_to the island
 			m_islands.back()->addBody(bodyToVisit);
-
 			// If the current body is static, we do not want to perform the DFS
 			// search across that body
-			if (bodyToVisit->getType() == STATIC) continue;
-
+			if (bodyToVisit->getType() == STATIC) {
+				continue;
+			}
 			// For each contact manifold in which the current body is involded
-			ContactManifoldListElement* contactElement;
-			for (contactElement = bodyToVisit->m_contactManifoldsList; contactElement != nullptr;
-				 contactElement = contactElement->next) {
-
-				ContactManifold* contactManifold = contactElement->contactManifold;
-
+			ephysics::ContactManifoldListElement* contactElement;
+			for (contactElement = bodyToVisit->m_contactManifoldsList;
+			     contactElement != nullptr;
+			     contactElement = contactElement->next) {
+				ephysics::ContactManifold* contactManifold = contactElement->contactManifold;
 				assert(contactManifold->getNbContactPoints() > 0);
-
 				// Check if the current contact manifold has already been added int32_to an island
-				if (contactManifold->isAlreadyInIsland()) continue;
-
+				if (contactManifold->isAlreadyInIsland()) {
+					continue;
+				}
 				// Add the contact manifold int32_to the island
 				m_islands.back()->addContactManifold(contactManifold);
 				contactManifold->m_isAlreadyInIsland = true;
-
 				// Get the other body of the contact manifold
-				RigidBody* body1 = static_cast<RigidBody*>(contactManifold->getBody1());
-				RigidBody* body2 = static_cast<RigidBody*>(contactManifold->getBody2());
-				RigidBody* otherBody = (body1->getID() == bodyToVisit->getID()) ? body2 : body1;
-
+				ephysics::RigidBody* body1 = static_cast<ephysics::RigidBody*>(contactManifold->getBody1());
+				ephysics::RigidBody* body2 = static_cast<ephysics::RigidBody*>(contactManifold->getBody2());
+				ephysics::RigidBody* otherBody = (body1->getID() == bodyToVisit->getID()) ? body2 : body1;
 				// Check if the other body has already been added to the island
-				if (otherBody->m_isAlreadyInIsland) continue;
-
+				if (otherBody->m_isAlreadyInIsland) {
+					continue;
+				}
 				// Insert the other body int32_to the stack of bodies to visit
 				stackBodiesToVisit[stackIndex] = otherBody;
 				stackIndex++;
 				otherBody->m_isAlreadyInIsland = true;
 			}
-
 			// For each joint in which the current body is involved
-			JointListElement* jointElement;
-			for (jointElement = bodyToVisit->m_jointsList; jointElement != nullptr;
-				 jointElement = jointElement->next) {
-
-				Joint* joint = jointElement->joint;
-
+			ephysics::JointListElement* jointElement;
+			for (jointElement = bodyToVisit->m_jointsList;
+			     jointElement != nullptr;
+			     jointElement = jointElement->next) {
+				ephysics::Joint* joint = jointElement->joint;
 				// Check if the current joint has already been added int32_to an island
 				if (joint->isAlreadyInIsland()) continue;
-
 				// Add the joint int32_to the island
 				m_islands.back()->addJoint(joint);
 				joint->m_isAlreadyInIsland = true;
-
 				// Get the other body of the contact manifold
-				RigidBody* body1 = static_cast<RigidBody*>(joint->getBody1());
-				RigidBody* body2 = static_cast<RigidBody*>(joint->getBody2());
-				RigidBody* otherBody = (body1->getID() == bodyToVisit->getID()) ? body2 : body1;
-
+				ephysics::RigidBody* body1 = static_cast<ephysics::RigidBody*>(joint->getBody1());
+				ephysics::RigidBody* body2 = static_cast<ephysics::RigidBody*>(joint->getBody2());
+				ephysics::RigidBody* otherBody = (body1->getID() == bodyToVisit->getID()) ? body2 : body1;
 				// Check if the other body has already been added to the island
 				if (otherBody->m_isAlreadyInIsland) continue;
-
 				// Insert the other body int32_to the stack of bodies to visit
 				stackBodiesToVisit[stackIndex] = otherBody;
 				stackIndex++;
 				otherBody->m_isAlreadyInIsland = true;
 			}
 		}
-
 		// Reset the isAlreadyIsland variable of the static bodies so that they
 		// can also be included in the other islands
 		for (uint32_t i=0; i < m_islands.back()->m_numberBodies; i++) {
-
 			if (m_islands.back()->m_bodies[i]->getType() == STATIC) {
 				m_islands.back()->m_bodies[i]->m_isAlreadyInIsland = false;
 			}
 		}
 	}
-
-	// Release the allocated memory for the stack of bodies to visit
-	delete[] stackBodiesToVisit;
 }
 
-// Put bodies to sleep if needed.
-/// For each island, if all the bodies have been almost still for a long enough period of
-/// time, we put all the bodies of the island to sleep.
-void DynamicsWorld::updateSleepingBodies() {
-
-	PROFILE("DynamicsWorld::updateSleepingBodies()");
-
+void ephysics::DynamicsWorld::updateSleepingBodies() {
+	PROFILE("ephysics::DynamicsWorld::updateSleepingBodies()");
 	const float sleepLinearVelocitySquare = m_sleepLinearVelocity * m_sleepLinearVelocity;
 	const float sleepAngularVelocitySquare = m_sleepAngularVelocity * m_sleepAngularVelocity;
-
 	// For each island of the world
 	for (uint32_t i=0; i<m_islands.size(); i++) {
-
 		float minSleepTime = FLT_MAX;
-
 		// For each body of the island
-		RigidBody** bodies = m_islands[i]->getBodies();
+		ephysics::RigidBody** bodies = m_islands[i]->getBodies();
 		for (uint32_t b=0; b < m_islands[i]->getNbBodies(); b++) {
-
 			// Skip static bodies
 			if (bodies[b]->getType() == STATIC) continue;
-
 			// If the body is velocity is large enough to stay awake
 			if (bodies[b]->getLinearVelocity().length2() > sleepLinearVelocitySquare ||
 				bodies[b]->getAngularVelocity().length2() > sleepAngularVelocitySquare ||
 				!bodies[b]->isAllowedToSleep()) {
-
 				// Reset the sleep time of the body
 				bodies[b]->m_sleepTime = 0.0f;
 				minSleepTime = 0.0f;
-			}
-			else {  // If the body velocity is bellow the sleeping velocity threshold
-
+			} else {  // If the body velocity is bellow the sleeping velocity threshold
 				// Increase the sleep time
 				bodies[b]->m_sleepTime += m_timeStep;
 				if (bodies[b]->m_sleepTime < minSleepTime) {
@@ -764,12 +579,10 @@ void DynamicsWorld::updateSleepingBodies() {
 				}
 			}
 		}
-
 		// If the velocity of all the bodies of the island is under the
 		// sleeping velocity threshold for a period of time larger than
 		// the time required to become a sleeping body
 		if (minSleepTime >= m_timeBeforeSleep) {
-
 			// Put all the bodies of the island to sleep
 			for (uint32_t b=0; b < m_islands[i]->getNbBodies(); b++) {
 				bodies[b]->setIsSleeping(true);
@@ -778,378 +591,211 @@ void DynamicsWorld::updateSleepingBodies() {
 	}
 }
 
-// Enable/Disable the sleeping technique.
-/// The sleeping technique is used to put bodies that are not moving int32_to sleep
-/// to speed up the simulation.
-/**
- * @param isSleepingEnabled True if you want to enable the sleeping technique
- *						  and false otherwise
- */
-void DynamicsWorld::enableSleeping(bool isSleepingEnabled) {
-	m_isSleepingEnabled = isSleepingEnabled;
-
+void ephysics::DynamicsWorld::enableSleeping(bool _isSleepingEnabled) {
+	m_isSleepingEnabled = _isSleepingEnabled;
 	if (!m_isSleepingEnabled) {
-
 		// For each body of the world
-		etk::Set<RigidBody*>::Iterator it;
+		etk::Set<ephysics::RigidBody*>::Iterator it;
 		for (it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
-
 			// Wake up the rigid body
 			(*it)->setIsSleeping(false);
 		}
 	}
 }
 
-// Test and report collisions between a given shape and all the others
-// shapes of the world.
-/// This method should be called after calling the
-/// DynamicsWorld::update() method that will compute the collisions.
-/**
- * @param shape Pointer to the proxy shape to test
- * @param callback Pointer to the object with the callback method
- */
-void DynamicsWorld::testCollision(const ProxyShape* shape,
-								   CollisionCallback* callback) {
-
+void ephysics::DynamicsWorld::testCollision(const ephysics::ProxyShape* _shape, ephysics::CollisionCallback* _callback) {
 	// Create the sets of shapes
 	etk::Set<uint32_t> shapes;
-	shapes.add(shape->m_broadPhaseID);
+	shapes.add(_shape->m_broadPhaseID);
 	etk::Set<uint32_t> emptySet;
-
 	// Perform the collision detection and report contacts
-	m_collisionDetection.reportCollisionBetweenShapes(callback, shapes, emptySet);
+	m_collisionDetection.reportCollisionBetweenShapes(_callback, shapes, emptySet);
 }
 
-// Test and report collisions between two given shapes.
-/// This method should be called after calling the
-/// DynamicsWorld::update() method that will compute the collisions.
-/**
- * @param shape1 Pointer to the first proxy shape to test
- * @param shape2 Pointer to the second proxy shape to test
- * @param callback Pointer to the object with the callback method
- */
-void DynamicsWorld::testCollision(const ProxyShape* shape1,
-								   const ProxyShape* shape2,
-								   CollisionCallback* callback) {
-
+void ephysics::DynamicsWorld::testCollision(const ephysics::ProxyShape* _shape1, const ephysics::ProxyShape* _shape2, ephysics::CollisionCallback* _callback) {
 	// Create the sets of shapes
 	etk::Set<uint32_t> shapes1;
-	shapes1.add(shape1->m_broadPhaseID);
+	shapes1.add(_shape1->m_broadPhaseID);
 	etk::Set<uint32_t> shapes2;
-	shapes2.add(shape2->m_broadPhaseID);
-
+	shapes2.add(_shape2->m_broadPhaseID);
 	// Perform the collision detection and report contacts
-	m_collisionDetection.reportCollisionBetweenShapes(callback, shapes1, shapes2);
+	m_collisionDetection.reportCollisionBetweenShapes(_callback, shapes1, shapes2);
 }
 
-// Test and report collisions between a body and all the others bodies of the
-// world.
-/// This method should be called after calling the
-/// DynamicsWorld::update() method that will compute the collisions.
-/**
- * @param body Pointer to the first body to test
- * @param callback Pointer to the object with the callback method
- */
-void DynamicsWorld::testCollision(const CollisionBody* body,
-								   CollisionCallback* callback) {
-
+void ephysics::DynamicsWorld::testCollision(const ephysics::CollisionBody* _body, ephysics::CollisionCallback* _callback) {
 	// Create the sets of shapes
 	etk::Set<uint32_t> shapes1;
-
 	// For each shape of the body
-	for (const ProxyShape* shape=body->getProxyShapesList(); shape != nullptr;
-		 shape = shape->getNext()) {
+	for (const ProxyShape* shape = _body->getProxyShapesList();
+	     shape != nullptr;
+	     shape = shape->getNext()) {
 		shapes1.add(shape->m_broadPhaseID);
 	}
-
 	etk::Set<uint32_t> emptySet;
-
 	// Perform the collision detection and report contacts
-	m_collisionDetection.reportCollisionBetweenShapes(callback, shapes1, emptySet);
+	m_collisionDetection.reportCollisionBetweenShapes(_callback, shapes1, emptySet);
 }
 
-// Test and report collisions between two bodies.
-/// This method should be called after calling the
-/// DynamicsWorld::update() method that will compute the collisions.
-/**
- * @param body1 Pointer to the first body to test
- * @param body2 Pointer to the second body to test
- * @param callback Pointer to the object with the callback method
- */
-void DynamicsWorld::testCollision(const CollisionBody* body1,
-								   const CollisionBody* body2,
-								   CollisionCallback* callback) {
-
+void ephysics::DynamicsWorld::testCollision(const ephysics::CollisionBody* _body1, const ephysics::CollisionBody* _body2, ephysics::CollisionCallback* _callback) {
 	// Create the sets of shapes
 	etk::Set<uint32_t> shapes1;
-	for (const ProxyShape* shape=body1->getProxyShapesList(); shape != nullptr;
+	for (const ProxyShape* shape=_body1->getProxyShapesList(); shape != nullptr;
 		 shape = shape->getNext()) {
 		shapes1.add(shape->m_broadPhaseID);
 	}
-
 	etk::Set<uint32_t> shapes2;
-	for (const ProxyShape* shape=body2->getProxyShapesList(); shape != nullptr;
+	for (const ProxyShape* shape=_body2->getProxyShapesList(); shape != nullptr;
 		 shape = shape->getNext()) {
 		shapes2.add(shape->m_broadPhaseID);
 	}
-
 	// Perform the collision detection and report contacts
-	m_collisionDetection.reportCollisionBetweenShapes(callback, shapes1, shapes2);
+	m_collisionDetection.reportCollisionBetweenShapes(_callback, shapes1, shapes2);
 }
 
-// Test and report collisions between all shapes of the world.
-/// This method should be called after calling the
-/// DynamicsWorld::update() method that will compute the collisions.
-/**
- * @param callback Pointer to the object with the callback method
- */
-void DynamicsWorld::testCollision(CollisionCallback* callback) {
-
+void ephysics::DynamicsWorld::testCollision(ephysics::CollisionCallback* _callback) {
 	etk::Set<uint32_t> emptySet;
-
 	// Perform the collision detection and report contacts
-	m_collisionDetection.reportCollisionBetweenShapes(callback, emptySet, emptySet);
+	m_collisionDetection.reportCollisionBetweenShapes(_callback, emptySet, emptySet);
 }
 
-/// Return the list of all contacts of the world
-etk::Vector<const ContactManifold*> DynamicsWorld::getContactsList() const {
-
-	etk::Vector<const ContactManifold*> contactManifolds;
-
+etk::Vector<const ephysics::ContactManifold*> ephysics::DynamicsWorld::getContactsList() const {
+	etk::Vector<const ephysics::ContactManifold*> contactManifolds;
 	// For each currently overlapping pair of bodies
-	etk::Map<overlappingpairid, OverlappingPair*>::Iterator it;
+	etk::Map<ephysics::overlappingpairid, ephysics::OverlappingPair*>::Iterator it;
 	for (it = m_collisionDetection.m_overlappingPairs.begin();
-		 it != m_collisionDetection.m_overlappingPairs.end(); ++it) {
-
-		OverlappingPair* pair = it->second;
-
+	     it != m_collisionDetection.m_overlappingPairs.end();
+	     ++it) {
+		ephysics::OverlappingPair* pair = it->second;
 		// For each contact manifold of the pair
-		const ContactManifoldSet& manifoldSet = pair->getContactManifoldSet();
+		const ephysics::ContactManifoldSet& manifoldSet = pair->getContactManifoldSet();
 		for (int32_t i=0; i<manifoldSet.getNbContactManifolds(); i++) {
-
 			ContactManifold* manifold = manifoldSet.getContactManifold(i);
-
 			// Get the contact manifold
 			contactManifolds.pushBack(manifold);
 		}
 	}
-
 	// Return all the contact manifold
 	return contactManifolds;
 }
 
-// Reset the external force and torque applied to the bodies
-void DynamicsWorld::resetBodiesForceAndTorque() {
-
+void ephysics::DynamicsWorld::resetBodiesForceAndTorque() {
 	// For each body of the world
-	etk::Set<RigidBody*>::Iterator it;
+	etk::Set<ephysics::RigidBody*>::Iterator it;
 	for (it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
 		(*it)->m_externalForce.setZero();
 		(*it)->m_externalTorque.setZero();
 	}
 }
 
-// Get the number of iterations for the velocity constraint solver
-uint32_t DynamicsWorld::getNbIterationsVelocitySolver() const {
+uint32_t ephysics::DynamicsWorld::getNbIterationsVelocitySolver() const {
 	return m_nbVelocitySolverIterations;
 }
 
-// Set the number of iterations for the velocity constraint solver
-/**
- * @param nbIterations Number of iterations for the velocity solver
- */
-void DynamicsWorld::setNbIterationsVelocitySolver(uint32_t nbIterations) {
-	m_nbVelocitySolverIterations = nbIterations;
+void ephysics::DynamicsWorld::setNbIterationsVelocitySolver(uint32_t _nbIterations) {
+	m_nbVelocitySolverIterations = _nbIterations;
 }
 
-// Get the number of iterations for the position constraint solver
-uint32_t DynamicsWorld::getNbIterationsPositionSolver() const {
+uint32_t ephysics::DynamicsWorld::getNbIterationsPositionSolver() const {
 	return m_nbPositionSolverIterations;
 }
 
-// Set the number of iterations for the position constraint solver
-/**
- * @param nbIterations Number of iterations for the position solver
- */
-void DynamicsWorld::setNbIterationsPositionSolver(uint32_t nbIterations) {
-	m_nbPositionSolverIterations = nbIterations;
+void ephysics::DynamicsWorld::setNbIterationsPositionSolver(uint32_t _nbIterations) {
+	m_nbPositionSolverIterations = _nbIterations;
 }
 
-// Set the position correction technique used for contacts
-/**
- * @param technique Technique used for the position correction (Baumgarte or Split Impulses)
- */
-void DynamicsWorld::setContactsPositionCorrectionTechnique(
-							  ContactsPositionCorrectionTechnique technique) {
-	if (technique == BAUMGARTE_CONTACTS) {
+void ephysics::DynamicsWorld::setContactsPositionCorrectionTechnique(ephysics::ContactsPositionCorrectionTechnique _technique) {
+	if (_technique == BAUMGARTE_CONTACTS) {
 		m_contactSolver.setIsSplitImpulseActive(false);
-	}
-	else {
+	} else {
 		m_contactSolver.setIsSplitImpulseActive(true);
 	}
 }
 
-// Set the position correction technique used for joints
-/**
- * @param technique Technique used for the joins position correction (Baumgarte or Non Linear Gauss Seidel)
- */
-void DynamicsWorld::setJointsPositionCorrectionTechnique(
-							  JointsPositionCorrectionTechnique technique) {
-	if (technique == BAUMGARTE_JOINTS) {
+void ephysics::DynamicsWorld::setJointsPositionCorrectionTechnique(ephysics::JointsPositionCorrectionTechnique _technique) {
+	if (_technique == BAUMGARTE_JOINTS) {
 		m_constraintSolver.setIsNonLinearGaussSeidelPositionCorrectionActive(false);
-	}
-	else {
+	} else {
 		m_constraintSolver.setIsNonLinearGaussSeidelPositionCorrectionActive(true);
 	}
 }
 
-// Activate or deactivate the solving of friction constraints at the center of
-// the contact manifold instead of solving them at each contact point
-/**
- * @param isActive True if you want the friction to be solved at the center of
- *				 the contact manifold and false otherwise
- */
-void DynamicsWorld::setIsSolveFrictionAtContactManifoldCenterActive(bool isActive) {
-	m_contactSolver.setIsSolveFrictionAtContactManifoldCenterActive(isActive);
+void ephysics::DynamicsWorld::setIsSolveFrictionAtContactManifoldCenterActive(bool _isActive) {
+	m_contactSolver.setIsSolveFrictionAtContactManifoldCenterActive(_isActive);
 }
 
-// Return the gravity vector of the world
-/**
- * @return The current gravity vector (in meter per seconds squared)
- */
-vec3 DynamicsWorld::getGravity() const {
+vec3 ephysics::DynamicsWorld::getGravity() const {
 	return m_gravity;
 }
 
-// Set the gravity vector of the world
-/**
- * @param gravity The gravity vector (in meter per seconds squared)
- */
-void DynamicsWorld::setGravity(vec3& gravity) {
-	m_gravity = gravity;
+void ephysics::DynamicsWorld::setGravity(vec3& _gravity) {
+	m_gravity = _gravity;
 }
 
-// Return if the gravity is enaled
-/**
- * @return True if the gravity is enabled in the world
- */
-bool DynamicsWorld::isGravityEnabled() const {
+bool ephysics::DynamicsWorld::isGravityEnabled() const {
 	return m_isGravityEnabled;
 }
 
-// Enable/Disable the gravity
-/**
- * @param isGravityEnabled True if you want to enable the gravity in the world
- *						 and false otherwise
- */
-void DynamicsWorld::setIsGratityEnabled(bool isGravityEnabled) {
-	m_isGravityEnabled = isGravityEnabled;
+void ephysics::DynamicsWorld::setIsGratityEnabled(bool _isGravityEnabled) {
+	m_isGravityEnabled = _isGravityEnabled;
 }
 
-// Return the number of rigid bodies in the world
-/**
- * @return Number of rigid bodies in the world
- */
-uint32_t DynamicsWorld::getNbRigidBodies() const {
+uint32_t ephysics::DynamicsWorld::getNbRigidBodies() const {
 	return m_rigidBodies.size();
 }
 
-/// Return the number of joints in the world
-/**
- * @return Number of joints in the world
- */
-uint32_t DynamicsWorld::getNbJoints() const {
+uint32_t ephysics::DynamicsWorld::getNbJoints() const {
 	return m_joints.size();
 }
 
-// Return an iterator to the beginning of the bodies of the physics world
-/**
- * @return Starting iterator of the set of rigid bodies
- */
-etk::Set<RigidBody*>::Iterator DynamicsWorld::getRigidBodiesBeginIterator() {
+etk::Set<ephysics::RigidBody*>::Iterator ephysics::DynamicsWorld::getRigidBodiesBeginIterator() {
 	return m_rigidBodies.begin();
 }
 
-// Return an iterator to the end of the bodies of the physics world
-/**
- * @return Ending iterator of the set of rigid bodies
- */
-etk::Set<RigidBody*>::Iterator DynamicsWorld::getRigidBodiesEndIterator() {
+etk::Set<ephysics::RigidBody*>::Iterator ephysics::DynamicsWorld::getRigidBodiesEndIterator() {
 	return m_rigidBodies.end();
 }
 
-// Return true if the sleeping technique is enabled
-/**
- * @return True if the sleeping technique is enabled and false otherwise
- */
-bool DynamicsWorld::isSleepingEnabled() const {
+bool ephysics::DynamicsWorld::isSleepingEnabled() const {
 	return m_isSleepingEnabled;
 }
 
-// Return the current sleep linear velocity
-/**
- * @return The sleep linear velocity (in meters per second)
- */
-float DynamicsWorld::getSleepLinearVelocity() const {
+float ephysics::DynamicsWorld::getSleepLinearVelocity() const {
 	return m_sleepLinearVelocity;
 }
 
-// Set the sleep linear velocity.
-/// When the velocity of a body becomes smaller than the sleep linear/angular
-/// velocity for a given amount of time, the body starts sleeping and does not need
-/// to be simulated anymore.
-/**
- * @param sleepLinearVelocity The sleep linear velocity (in meters per second)
- */
-void DynamicsWorld::setSleepLinearVelocity(float sleepLinearVelocity) {
-	assert(sleepLinearVelocity >= 0.0f);
-	m_sleepLinearVelocity = sleepLinearVelocity;
+void ephysics::DynamicsWorld::setSleepLinearVelocity(float _sleepLinearVelocity) {
+	if(_sleepLinearVelocity < 0.0f) {
+		EPHY_ERROR("Can not set _sleepLinearVelocity=" << _sleepLinearVelocity << " < 0 ");
+		return;
+	}
+	m_sleepLinearVelocity = _sleepLinearVelocity;
 }
 
-// Return the current sleep angular velocity
-/**
- * @return The sleep angular velocity (in radian per second)
- */
-float DynamicsWorld::getSleepAngularVelocity() const {
+float ephysics::DynamicsWorld::getSleepAngularVelocity() const {
 	return m_sleepAngularVelocity;
 }
 
-// Set the sleep angular velocity.
-/// When the velocity of a body becomes smaller than the sleep linear/angular
-/// velocity for a given amount of time, the body starts sleeping and does not need
-/// to be simulated anymore.
-/**
- * @param sleepAngularVelocity The sleep angular velocity (in radian per second)
- */
-void DynamicsWorld::setSleepAngularVelocity(float sleepAngularVelocity) {
-	assert(sleepAngularVelocity >= 0.0f);
-	m_sleepAngularVelocity = sleepAngularVelocity;
+void ephysics::DynamicsWorld::setSleepAngularVelocity(float _sleepAngularVelocity) {
+	if(_sleepAngularVelocity < 0.0f) {
+		EPHY_ERROR("Can not set _sleepAngularVelocity=" << _sleepAngularVelocity << " < 0 ");
+		return;
+	}
+	m_sleepAngularVelocity = _sleepAngularVelocity;
 }
 
-// Return the time a body is required to stay still before sleeping
-/**
- * @return Time a body is required to stay still before sleeping (in seconds)
- */
-float DynamicsWorld::getTimeBeforeSleep() const {
+float ephysics::DynamicsWorld::getTimeBeforeSleep() const {
 	return m_timeBeforeSleep;
 }
 
-
-// Set the time a body is required to stay still before sleeping
-/**
- * @param timeBeforeSleep Time a body is required to stay still before sleeping (in seconds)
- */
-void DynamicsWorld::setTimeBeforeSleep(float timeBeforeSleep) {
-	assert(timeBeforeSleep >= 0.0f);
-	m_timeBeforeSleep = timeBeforeSleep;
+void ephysics::DynamicsWorld::setTimeBeforeSleep(float _timeBeforeSleep) {
+	if(_timeBeforeSleep < 0.0f) {
+		EPHY_ERROR("Can not set _timeBeforeSleep=" << _timeBeforeSleep << " < 0 ");
+		return;
+	}
+	m_timeBeforeSleep = _timeBeforeSleep;
 }
 
-// Set an event listener object to receive events callbacks.
-/// If you use NULL as an argument, the events callbacks will be disabled.
-/**
- * @param eventListener Pointer to the event listener object that will receive
- *					  event callbacks during the simulation
- */
-void DynamicsWorld::setEventListener(EventListener* eventListener) {
-	m_eventListener = eventListener;
+void ephysics::DynamicsWorld::setEventListener(ephysics::EventListener* _eventListener) {
+	m_eventListener = _eventListener;
 }
+

@@ -26,9 +26,12 @@ def get_maintainer():
 
 def configure(target, my_module):
 	my_module.add_src_file([
-		'test/Test.cpp',
-		'test/TestSuite.cpp',
-		'test/main.cpp'
+		'test/main.cpp',
+		'test/testAABB.cpp',
+		'test/testCollisionWorld.cpp',
+		'test/testDynamicAABBTree.cpp',
+		'test/testPointInside.cpp',
+		'test/testRaycast.cpp',
 		])
 	my_module.add_depend([
 		'ephysics',
