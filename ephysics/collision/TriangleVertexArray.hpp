@@ -28,7 +28,7 @@ namespace ephysics {
 	class TriangleVertexArray {
 		protected:
 			etk::Vector<vec3> m_vertices; //!< Vertice list
-			etk::Vector<size_t> m_triangles; //!< List of triangle (3 pos for each triangle)
+			etk::Vector<uint32_t> m_triangles; //!< List of triangle (3 pos for each triangle)
 		public:
 			/**
 			 * @brief Constructor
@@ -36,7 +36,7 @@ namespace ephysics {
 			 * @param[in] _triangles List of all linked points
 			 */
 			TriangleVertexArray(const etk::Vector<vec3>& _vertices,
-			                    etk::Vector<size_t> _triangles);
+			                    const etk::Vector<uint32_t>& _triangles);
 			/**
 			 * @brief Get the number of vertices
 			 * @return Number of vertices
@@ -56,12 +56,12 @@ namespace ephysics {
 			 * @brief Get The table of the triangle indice
 			 * @return reference on the triangle indice
 			 */
-			const etk::Vector<size_t>& getIndices() const;
+			const etk::Vector<uint32_t>& getIndices() const;
 			/**
 			 * @brief Get a triangle at the specific ID
 			 * @return Buffer of 3 points
 			 */
-			ephysics::Triangle getTriangle(size_t _id) const;
+			ephysics::Triangle getTriangle(uint32_t _id) const;
 	};
 
 

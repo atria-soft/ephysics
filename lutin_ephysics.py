@@ -156,7 +156,8 @@ def configure(target, my_module):
 		'm',
 		'elog',
 		'etk',
-		'ememory'
+		'ememory',
+		'echrono'
 		])
 	# TODO: Remove this ...
 	#my_module.add_flag('c++', "-Wno-overloaded-virtual", export=True)

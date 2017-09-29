@@ -6,6 +6,7 @@
 
 // Libraries
 #include <ephysics/engine/CollisionWorld.hpp>
+#include <ephysics/debug.hpp>
 
 // Namespaces
 using namespace ephysics;
@@ -14,7 +15,7 @@ using namespace std;
 // Constructor
 CollisionWorld::CollisionWorld()
 			   : m_collisionDetection(this, m_memoryAllocator), m_currentBodyID(0),
-				 m_eventListener(nullptrptr) {
+				 m_eventListener(nullptr) {
 
 }
 
@@ -43,16 +44,16 @@ CollisionBody* CollisionWorld::createCollisionBody(const etk::Transform3D& trans
 	bodyindex bodyID = computeNextAvailableBodyID();
 
 	// Largest index cannot be used (it is used for invalid index)
-	EPHYSIC_ASSERT(bodyID < std::numeric_limits<ephysics::bodyindex>::max(), "index too big");
+	EPHY_ASSERT(bodyID < std::numeric_limits<ephysics::bodyindex>::max(), "index too big");
 
 	// Create the collision body
 	CollisionBody* collisionBody = new (m_memoryAllocator.allocate(sizeof(CollisionBody)))
 										CollisionBody(transform, *this, bodyID);
 
-	EPHYSIC_ASSERT(collisionBody != nullptr, "empty Body collision");
+	EPHY_ASSERT(collisionBody != nullptr, "empty Body collision");
 
 	// Add the collision body to the world
-	m_bodies.insert(collisionBody);
+	m_bodies.add(collisionBody);
 
 	// Return the pointer to the rigid body
 	return collisionBody;
@@ -74,7 +75,7 @@ void CollisionWorld::destroyCollisionBody(CollisionBody* collisionBody) {
 	collisionBody->~CollisionBody();
 
 	// Remove the collision body from the list of bodies
-	m_bodies.erase(collisionBody);
+	m_bodies.erase(m_bodies.find(collisionBody));
 
 	// Free the object from the memory allocator
 	m_memoryAllocator.release(collisionBody, sizeof(CollisionBody));
@@ -142,7 +143,7 @@ void CollisionWorld::testCollision(const ProxyShape* shape,
 
 	// Create the sets of shapes
 	etk::Set<uint32_t> shapes;
-	shapes.insert(shape->m_broadPhaseID);
+	shapes.add(shape->m_broadPhaseID);
 	etk::Set<uint32_t> emptySet;
 
 	// Perform the collision detection and report contacts
@@ -164,9 +165,9 @@ void CollisionWorld::testCollision(const ProxyShape* shape1,
 
 	// Create the sets of shapes
 	etk::Set<uint32_t> shapes1;
-	shapes1.insert(shape1->m_broadPhaseID);
+	shapes1.add(shape1->m_broadPhaseID);
 	etk::Set<uint32_t> shapes2;
-	shapes2.insert(shape2->m_broadPhaseID);
+	shapes2.add(shape2->m_broadPhaseID);
 
 	// Perform the collision detection and report contacts
 	m_collisionDetection.testCollisionBetweenShapes(callback, shapes1, shapes2);
@@ -190,7 +191,7 @@ void CollisionWorld::testCollision(const CollisionBody* body,
 	// For each shape of the body
 	for (const ProxyShape* shape=body->getProxyShapesList(); shape != nullptr;
 		 shape = shape->getNext()) {
-		shapes1.insert(shape->m_broadPhaseID);
+		shapes1.add(shape->m_broadPhaseID);
 	}
 
 	etk::Set<uint32_t> emptySet;
@@ -216,13 +217,13 @@ void CollisionWorld::testCollision(const CollisionBody* body1,
 	etk::Set<uint32_t> shapes1;
 	for (const ProxyShape* shape=body1->getProxyShapesList(); shape != nullptr;
 		 shape = shape->getNext()) {
-		shapes1.insert(shape->m_broadPhaseID);
+		shapes1.add(shape->m_broadPhaseID);
 	}
 
 	etk::Set<uint32_t> shapes2;
 	for (const ProxyShape* shape=body2->getProxyShapesList(); shape != nullptr;
 		 shape = shape->getNext()) {
-		shapes2.insert(shape->m_broadPhaseID);
+		shapes2.add(shape->m_broadPhaseID);
 	}
 
 	// Perform the collision detection and report contacts

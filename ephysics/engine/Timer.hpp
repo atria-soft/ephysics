@@ -7,8 +7,7 @@
 
 // Libraries
 #include <ephysics/configuration.hpp>
-#include <eechrono/echrono.hpp>
-
+#include <echrono/echrono.hpp>
 
 namespace ephysics {
 	/**

@@ -268,7 +268,7 @@ void DynamicsWorld::initVelocityArrays() {
 	for (it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
 
 		// Add the body int32_to the map
-		m_mapBodyToConstrainedVelocityIndex.insert(etk::makePair(*it, indexBody));
+		m_mapBodyToConstrainedVelocityIndex.add(*it, indexBody);
 		indexBody++;
 	}
 }
@@ -441,8 +441,8 @@ RigidBody* DynamicsWorld::createRigidBody(const etk::Transform3D& transform) {
 	assert(rigidBody != nullptr);
 
 	// Add the rigid body to the physics world
-	m_bodies.insert(rigidBody);
-	m_rigidBodies.insert(rigidBody);
+	m_bodies.add(rigidBody);
+	m_rigidBodies.add(rigidBody);
 
 	// Return the pointer to the rigid body
 	return rigidBody;
@@ -473,8 +473,8 @@ void DynamicsWorld::destroyRigidBody(RigidBody* rigidBody) {
 	rigidBody->~RigidBody();
 
 	// Remove the rigid body from the list of rigid bodies
-	m_bodies.erase(rigidBody);
-	m_rigidBodies.erase(rigidBody);
+	m_bodies.erase(m_bodies.find(rigidBody));
+	m_rigidBodies.erase(m_rigidBodies.find(rigidBody));
 
 	// Free the object from the memory allocator
 	m_memoryAllocator.release(rigidBody, sizeof(RigidBody));
@@ -544,7 +544,7 @@ Joint* DynamicsWorld::createJoint(const JointInfo& jointInfo) {
 	}
 
 	// Add the joint int32_to the world
-	m_joints.insert(newJoint);
+	m_joints.add(newJoint);
 
 	// Add the joint int32_to the joint list of the bodies involved in the joint
 	addJointToBody(newJoint);
@@ -573,7 +573,7 @@ void DynamicsWorld::destroyJoint(Joint* joint) {
 	joint->getBody2()->setIsSleeping(false);
 
 	// Remove the joint from the world
-	m_joints.erase(joint);
+	m_joints.erase(m_joints.find(joint));
 
 	// Remove the joint from the joint list of the bodies involved in the joint
 	joint->m_body1->removeJointFrom_jointsList(m_memoryAllocator, joint);
@@ -862,7 +862,7 @@ void DynamicsWorld::testCollision(const ProxyShape* shape,
 
 	// Create the sets of shapes
 	etk::Set<uint32_t> shapes;
-	shapes.insert(shape->m_broadPhaseID);
+	shapes.add(shape->m_broadPhaseID);
 	etk::Set<uint32_t> emptySet;
 
 	// Perform the collision detection and report contacts
@@ -883,9 +883,9 @@ void DynamicsWorld::testCollision(const ProxyShape* shape1,
 
 	// Create the sets of shapes
 	etk::Set<uint32_t> shapes1;
-	shapes1.insert(shape1->m_broadPhaseID);
+	shapes1.add(shape1->m_broadPhaseID);
 	etk::Set<uint32_t> shapes2;
-	shapes2.insert(shape2->m_broadPhaseID);
+	shapes2.add(shape2->m_broadPhaseID);
 
 	// Perform the collision detection and report contacts
 	m_collisionDetection.reportCollisionBetweenShapes(callback, shapes1, shapes2);
@@ -908,7 +908,7 @@ void DynamicsWorld::testCollision(const CollisionBody* body,
 	// For each shape of the body
 	for (const ProxyShape* shape=body->getProxyShapesList(); shape != nullptr;
 		 shape = shape->getNext()) {
-		shapes1.insert(shape->m_broadPhaseID);
+		shapes1.add(shape->m_broadPhaseID);
 	}
 
 	etk::Set<uint32_t> emptySet;
@@ -933,13 +933,13 @@ void DynamicsWorld::testCollision(const CollisionBody* body1,
 	etk::Set<uint32_t> shapes1;
 	for (const ProxyShape* shape=body1->getProxyShapesList(); shape != nullptr;
 		 shape = shape->getNext()) {
-		shapes1.insert(shape->m_broadPhaseID);
+		shapes1.add(shape->m_broadPhaseID);
 	}
 
 	etk::Set<uint32_t> shapes2;
 	for (const ProxyShape* shape=body2->getProxyShapesList(); shape != nullptr;
 		 shape = shape->getNext()) {
-		shapes2.insert(shape->m_broadPhaseID);
+		shapes2.add(shape->m_broadPhaseID);
 	}
 
 	// Perform the collision detection and report contacts
