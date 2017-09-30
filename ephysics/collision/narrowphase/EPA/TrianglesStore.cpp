@@ -6,10 +6,3 @@
 
 #include <ephysics/collision/narrowphase/EPA/TrianglesStore.hpp>
 
-ephysics::TrianglesStore::TrianglesStore() : m_numberTriangles(0) {
-	
-}
-
-ephysics::TrianglesStore::~TrianglesStore() {
-	
-}

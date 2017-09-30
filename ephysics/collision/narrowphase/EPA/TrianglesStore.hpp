@@ -12,48 +12,43 @@ namespace ephysics {
 	 */
 	class TrianglesStore {
 		private:
-			TriangleEPA m_triangles[MAX_TRIANGLES]; //!< Triangles
-			int32_t m_numberTriangles; //!< Number of triangles
+			etk::Vector<TriangleEPA> m_triangles; //!< Triangles
 			/// Private copy-constructor
-			TrianglesStore(const TrianglesStore& triangleStore);
+			TrianglesStore(const TrianglesStore& triangleStore) = delete;
 			/// Private assignment operator
-			TrianglesStore& operator=(const TrianglesStore& triangleStore);
+			TrianglesStore& operator=(const TrianglesStore& triangleStore) = delete;
 		public:
 			/// Constructor
-			TrianglesStore();
-			/// Destructor
-			~TrianglesStore();
+			TrianglesStore() = default;
 			/// Clear all the storage
 			void clear() {
-				m_numberTriangles = 0;
+				m_triangles.clear();
 			}
 			/// Return the number of triangles
-			int32_t getNbTriangles() const {
-				return m_numberTriangles;
+			size_t getNbTriangles() const {
+				return m_triangles.size();
 			}
 			/// Set the number of triangles
-			void setNbTriangles(int32_t _backup) {
-				m_numberTriangles = _backup;
+			void resize(int32_t _backup) {
+				m_triangles.resize(_backup);
 			}
 			/// Return the last triangle
 			TriangleEPA& last() {
-				assert(m_numberTriangles > 0);
-				return m_triangles[m_numberTriangles - 1];
+				return m_triangles.back();
 			}
 			/// Create a new triangle
 			TriangleEPA* newTriangle(const vec3* _vertices, uint32_t _v0, uint32_t _v1, uint32_t _v2) {
-				TriangleEPA* newTriangle = nullptr;
 				// If we have not reached the maximum number of triangles
-				if (m_numberTriangles != MAX_TRIANGLES) {
-					newTriangle = &m_triangles[m_numberTriangles++];
-					newTriangle->set(_v0, _v1, _v2);
-					if (!newTriangle->computeClosestPoint(_vertices)) {
-						m_numberTriangles--;
-						newTriangle = nullptr;
+				if (m_triangles.size() < MAX_TRIANGLES) {
+					TriangleEPA tmp(_v0, _v1, _v2);
+					if (!tmp.computeClosestPoint(_vertices)) {
+						return nullptr;
 					}
+					m_triangles.pushBack(etk::move(tmp));
+					return &m_triangles.back();
 				}
-				// Return the new triangle
-				return newTriangle;
+				// We are at the limit (internal)
+				return nullptr;
 			}
 			/// Access operator
 			TriangleEPA& operator[](int32_t _id) {

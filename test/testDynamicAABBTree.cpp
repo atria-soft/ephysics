@@ -10,35 +10,35 @@
 #include <etk/Vector.hpp>
 
 
-class OverlapCallback : public ephysics::DynamicAABBTreeOverlapCallback {
+class OverlapCallback {
 	public :
 		etk::Vector<int32_t> m_overlapNodes;
 		// Called when a overlapping node has been found during the call to
 		// DynamicAABBTree:reportAllShapesOverlappingWithAABB()
-		virtual void notifyOverlappingNode(int32_t nodeId) {
-			m_overlapNodes.pushBack(nodeId);
+		void operator()(int32_t _nodeId) {
+			m_overlapNodes.pushBack(_nodeId);
 		}
 		void reset() {
 			m_overlapNodes.clear();
 		}
-		bool isOverlapping(int32_t nodeId) const {
-			return etk::isIn(nodeId, m_overlapNodes);
+		bool isOverlapping(int32_t _nodeId) const {
+			return etk::isIn(_nodeId, m_overlapNodes);
 		}
 };
 
-class DynamicTreeRaycastCallback : public ephysics::DynamicAABBTreeRaycastCallback {
+class DynamicTreeRaycastCallback {
 	public:
 		etk::Vector<int32_t> m_hitNodes;
 		// Called when the AABB of a leaf node is hit by a ray
-		virtual float raycastBroadPhaseShape(int32_t nodeId, const ephysics::Ray& ray) {
-			m_hitNodes.pushBack(nodeId);
+		float operator()(int32_t _nodeId, const ephysics::Ray& _ray) {
+			m_hitNodes.pushBack(_nodeId);
 			return 1.0;
 		}
 		void reset() {
 			m_hitNodes.clear();
 		}
-		bool isHit(int32_t nodeId) const {
-			return etk::isIn(nodeId, m_hitNodes);
+		bool isHit(int32_t _nodeId) const {
+			return etk::isIn(_nodeId, m_hitNodes);
 		}
 };
 
@@ -115,7 +115,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping nothing
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-10, 12, -4), vec3(10, 50, 4)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-10, 12, -4), vec3(10, 50, 4)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), false);
@@ -123,7 +123,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping everything
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-15, -15, -4), vec3(15, 15, 4)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-15, -15, -4), vec3(15, 15, 4)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), true);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), true);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), true);
@@ -131,7 +131,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping object 1 and 3
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-4, 2, -4), vec3(-1, 7, 4)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-4, 2, -4), vec3(-1, 7, 4)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), true);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), true);
@@ -139,7 +139,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping object 3 and 4
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-6, -5, -2), vec3(2, 2, 0)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-6, -5, -2), vec3(2, 2, 0)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), true);
@@ -147,7 +147,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping object 2
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(5, -10, -2), vec3(7, 10, 9)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(5, -10, -2), vec3(7, 10, 9)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), true);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), false);
@@ -162,7 +162,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping nothing
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-10, 12, -4), vec3(10, 50, 4)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-10, 12, -4), vec3(10, 50, 4)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), false);
@@ -170,7 +170,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping everything
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-15, -15, -4), vec3(15, 15, 4)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-15, -15, -4), vec3(15, 15, 4)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), true);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), true);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), true);
@@ -178,7 +178,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping object 1 and 3
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-4, 2, -4), vec3(-1, 7, 4)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-4, 2, -4), vec3(-1, 7, 4)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), true);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), true);
@@ -186,7 +186,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping object 3 and 4
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-6, -5, -2), vec3(2, 2, 0)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-6, -5, -2), vec3(2, 2, 0)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), true);
@@ -194,7 +194,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping object 2
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(5, -10, -2), vec3(7, 10, 9)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(5, -10, -2), vec3(7, 10, 9)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), true);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), false);
@@ -209,7 +209,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping nothing
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-10, 12, -4), vec3(10, 50, 4)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-10, 12, -4), vec3(10, 50, 4)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), false);
@@ -217,7 +217,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping everything
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-15, -15, -4), vec3(15, 15, 4)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-15, -15, -4), vec3(15, 15, 4)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), true);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), true);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), true);
@@ -225,7 +225,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping object 1 and 3
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-4, 2, -4), vec3(-1, 7, 4)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-4, 2, -4), vec3(-1, 7, 4)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), true);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), true);
@@ -233,7 +233,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping object 3 and 4
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-6, -5, -2), vec3(2, 2, 0)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-6, -5, -2), vec3(2, 2, 0)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), true);
@@ -241,7 +241,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping object 2
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(5, -10, -2), vec3(7, 10, 9)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(5, -10, -2), vec3(7, 10, 9)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), true);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), false);
@@ -257,7 +257,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping object 3
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(6, -10, -2), vec3(8, 5, 3)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(6, -10, -2), vec3(8, 5, 3)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), false);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), true);
@@ -265,7 +265,7 @@ TEST(TestAABBTree, overlapping) {
 
 	// AABB overlapping objects 1, 2
 	overlapCallback.reset();
-	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-8, 5, -3), vec3(-2, 11, 3)), overlapCallback);
+	tree.reportAllShapesOverlappingWithAABB(ephysics::AABB(vec3(-8, 5, -3), vec3(-2, 11, 3)), [&](int32_t _nodeId) mutable { overlapCallback(_nodeId);});
 	EXPECT_EQ(overlapCallback.isOverlapping(object1Id), true);
 	EXPECT_EQ(overlapCallback.isOverlapping(object2Id), true);
 	EXPECT_EQ(overlapCallback.isOverlapping(object3Id), false);
@@ -303,7 +303,7 @@ TEST(TestAABBTree, raycast) {
 	// Ray with no hits
 	raycastCallback.reset();
 	ephysics::Ray ray1(vec3(4.5, -10, -5), vec3(4.5, 10, -5));
-	tree.raycast(ray1, raycastCallback);
+	tree.raycast(ray1, [&](int32_t _nodeId, const ephysics::Ray& _ray) mutable { return raycastCallback(_nodeId, _ray);});
 	EXPECT_EQ(raycastCallback.isHit(object1Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object2Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object3Id), false);
@@ -312,7 +312,7 @@ TEST(TestAABBTree, raycast) {
 	// Ray that hits object 1
 	raycastCallback.reset();
 	ephysics::Ray ray2(vec3(-1, -20, -2), vec3(-1, 20, -2));
-	tree.raycast(ray2, raycastCallback);
+	tree.raycast(ray2, [&](int32_t _nodeId, const ephysics::Ray& _ray) mutable { return raycastCallback(_nodeId, _ray);});
 	EXPECT_EQ(raycastCallback.isHit(object1Id), true);
 	EXPECT_EQ(raycastCallback.isHit(object2Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object3Id), false);
@@ -321,7 +321,7 @@ TEST(TestAABBTree, raycast) {
 	// Ray that hits object 1 and 2
 	raycastCallback.reset();
 	ephysics::Ray ray3(vec3(-7, 6, -2), vec3(8, 6, -2));
-	tree.raycast(ray3, raycastCallback);
+	tree.raycast(ray3, [&](int32_t _nodeId, const ephysics::Ray& _ray) mutable { return raycastCallback(_nodeId, _ray);});
 	EXPECT_EQ(raycastCallback.isHit(object1Id), true);
 	EXPECT_EQ(raycastCallback.isHit(object2Id), true);
 	EXPECT_EQ(raycastCallback.isHit(object3Id), false);
@@ -330,7 +330,7 @@ TEST(TestAABBTree, raycast) {
 	// Ray that hits object 3
 	raycastCallback.reset();
 	ephysics::Ray ray4(vec3(-7, 2, 0), vec3(-1, 2, 0));
-	tree.raycast(ray4, raycastCallback);
+	tree.raycast(ray4, [&](int32_t _nodeId, const ephysics::Ray& _ray) mutable { return raycastCallback(_nodeId, _ray);});
 	EXPECT_EQ(raycastCallback.isHit(object1Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object2Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object3Id), true);
@@ -345,7 +345,7 @@ TEST(TestAABBTree, raycast) {
 
 	// Ray with no hits
 	raycastCallback.reset();
-	tree.raycast(ray1, raycastCallback);
+	tree.raycast(ray1, [&](int32_t _nodeId, const ephysics::Ray& _ray) mutable { return raycastCallback(_nodeId, _ray);});
 	EXPECT_EQ(raycastCallback.isHit(object1Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object2Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object3Id), false);
@@ -353,7 +353,7 @@ TEST(TestAABBTree, raycast) {
 
 	// Ray that hits object 1
 	raycastCallback.reset();
-	tree.raycast(ray2, raycastCallback);
+	tree.raycast(ray2, [&](int32_t _nodeId, const ephysics::Ray& _ray) mutable { return raycastCallback(_nodeId, _ray);});
 	EXPECT_EQ(raycastCallback.isHit(object1Id), true);
 	EXPECT_EQ(raycastCallback.isHit(object2Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object3Id), false);
@@ -361,7 +361,7 @@ TEST(TestAABBTree, raycast) {
 
 	// Ray that hits object 1 and 2
 	raycastCallback.reset();
-	tree.raycast(ray3, raycastCallback);
+	tree.raycast(ray3, [&](int32_t _nodeId, const ephysics::Ray& _ray) mutable { return raycastCallback(_nodeId, _ray);});
 	EXPECT_EQ(raycastCallback.isHit(object1Id), true);
 	EXPECT_EQ(raycastCallback.isHit(object2Id), true);
 	EXPECT_EQ(raycastCallback.isHit(object3Id), false);
@@ -369,7 +369,7 @@ TEST(TestAABBTree, raycast) {
 
 	// Ray that hits object 3
 	raycastCallback.reset();
-	tree.raycast(ray4, raycastCallback);
+	tree.raycast(ray4, [&](int32_t _nodeId, const ephysics::Ray& _ray) mutable { return raycastCallback(_nodeId, _ray);});
 	EXPECT_EQ(raycastCallback.isHit(object1Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object2Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object3Id), true);
@@ -384,7 +384,7 @@ TEST(TestAABBTree, raycast) {
 
 	// Ray with no hits
 	raycastCallback.reset();
-	tree.raycast(ray1, raycastCallback);
+	tree.raycast(ray1, [&](int32_t _nodeId, const ephysics::Ray& _ray) mutable { return raycastCallback(_nodeId, _ray);});
 	EXPECT_EQ(raycastCallback.isHit(object1Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object2Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object3Id), false);
@@ -392,7 +392,7 @@ TEST(TestAABBTree, raycast) {
 
 	// Ray that hits object 1
 	raycastCallback.reset();
-	tree.raycast(ray2, raycastCallback);
+	tree.raycast(ray2, [&](int32_t _nodeId, const ephysics::Ray& _ray) mutable { return raycastCallback(_nodeId, _ray);});
 	EXPECT_EQ(raycastCallback.isHit(object1Id), true);
 	EXPECT_EQ(raycastCallback.isHit(object2Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object3Id), false);
@@ -400,7 +400,7 @@ TEST(TestAABBTree, raycast) {
 
 	// Ray that hits object 1 and 2
 	raycastCallback.reset();
-	tree.raycast(ray3, raycastCallback);
+	tree.raycast(ray3, [&](int32_t _nodeId, const ephysics::Ray& _ray) mutable { return raycastCallback(_nodeId, _ray);});
 	EXPECT_EQ(raycastCallback.isHit(object1Id), true);
 	EXPECT_EQ(raycastCallback.isHit(object2Id), true);
 	EXPECT_EQ(raycastCallback.isHit(object3Id), false);
@@ -408,7 +408,7 @@ TEST(TestAABBTree, raycast) {
 
 	// Ray that hits object 3
 	raycastCallback.reset();
-	tree.raycast(ray4, raycastCallback);
+	tree.raycast(ray4, [&](int32_t _nodeId, const ephysics::Ray& _ray) mutable { return raycastCallback(_nodeId, _ray);});
 	EXPECT_EQ(raycastCallback.isHit(object1Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object2Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object3Id), true);
@@ -425,7 +425,7 @@ TEST(TestAABBTree, raycast) {
 	// Ray that hits object 1, 2
 	ephysics::Ray ray5(vec3(-4, -5, 0), vec3(-4, 12, 0));
 	raycastCallback.reset();
-	tree.raycast(ray5, raycastCallback);
+	tree.raycast(ray5, [&](int32_t _nodeId, const ephysics::Ray& _ray) mutable { return raycastCallback(_nodeId, _ray);});
 	EXPECT_EQ(raycastCallback.isHit(object1Id), true);
 	EXPECT_EQ(raycastCallback.isHit(object2Id), true);
 	EXPECT_EQ(raycastCallback.isHit(object3Id), false);
@@ -434,7 +434,7 @@ TEST(TestAABBTree, raycast) {
 	// Ray that hits object 3 and 4
 	ephysics::Ray ray6(vec3(11, -3, 1), vec3(-2, -3, 1));
 	raycastCallback.reset();
-	tree.raycast(ray6, raycastCallback);
+	tree.raycast(ray6, [&](int32_t _nodeId, const ephysics::Ray& _ray) mutable { return raycastCallback(_nodeId, _ray);});
 	EXPECT_EQ(raycastCallback.isHit(object1Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object2Id), false);
 	EXPECT_EQ(raycastCallback.isHit(object3Id), true);

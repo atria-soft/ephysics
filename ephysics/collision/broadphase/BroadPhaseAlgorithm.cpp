@@ -13,25 +13,20 @@ using namespace ephysics;
 
 BroadPhaseAlgorithm::BroadPhaseAlgorithm(CollisionDetection& collisionDetection)
 					:m_dynamicAABBTree(DYNAMIC_TREE_AABB_GAP), m_numberMovedShapes(0), m_numberAllocatedMovedShapes(8),
-					 m_numberNonUsedMovedShapes(0), m_numberPotentialPairs(0), m_numberAllocatedPotentialPairs(8),
+					 m_numberNonUsedMovedShapes(0),
 					 m_collisionDetection(collisionDetection) {
 
 	// Allocate memory for the array of non-static proxy shapes IDs
 	m_movedShapes = (int32_t*) malloc(m_numberAllocatedMovedShapes * sizeof(int32_t));
 	assert(m_movedShapes != NULL);
-
-	// Allocate memory for the array of potential overlapping pairs
-	m_potentialPairs = (BroadPhasePair*) malloc(m_numberAllocatedPotentialPairs * sizeof(BroadPhasePair));
-	assert(m_potentialPairs != NULL);
+	
+	m_potentialPairs.reserve(8);
 }
 
 BroadPhaseAlgorithm::~BroadPhaseAlgorithm() {
 
 	// Release the memory for the array of non-static proxy shapes IDs
 	free(m_movedShapes);
-
-	// Release the memory for the array of potential overlapping pairs
-	free(m_potentialPairs);
 }
 
 void BroadPhaseAlgorithm::addMovedCollisionShape(int32_t broadPhaseID) {
@@ -131,111 +126,72 @@ void BroadPhaseAlgorithm::updateProxyCollisionShape(ProxyShape* _proxyShape,
 }
 
 void BroadPhaseAlgorithm::computeOverlappingPairs() {
-
-	// Reset the potential overlapping pairs
-	m_numberPotentialPairs = 0;
-
+	m_potentialPairs.clear();
 	// For all collision shapes that have moved (or have been created) during the
 	// last simulation step
 	for (uint32_t i=0; i<m_numberMovedShapes; i++) {
 		int32_t shapeID = m_movedShapes[i];
-
-		if (shapeID == -1) continue;
-
-		AABBOverlapCallback callback(*this, shapeID);
-
+		if (shapeID == -1) {
+			continue;
+		}
 		// Get the AABB of the shape
 		const AABB& shapeAABB = m_dynamicAABBTree.getFatAABB(shapeID);
-
 		// Ask the dynamic AABB tree to report all collision shapes that overlap with
 		// this AABB. The method BroadPhase::notifiyOverlappingPair() will be called
 		// by the dynamic AABB tree for each potential overlapping pair.
-		m_dynamicAABBTree.reportAllShapesOverlappingWithAABB(shapeAABB, callback);
+		m_dynamicAABBTree.reportAllShapesOverlappingWithAABB(shapeAABB, [&](int32_t nodeId) mutable {
+		                                                                	// If both the nodes are the same, we do not create store the overlapping pair
+		                                                                	if (shapeID == nodeId) {
+		                                                                		return;
+		                                                                	}
+		                                                                	// Add the new potential pair int32_to the array of potential overlapping pairs
+		                                                                	m_potentialPairs.pushBack(etk::makePair(etk::min(shapeID, nodeId), etk::max(shapeID, nodeId) ));
+		                                                                });
 	}
-
 	// Reset the array of collision shapes that have move (or have been created) during the
 	// last simulation step
 	m_numberMovedShapes = 0;
 
 	// Sort the array of potential overlapping pairs in order to remove duplicate pairs
-	std::sort(m_potentialPairs, m_potentialPairs + m_numberPotentialPairs, BroadPhasePair::smallerThan);
+	m_potentialPairs.sort(0,
+	                      m_potentialPairs.size()-1,
+	                      [](const etk::Pair<int32_t,int32_t>& _pair1, const etk::Pair<int32_t,int32_t>& _pair2) {
+	                      	if (_pair1.first < _pair2.first) {
+	                      		return true;
+	                      	}
+	                      	if (_pair1.first == _pair2.first) {
+	                      		return _pair1.second < _pair2.second;
+	                      	}
+	                      	return false;
+	                      });
 
 	// Check all the potential overlapping pairs avoiding duplicates to report unique
 	// overlapping pairs
-	uint32_t i=0;
-	while (i < m_numberPotentialPairs) {
-
+	uint32_t iii=0;
+	while (iii < m_potentialPairs.size()) {
 		// Get a potential overlapping pair
-		BroadPhasePair* pair = m_potentialPairs + i;
-		i++;
-
-		assert(pair->collisionShape1ID != pair->collisionShape2ID);
-
+		const etk::Pair<int32_t,int32_t>& pair = (m_potentialPairs[iii]);
+		++iii;
 		// Get the two collision shapes of the pair
-		ProxyShape* shape1 = static_cast<ProxyShape*>(m_dynamicAABBTree.getNodeDataPointer(pair->collisionShape1ID));
-		ProxyShape* shape2 = static_cast<ProxyShape*>(m_dynamicAABBTree.getNodeDataPointer(pair->collisionShape2ID));
-
+		ProxyShape* shape1 = static_cast<ProxyShape*>(m_dynamicAABBTree.getNodeDataPointer(pair.first));
+		ProxyShape* shape2 = static_cast<ProxyShape*>(m_dynamicAABBTree.getNodeDataPointer(pair.second));
 		// Notify the collision detection about the overlapping pair
 		m_collisionDetection.broadPhaseNotifyOverlappingPair(shape1, shape2);
-
 		// Skip the duplicate overlapping pairs
-		while (i < m_numberPotentialPairs) {
-
+		while (iii < m_potentialPairs.size()) {
 			// Get the next pair
-			BroadPhasePair* nextPair = m_potentialPairs + i;
-
+			const etk::Pair<int32_t,int32_t>& nextPair = m_potentialPairs[iii];
 			// If the next pair is different from the previous one, we stop skipping pairs
-			if (nextPair->collisionShape1ID != pair->collisionShape1ID ||
-				nextPair->collisionShape2ID != pair->collisionShape2ID) {
+			if (    nextPair.first != pair.first
+			     || nextPair.second != pair.second) {
 				break;
 			}
-			i++;
+			++iii;
 		}
 	}
-
-	// If the number of potential overlapping pairs is less than the quarter of allocated
-	// number of overlapping pairs
-	if (m_numberPotentialPairs < m_numberAllocatedPotentialPairs / 4 && m_numberPotentialPairs > 8) {
-
-		// Reduce the number of allocated potential overlapping pairs
-		BroadPhasePair* oldPairs = m_potentialPairs;
-		m_numberAllocatedPotentialPairs /= 2;
-		m_potentialPairs = (BroadPhasePair*) malloc(m_numberAllocatedPotentialPairs * sizeof(BroadPhasePair));
-		assert(m_potentialPairs);
-		memcpy(m_potentialPairs, oldPairs, m_numberPotentialPairs * sizeof(BroadPhasePair));
-		free(oldPairs);
-	}
 }
 
-void BroadPhaseAlgorithm::notifyOverlappingNodes(int32_t node1ID, int32_t node2ID) {
-
-	// If both the nodes are the same, we do not create store the overlapping pair
-	if (node1ID == node2ID) return;
-
-	// If we need to allocate more memory for the array of potential overlapping pairs
-	if (m_numberPotentialPairs == m_numberAllocatedPotentialPairs) {
-
-		// Allocate more memory for the array of potential pairs
-		BroadPhasePair* oldPairs = m_potentialPairs;
-		m_numberAllocatedPotentialPairs *= 2;
-		m_potentialPairs = (BroadPhasePair*) malloc(m_numberAllocatedPotentialPairs * sizeof(BroadPhasePair));
-		assert(m_potentialPairs);
-		memcpy(m_potentialPairs, oldPairs, m_numberPotentialPairs * sizeof(BroadPhasePair));
-		free(oldPairs);
-	}
-
-	// Add the new potential pair int32_to the array of potential overlapping pairs
-	m_potentialPairs[m_numberPotentialPairs].collisionShape1ID = etk::min(node1ID, node2ID);
-	m_potentialPairs[m_numberPotentialPairs].collisionShape2ID = etk::max(node1ID, node2ID);
-	m_numberPotentialPairs++;
-}
-
-void AABBOverlapCallback::notifyOverlappingNode(int32_t nodeId) {
-
-	m_broadPhaseAlgorithm.notifyOverlappingNodes(m_referenceNodeId, nodeId);
-}
-
-float BroadPhaseRaycastCallback::raycastBroadPhaseShape(int32_t nodeId, const Ray& ray) {
+float BroadPhaseRaycastCallback::operator()(int32_t nodeId, const Ray& ray) {
 
 	float hitFraction = float(-1.0);
 

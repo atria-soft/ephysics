@@ -568,36 +568,31 @@ int32_t DynamicAABBTree::balanceSubTreeAtNode(int32_t _nodeID) {
 }
 
 /// Report all shapes overlapping with the AABB given in parameter.
-void DynamicAABBTree::reportAllShapesOverlappingWithAABB(const AABB& aabb,
-														 DynamicAABBTreeOverlapCallback& callback) const {
-
+void DynamicAABBTree::reportAllShapesOverlappingWithAABB(const AABB& _aabb, etk::Function<void(int32_t nodeId)> _callback) const {
+	if (_callback == nullptr) {
+		EPHY_ERROR("call with nullptr callback");
+		return;
+	}
 	// Create a stack with the nodes to visit
 	Stack<int32_t, 64> stack;
 	stack.push(m_rootNodeID);
-
 	// While there are still nodes to visit
 	while(stack.getNbElements() > 0) {
-
 		// Get the next node ID to visit
 		int32_t nodeIDToVisit = stack.pop();
-
 		// Skip it if it is a null node
-		if (nodeIDToVisit == TreeNode::NULL_TREE_NODE) continue;
-
+		if (nodeIDToVisit == TreeNode::NULL_TREE_NODE) {
+			continue;
+		}
 		// Get the corresponding node
 		const TreeNode* nodeToVisit = m_nodes + nodeIDToVisit;
-
 		// If the AABB in parameter overlaps with the AABB of the node to visit
-		if (aabb.testCollision(nodeToVisit->aabb)) {
-
+		if (_aabb.testCollision(nodeToVisit->aabb)) {
 			// If the node is a leaf
 			if (nodeToVisit->isLeaf()) {
-
 				// Notify the broad-phase about a new potential overlapping pair
-				callback.notifyOverlappingNode(nodeIDToVisit);
-			}
-			else {  // If the node is not a leaf
-
+				_callback(nodeIDToVisit);
+			} else {  // If the node is not a leaf
 				// We need to visit its children
 				stack.push(nodeToVisit->children[0]);
 				stack.push(nodeToVisit->children[1]);
@@ -607,60 +602,51 @@ void DynamicAABBTree::reportAllShapesOverlappingWithAABB(const AABB& aabb,
 }
 
 // Ray casting method
-void DynamicAABBTree::raycast(const Ray& ray, DynamicAABBTreeRaycastCallback &callback) const {
-
+void DynamicAABBTree::raycast(const ephysics::Ray& _ray, etk::Function<float(int32_t _nodeId, const ephysics::Ray& _ray)> _callback) const {
 	PROFILE("DynamicAABBTree::raycast()");
-
-	float maxFraction = ray.maxFraction;
-
+	if (_callback == nullptr) {
+		EPHY_ERROR("call with nullptr callback");
+		return;
+	}
+	float maxFraction = _ray.maxFraction;
 	Stack<int32_t, 128> stack;
 	stack.push(m_rootNodeID);
-
 	// Walk through the tree from the root looking for proxy shapes
 	// that overlap with the ray AABB
 	while (stack.getNbElements() > 0) {
-
 		// Get the next node in the stack
 		int32_t nodeID = stack.pop();
-
 		// If it is a null node, skip it
-		if (nodeID == TreeNode::NULL_TREE_NODE) continue;
-
+		if (nodeID == TreeNode::NULL_TREE_NODE) {
+			continue;
+		}
 		// Get the corresponding node
 		const TreeNode* node = m_nodes + nodeID;
-
-		Ray rayTemp(ray.point1, ray.point2, maxFraction);
-
+		Ray rayTemp(_ray.point1, _ray.point2, maxFraction);
 		// Test if the ray int32_tersects with the current node AABB
-		if (!node->aabb.testRayIntersect(rayTemp)) continue;
-
+		if (node->aabb.testRayIntersect(rayTemp) == false) {
+			continue;
+		}
 		// If the node is a leaf of the tree
 		if (node->isLeaf()) {
-
 			// Call the callback that will raycast again the broad-phase shape
-			float hitFraction = callback.raycastBroadPhaseShape(nodeID, rayTemp);
-
+			float hitFraction = _callback(nodeID, rayTemp);
 			// If the user returned a hitFraction of zero, it means that
 			// the raycasting should stop here
 			if (hitFraction == 0.0f) {
 				return;
 			}
-
 			// If the user returned a positive fraction
 			if (hitFraction > 0.0f) {
-
 				// We update the maxFraction value and the ray
 				// AABB using the new maximum fraction
 				if (hitFraction < maxFraction) {
 					maxFraction = hitFraction;
 				}
 			}
-
 			// If the user returned a negative fraction, we continue
 			// the raycasting as if the proxy shape did not exist
-		}
-		else {  // If the node has children
-
+		} else {  // If the node has children
 			// Push its children in the stack of nodes to explore
 			stack.push(node->children[0]);
 			stack.push(node->children[1]);

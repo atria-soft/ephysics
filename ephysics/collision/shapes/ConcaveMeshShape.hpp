@@ -13,27 +13,7 @@
 
 namespace ephysics {
 	class ConcaveMeshShape;
-	class ConvexTriangleAABBOverlapCallback : public DynamicAABBTreeOverlapCallback {
-		private:
-			TriangleCallback& m_triangleTestCallback; //!< 
-			const ConcaveMeshShape& m_concaveMeshShape; //!< Reference to the concave mesh shape
-			const DynamicAABBTree& m_dynamicAABBTree; //!< Reference to the Dynamic AABB tree
-		public:
-			// Constructor
-			ConvexTriangleAABBOverlapCallback(TriangleCallback& _triangleCallback,
-			                                  const ConcaveMeshShape& _concaveShape,
-			                                  const DynamicAABBTree& _dynamicAABBTree):
-			  m_triangleTestCallback(_triangleCallback),
-			  m_concaveMeshShape(_concaveShape),
-			  m_dynamicAABBTree(_dynamicAABBTree) {
-				
-			}
-			// Called when a overlapping node has been found during the call to
-			// DynamicAABBTree:reportAllShapesOverlappingWithAABB()
-			virtual void notifyOverlappingNode(int32_t _nodeId);
-	};
-	
-	class ConcaveMeshRaycastCallback : public DynamicAABBTreeRaycastCallback {
+	class ConcaveMeshRaycastCallback {
 		private :
 			etk::Vector<int32_t> m_hitAABBNodes;
 			const DynamicAABBTree& m_dynamicAABBTree;
@@ -41,7 +21,7 @@ namespace ephysics {
 			ProxyShape* m_proxyShape;
 			RaycastInfo& m_raycastInfo;
 			const Ray& m_ray;
-			bool mIsHit;
+			bool m_isHit;
 		public:
 			// Constructor
 			ConcaveMeshRaycastCallback(const DynamicAABBTree& _dynamicAABBTree,
@@ -54,16 +34,16 @@ namespace ephysics {
 			  m_proxyShape(_proxyShape),
 			  m_raycastInfo(_raycastInfo),
 			  m_ray(_ray),
-			  mIsHit(false) {
+			  m_isHit(false) {
 				
 			}
 			/// Collect all the AABB nodes that are hit by the ray in the Dynamic AABB Tree
-			virtual float raycastBroadPhaseShape(int32_t _nodeId, const Ray& _ray);
+			float operator()(int32_t _nodeId, const ephysics::Ray& _ray);
 			/// Raycast all collision shapes that have been collected
 			void raycastTriangles();
 			/// Return true if a raycast hit has been found
 			bool getIsHit() const {
-				return mIsHit;
+				return m_isHit;
 			}
 	};
 	/**

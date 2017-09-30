@@ -16,49 +16,12 @@ namespace ephysics {
 	class CollisionDetection;
 	class BroadPhaseAlgorithm;
 	
-	/**
-	 * @brief It represent a potential overlapping pair during the
-	 * broad-phase collision detection.
-	 */
-	struct BroadPhasePair {
-		int32_t collisionShape1ID; //!< Broad-phase ID of the first collision shape
-		int32_t collisionShape2ID; //!< Broad-phase ID of the second collision shape
-		/**
-		 * @brief Method used to compare two pairs for sorting algorithm
-		 * @param[in] _pair1 first pair of element
-		 * @param[in] _pair2 Second pair of element
-		 * @return _pair1 is smaller than _pair2
-		 */
-		static bool smallerThan(const BroadPhasePair& _pair1, const BroadPhasePair& _pair2) {
-			if (_pair1.collisionShape1ID < _pair2.collisionShape1ID) return true;
-			if (_pair1.collisionShape1ID == _pair2.collisionShape1ID) {
-				return _pair1.collisionShape2ID < _pair2.collisionShape2ID;
-			}
-			return false;
-		}
-	};
-	
-	class AABBOverlapCallback : public DynamicAABBTreeOverlapCallback {
-		private:
-			BroadPhaseAlgorithm& m_broadPhaseAlgorithm;
-			int32_t m_referenceNodeId;
-		public:
-			// Constructor
-			AABBOverlapCallback(BroadPhaseAlgorithm& _broadPhaseAlgo, int32_t _referenceNodeId):
-			  m_broadPhaseAlgorithm(_broadPhaseAlgo),
-			  m_referenceNodeId(_referenceNodeId) {
-				
-			}
-			// Called when a overlapping node has been found during the call to
-			// DynamicAABBTree:reportAllShapesOverlappingWithAABB()
-			virtual void notifyOverlappingNode(int32_t nodeId);
-	};
-	
+	// TODO : remove this as callback ... DynamicAABBTreeOverlapCallback {
 	/**
 	 * Callback called when the AABB of a leaf node is hit by a ray the
 	 * broad-phase Dynamic AABB Tree.
 	 */
-	class BroadPhaseRaycastCallback : public DynamicAABBTreeRaycastCallback {
+	class BroadPhaseRaycastCallback {
 		private :
 			const DynamicAABBTree& m_dynamicAABBTree;
 			unsigned short m_raycastWithCategoryMaskBits;
@@ -74,7 +37,7 @@ namespace ephysics {
 				
 			}
 			// Called for a broad-phase shape that has to be tested for raycast
-			virtual float raycastBroadPhaseShape(int32_t _nodeId, const Ray& _ray);
+			float operator()(int32_t _nodeId, const Ray& _ray);
 	};
 	
 	/**
@@ -91,9 +54,7 @@ namespace ephysics {
 			uint32_t m_numberMovedShapes; //!< Number of collision shapes in the array of shapes that have moved during the last simulation step.
 			uint32_t m_numberAllocatedMovedShapes; //!< Number of allocated elements for the array of shapes that have moved during the last simulation step.
 			uint32_t m_numberNonUsedMovedShapes; //!< Number of non-used elements in the array of shapes that have moved during the last simulation step.
-			BroadPhasePair* m_potentialPairs; //!< Temporary array of potential overlapping pairs (with potential duplicates)
-			uint32_t m_numberPotentialPairs; //!< Number of potential overlapping pairs
-			uint32_t m_numberAllocatedPotentialPairs; //!< Number of allocated elements for the array of potential overlapping pairs
+			etk::Vector<etk::Pair<int32_t,int32_t>> m_potentialPairs; //!< Temporary array of potential overlapping pairs (with potential duplicates)
 			CollisionDetection& m_collisionDetection; //!< Reference to the collision detection object
 			/// Private copy-constructor
 			BroadPhaseAlgorithm(const BroadPhaseAlgorithm& algorithm);
@@ -119,8 +80,6 @@ namespace ephysics {
 			/// Remove a collision shape from the array of shapes that have moved in the last simulation
 			/// step and that need to be tested again for broad-phase overlapping.
 			void removeMovedCollisionShape(int32_t _broadPhaseID);
-			/// Notify the broad-phase about a potential overlapping pair in the dynamic AABB tree
-			void notifyOverlappingNodes(int32_t _broadPhaseId1, int32_t _broadPhaseId2);
 			/// Compute all the overlapping pairs of collision shapes
 			void computeOverlappingPairs();
 			/// Return true if the two broad-phase collision shapes are overlapping

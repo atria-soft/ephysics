@@ -53,10 +53,17 @@ void ConcaveMeshShape::getTriangleVerticesWithIndexPointer(int32_t _subPart, int
 }
 
 void ConcaveMeshShape::testAllTriangles(TriangleCallback& _callback, const AABB& _localAABB) const {
-	ConvexTriangleAABBOverlapCallback overlapCallback(_callback, *this, m_dynamicAABBTree);
 	// Ask the Dynamic AABB Tree to report all the triangles that are overlapping
 	// with the AABB of the convex shape.
-	m_dynamicAABBTree.reportAllShapesOverlappingWithAABB(_localAABB, overlapCallback);
+	m_dynamicAABBTree.reportAllShapesOverlappingWithAABB(_localAABB, [&](int32_t _nodeId) {
+	                                                     	// Get the node data (triangle index and mesh subpart index)
+	                                                     	int32_t* data = m_dynamicAABBTree.getNodeDataInt(_nodeId);
+	                                                     	// Get the triangle vertices for this node from the concave mesh shape
+	                                                     	vec3 trianglePoints[3];
+	                                                     	getTriangleVerticesWithIndexPointer(data[0], data[1], trianglePoints);
+	                                                     	// Call the callback to test narrow-phase collision with this triangle
+	                                                     	_callback.testTriangle(trianglePoints);
+	                                                     });
 }
 
 bool ConcaveMeshShape::raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const {
@@ -66,12 +73,12 @@ bool ConcaveMeshShape::raycast(const Ray& _ray, RaycastInfo& _raycastInfo, Proxy
 	// Ask the Dynamic AABB Tree to report all AABB nodes that are hit by the ray.
 	// The raycastCallback object will then compute ray casting against the triangles
 	// in the hit AABBs.
-	m_dynamicAABBTree.raycast(_ray, raycastCallback);
+	m_dynamicAABBTree.raycast(_ray, [&](int32_t _nodeId, const ephysics::Ray& _ray) mutable { return raycastCallback(_nodeId, _ray);});
 	raycastCallback.raycastTriangles();
 	return raycastCallback.getIsHit();
 }
 
-float ConcaveMeshRaycastCallback::raycastBroadPhaseShape(int32_t _nodeId, const Ray& _ray) {
+float ConcaveMeshRaycastCallback::operator()(int32_t _nodeId, const Ray& _ray) {
 	// Add the id of the hit AABB node int32_to
 	m_hitAABBNodes.pushBack(_nodeId);
 	return _ray.maxFraction;
@@ -104,7 +111,7 @@ void ConcaveMeshRaycastCallback::raycastTriangles() {
 			m_raycastInfo.meshSubpart = data[0];
 			m_raycastInfo.triangleIndex = data[1];
 			smallestHitFraction = raycastInfo.hitFraction;
-			mIsHit = true;
+			m_isHit = true;
 		}
 	}
 }
@@ -134,19 +141,6 @@ void ConcaveMeshShape::computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float 
 	_tensor.setValue(_mass, 0,     0,
 	                 0,     _mass, 0,
 	                 0,     0,     _mass);
-}
-
-void ConvexTriangleAABBOverlapCallback::notifyOverlappingNode(int32_t _nodeId) {
-
-	// Get the node data (triangle index and mesh subpart index)
-	int32_t* data = m_dynamicAABBTree.getNodeDataInt(_nodeId);
-
-	// Get the triangle vertices for this node from the concave mesh shape
-	vec3 trianglePoints[3];
-	m_concaveMeshShape.getTriangleVerticesWithIndexPointer(data[0], data[1], trianglePoints);
-
-	// Call the callback to test narrow-phase collision with this triangle
-	m_triangleTestCallback.testTriangle(trianglePoints);
 }
 
 
