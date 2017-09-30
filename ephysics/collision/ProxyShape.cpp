@@ -62,12 +62,12 @@ bool ProxyShape::raycast(const Ray& ray, RaycastInfo& raycastInfo) {
 				 ray.maxFraction);
 
 	bool isHit = m_collisionShape->raycast(rayLocal, raycastInfo, this);
-
-	// Convert the raycast info int32_to world-space
-	raycastInfo.worldPoint = localToWorldTransform * raycastInfo.worldPoint;
-	raycastInfo.worldNormal = localToWorldTransform.getOrientation() * raycastInfo.worldNormal;
-	raycastInfo.worldNormal.normalize();
-
+	if (isHit == true) {
+		// Convert the raycast info int32_to world-space
+		raycastInfo.worldPoint = localToWorldTransform * raycastInfo.worldPoint;
+		raycastInfo.worldNormal = localToWorldTransform.getOrientation() * raycastInfo.worldNormal;
+		raycastInfo.worldNormal.normalize();
+	}
 	return isHit;
 }
 

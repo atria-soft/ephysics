@@ -48,67 +48,63 @@ bool BoxShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pro
 	vec3 rayDirection = ray.point2 - ray.point1;
 	float tMin = FLT_MIN;
 	float tMax = FLT_MAX;
-	vec3 normalDirection(float(0), float(0), float(0));
-	vec3 currentNormal;
-
+	vec3 normalDirection(0,0,0);
+	vec3 currentNormal(0,0,0);
 	// For each of the three slabs
-	for (int32_t i=0; i<3; i++) {
-
+	for (int32_t iii=0; iii<3; ++iii) {
 		// If ray is parallel to the slab
-		if (etk::abs(rayDirection[i]) < FLT_EPSILON) {
-
+		if (etk::abs(rayDirection[iii]) < FLT_EPSILON) {
 			// If the ray's origin is not inside the slab, there is no hit
-			if (ray.point1[i] > m_extent[i] || ray.point1[i] < -m_extent[i]) return false;
-		}
-		else {
-
-			// Compute the int32_tersection of the ray with the near and far plane of the slab
-			float oneOverD = 1.0f / rayDirection[i];
-			float t1 = (-m_extent[i] - ray.point1[i]) * oneOverD;
-			float t2 = (m_extent[i] - ray.point1[i]) * oneOverD;
-			currentNormal[0] = (i == 0) ? -m_extent[i] : 0.0f;
-			currentNormal[1] = (i == 1) ? -m_extent[i] : 0.0f;
-			currentNormal[2] = (i == 2) ? -m_extent[i] : 0.0f;
-
-			// Swap t1 and t2 if need so that t1 is int32_tersection with near plane and
+			if (ray.point1[iii] > m_extent[iii] || ray.point1[iii] < -m_extent[iii]) {
+				return false;
+			}
+		} else {
+			// Compute the intersection of the ray with the near and far plane of the slab
+			float oneOverD = 1.0f / rayDirection[iii];
+			float t1 = (-m_extent[iii] - ray.point1[iii]) * oneOverD;
+			float t2 = (m_extent[iii] - ray.point1[iii]) * oneOverD;
+			currentNormal[0] = (iii == 0) ? -m_extent[iii] : 0.0f;
+			currentNormal[1] = (iii == 1) ? -m_extent[iii] : 0.0f;
+			currentNormal[2] = (iii == 2) ? -m_extent[iii] : 0.0f;
+			// Swap t1 and t2 if need so that t1 is intersection with near plane and
 			// t2 with far plane
 			if (t1 > t2) {
 				etk::swap(t1, t2);
 				currentNormal = -currentNormal;
 			}
-
-			// Compute the int32_tersection of the of slab int32_tersection int32_terval with previous slabs
+			// Compute the intersection of the of slab intersection interval with previous slabs
 			if (t1 > tMin) {
 				tMin = t1;
 				normalDirection = currentNormal;
 			}
 			tMax = etk::min(tMax, t2);
-
 			// If tMin is larger than the maximum raycasting fraction, we return no hit
-			if (tMin > ray.maxFraction) return false;
-
-			// If the slabs int32_tersection is empty, there is no hit
-			if (tMin > tMax) return false;
+			if (tMin > ray.maxFraction) {
+				return false;
+			}
+			// If the slabs intersection is empty, there is no hit
+			if (tMin > tMax) {
+				return false;
+			}
 		}
 	}
-
 	// If tMin is negative, we return no hit
-	if (tMin < 0.0f || tMin > ray.maxFraction) return false;
-
+	if (    tMin < 0.0f
+	     || tMin > ray.maxFraction) {
+		return false;
+	}
+	if (normalDirection == vec3(0,0,0)) {
+		return false;
+	}
 	// The ray int32_tersects the three slabs, we compute the hit point
 	vec3 localHitPoint = ray.point1 + tMin * rayDirection;
-
 	raycastInfo.body = proxyShape->getBody();
 	raycastInfo.proxyShape = proxyShape;
 	raycastInfo.hitFraction = tMin;
 	raycastInfo.worldPoint = localHitPoint;
 	raycastInfo.worldNormal = normalDirection;
-
 	return true;
 }
-
-
-
 
 // Return the extents of the box
 /**
