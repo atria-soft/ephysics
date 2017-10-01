@@ -27,7 +27,9 @@ namespace ephysics {
 		public:
 			/// Private copy-constructor
 			TriangleEPA(const TriangleEPA& _triangle) {
-				memcpy(m_indicesVertices, _triangle.m_indicesVertices, sizeof(m_indicesVertices));
+				m_indicesVertices[0] = _triangle.m_indicesVertices[0];
+				m_indicesVertices[1] = _triangle.m_indicesVertices[1];
+				m_indicesVertices[2] = _triangle.m_indicesVertices[2];
 				m_adjacentEdges[0] = _triangle.m_adjacentEdges[0];
 				m_adjacentEdges[1] = _triangle.m_adjacentEdges[1];
 				m_adjacentEdges[2] = _triangle.m_adjacentEdges[2];
@@ -40,7 +42,9 @@ namespace ephysics {
 			}
 			/// Private assignment operator
 			TriangleEPA& operator=(const TriangleEPA& _triangle) {
-				memcpy(m_indicesVertices, _triangle.m_indicesVertices, sizeof(m_indicesVertices));
+				m_indicesVertices[0] = _triangle.m_indicesVertices[0];
+				m_indicesVertices[1] = _triangle.m_indicesVertices[1];
+				m_indicesVertices[2] = _triangle.m_indicesVertices[2];
 				m_adjacentEdges[0] = _triangle.m_adjacentEdges[0];
 				m_adjacentEdges[1] = _triangle.m_adjacentEdges[1];
 				m_adjacentEdges[2] = _triangle.m_adjacentEdges[2];
