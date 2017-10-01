@@ -11,45 +11,31 @@
 
 using namespace ephysics;
 
-BroadPhaseAlgorithm::BroadPhaseAlgorithm(CollisionDetection& collisionDetection)
-					:m_dynamicAABBTree(DYNAMIC_TREE_AABB_GAP), m_numberMovedShapes(0), m_numberAllocatedMovedShapes(8),
-					 m_numberNonUsedMovedShapes(0),
-					 m_collisionDetection(collisionDetection) {
-
-	// Allocate memory for the array of non-static proxy shapes IDs
-	m_movedShapes = (int32_t*) malloc(m_numberAllocatedMovedShapes * sizeof(int32_t));
-	assert(m_movedShapes != NULL);
-	
+BroadPhaseAlgorithm::BroadPhaseAlgorithm(CollisionDetection& _collisionDetection):
+  m_dynamicAABBTree(DYNAMIC_TREE_AABB_GAP),
+  m_collisionDetection(_collisionDetection) {
+	m_movedShapes.reserve(8);
 	m_potentialPairs.reserve(8);
 }
 
 BroadPhaseAlgorithm::~BroadPhaseAlgorithm() {
-
-	// Release the memory for the array of non-static proxy shapes IDs
-	free(m_movedShapes);
+	
 }
 
-void BroadPhaseAlgorithm::addMovedCollisionShape(int32_t broadPhaseID) {
+void BroadPhaseAlgorithm::addMovedCollisionShape(int32_t _broadPhaseID) {
+	m_movedShapes.pushBack(_broadPhaseID);
+}
 
-	// Allocate more elements in the array of shapes that have moved if necessary
-	if (m_numberAllocatedMovedShapes == m_numberMovedShapes) {
-		m_numberAllocatedMovedShapes *= 2;
-		int32_t* oldArray = m_movedShapes;
-		m_movedShapes = (int32_t*) malloc(m_numberAllocatedMovedShapes * sizeof(int32_t));
-		assert(m_movedShapes != NULL);
-		memcpy(m_movedShapes, oldArray, m_numberMovedShapes * sizeof(int32_t));
-		free(oldArray);
+void BroadPhaseAlgorithm::removeMovedCollisionShape(int32_t _broadPhaseID) {
+	auto it = m_movedShapes.begin();
+	while (it != m_movedShapes.end()) {
+		if (*it == _broadPhaseID) {
+			it = m_movedShapes.erase(it);
+		} else {
+			++it;
+		}
 	}
-
-	// Store the broad-phase ID int32_to the array of shapes that have moved
-	assert(m_numberMovedShapes < m_numberAllocatedMovedShapes);
-	assert(m_movedShapes != NULL);
-	m_movedShapes[m_numberMovedShapes] = broadPhaseID;
-	m_numberMovedShapes++;
-}
-
-void BroadPhaseAlgorithm::removeMovedCollisionShape(int32_t broadPhaseID) {
-
+	/*
 	assert(m_numberNonUsedMovedShapes <= m_numberMovedShapes);
 
 	// If less than the quarter of allocated elements of the non-static shapes IDs array
@@ -81,6 +67,7 @@ void BroadPhaseAlgorithm::removeMovedCollisionShape(int32_t broadPhaseID) {
 			break;
 		}
 	}
+	*/
 }
 
 void BroadPhaseAlgorithm::addProxyCollisionShape(ProxyShape* proxyShape, const AABB& aabb) {
@@ -129,28 +116,27 @@ void BroadPhaseAlgorithm::computeOverlappingPairs() {
 	m_potentialPairs.clear();
 	// For all collision shapes that have moved (or have been created) during the
 	// last simulation step
-	for (uint32_t i=0; i<m_numberMovedShapes; i++) {
-		int32_t shapeID = m_movedShapes[i];
-		if (shapeID == -1) {
+	for (auto &it: m_movedShapes) {
+		if (it == -1) {
+			// impossible case ...
 			continue;
 		}
 		// Get the AABB of the shape
-		const AABB& shapeAABB = m_dynamicAABBTree.getFatAABB(shapeID);
+		const AABB& shapeAABB = m_dynamicAABBTree.getFatAABB(it);
 		// Ask the dynamic AABB tree to report all collision shapes that overlap with
 		// this AABB. The method BroadPhase::notifiyOverlappingPair() will be called
 		// by the dynamic AABB tree for each potential overlapping pair.
 		m_dynamicAABBTree.reportAllShapesOverlappingWithAABB(shapeAABB, [&](int32_t nodeId) mutable {
 		                                                                	// If both the nodes are the same, we do not create store the overlapping pair
-		                                                                	if (shapeID == nodeId) {
+		                                                                	if (it == nodeId) {
 		                                                                		return;
 		                                                                	}
 		                                                                	// Add the new potential pair int32_to the array of potential overlapping pairs
-		                                                                	m_potentialPairs.pushBack(etk::makePair(etk::min(shapeID, nodeId), etk::max(shapeID, nodeId) ));
+		                                                                	m_potentialPairs.pushBack(etk::makePair(etk::min(it, nodeId), etk::max(it, nodeId) ));
 		                                                                });
 	}
-	// Reset the array of collision shapes that have move (or have been created) during the
-	// last simulation step
-	m_numberMovedShapes = 0;
+	// Reset the array of collision shapes that have move (or have been created) during the last simulation step
+	m_movedShapes.clear();
 
 	// Sort the array of potential overlapping pairs in order to remove duplicate pairs
 	m_potentialPairs.sort(0,

@@ -50,16 +50,13 @@ namespace ephysics {
 	class BroadPhaseAlgorithm {
 		protected :
 			DynamicAABBTree m_dynamicAABBTree; //!< Dynamic AABB tree
-			int32_t* m_movedShapes; //!< Array with the broad-phase IDs of all collision shapes that have moved (or have been created) during the last simulation step. Those are the shapes that need to be tested for overlapping in the next simulation step.
-			uint32_t m_numberMovedShapes; //!< Number of collision shapes in the array of shapes that have moved during the last simulation step.
-			uint32_t m_numberAllocatedMovedShapes; //!< Number of allocated elements for the array of shapes that have moved during the last simulation step.
-			uint32_t m_numberNonUsedMovedShapes; //!< Number of non-used elements in the array of shapes that have moved during the last simulation step.
+			etk::Vector<int32_t> m_movedShapes; //!< Array with the broad-phase IDs of all collision shapes that have moved (or have been created) during the last simulation step. Those are the shapes that need to be tested for overlapping in the next simulation step.
 			etk::Vector<etk::Pair<int32_t,int32_t>> m_potentialPairs; //!< Temporary array of potential overlapping pairs (with potential duplicates)
 			CollisionDetection& m_collisionDetection; //!< Reference to the collision detection object
 			/// Private copy-constructor
-			BroadPhaseAlgorithm(const BroadPhaseAlgorithm& algorithm);
+			BroadPhaseAlgorithm(const BroadPhaseAlgorithm& _obj);
 			/// Private assignment operator
-			BroadPhaseAlgorithm& operator=(const BroadPhaseAlgorithm& algorithm);
+			BroadPhaseAlgorithm& operator=(const BroadPhaseAlgorithm& _obj);
 		public :
 			/// Constructor
 			BroadPhaseAlgorithm(CollisionDetection& _collisionDetection);

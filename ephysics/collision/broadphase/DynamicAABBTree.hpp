@@ -11,9 +11,7 @@
 #include <etk/Function.hpp>
 
 namespace ephysics {
-	class BroadPhaseAlgorithm;
-	class BroadPhaseRaycastTestCallback;
-	struct RaycastTest;
+	// TODO: to replace this, create a Tree<T> template (multiple child) or TreeRedBlack<T>
 	/**
 	 * @brief It represents a node of the dynamic AABB tree.
 	 */
