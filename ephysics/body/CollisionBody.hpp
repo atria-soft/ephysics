@@ -1,11 +1,11 @@
 /** @file
- * @author Daniel Chappuis
- * @copyright 2010-2016 Daniel Chappuis
- * @license BSD 3 clauses (see license file)
+ * Original ReactPhysics3D C++ library by Daniel Chappuis <http://www.reactphysics3d.com/> This code is re-licensed with permission from ReactPhysics3D author.
+ * @author Daniel CHAPPUIS
+ * @author Edouard DUPIN
+ * @copyright 2010-2016, Daniel Chappuis
+ * @copyright 2017, Edouard DUPIN
+ * @license MPL v2.0 (see license file)
  */
-#pragma once
-
-// Libraries
 #include <ephysics/body/Body.hpp>
 #include <etk/math/Transform3D.hpp>
 #include <ephysics/collision/shapes/AABB.hpp>
