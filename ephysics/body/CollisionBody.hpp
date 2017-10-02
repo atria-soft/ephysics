@@ -6,6 +6,7 @@
  * @copyright 2017, Edouard DUPIN
  * @license MPL v2.0 (see license file)
  */
+#pragma once
 #include <ephysics/body/Body.hpp>
 #include <etk/math/Transform3D.hpp>
 #include <ephysics/collision/shapes/AABB.hpp>

@@ -303,7 +303,11 @@ void EPAAlgorithm::computePenetrationDepthAndContactPoints(const Simplex& _simpl
 			EPHY_INFO("      point=" << points[indexNewVertex]);
 			EPHY_INFO("close point=" << triangle->getClosestPoint());
 			EPHY_INFO("         ==>" << wDotv);
-			EPHY_ASSERT(wDotv >= 0.0, "depth penetration error");
+			if (wDotv < 0.0) {
+				EPHY_ERROR("depth penetration error " << wDotv);
+				continue;
+			}
+			EPHY_ASSERT(wDotv >= 0.0, "depth penetration error " << wDotv);
 			float wDotVSquare = wDotv * wDotv / triangle->getDistSquare();
 			if (wDotVSquare < upperBoundSquarePenDepth) {
 				upperBoundSquarePenDepth = wDotVSquare;
