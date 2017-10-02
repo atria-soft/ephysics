@@ -340,7 +340,7 @@ void CollisionDetection::createContact(OverlappingPair* overlappingPair, const C
 	// Add the overlapping pair int32_to the set of pairs in contact during narrow-phase
 	overlappingpairid pairId = OverlappingPair::computeID(overlappingPair->getShape1(),
 														  overlappingPair->getShape2());
-	m_contactOverlappingPairs[pairId] = overlappingPair;
+	m_contactOverlappingPairs.set(pairId, overlappingPair);
 }
 
 void CollisionDetection::addAllContactManifoldsToBodies() {
