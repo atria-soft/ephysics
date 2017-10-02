@@ -256,9 +256,9 @@ void RigidBody::updateBroadPhaseState() const {
 	for (ProxyShape* shape = m_proxyCollisionShapes; shape != nullptr; shape = shape->m_next) {
 		// Recompute the world-space AABB of the collision shape
 		AABB aabb;
-		EPHY_ERROR("         : " << aabb.getMin() << " " << aabb.getMax());
+		EPHY_VERBOSE("         : " << aabb.getMin() << " " << aabb.getMax());
 		shape->getCollisionShape()->computeAABB(aabb, m_transform *shape->getLocalToBodyTransform());
-		EPHY_ERROR("         : " << aabb.getMin() << " " << aabb.getMax());
+		EPHY_VERBOSE("         : " << aabb.getMin() << " " << aabb.getMax());
 		// Update the broad-phase state for the proxy collision shape
 		m_world.m_collisionDetection.updateProxyCollisionShape(shape, aabb, displacement);
 	}
