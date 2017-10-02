@@ -131,8 +131,8 @@ bool DynamicAABBTree::updateObject(int32_t _nodeID, const AABB& _newAABB, const 
 	assert(_nodeID >= 0 && _nodeID < m_numberAllocatedNodes);
 	assert(m_nodes[_nodeID].isLeaf());
 	assert(m_nodes[_nodeID].height >= 0);
-	EPHY_INFO(" compare : " << m_nodes[_nodeID].aabb.m_minCoordinates << " " << m_nodes[_nodeID].aabb.m_maxCoordinates);
-	EPHY_INFO("         : " << _newAABB.m_minCoordinates << " " << _newAABB.m_maxCoordinates);
+	EPHY_VERBOSE(" compare : " << m_nodes[_nodeID].aabb.m_minCoordinates << " " << m_nodes[_nodeID].aabb.m_maxCoordinates);
+	EPHY_VERBOSE("         : " << _newAABB.m_minCoordinates << " " << _newAABB.m_maxCoordinates);
 	// If the new AABB is still inside the fat AABB of the node
 	if (    _forceReinsert == false
 	     && m_nodes[_nodeID].aabb.contains(_newAABB)) {
