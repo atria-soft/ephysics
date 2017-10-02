@@ -1,22 +1,16 @@
 /** @file
- * @author Daniel Chappuis
- * @copyright 2010-2016 Daniel Chappuis
- * @license BSD 3 clauses (see license file)
+ * Original ReactPhysics3D C++ library by Daniel Chappuis <http://www.reactphysics3d.com/> This code is re-licensed with permission from ReactPhysics3D author.
+ * @author Daniel CHAPPUIS
+ * @author Edouard DUPIN
+ * @copyright 2010-2016, Daniel Chappuis
+ * @copyright 2017, Edouard DUPIN
+ * @license MPL v2.0 (see license file)
  */
-
-// Libraries
 #include <ephysics/collision/narrowphase/GJK/Simplex.hpp>
 
-// We want to use the ReactPhysics3D namespace
 using namespace ephysics;
 
-// Constructor
 Simplex::Simplex() : mBitsCurrentSimplex(0x0), mAllBits(0x0) {
-
-}
-
-// Destructor
-Simplex::~Simplex() {
 
 }
 

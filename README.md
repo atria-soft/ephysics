@@ -1,18 +1,19 @@
-[![Travis Build Status](https://travis-ci.org/DanielChappuis/ephysics.svg?branch=master)](https://travis-ci.org/DanielChappuis/ephysics)
+[![Travis Build Status](https://travis-ci.org/atria-soft/ephysics.svg?branch=master)](https://travis-ci.org/atria-soft/ephysics)
 
-## ReactPhysics3D
+## ephysics
 
-ReactPhysics3D is an open source C++ physics engine library that can be used in 3D simulations and games.
+ephysics is an open source C++ physics engine library that can be used in 3D simulations and games.
 
-Website : [http://www.ephysics.com](http://www.ephysics.com)
+Website: [http://www.ephysics.com](http://www.ephysics.com)
 
-Author : Daniel Chappuis
+Author: Daniel CHAPPUIS (original project ReactPhysics3D)
+Author: Edouard DUPIN (forker)
 
 <img src="https://raw.githubusercontent.com/DanielChappuis/ephysics/master/documentation/UserManual/images/testbed.png" alt="Drawing" height="400" />
 
 ## Features
 
-ReactPhysics3D has the following features :
+ephysics has the following features:
 
 - Rigid body dynamics
 - Discrete collision detection
@@ -34,18 +35,5 @@ ReactPhysics3D has the following features :
 
 ## License
 
-The ReactPhysics3D library is released under the open-source BSD 3 clauses license.
+The ephysics library is released under the MPL-2 license.
 
-## Documentation
-
-You can find the User Manual and the Doxygen API Documentation [here](http://www.ephysics.com/documentation.html)
-
-## Branches
-
-The "master" branch always contains the last released version of the library and some possible bug fixes. This is the most stable version. On the other side,
-the "develop" branch is used for development. This branch is frequently updated and can be quite unstable. Therefore, if you want to use the library in
-your application, it is recommended to checkout the "master" branch.
-
-## Issues
-
-If you find any issue with the library, you can report it on the issue tracker [here](https://github.com/DanielChappuis/ephysics/issues).
