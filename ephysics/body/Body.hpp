@@ -154,7 +154,9 @@ namespace ephysics {
 			bool operator!=(const Body& _obj) const {
 				return (m_id != _obj.m_id);
 			}
+			// TODO : remove this
 			friend class DynamicsWorld;
+			friend class Island;
 	};
 
 }

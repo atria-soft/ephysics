@@ -20,14 +20,9 @@ CollisionWorld::CollisionWorld() :
 }
 
 CollisionWorld::~CollisionWorld() {
-	// Destroy all the collision bodies that have not been removed
-	etk::Set<CollisionBody*>::Iterator itBodies;
-	for (itBodies = m_bodies.begin(); itBodies != m_bodies.end(); ) {
-		 etk::Set<CollisionBody*>::Iterator itToRemove = itBodies;
-		 ++itBodies;
-		destroyCollisionBody(*itToRemove);
+	while(m_bodies.size() != 0) {
+		destroyCollisionBody(m_bodies[0]);
 	}
-	assert(m_bodies.empty());
 }
 
 /**
@@ -41,7 +36,7 @@ CollisionBody* CollisionWorld::createCollisionBody(const etk::Transform3D& trans
 	// Largest index cannot be used (it is used for invalid index)
 	EPHY_ASSERT(bodyID < UINT64_MAX, "index too big");
 	// Create the collision body
-	CollisionBody* collisionBody = new CollisionBody(transform, *this, bodyID);
+	CollisionBody* collisionBody = ETK_NEW(CollisionBody, transform, *this, bodyID);
 	EPHY_ASSERT(collisionBody != nullptr, "empty Body collision");
 	// Add the collision body to the world
 	m_bodies.add(collisionBody);
@@ -64,7 +59,7 @@ void CollisionWorld::destroyCollisionBody(CollisionBody* collisionBody) {
 	// Remove the collision body from the list of bodies
 	m_bodies.erase(m_bodies.find(collisionBody));
 
-	delete collisionBody;
+	ETK_DELETE(CollisionBody, collisionBody);
 	collisionBody = nullptr;
 }
 

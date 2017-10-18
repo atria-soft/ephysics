@@ -137,7 +137,7 @@ void CollisionDetection::computeNarrowPhase() {
 			 !m_broadPhaseAlgorithm.testOverlappingShapes(shape1, shape2)) {
 			// TODO : Remove all the contact manifold of the overlapping pair from the contact manifolds list of the two bodies involved
 			// Destroy the overlapping pair
-			delete it->second;
+			ETK_DELETE(OverlappingPair, it->second);
 			it->second = nullptr;
 			it = m_overlappingPairs.erase(it);
 			continue;
@@ -228,7 +228,7 @@ void CollisionDetection::computeNarrowPhaseBetweenShapes(CollisionCallback* call
 			 !m_broadPhaseAlgorithm.testOverlappingShapes(shape1, shape2)) {
 			// TODO : Remove all the contact manifold of the overlapping pair from the contact manifolds list of the two bodies involved
 			// Destroy the overlapping pair
-			delete it->second;
+			ETK_DELETE(OverlappingPair, it->second);
 			it->second = nullptr;
 			it = m_overlappingPairs.erase(it);
 			continue;
@@ -294,7 +294,7 @@ void CollisionDetection::broadPhaseNotifyOverlappingPair(ProxyShape* shape1, Pro
 	int32_t nbMaxManifolds = CollisionShape::computeNbMaxContactManifolds(shape1->getCollisionShape()->getType(),
 																	  shape2->getCollisionShape()->getType());
 	// Create the overlapping pair and add it int32_to the set of overlapping pairs
-	OverlappingPair* newPair = new OverlappingPair(shape1, shape2, nbMaxManifolds);
+	OverlappingPair* newPair = ETK_NEW(OverlappingPair, shape1, shape2, nbMaxManifolds);
 	assert(newPair != nullptr);
 	m_overlappingPairs.set(pairID, newPair);
 	// Wake up the two bodies
@@ -310,7 +310,7 @@ void CollisionDetection::removeProxyCollisionShape(ProxyShape* proxyShape) {
 			it->second->getShape2()->m_broadPhaseID == proxyShape->m_broadPhaseID) {
 			// TODO : Remove all the contact manifold of the overlapping pair from the contact manifolds list of the two bodies involved
 			// Destroy the overlapping pair
-			delete it->second;
+			ETK_DELETE(OverlappingPair, it->second);
 			it->second = nullptr;
 			it = m_overlappingPairs.erase(it);
 		} else {
@@ -325,22 +325,26 @@ void CollisionDetection::notifyContact(OverlappingPair* overlappingPair, const C
 	// If it is the first contact since the pairs are overlapping
 	if (overlappingPair->getNbContactPoints() == 0) {
 		// Trigger a callback event
-		if (m_world->m_eventListener != NULL) m_world->m_eventListener->beginContact(contactInfo);
+		if (m_world->m_eventListener != NULL) {
+			m_world->m_eventListener->beginContact(contactInfo);
+		}
 	}
 	// Create a new contact
 	createContact(overlappingPair, contactInfo);
 	// Trigger a callback event for the new contact
-	if (m_world->m_eventListener != NULL) m_world->m_eventListener->newContact(contactInfo);
+	if (m_world->m_eventListener != NULL) {
+		m_world->m_eventListener->newContact(contactInfo);
+	}
 }
 
 void CollisionDetection::createContact(OverlappingPair* overlappingPair, const ContactPointInfo& contactInfo) {
 	// Create a new contact
-	ContactPoint* contact = new ContactPoint(contactInfo);
+	ContactPoint* contact = ETK_NEW(ContactPoint, contactInfo);
 	// Add the contact to the contact manifold set of the corresponding overlapping pair
 	overlappingPair->addContact(contact);
 	// Add the overlapping pair int32_to the set of pairs in contact during narrow-phase
 	overlappingpairid pairId = OverlappingPair::computeID(overlappingPair->getShape1(),
-														  overlappingPair->getShape2());
+	                                                      overlappingPair->getShape2());
 	m_contactOverlappingPairs.set(pairId, overlappingPair);
 }
 
@@ -365,10 +369,10 @@ void CollisionDetection::addContactManifoldToBody(OverlappingPair* pair) {
 		assert(contactManifold->getNbContactPoints() > 0);
 		// Add the contact manifold at the beginning of the linked
 		// list of contact manifolds of the first body
-		body1->m_contactManifoldsList = new ContactManifoldListElement(contactManifold, body1->m_contactManifoldsList);;
+		body1->m_contactManifoldsList = ETK_NEW(ContactManifoldListElement, contactManifold, body1->m_contactManifoldsList);;
 		// Add the contact manifold at the beginning of the linked
 		// list of the contact manifolds of the second body
-		body2->m_contactManifoldsList = new ContactManifoldListElement(contactManifold, body2->m_contactManifoldsList);;
+		body2->m_contactManifoldsList = ETK_NEW(ContactManifoldListElement, contactManifold, body2->m_contactManifoldsList);;
 	}
 }
 

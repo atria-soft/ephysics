@@ -50,7 +50,7 @@ class TestPointInside {
 	public :
 		TestPointInside() {
 			// Create the world
-			m_world = new ephysics::CollisionWorld();
+			m_world = ETK_NEW(ephysics::CollisionWorld);
 			// Body transform
 			vec3 position(-3, 2, 7);
 			etk::Quaternion orientation(M_PI / 5, M_PI / 6, M_PI / 7, 1);
@@ -71,15 +71,15 @@ class TestPointInside {
 			// Compute the the transform from a local shape point to world-space
 			m_localShapeToWorld = m_bodyTransform * m_shapeTransform;
 			// Create collision shapes
-			m_boxShape = new ephysics::BoxShape(vec3(2, 3, 4), 0);
+			m_boxShape = ETK_NEW(ephysics::BoxShape, vec3(2, 3, 4), 0);
 			m_boxProxyShape = m_boxBody->addCollisionShape(m_boxShape, m_shapeTransform);
-			m_sphereShape = new ephysics::SphereShape(3);
+			m_sphereShape = ETK_NEW(ephysics::SphereShape, 3);
 			m_sphereProxyShape = m_sphereBody->addCollisionShape(m_sphereShape, m_shapeTransform);
-			m_capsuleShape = new ephysics::CapsuleShape(2, 10);
+			m_capsuleShape = ETK_NEW(ephysics::CapsuleShape, 2, 10);
 			m_capsuleProxyShape = m_capsuleBody->addCollisionShape(m_capsuleShape, m_shapeTransform);
-			m_coneShape = new ephysics::ConeShape(2, 6, 0);
+			m_coneShape = ETK_NEW(ephysics::ConeShape, 2, 6, 0);
 			m_coneProxyShape = m_coneBody->addCollisionShape(m_coneShape, m_shapeTransform);
-			m_convexMeshShape = new ephysics::ConvexMeshShape(0.0);			 // Box of dimension (2, 3, 4)
+			m_convexMeshShape = ETK_NEW(ephysics::ConvexMeshShape, 0.0f);			 // Box of dimension (2, 3, 4)
 			m_convexMeshShape->addVertex(vec3(-2, -3, -4));
 			m_convexMeshShape->addVertex(vec3(2, -3, -4));
 			m_convexMeshShape->addVertex(vec3(2, -3, 4));
@@ -89,7 +89,7 @@ class TestPointInside {
 			m_convexMeshShape->addVertex(vec3(2, 3, 4));
 			m_convexMeshShape->addVertex(vec3(-2, 3, 4));
 			m_convexMeshProxyShape = m_convexMeshBody->addCollisionShape(m_convexMeshShape, m_shapeTransform);
-			m_convexMeshShapeBodyEdgesInfo = new ephysics::ConvexMeshShape(0.0);
+			m_convexMeshShapeBodyEdgesInfo = ETK_NEW(ephysics::ConvexMeshShape, 0.0f);
 			m_convexMeshShapeBodyEdgesInfo->addVertex(vec3(-2, -3, -4));
 			m_convexMeshShapeBodyEdgesInfo->addVertex(vec3(2, -3, -4));
 			m_convexMeshShapeBodyEdgesInfo->addVertex(vec3(2, -3, 4));
@@ -111,10 +111,8 @@ class TestPointInside {
 			m_convexMeshShapeBodyEdgesInfo->addEdge(2, 6);
 			m_convexMeshShapeBodyEdgesInfo->addEdge(3, 7);
 			m_convexMeshShapeBodyEdgesInfo->setIsEdgesInformationUsed(true);
-			m_convexMeshProxyShapeEdgesInfo = m_convexMeshBodyEdgesInfo->addCollisionShape(
-																	 m_convexMeshShapeBodyEdgesInfo,
-																	 m_shapeTransform);
-			m_cylinderShape = new ephysics::CylinderShape(3, 8, 0);
+			m_convexMeshProxyShapeEdgesInfo = m_convexMeshBodyEdgesInfo->addCollisionShape(m_convexMeshShapeBodyEdgesInfo, m_shapeTransform);
+			m_cylinderShape = ETK_NEW(ephysics::CylinderShape, 3, 8, 0);
 			m_cylinderProxyShape = m_cylinderBody->addCollisionShape(m_cylinderShape, m_shapeTransform);
 			// Compound shape is a cylinder and a sphere
 			vec3 positionShape2(vec3(4, 2, -3));
@@ -126,13 +124,14 @@ class TestPointInside {
 		}
 		/// Destructor
 		~TestPointInside() {
-			delete m_boxShape;
-			delete m_sphereShape;
-			delete m_capsuleShape;
-			delete m_coneShape;
-			delete m_convexMeshShape;
-			delete m_convexMeshShapeBodyEdgesInfo;
-			delete m_cylinderShape;
+			ETK_DELETE(ephysics::BoxShape, m_boxShape);
+			ETK_DELETE(ephysics::SphereShape, m_sphereShape);
+			ETK_DELETE(ephysics::CapsuleShape, m_capsuleShape);
+			ETK_DELETE(ephysics::ConeShape, m_coneShape);
+			ETK_DELETE(ephysics::ConvexMeshShape, m_convexMeshShape);
+			ETK_DELETE(ephysics::ConvexMeshShape, m_convexMeshShapeBodyEdgesInfo);
+			ETK_DELETE(ephysics::CylinderShape, m_cylinderShape);
+			ETK_DELETE(ephysics::CollisionWorld, m_world);
 		}
 };
 

@@ -34,12 +34,12 @@ namespace ephysics {
 			vec3 m_gravity; //!< Gravity vector of the world
 			float m_timeStep; //!< Current frame time step (in seconds)
 			bool m_isGravityEnabled; //!< True if the gravity force is on
-			vec3* m_constrainedLinearVelocities; //!< Array of constrained linear velocities (state of the linear velocities after solving the constraints)
-			vec3* m_constrainedAngularVelocities; //!< Array of constrained angular velocities (state of the angular velocities after solving the constraints)
-			vec3* m_splitLinearVelocities; //!< Split linear velocities for the position contact solver (split impulse)
-			vec3* m_splitAngularVelocities; //!< Split angular velocities for the position contact solver (split impulse)
-			vec3* m_constrainedPositions; //!< Array of constrained rigid bodies position (for position error correction)
-			etk::Quaternion* m_constrainedOrientations; //!< Array of constrained rigid bodies orientation (for position error correction)
+			etk::Vector<vec3> m_constrainedLinearVelocities; //!< Array of constrained linear velocities (state of the linear velocities after solving the constraints)
+			etk::Vector<vec3> m_constrainedAngularVelocities; //!< Array of constrained angular velocities (state of the angular velocities after solving the constraints)
+			etk::Vector<vec3> m_splitLinearVelocities; //!< Split linear velocities for the position contact solver (split impulse)
+			etk::Vector<vec3> m_splitAngularVelocities; //!< Split angular velocities for the position contact solver (split impulse)
+			etk::Vector<vec3> m_constrainedPositions; //!< Array of constrained rigid bodies position (for position error correction)
+			etk::Vector<etk::Quaternion> m_constrainedOrientations; //!< Array of constrained rigid bodies orientation (for position error correction)
 			etk::Map<RigidBody*, uint32_t> m_mapBodyToConstrainedVelocityIndex; //!< Map body to their index in the constrained velocities array
 			etk::Vector<Island*> m_islands; //!< Array with all the islands of awaken bodies
 			uint32_t m_numberBodiesCapacity; //!< Current allocated capacity for the bodies

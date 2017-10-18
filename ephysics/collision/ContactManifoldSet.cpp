@@ -76,7 +76,7 @@ void ContactManifoldSet::addContactPoint(ContactPoint* contact) {
 	// new contact point
 	if (smallestDepthIndex == -1) {
 		// Delete the new contact
-		delete contact;
+		ETK_DELETE(ContactPoint, contact);
 		contact = nullptr;
 		return;
 	}
@@ -155,7 +155,7 @@ void ContactManifoldSet::clear() {
 
 void ContactManifoldSet::createManifold(int16_t normalDirectionId) {
 	assert(m_nbManifolds < m_nbMaxManifolds);
-	m_manifolds[m_nbManifolds] = new ContactManifold(m_shape1, m_shape2, normalDirectionId);
+	m_manifolds[m_nbManifolds] = ETK_NEW(ContactManifold, m_shape1, m_shape2, normalDirectionId);
 	m_nbManifolds++;
 }
 
@@ -163,7 +163,7 @@ void ContactManifoldSet::removeManifold(int32_t index) {
 	assert(m_nbManifolds > 0);
 	assert(index >= 0 && index < m_nbManifolds);
 	// Delete the new contact
-	delete m_manifolds[index];
+	ETK_DELETE(ContactManifold, m_manifolds[index]);
 	m_manifolds[index] = nullptr;
 	for (int32_t i=index; (i+1) < m_nbManifolds; i++) {
 		m_manifolds[i] = m_manifolds[i+1];

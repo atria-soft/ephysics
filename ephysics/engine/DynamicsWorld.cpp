@@ -22,13 +22,6 @@ ephysics::DynamicsWorld::DynamicsWorld(const vec3& _gravity):
   m_isSleepingEnabled(SPLEEPING_ENABLED),
   m_gravity(_gravity),
   m_isGravityEnabled(true),
-  m_constrainedLinearVelocities(nullptr),
-  m_constrainedAngularVelocities(nullptr),
-  m_splitLinearVelocities(nullptr),
-  m_splitAngularVelocities(nullptr),
-  m_constrainedPositions(nullptr),
-  m_constrainedOrientations(nullptr),
-  m_islands(),
   m_numberBodiesCapacity(0),
   m_sleepLinearVelocity(DEFAULT_SLEEP_LINEAR_VELOCITY),
   m_sleepAngularVelocity(DEFAULT_SLEEP_ANGULAR_VELOCITY),
@@ -54,18 +47,18 @@ ephysics::DynamicsWorld::~DynamicsWorld() {
 	// Release the memory allocated for the islands
 	for (auto &it: m_islands) {
 		// Call the island destructor
-		delete it;
+		ETK_DELETE(Island, it);
 		it = nullptr;
 	}
 	m_islands.clear();
 	// Release the memory allocated for the bodies velocity arrays
 	if (m_numberBodiesCapacity > 0) {
-		delete[] m_splitLinearVelocities;
-		delete[] m_splitAngularVelocities;
-		delete[] m_constrainedLinearVelocities;
-		delete[] m_constrainedAngularVelocities;
-		delete[] m_constrainedPositions;
-		delete[] m_constrainedOrientations;
+		m_splitLinearVelocities.clear();
+		m_splitAngularVelocities.clear();
+		m_constrainedLinearVelocities.clear();
+		m_constrainedAngularVelocities.clear();
+		m_constrainedPositions.clear();
+		m_constrainedOrientations.clear();
 	}
 	assert(m_joints.size() == 0);
 	assert(m_rigidBodies.size() == 0);
@@ -180,23 +173,22 @@ void ephysics::DynamicsWorld::initVelocityArrays() {
 	uint32_t nbBodies = m_rigidBodies.size();
 	if (m_numberBodiesCapacity != nbBodies && nbBodies > 0) {
 		if (m_numberBodiesCapacity > 0) {
-			delete[] m_splitLinearVelocities;
-			delete[] m_splitAngularVelocities;
+			m_splitLinearVelocities.clear();
+			m_splitAngularVelocities.clear();
 		}
 		m_numberBodiesCapacity = nbBodies;
-		// TODO : Use better memory allocation here
-		m_splitLinearVelocities = new vec3[m_numberBodiesCapacity];
-		m_splitAngularVelocities = new vec3[m_numberBodiesCapacity];
-		m_constrainedLinearVelocities = new vec3[m_numberBodiesCapacity];
-		m_constrainedAngularVelocities = new vec3[m_numberBodiesCapacity];
-		m_constrainedPositions = new vec3[m_numberBodiesCapacity];
-		m_constrainedOrientations = new etk::Quaternion[m_numberBodiesCapacity];
-		assert(m_splitLinearVelocities != nullptr);
-		assert(m_splitAngularVelocities != nullptr);
-		assert(m_constrainedLinearVelocities != nullptr);
-		assert(m_constrainedAngularVelocities != nullptr);
-		assert(m_constrainedPositions != nullptr);
-		assert(m_constrainedOrientations != nullptr);
+		m_splitLinearVelocities.clear();
+		m_splitAngularVelocities.clear();
+		m_constrainedLinearVelocities.clear();
+		m_constrainedAngularVelocities.clear();
+		m_constrainedPositions.clear();
+		m_constrainedOrientations.clear();
+		m_splitLinearVelocities.resize(m_numberBodiesCapacity, vec3(0,0,0));
+		m_splitAngularVelocities.resize(m_numberBodiesCapacity, vec3(0,0,0));
+		m_constrainedLinearVelocities.resize(m_numberBodiesCapacity, vec3(0,0,0));
+		m_constrainedAngularVelocities.resize(m_numberBodiesCapacity, vec3(0,0,0));
+		m_constrainedPositions.resize(m_numberBodiesCapacity, vec3(0,0,0));
+		m_constrainedOrientations.resize(m_numberBodiesCapacity, etk::Quaternion::identity());
 	}
 	// Reset the velocities arrays
 	for (uint32_t i=0; i<m_numberBodiesCapacity; i++) {
@@ -264,13 +256,13 @@ void ephysics::DynamicsWorld::integrateRigidBodiesVelocities() {
 void ephysics::DynamicsWorld::solveContactsAndConstraints() {
 	PROFILE("ephysics::DynamicsWorld::solveContactsAndConstraints()");
 	// Set the velocities arrays
-	m_contactSolver.setSplitVelocitiesArrays(m_splitLinearVelocities, m_splitAngularVelocities);
-	m_contactSolver.setConstrainedVelocitiesArrays(m_constrainedLinearVelocities,
-												  m_constrainedAngularVelocities);
-	m_constraintSolver.setConstrainedVelocitiesArrays(m_constrainedLinearVelocities,
-													 m_constrainedAngularVelocities);
-	m_constraintSolver.setConstrainedPositionsArrays(m_constrainedPositions,
-													m_constrainedOrientations);
+	m_contactSolver.setSplitVelocitiesArrays(&m_splitLinearVelocities[0], &m_splitAngularVelocities[0]);
+	m_contactSolver.setConstrainedVelocitiesArrays(&m_constrainedLinearVelocities[0],
+	                                               &m_constrainedAngularVelocities[0]);
+	m_constraintSolver.setConstrainedVelocitiesArrays(&m_constrainedLinearVelocities[0],
+	                                                  &m_constrainedAngularVelocities[0]);
+	m_constraintSolver.setConstrainedPositionsArrays(&m_constrainedPositions[0],
+	                                                 &m_constrainedOrientations[0]);
 	// ---------- Solve velocity constraints for joints and contacts ---------- //
 	// For each island of the world
 	for (uint32_t islandIndex = 0; islandIndex < m_islands.size(); islandIndex++) {
@@ -333,7 +325,7 @@ ephysics::RigidBody* ephysics::DynamicsWorld::createRigidBody(const etk::Transfo
 	// Largest index cannot be used (it is used for invalid index)
 	assert(bodyID < UINT64_MAX);
 	// Create the rigid body
-	ephysics::RigidBody* rigidBody = new RigidBody(_transform, *this, bodyID);
+	ephysics::RigidBody* rigidBody = ETK_NEW(RigidBody, _transform, *this, bodyID);
 	assert(rigidBody != nullptr);
 	// Add the rigid body to the physics world
 	m_bodies.add(rigidBody);
@@ -359,7 +351,7 @@ void ephysics::DynamicsWorld::destroyRigidBody(RigidBody* _rigidBody) {
 	m_bodies.erase(m_bodies.find(_rigidBody));
 	m_rigidBodies.erase(m_rigidBodies.find(_rigidBody));
 	// Call the destructor of the rigid body
-	delete _rigidBody;
+	ETK_DELETE(RigidBody, _rigidBody);
 	_rigidBody = nullptr;
 }
 
@@ -369,19 +361,19 @@ ephysics::Joint* ephysics::DynamicsWorld::createJoint(const ephysics::JointInfo&
 	switch(_jointInfo.type) {
 		// Ball-and-Socket joint
 		case BALLSOCKETJOINT:
-			newJoint = new BallAndSocketJoint(static_cast<const ephysics::BallAndSocketJointInfo&>(_jointInfo));
+			newJoint = ETK_NEW(BallAndSocketJoint, static_cast<const ephysics::BallAndSocketJointInfo&>(_jointInfo));
 			break;
 		// Slider joint
 		case SLIDERJOINT:
-			newJoint = new SliderJoint(static_cast<const ephysics::SliderJointInfo&>(_jointInfo));
+			newJoint = ETK_NEW(SliderJoint, static_cast<const ephysics::SliderJointInfo&>(_jointInfo));
 			break;
 		// Hinge joint
 		case HINGEJOINT:
-			newJoint = new HingeJoint(static_cast<const ephysics::HingeJointInfo&>(_jointInfo));
+			newJoint = ETK_NEW(HingeJoint, static_cast<const ephysics::HingeJointInfo&>(_jointInfo));
 			break;
 		// Fixed joint
 		case FIXEDJOINT:
-			newJoint = new FixedJoint(static_cast<const ephysics::FixedJointInfo&>(_jointInfo));
+			newJoint = ETK_NEW(FixedJoint, static_cast<const ephysics::FixedJointInfo&>(_jointInfo));
 			break;
 		default:
 			assert(false);
@@ -420,7 +412,7 @@ void ephysics::DynamicsWorld::destroyJoint(Joint* _joint) {
 	_joint->m_body2->removeJointFrom_jointsList(_joint);
 	size_t nbBytes = _joint->getSizeInBytes();
 	// Call the destructor of the joint
-	delete _joint;
+	ETK_DELETE(Joint, _joint);
 	_joint = nullptr;
 }
 
@@ -430,9 +422,9 @@ void ephysics::DynamicsWorld::addJointToBody(ephysics::Joint* _joint) {
 		return;
 	}
 	// Add the joint at the beginning of the linked list of joints of the first body
-	_joint->m_body1->m_jointsList = new JointListElement(_joint, _joint->m_body1->m_jointsList);
+	_joint->m_body1->m_jointsList = ETK_NEW(JointListElement, _joint, _joint->m_body1->m_jointsList);
 	// Add the joint at the beginning of the linked list of joints of the second body
-	_joint->m_body2->m_jointsList = new JointListElement(_joint, _joint->m_body2->m_jointsList);
+	_joint->m_body2->m_jointsList = ETK_NEW(JointListElement, _joint, _joint->m_body2->m_jointsList);
 }
 
 void ephysics::DynamicsWorld::computeIslands() {
@@ -440,7 +432,7 @@ void ephysics::DynamicsWorld::computeIslands() {
 	uint32_t nbBodies = m_rigidBodies.size();
 	// Clear all the islands
 	for (auto &it: m_islands) {
-		delete it;
+		ETK_DELETE(Island, it);
 		it = nullptr;
 	}
 	// Call the island destructor
@@ -478,7 +470,7 @@ void ephysics::DynamicsWorld::computeIslands() {
 		stackIndex++;
 		body->m_isAlreadyInIsland = true;
 		// Create the new island
-		m_islands.pushBack(new Island(nbBodies, nbContactManifolds, m_joints.size()));
+		m_islands.pushBack(ETK_NEW(Island, nbBodies, nbContactManifolds, m_joints.size()));
 		// While there are still some bodies to visit in the stack
 		while (stackIndex > 0) {
 			// Get the next body to visit from the stack
@@ -544,13 +536,7 @@ void ephysics::DynamicsWorld::computeIslands() {
 				otherBody->m_isAlreadyInIsland = true;
 			}
 		}
-		// Reset the isAlreadyIsland variable of the static bodies so that they
-		// can also be included in the other islands
-		for (uint32_t i=0; i < m_islands.back()->m_numberBodies; i++) {
-			if (m_islands.back()->m_bodies[i]->getType() == STATIC) {
-				m_islands.back()->m_bodies[i]->m_isAlreadyInIsland = false;
-			}
-		}
+		m_islands.back()->resetStaticBobyNotInIsland();
 	}
 }
 

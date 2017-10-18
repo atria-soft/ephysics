@@ -30,9 +30,10 @@ ProfileNode::ProfileNode(const char* name, ProfileNode* parentNode)
 
 // Destructor
 ProfileNode::~ProfileNode() {
-
-	delete m_childNode;
-	delete m_siblingNode;
+	ETK_DELETE(ProfileNode, m_childNode);
+	m_childNode = nullptr;
+	ETK_DELETE(ProfileNode, m_siblingNode);
+	m_siblingNode = nullptr;
 }
 
 // Return a pointer to a sub node with a given name
@@ -49,7 +50,7 @@ ProfileNode* ProfileNode::findSubNode(const char* name) {
 
 	// The nose has not been found. Therefore, we create it
 	// and add it to the profiler tree
-	ProfileNode* newNode = new ProfileNode(name, this);
+	ProfileNode* newNode = ETK_NEW(ProfileNode, name, this);
 	newNode->m_siblingNode = m_childNode;
 	m_childNode = newNode;
 
@@ -106,9 +107,9 @@ void ProfileNode::reset() {
 
 // Destroy the node
 void ProfileNode::destroy() {
-	delete m_childNode;
+	ETK_DELETE(ProfileNode, m_childNode);
 	m_childNode = nullptr;
-	delete m_siblingNode;
+	ETK_DELETE(ProfileNode, m_siblingNode);
 	m_siblingNode = nullptr;
 }
 
@@ -337,12 +338,12 @@ void Profiler::incrementFrameCounter() {
 
 // Return an iterator over the profiler tree starting at the root
 ProfileNodeIterator* Profiler::getIterator() {
-	return new ProfileNodeIterator(&m_rootNode);
+	return ETK_NEW(ProfileNodeIterator(&m_rootNode));
 }
 
 // Destroy a previously allocated iterator
 void Profiler::destroyIterator(ProfileNodeIterator* iterator) {
-	delete iterator;
+	ETK_DELETE(ProfileNodeIterator, iterator);
 }
 
 // Destroy the profiler (release the memory)

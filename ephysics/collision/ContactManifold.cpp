@@ -42,7 +42,7 @@ void ContactManifold::addContactPoint(ContactPoint* contact) {
 							contact->getWorldPointOnBody1()).length2();
 		if (distance <= PERSISTENT_CONTACT_DIST_THRESHOLD*PERSISTENT_CONTACT_DIST_THRESHOLD) {
 			// Delete the new contact
-			delete contact;
+			ETK_DELETE(ContactPoint, contact);
 			assert(m_nbContactPoints > 0);
 			return;
 		}
@@ -69,7 +69,7 @@ void ContactManifold::removeContactPoint(uint32_t index) {
 	
 	// Call the destructor explicitly and tell the memory allocator that
 	// the corresponding memory block is now free
-	delete m_contactPoints[index];
+	ETK_DELETE(ContactPoint, m_contactPoints[index]);
 	m_contactPoints[index] = nullptr;
 	// If we don't remove the last index
 	if (index < m_nbContactPoints - 1) {
@@ -237,7 +237,7 @@ void ContactManifold::clear() {
 		
 		// Call the destructor explicitly and tell the memory allocator that
 		// the corresponding memory block is now free
-		delete m_contactPoints[iii];
+		ETK_DELETE(ContactPoint, m_contactPoints[iii]);
 		m_contactPoints[iii] = nullptr;
 	}
 	m_nbContactPoints = 0;
