@@ -118,7 +118,6 @@ namespace ephysics {
 				bool isRestingContact; //!< True if the contact was existing last time step
 				ContactPoint* externalContact; //!< Pointer to the external contact
 			};
-	
 			/**
 			 * @brief Contact solver int32_ternal data structure to store all the information relative to a contact manifold.
 			 */
@@ -166,76 +165,147 @@ namespace ephysics {
 			vec3* m_splitLinearVelocities; //!< Split linear velocities for the position contact solver (split impulse)
 			vec3* m_splitAngularVelocities; //!< Split angular velocities for the position contact solver (split impulse)
 			float m_timeStep; //!< Current time step
-			ContactManifoldSolver* m_contactConstraints; //!< Contact constraints
-			uint32_t m_numberContactManifolds; //!< Number of contact constraints
+			etk::Vector<ContactManifoldSolver> m_contactConstraints; //!< Contact constraints
 			vec3* m_linearVelocities; //!< Array of linear velocities
 			vec3* m_angularVelocities; //!< Array of angular velocities
 			const etk::Map<RigidBody*, uint32_t>& m_mapBodyToConstrainedVelocityIndex; //!< Reference to the map of rigid body to their index in the constrained velocities array
 			bool m_isWarmStartingActive; //!< True if the warm starting of the solver is active
 			bool m_isSplitImpulseActive; //!< True if the split impulse position correction is active
 			bool m_isSolveFrictionAtContactManifoldCenterActive; //!< True if we solve 3 friction constraints at the contact manifold center only instead of 2 friction constraints at each contact point
-			/// Initialize the contact constraints before solving the system
+			/**
+			 * @brief Initialize the contact constraints before solving the system
+			 */
 			void initializeContactConstraints();
-			/// Apply an impulse to the two bodies of a constraint
-			void applyImpulse(const Impulse& impulse, const ContactManifoldSolver& manifold);
-			/// Apply an impulse to the two bodies of a constraint
-			void applySplitImpulse(const Impulse& impulse,
-								   const ContactManifoldSolver& manifold);
-			/// Compute the collision restitution factor from the restitution factor of each body
-			float computeMixedRestitutionFactor(RigidBody *body1,
-												  RigidBody *body2) const;
-			/// Compute the mixed friction coefficient from the friction coefficient of each body
-			float computeMixedFrictionCoefficient(RigidBody* body1,
-													RigidBody* body2) const;
-			/// Compute th mixed rolling resistance factor between two bodies
-			float computeMixedRollingResistance(RigidBody* body1, RigidBody* body2) const;
-			/// Compute the two unit orthogonal vectors "t1" and "t2" that span the tangential friction
-			/// plane for a contact point. The two vectors have to be
-			/// such that : t1 x t2 = contactNormal.
-			void computeFrictionVectors(const vec3& deltaVelocity,
-			                            ContactPointSolver &contactPoint) const;
-			/// Compute the two unit orthogonal vectors "t1" and "t2" that span the tangential friction
-			/// plane for a contact manifold. The two vectors have to be
-			/// such that : t1 x t2 = contactNormal.
-			void computeFrictionVectors(const vec3& deltaVelocity,
-										ContactManifoldSolver& contactPoint) const;
-			/// Compute a penetration constraint impulse
-			const Impulse computePenetrationImpulse(float deltaLambda,
-													const ContactPointSolver& contactPoint) const;
-			/// Compute the first friction constraint impulse
-			const Impulse computeFriction1Impulse(float deltaLambda,
-												  const ContactPointSolver& contactPoint) const;
-			/// Compute the second friction constraint impulse
-			const Impulse computeFriction2Impulse(float deltaLambda,
-												  const ContactPointSolver& contactPoint) const;
+			/**
+			 * @brief Apply an impulse to the two bodies of a constraint
+			 * @param[in] _impulse Impulse to apply
+			 * @param[in] _manifold Constraint to apply the impulse
+			 */
+			void applyImpulse(const Impulse& _impulse, const ContactManifoldSolver& _manifold);
+			/**
+			 * @brief Apply an impulse to the two bodies of a constraint
+			 * @param[in] _impulse Impulse to apply
+			 * @param[in] _manifold Constraint to apply the impulse
+			 */
+			void applySplitImpulse(const Impulse& _impulse, const ContactManifoldSolver& _manifold);
+			/**
+			 * @brief Compute the collision restitution factor from the restitution factor of each body
+			 * @param[in] _body1 First body to compute
+			 * @param[in] _body2 Second body to compute
+			 * @return Collision restitution factor
+			 */
+			float computeMixedRestitutionFactor(RigidBody* _body1, RigidBody* _body2) const;
+			/**
+			 * @brief Compute the mixed friction coefficient from the friction coefficient of each body
+			 * @param[in] _body1 First body to compute
+			 * @param[in] _body2 Second body to compute
+			 * @return Mixed friction coefficient
+			 */
+			float computeMixedFrictionCoefficient(RigidBody* _body1, RigidBody* _body2) const;
+			/**
+			 * @brief Compute the mixed rolling resistance factor between two bodies
+			 * @param[in] _body1 First body to compute
+			 * @param[in] _body2 Second body to compute
+			 * @return Mixed rolling resistance
+			 */
+			float computeMixedRollingResistance(RigidBody* _body1, RigidBody* _body2) const;
+			/**
+			 * @brief Compute the two unit orthogonal vectors "t1" and "t2" that span the tangential friction
+			 *        plane for a contact point. The two vectors have to be such that : t1 x t2 = contactNormal.
+			 * @param[in] _deltaVelocity Velocity ratio (with the delta time step)
+			 * @param[in,out] _contactPoint Contact point property
+			 */
+			void computeFrictionVectors(const vec3& _deltaVelocity, ContactPointSolver& _contactPoint) const;
+			/**
+			 * @brief Compute the two unit orthogonal vectors "t1" and "t2" that span the tangential friction
+			 *        plane for a contact manifold. The two vectors have to be such that : t1 x t2 = contactNormal.
+			 * @param[in] _deltaVelocity Velocity ratio (with the delta time step)
+			 * @param[in,out] _contactPoint Contact point property
+			 */
+			void computeFrictionVectors(const vec3& _deltaVelocity, ContactManifoldSolver& _contactPoint) const;
+			/**
+			 * @brief Compute a penetration constraint impulse
+			 * @param[in] _deltaLambda Ratio to apply at the calculation.
+			 * @param[in,out] _contactPoint Contact point property
+			 * @return Impulse of the penetration result
+			 */
+			const Impulse computePenetrationImpulse(float _deltaLambda, const ContactPointSolver& _contactPoint) const;
+			/**
+			 * @brief Compute the first friction constraint impulse
+			 * @param[in] _deltaLambda Ratio to apply at the calculation.
+			 * @param[in] _contactPoint Contact point property
+			 * @return Impulse of the friction result
+			 */
+			const Impulse computeFriction1Impulse(float _deltaLambda, const ContactPointSolver& _contactPoint) const;
+			/**
+			 * @brief Compute the second friction constraint impulse
+			 * @param[in] _deltaLambda Ratio to apply at the calculation.
+			 * @param[in] _contactPoint Contact point property
+			 * @return Impulse of the friction result
+			 */
+			const Impulse computeFriction2Impulse(float _deltaLambda, const ContactPointSolver& _contactPoint) const;
 		public:
-			/// Constructor
-			ContactSolver(const etk::Map<RigidBody*, uint32_t>& mapBodyToVelocityIndex);
-			/// Destructor
-			virtual ~ContactSolver();
-			/// Initialize the constraint solver for a given island
-			void initializeForIsland(float dt, Island* island);
-			/// Set the split velocities arrays
-			void setSplitVelocitiesArrays(vec3* splitLinearVelocities,
-										  vec3* splitAngularVelocities);
-			/// Set the constrained velocities arrays
-			void setConstrainedVelocitiesArrays(vec3* constrainedLinearVelocities,
-												vec3* constrainedAngularVelocities);
-			/// Warm start the solver.
+			/**
+			 * @brief Constructor
+			 * @param[in] _mapBodyToVelocityIndex
+			 */
+			ContactSolver(const etk::Map<RigidBody*, uint32_t>& _mapBodyToVelocityIndex);
+			/**
+			 * @brief Virtualize the destructor
+			 */
+			virtual ~ContactSolver() = default;
+			/**
+			 * @brief Initialize the constraint solver for a given island
+			 * @param[in] _dt Delta step time
+			 * @param[in] _island Island list property
+			 */
+			void initializeForIsland(float _dt, Island* _island);
+			/**
+			 * @brief Set the split velocities arrays
+			 * @param[in] _splitLinearVelocities Split linear velocities Table pointer (not free)
+			 * @param[in] _splitAngularVelocities Split angular velocities Table pointer (not free)
+			 */
+			void setSplitVelocitiesArrays(vec3* _splitLinearVelocities, vec3* _splitAngularVelocities);
+			/**
+			 * @brief Set the constrained velocities arrays
+			 * @param[in] _constrainedLinearVelocities Constrained Linear velocities Table pointer (not free)
+			 * @param[in] _constrainedAngularVelocities Constrained angular velocities Table pointer (not free)
+			 */
+			void setConstrainedVelocitiesArrays(vec3* _constrainedLinearVelocities, vec3* _constrainedAngularVelocities);
+			/**
+			 * @brief Warm start the solver.
+			 * For each constraint, we apply the previous impulse (from the previous step)
+			 * at the beginning. With this technique, we will converge faster towards the solution of the linear system
+			 */
 			void warmStart();
-			/// Store the computed impulses to use them to
-			/// warm start the solver at the next iteration
+			/**
+			 * @brief Store the computed impulses to use them to warm start the solver at the next iteration
+			 */
 			void storeImpulses();
-			/// Solve the contacts
+			/**
+			 * @brief Solve the contacts
+			 */
 			void solve();
-			/// Return true if the split impulses position correction technique is used for contacts
+			/**
+			 * @brief Get the split impulses position correction technique is used for contacts
+			 * @return true the split status is Enable
+			 * @return true the split status is Disable
+			 */
 			bool isSplitImpulseActive() const;
-			/// Activate or Deactivate the split impulses for contacts
-			void setIsSplitImpulseActive(bool isActive);
-			/// Activate or deactivate the solving of friction constraints at the center of
+			/**
+			 * @brief Activate or Deactivate the split impulses for contacts
+			 * @param[in] _isActive status to set.
+			 */
+			void setIsSplitImpulseActive(bool _isActive);
+			/**
+			 * @brief Activate or deactivate the solving of friction constraints at the center of
 			/// the contact manifold instead of solving them at each contact point
-			void setIsSolveFrictionAtContactManifoldCenterActive(bool isActive);
-			/// Clean up the constraint solver
+			 * @param[in] _isActive Enable or not the center inertie
+			 */
+			void setIsSolveFrictionAtContactManifoldCenterActive(bool _isActive);
+			/**
+			 * @brief Clean up the constraint solver
+			 */
 			void cleanup();
 	};
 

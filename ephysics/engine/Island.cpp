@@ -7,79 +7,64 @@
  * @license MPL v2.0 (see license file)
  */
 #include <ephysics/engine/Island.hpp>
+#include <ephysics/debug.hpp>
 
 using namespace ephysics;
 
-ephysics::Island::Island(uint32_t _nbMaxBodies,
-                         uint32_t _nbMaxContactManifolds,
-                         uint32_t _nbMaxJoints):
-  m_bodies(nullptr),
-  m_contactManifolds(nullptr),
-  m_joints(nullptr),
-  m_numberBodies(0),
-  m_numberContactManifolds(0),
-  m_numberJoints(0) {
+ephysics::Island::Island(size_t _nbMaxBodies,
+                         size_t _nbMaxContactManifolds,
+                         size_t _nbMaxJoints) {
 	// Allocate memory for the arrays
-	m_numberAllocatedBytesBodies = sizeof(RigidBody*) * _nbMaxBodies;
-	m_bodies = new RigidBody*[_nbMaxBodies];
-	m_numberAllocatedBytesContactManifolds = sizeof(ContactManifold*) * _nbMaxContactManifolds;
-	m_contactManifolds = new ContactManifold*[_nbMaxContactManifolds];
-	m_numberAllocatedBytesJoints = sizeof(Joint*) * _nbMaxJoints;
-	m_joints = new Joint*[_nbMaxJoints];
+	m_bodies.reserve(_nbMaxBodies);
+	m_contactManifolds.reserve(_nbMaxContactManifolds);
+	m_joints.reserve(_nbMaxJoints);
 }
 
-Island::~Island() {
-	// Release the memory of the arrays
-	delete[] m_bodies;
-	delete[] m_contactManifolds;
-	delete[] m_joints;
+
+void ephysics::Island::addBody(ephysics::RigidBody* _body) {
+	if (_body->isSleeping() == true) {
+		EPHY_ERROR("Try to add a body that is sleeping ...");
+		return;
+	}
+	m_bodies.pushBack(_body);
 }
 
-// Add a body int32_to the island
-void Island::addBody(RigidBody* body) {
-	assert(!body->isSleeping());
-	m_bodies[m_numberBodies] = body;
-	m_numberBodies++;
+void ephysics::Island::addContactManifold(ephysics::ContactManifold* _contactManifold) {
+	m_contactManifolds.pushBack(_contactManifold);
 }
 
-// Add a contact manifold int32_to the island
-void Island::addContactManifold(ContactManifold* contactManifold) {
-	m_contactManifolds[m_numberContactManifolds] = contactManifold;
-	m_numberContactManifolds++;
+void ephysics::Island::addJoint(ephysics::Joint* _joint) {
+	m_joints.pushBack(_joint);
 }
 
-// Add a joint int32_to the island
-void Island::addJoint(Joint* joint) {
-	m_joints[m_numberJoints] = joint;
-	m_numberJoints++;
+size_t ephysics::Island::getNbBodies() const {
+	return m_bodies.size();
 }
 
-// Return the number of bodies in the island
-uint32_t Island::getNbBodies() const {
-	return m_numberBodies;
+size_t ephysics::Island::getNbContactManifolds() const {
+	return m_contactManifolds.size();
 }
 
-// Return the number of contact manifolds in the island
-uint32_t Island::getNbContactManifolds() const {
-	return m_numberContactManifolds;
+size_t ephysics::Island::getNbJoints() const {
+	return m_joints.size();
 }
 
-// Return the number of joints in the island
-uint32_t Island::getNbJoints() const {
-	return m_numberJoints;
+ephysics::RigidBody** ephysics::Island::getBodies() {
+	return &m_bodies[0];
 }
 
-// Return a pointer to the array of bodies
-RigidBody** Island::getBodies() {
-	return m_bodies;
+ephysics::ContactManifold** ephysics::Island::getContactManifold() {
+	return &m_contactManifolds[0];
 }
 
-// Return a pointer to the array of contact manifolds
-ContactManifold** Island::getContactManifold() {
-	return m_contactManifolds;
+ephysics::Joint** ephysics::Island::getJoints() {
+	return &m_joints[0];
 }
 
-// Return a pointer to the array of joints
-Joint** Island::getJoints() {
-	return m_joints;
+void ephysics::Island::resetStaticBobyNotInIsland() {
+	for (auto &it: m_bodies) {
+		if (it->getType() == STATIC) {
+			it->m_isAlreadyInIsland = false;
+		}
+	}
 }

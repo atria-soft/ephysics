@@ -6,6 +6,8 @@
 
 #include <etest/etest.hpp>
 #include <ephysics/ephysics.hpp>
+#include <test-debug/debug.hpp>
+
 // Enumeration for categories
 enum CollisionCategory {
 	CATEGORY_1 = 0x0001,
@@ -32,24 +34,28 @@ class WorldCollisionCallback : public ephysics::CollisionCallback {
 			sphere1CollideWithSphere2 = false;
 		}
 		// This method will be called for contact
-		virtual void notifyContact(const ephysics::ContactPointInfo& contactPointInfo) {
-			if (isContactBetweenBodies(boxBody, sphere1Body, contactPointInfo)) {
+		virtual void notifyContact(const ephysics::ContactPointInfo& _contactPointInfo) {
+			if (isContactBetweenBodies(boxBody, sphere1Body, _contactPointInfo)) {
+				TEST_WARNING("plop 1 boxCollideWithSphere1");
 				boxCollideWithSphere1 = true;
-			} else if (isContactBetweenBodies(boxBody, cylinderBody, contactPointInfo)) {
+			} else if (isContactBetweenBodies(boxBody, cylinderBody, _contactPointInfo)) {
+				TEST_WARNING("plop 2 boxCollideWithCylinder");
 				boxCollideWithCylinder = true;
-			} else if (isContactBetweenBodies(sphere1Body, cylinderBody, contactPointInfo)) {
+			} else if (isContactBetweenBodies(sphere1Body, cylinderBody, _contactPointInfo)) {
+				TEST_WARNING("plop 3 sphere1CollideWithCylinder");
 				sphere1CollideWithCylinder = true;
-			} else if (isContactBetweenBodies(sphere1Body, sphere2Body, contactPointInfo)) {
+			} else if (isContactBetweenBodies(sphere1Body, sphere2Body, _contactPointInfo)) {
+				TEST_WARNING("plop 4 sphere1CollideWithSphere2");
 				sphere1CollideWithSphere2 = true;
 			}
 		}
-		bool isContactBetweenBodies(const ephysics::CollisionBody* body1,
-		                            const ephysics::CollisionBody* body2,
-		                            const ephysics::ContactPointInfo& contactPointInfo) {
-			return    (    contactPointInfo.shape1->getBody()->getID() == body1->getID()
-			            && contactPointInfo.shape2->getBody()->getID() == body2->getID() )
-			       || (    contactPointInfo.shape2->getBody()->getID() == body1->getID()
-			            && contactPointInfo.shape1->getBody()->getID() == body2->getID() );
+		bool isContactBetweenBodies(const ephysics::CollisionBody* _body1,
+		                            const ephysics::CollisionBody* _body2,
+		                            const ephysics::ContactPointInfo& _contactPointInfo) {
+			return    (    _contactPointInfo.shape1->getBody()->getID() == _body1->getID()
+			            && _contactPointInfo.shape2->getBody()->getID() == _body2->getID() )
+			       || (    _contactPointInfo.shape2->getBody()->getID() == _body1->getID()
+			            && _contactPointInfo.shape1->getBody()->getID() == _body2->getID() );
 		}
 };
 
@@ -79,13 +85,13 @@ class TestCollisionWorld {
 	public :
 		TestCollisionWorld() {
 			// Create the world
-			m_world = new ephysics::CollisionWorld();
+			m_world = ETK_NEW(ephysics::CollisionWorld);
 			// Create the bodies
 			etk::Transform3D boxTransform(vec3(10, 0, 0), etk::Quaternion::identity());
 			m_boxBody = m_world->createCollisionBody(boxTransform);
-			m_boxShape = new ephysics::BoxShape(vec3(3, 3, 3));
+			m_boxShape = ETK_NEW(ephysics::BoxShape, vec3(3,3,3));
 			m_boxProxyShape = m_boxBody->addCollisionShape(m_boxShape, etk::Transform3D::identity());
-			m_sphereShape = new ephysics::SphereShape(3.0);
+			m_sphereShape = ETK_NEW(ephysics::SphereShape, 3.0);
 			etk::Transform3D sphere1Transform(vec3(10,5, 0), etk::Quaternion::identity());
 			m_sphere1Body = m_world->createCollisionBody(sphere1Transform);
 			m_sphere1ProxyShape = m_sphere1Body->addCollisionShape(m_sphereShape, etk::Transform3D::identity());
@@ -94,7 +100,7 @@ class TestCollisionWorld {
 			m_sphere2ProxyShape = m_sphere2Body->addCollisionShape(m_sphereShape, etk::Transform3D::identity());
 			etk::Transform3D cylinderTransform(vec3(10, -5, 0), etk::Quaternion::identity());
 			m_cylinderBody = m_world->createCollisionBody(cylinderTransform);
-			m_cylinderShape = new ephysics::CylinderShape(2, 5);
+			m_cylinderShape = ETK_NEW(ephysics::CylinderShape, 2, 5);
 			m_cylinderProxyShape = m_cylinderBody->addCollisionShape(m_cylinderShape, etk::Transform3D::identity());
 			// Assign collision categories to proxy shapes
 			m_boxProxyShape->setCollisionCategoryBits(CATEGORY_1);
@@ -107,9 +113,10 @@ class TestCollisionWorld {
 			m_collisionCallback.cylinderBody = m_cylinderBody;
 		}
 		~TestCollisionWorld() {
-			delete m_boxShape;
-			delete m_sphereShape;
-			delete m_cylinderShape;
+			ETK_DELETE(ephysics::BoxShape, m_boxShape);
+			ETK_DELETE(ephysics::SphereShape, m_sphereShape);
+			ETK_DELETE(ephysics::CylinderShape, m_cylinderShape);
+			ETK_DELETE(ephysics::CollisionWorld, m_world);
 		}
 };
 

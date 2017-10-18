@@ -19,43 +19,64 @@ namespace ephysics {
 	 */
 	class Island {
 		private:
-			RigidBody** m_bodies; //!< Array with all the bodies of the island
-			ContactManifold** m_contactManifolds; //!< Array with all the contact manifolds between bodies of the island
-			Joint** m_joints; //!< Array with all the joints between bodies of the island
-			uint32_t m_numberBodies; //!< Current number of bodies in the island
-			uint32_t m_numberContactManifolds; //!< Current number of contact manifold in the island
-			uint32_t m_numberJoints; //!< Current number of joints in the island
-			size_t m_numberAllocatedBytesBodies; //!< Number of bytes allocated for the bodies array
-			size_t m_numberAllocatedBytesContactManifolds; //!< Number of bytes allocated for the contact manifolds array
-			size_t m_numberAllocatedBytesJoints; //!< Number of bytes allocated for the joints array
-			/// Private assignment operator
-			Island& operator=(const Island& island);
-			/// Private copy-constructor
-			Island(const Island& island);
+			etk::Vector<RigidBody*> m_bodies; //!< Array with all the bodies of the island
+			etk::Vector<ContactManifold*> m_contactManifolds; //!< Array with all the contact manifolds between bodies of the island
+			etk::Vector<Joint*> m_joints; //!< Array with all the joints between bodies of the island
+			//! Remove assignment operator
+			Island& operator=(const Island& island) = delete;
+			//! Remove copy-constructor
+			Island(const Island& island) = delete;
 		public:
-			/// Constructor
-			Island(uint32_t nbMaxBodies, uint32_t nbMaxContactManifolds, uint32_t nbMaxJoints);
-			/// Destructor
-			~Island();
-			/// Add a body int32_to the island
-			void addBody(RigidBody* body);
-			/// Add a contact manifold int32_to the island
-			void addContactManifold(ContactManifold* contactManifold);
-			/// Add a joint int32_to the island
-			void addJoint(Joint* joint);
-			/// Return the number of bodies in the island
-			uint32_t getNbBodies() const;
-			/// Return the number of contact manifolds in the island
-			uint32_t getNbContactManifolds() const;
-			/// Return the number of joints in the island
-			uint32_t getNbJoints() const;
-			/// Return a pointer to the array of bodies
+			/**
+			 * @brief Constructor
+			 */
+			Island(size_t nbMaxBodies, size_t nbMaxContactManifolds, size_t nbMaxJoints);
+			/**
+			 * @brief Destructor
+			 */
+			~Island() = default;
+			/** 
+			 * Add a body.
+			 */
+			void addBody(RigidBody* _body);
+			/** 
+			 * Add a contact manifold.
+			 */
+			void addContactManifold(ContactManifold* _contactManifold);
+			/** 
+			 * Add a joint.
+			 */
+			void addJoint(Joint* _joint);
+			/** 
+			 * @brief Get the number of body
+			 * @return Number of bodies.
+			 */
+			size_t getNbBodies() const;
+			/** 
+			 * @ Get the number of contact manifolds
+			 * Return the number of contact manifolds in the island
+			 */
+			size_t getNbContactManifolds() const;
+			/** 
+			 * Return the number of joints in the island
+			 */
+			size_t getNbJoints() const;
+			/** 
+			 * Return a pointer to the array of bodies
+			 */
 			RigidBody** getBodies();
-			/// Return a pointer to the array of contact manifolds
+			/** 
+			 * Return a pointer to the array of contact manifolds
+			 */
 			ContactManifold** getContactManifold();
-			/// Return a pointer to the array of joints
+			/** 
+			 * Return a pointer to the array of joints
+			 */
 			Joint** getJoints();
-			friend class DynamicsWorld;
+			/**
+			 * @brief Reset the isAlreadyIsland variable of the static bodies so that they can also be included in the other islands
+			 */
+			void resetStaticBobyNotInIsland();
 	};
 
 

@@ -116,7 +116,7 @@ class TestRaycast {
 		TestRaycast() {
 			epsilon = float(0.0001);
 			// Create the world
-			m_world = new ephysics::CollisionWorld();
+			m_world = ETK_NEW(ephysics::CollisionWorld);
 			// Body transform
 			vec3 position(-3, 2, 7);
 			etk::Quaternion orientation(M_PI / 5, M_PI / 6, M_PI / 7, 1.0f);
@@ -144,26 +144,26 @@ class TestRaycast {
 			m_localShapeToWorld = m_bodyTransform * m_shapeTransform;
 
 			// Create collision shapes
-			m_boxShape = new ephysics::BoxShape(vec3(2, 3, 4), 0);
+			m_boxShape = ETK_NEW(ephysics::BoxShape, vec3(2, 3, 4), 0);
 			m_boxProxyShape = m_boxBody->addCollisionShape(m_boxShape, m_shapeTransform);
 
-			m_sphereShape = new ephysics::SphereShape(3);
+			m_sphereShape = ETK_NEW(ephysics::SphereShape, 3);
 			m_sphereProxyShape = m_sphereBody->addCollisionShape(m_sphereShape, m_shapeTransform);
 
 			const vec3 triangleVertex1(100, 100, 0);
 			const vec3 triangleVertex2(105, 100, 0);
 			const vec3 triangleVertex3(100, 103, 0);
-			m_triangleShape = new ephysics::TriangleShape(triangleVertex1, triangleVertex2, triangleVertex3);
+			m_triangleShape = ETK_NEW(ephysics::TriangleShape, triangleVertex1, triangleVertex2, triangleVertex3);
 			m_triangleProxyShape = m_triangleBody->addCollisionShape(m_triangleShape, m_shapeTransform);
 
-			m_capsuleShape = new ephysics::CapsuleShape(2, 5);
+			m_capsuleShape = ETK_NEW(ephysics::CapsuleShape, 2, 5);
 			m_capsuleProxyShape = m_capsuleBody->addCollisionShape(m_capsuleShape, m_shapeTransform);
 
-			m_coneShape = new ephysics::ConeShape(2, 6, 0);
+			m_coneShape = ETK_NEW(ephysics::ConeShape, 2, 6, 0);
 			m_coneProxyShape = m_coneBody->addCollisionShape(m_coneShape, m_shapeTransform);
 
 			// Box of dimension (2, 3, 4)
-			m_convexMeshShape = new ephysics::ConvexMeshShape(0.0);
+			m_convexMeshShape = ETK_NEW(ephysics::ConvexMeshShape, 0.0f);
 			m_convexMeshShape->addVertex(vec3(-2, -3, -4));
 			m_convexMeshShape->addVertex(vec3(2, -3, -4));
 			m_convexMeshShape->addVertex(vec3(2, -3, 4));
@@ -174,7 +174,7 @@ class TestRaycast {
 			m_convexMeshShape->addVertex(vec3(-2, 3, 4));
 			m_convexMeshProxyShape = m_convexMeshBody->addCollisionShape(m_convexMeshShape, m_shapeTransform);
 
-			m_convexMeshShapeEdgesInfo = new ephysics::ConvexMeshShape(0.0);
+			m_convexMeshShapeEdgesInfo = ETK_NEW(ephysics::ConvexMeshShape, 0.0f);
 			m_convexMeshShapeEdgesInfo->addVertex(vec3(-2, -3, -4));
 			m_convexMeshShapeEdgesInfo->addVertex(vec3(2, -3, -4));
 			m_convexMeshShapeEdgesInfo->addVertex(vec3(2, -3, 4));
@@ -200,7 +200,7 @@ class TestRaycast {
 																	 m_convexMeshShapeEdgesInfo,
 																	 m_shapeTransform);
 
-			m_cylinderShape = new ephysics::CylinderShape(2, 5, 0);
+			m_cylinderShape = ETK_NEW(ephysics::CylinderShape, 2, 5, 0);
 			m_cylinderProxyShape = m_cylinderBody->addCollisionShape(m_cylinderShape, m_shapeTransform);
 
 			// Compound shape is a cylinder and a sphere
@@ -233,18 +233,18 @@ class TestRaycast {
 			m_concaveMeshIndices.pushBack(1); m_concaveMeshIndices.pushBack(4); m_concaveMeshIndices.pushBack(5);
 			m_concaveMeshIndices.pushBack(5); m_concaveMeshIndices.pushBack(7); m_concaveMeshIndices.pushBack(6);
 			m_concaveMeshIndices.pushBack(4); m_concaveMeshIndices.pushBack(7); m_concaveMeshIndices.pushBack(5);
-			m_concaveMeshVertexArray = new ephysics::TriangleVertexArray(m_concaveMeshVertices, m_concaveMeshIndices);
+			m_concaveMeshVertexArray = ETK_NEW(ephysics::TriangleVertexArray, m_concaveMeshVertices, m_concaveMeshIndices);
 
 
 			// Add the triangle vertex array of the subpart to the triangle mesh
 			m_concaveTriangleMesh.addSubpart(m_concaveMeshVertexArray);
-			m_concaveMeshShape = new ephysics::ConcaveMeshShape(&m_concaveTriangleMesh);
+			m_concaveMeshShape = ETK_NEW(ephysics::ConcaveMeshShape, &m_concaveTriangleMesh);
 			m_concaveMeshProxyShape = m_concaveMeshBody->addCollisionShape(m_concaveMeshShape, m_shapeTransform);
 
 
 			// Heightfield shape (plane height field at height=4)
 			for (int32_t i=0; i<100; i++) m_heightFieldData[i] = 4;
-			m_heightFieldShape = new ephysics::HeightFieldShape(10, 10, 0, 4, m_heightFieldData, ephysics::HeightFieldShape::HEIGHT_FLOAT_TYPE);
+			m_heightFieldShape = ETK_NEW(ephysics::HeightFieldShape, 10, 10, 0, 4, m_heightFieldData, ephysics::HeightFieldShape::HEIGHT_FLOAT_TYPE);
 			m_heightFieldProxyShape = m_heightFieldBody->addCollisionShape(m_heightFieldShape, m_shapeTransform);
 
 			// Assign proxy shapes to the different categories
@@ -264,18 +264,18 @@ class TestRaycast {
 
 		/// Destructor
 		~TestRaycast() {
-			delete m_boxShape;
-			delete m_sphereShape;
-			delete m_capsuleShape;
-			delete m_coneShape;
-			delete m_convexMeshShape;
-			delete m_convexMeshShapeEdgesInfo;
-			delete m_cylinderShape;
-			delete m_triangleShape;
-			delete m_concaveMeshShape;
-			delete m_heightFieldShape;
-
-			delete m_concaveMeshVertexArray;
+			ETK_DELETE(ephysics::BoxShape, m_boxShape);
+			ETK_DELETE(ephysics::SphereShape, m_sphereShape);
+			ETK_DELETE(ephysics::CapsuleShape, m_capsuleShape);
+			ETK_DELETE(ephysics::ConeShape, m_coneShape);
+			ETK_DELETE(ephysics::ConvexMeshShape, m_convexMeshShape);
+			ETK_DELETE(ephysics::ConvexMeshShape, m_convexMeshShapeEdgesInfo);
+			ETK_DELETE(ephysics::CylinderShape, m_cylinderShape);
+			ETK_DELETE(ephysics::TriangleShape, m_triangleShape);
+			ETK_DELETE(ephysics::ConcaveShape, m_concaveMeshShape);
+			ETK_DELETE(ephysics::HeightFieldShape, m_heightFieldShape);
+			ETK_DELETE(ephysics::TriangleVertexArray, m_concaveMeshVertexArray);
+			ETK_DELETE(ephysics::CollisionWorld, m_world);
 		}
 };
 

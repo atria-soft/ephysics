@@ -103,7 +103,7 @@ void RigidBody::removeJointFrom_jointsList(const Joint* _joint) {
 	if (m_jointsList->joint == _joint) {   // If the first element is the one to remove
 		JointListElement* elementToRemove = m_jointsList;
 		m_jointsList = elementToRemove->next;
-		delete elementToRemove;
+		ETK_DELETE(JointListElement, elementToRemove);
 		elementToRemove = nullptr;
 	}
 	else {  // If the element to remove is not the first one in the list
@@ -112,7 +112,7 @@ void RigidBody::removeJointFrom_jointsList(const Joint* _joint) {
 			if (currentElement->next->joint == _joint) {
 				JointListElement* elementToRemove = currentElement->next;
 				currentElement->next = elementToRemove->next;
-				delete elementToRemove;
+				ETK_DELETE(JointListElement, elementToRemove);
 				elementToRemove = nullptr;
 				break;
 			}
@@ -127,7 +127,7 @@ ProxyShape* RigidBody::addCollisionShape(CollisionShape* _collisionShape,
                                          float _mass) {
 	assert(_mass > 0.0f);
 	// Create a new proxy collision shape to attach the collision shape to the body
-	ProxyShape* proxyShape = new ProxyShape(this, _collisionShape, _transform, _mass);
+	ProxyShape* proxyShape = ETK_NEW(ProxyShape, this, _collisionShape, _transform, _mass);
 	// Add it to the list of proxy collision shapes of the body
 	if (m_proxyCollisionShapes == nullptr) {
 		m_proxyCollisionShapes = proxyShape;
