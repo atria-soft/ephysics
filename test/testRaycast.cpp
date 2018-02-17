@@ -243,7 +243,9 @@ class TestRaycast {
 
 
 			// Heightfield shape (plane height field at height=4)
-			for (int32_t i=0; i<100; i++) m_heightFieldData[i] = 4;
+			for (int32_t i=0; i<100; i++) {
+				m_heightFieldData[i] = 4;
+			}
 			m_heightFieldShape = ETK_NEW(ephysics::HeightFieldShape, 10, 10, 0, 4, m_heightFieldData, ephysics::HeightFieldShape::HEIGHT_FLOAT_TYPE);
 			m_heightFieldProxyShape = m_heightFieldBody->addCollisionShape(m_heightFieldShape, m_shapeTransform);
 
