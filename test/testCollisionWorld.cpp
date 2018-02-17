@@ -38,13 +38,16 @@ class WorldCollisionCallback : public ephysics::CollisionCallback {
 			if (isContactBetweenBodies(boxBody, sphere1Body, _contactPointInfo)) {
 				TEST_WARNING("plop 1 boxCollideWithSphere1");
 				boxCollideWithSphere1 = true;
-			} else if (isContactBetweenBodies(boxBody, cylinderBody, _contactPointInfo)) {
+			}
+			if (isContactBetweenBodies(boxBody, cylinderBody, _contactPointInfo)) {
 				TEST_WARNING("plop 2 boxCollideWithCylinder");
 				boxCollideWithCylinder = true;
-			} else if (isContactBetweenBodies(sphere1Body, cylinderBody, _contactPointInfo)) {
+			}
+			if (isContactBetweenBodies(sphere1Body, cylinderBody, _contactPointInfo)) {
 				TEST_WARNING("plop 3 sphere1CollideWithCylinder");
 				sphere1CollideWithCylinder = true;
-			} else if (isContactBetweenBodies(sphere1Body, sphere2Body, _contactPointInfo)) {
+			}
+			if (isContactBetweenBodies(sphere1Body, sphere2Body, _contactPointInfo)) {
 				TEST_WARNING("plop 4 sphere1CollideWithSphere2");
 				sphere1CollideWithSphere2 = true;
 			}
