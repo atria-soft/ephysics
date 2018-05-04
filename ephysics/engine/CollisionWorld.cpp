@@ -25,18 +25,14 @@ CollisionWorld::~CollisionWorld() {
 	}
 }
 
-/**
- * @brief Create a collision body and add it to the world
- * @param transform etk::Transform3Dation mapping the local-space of the body to world-space
- * @return A pointer to the body that has been created in the world
- */
-CollisionBody* CollisionWorld::createCollisionBody(const etk::Transform3D& transform) {
+
+CollisionBody* CollisionWorld::createCollisionBody(const etk::Transform3D& _transform) {
 	// Get the next available body ID
 	bodyindex bodyID = computeNextAvailableBodyID();
 	// Largest index cannot be used (it is used for invalid index)
 	EPHY_ASSERT(bodyID < UINT64_MAX, "index too big");
 	// Create the collision body
-	CollisionBody* collisionBody = ETK_NEW(CollisionBody, transform, *this, bodyID);
+	CollisionBody* collisionBody = ETK_NEW(CollisionBody, _transform, *this, bodyID);
 	EPHY_ASSERT(collisionBody != nullptr, "empty Body collision");
 	// Add the collision body to the world
 	m_bodies.add(collisionBody);
@@ -44,186 +40,115 @@ CollisionBody* CollisionWorld::createCollisionBody(const etk::Transform3D& trans
 	return collisionBody;
 }
 
-/**
- * @brief Destroy a collision body
- * @param collisionBody Pointer to the body to destroy
- */
-void CollisionWorld::destroyCollisionBody(CollisionBody* collisionBody) {
-
+void CollisionWorld::destroyCollisionBody(CollisionBody* _collisionBody) {
 	// Remove all the collision shapes of the body
-	collisionBody->removeAllCollisionShapes();
-
+	_collisionBody->removeAllCollisionShapes();
 	// Add the body ID to the list of free IDs
-	m_freeBodiesIDs.pushBack(collisionBody->getID());
-
+	m_freeBodiesIDs.pushBack(_collisionBody->getID());
 	// Remove the collision body from the list of bodies
-	m_bodies.erase(m_bodies.find(collisionBody));
-
-	ETK_DELETE(CollisionBody, collisionBody);
-	collisionBody = nullptr;
+	m_bodies.erase(m_bodies.find(_collisionBody));
+	ETK_DELETE(CollisionBody, _collisionBody);
+	_collisionBody = nullptr;
 }
 
-// Return the next available body ID
 bodyindex CollisionWorld::computeNextAvailableBodyID() {
-
 	// Compute the body ID
 	bodyindex bodyID;
 	if (!m_freeBodiesIDs.empty()) {
 		bodyID = m_freeBodiesIDs.back();
 		m_freeBodiesIDs.popBack();
-	}
-	else {
+	} else {
 		bodyID = m_currentBodyID;
 		m_currentBodyID++;
 	}
-
 	return bodyID;
 }
 
-// Reset all the contact manifolds linked list of each body
 void CollisionWorld::resetContactManifoldListsOfBodies() {
-
 	// For each rigid body of the world
 	for (etk::Set<CollisionBody*>::Iterator it = m_bodies.begin(); it != m_bodies.end(); ++it) {
-
 		// Reset the contact manifold list of the body
 		(*it)->resetContactManifoldsList();
 	}
 }
 
-// Test if the AABBs of two bodies overlap
-/**
- * @param body1 Pointer to the first body to test
- * @param body2 Pointer to the second body to test
- * @return True if the AABBs of the two bodies overlap and false otherwise
- */
-bool CollisionWorld::testAABBOverlap(const CollisionBody* body1,
-									 const CollisionBody* body2) const {
-
+bool CollisionWorld::testAABBOverlap(const CollisionBody* _body1, const CollisionBody* _body2) const {
 	// If one of the body is not active, we return no overlap
-	if (!body1->isActive() || !body2->isActive()) return false;
-
+	if (    !_body1->isActive()
+	     || !_body2->isActive()) {
+		return false;
+	}
 	// Compute the AABBs of both bodies
-	AABB body1AABB = body1->getAABB();
-	AABB body2AABB = body2->getAABB();
-
+	AABB body1AABB = _body1->getAABB();
+	AABB body2AABB = _body2->getAABB();
 	// Return true if the two AABBs overlap
 	return body1AABB.testCollision(body2AABB);
 }
 
-// Test and report collisions between a given shape and all the others
-// shapes of the world.
-/**
- * @param shape Pointer to the proxy shape to test
- * @param callback Pointer to the object with the callback method
- */
-void CollisionWorld::testCollision(const ProxyShape* shape,
-								   CollisionCallback* callback) {
-
+void CollisionWorld::testCollision(const ProxyShape* _shape, CollisionCallback* _callback) {
 	// Reset all the contact manifolds lists of each body
 	resetContactManifoldListsOfBodies();
-
 	// Create the sets of shapes
 	etk::Set<uint32_t> shapes;
-	shapes.add(shape->m_broadPhaseID);
+	shapes.add(_shape->m_broadPhaseID);
 	etk::Set<uint32_t> emptySet;
-
 	// Perform the collision detection and report contacts
-	m_collisionDetection.testCollisionBetweenShapes(callback, shapes, emptySet);
+	m_collisionDetection.testCollisionBetweenShapes(_callback, shapes, emptySet);
 }
 
-// Test and report collisions between two given shapes
-/**
- * @param shape1 Pointer to the first proxy shape to test
- * @param shape2 Pointer to the second proxy shape to test
- * @param callback Pointer to the object with the callback method
- */
-void CollisionWorld::testCollision(const ProxyShape* shape1,
-								   const ProxyShape* shape2,
-								   CollisionCallback* callback) {
-
+void CollisionWorld::testCollision(const ProxyShape* _shape1, const ProxyShape* _shape2, CollisionCallback* _callback) {
 	// Reset all the contact manifolds lists of each body
 	resetContactManifoldListsOfBodies();
-
 	// Create the sets of shapes
 	etk::Set<uint32_t> shapes1;
-	shapes1.add(shape1->m_broadPhaseID);
+	shapes1.add(_shape1->m_broadPhaseID);
 	etk::Set<uint32_t> shapes2;
-	shapes2.add(shape2->m_broadPhaseID);
-
+	shapes2.add(_shape2->m_broadPhaseID);
 	// Perform the collision detection and report contacts
-	m_collisionDetection.testCollisionBetweenShapes(callback, shapes1, shapes2);
+	m_collisionDetection.testCollisionBetweenShapes(_callback, shapes1, shapes2);
 }
 
-// Test and report collisions between a body and all the others bodies of the
-// world
-/**
- * @param body Pointer to the first body to test
- * @param callback Pointer to the object with the callback method
- */
-void CollisionWorld::testCollision(const CollisionBody* body,
-								   CollisionCallback* callback) {
-
+void CollisionWorld::testCollision(const CollisionBody* _body, CollisionCallback* _callback) {
 	// Reset all the contact manifolds lists of each body
 	resetContactManifoldListsOfBodies();
-
 	// Create the sets of shapes
 	etk::Set<uint32_t> shapes1;
-
 	// For each shape of the body
-	for (const ProxyShape* shape=body->getProxyShapesList(); shape != nullptr;
-		 shape = shape->getNext()) {
+	for (const ProxyShape* shape = _body->getProxyShapesList();
+	     shape != nullptr;
+	     shape = shape->getNext()) {
 		shapes1.add(shape->m_broadPhaseID);
 	}
-
 	etk::Set<uint32_t> emptySet;
-
 	// Perform the collision detection and report contacts
-	m_collisionDetection.testCollisionBetweenShapes(callback, shapes1, emptySet);
+	m_collisionDetection.testCollisionBetweenShapes(_callback, shapes1, emptySet);
 }
 
-// Test and report collisions between two bodies
-/**
- * @param body1 Pointer to the first body to test
- * @param body2 Pointer to the second body to test
- * @param callback Pointer to the object with the callback method
- */
-void CollisionWorld::testCollision(const CollisionBody* body1,
-								   const CollisionBody* body2,
-								   CollisionCallback* callback) {
-
+void CollisionWorld::testCollision(const CollisionBody* _body1, const CollisionBody* _body2, CollisionCallback* _callback) {
 	// Reset all the contact manifolds lists of each body
 	resetContactManifoldListsOfBodies();
-
 	// Create the sets of shapes
 	etk::Set<uint32_t> shapes1;
-	for (const ProxyShape* shape=body1->getProxyShapesList(); shape != nullptr;
-		 shape = shape->getNext()) {
+	for (const ProxyShape* shape = _body1->getProxyShapesList();
+	     shape != nullptr;
+	     shape = shape->getNext()) {
 		shapes1.add(shape->m_broadPhaseID);
 	}
-
 	etk::Set<uint32_t> shapes2;
-	for (const ProxyShape* shape=body2->getProxyShapesList(); shape != nullptr;
-		 shape = shape->getNext()) {
+	for (const ProxyShape* shape = _body2->getProxyShapesList();
+	     shape != nullptr;
+	     shape = shape->getNext()) {
 		shapes2.add(shape->m_broadPhaseID);
 	}
-
 	// Perform the collision detection and report contacts
-	m_collisionDetection.testCollisionBetweenShapes(callback, shapes1, shapes2);
+	m_collisionDetection.testCollisionBetweenShapes(_callback, shapes1, shapes2);
 }
 
-// Test and report collisions between all shapes of the world
-/**
- * @param callback Pointer to the object with the callback method
- */
-void CollisionWorld::testCollision(CollisionCallback* callback) {
-
+void CollisionWorld::testCollision(CollisionCallback* _callback) {
 	// Reset all the contact manifolds lists of each body
 	resetContactManifoldListsOfBodies();
-
 	etk::Set<uint32_t> emptySet;
-
 	// Perform the collision detection and report contacts
-	m_collisionDetection.testCollisionBetweenShapes(callback, emptySet, emptySet);
+	m_collisionDetection.testCollisionBetweenShapes(_callback, emptySet, emptySet);
 }
 
