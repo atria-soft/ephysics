@@ -60,9 +60,16 @@ namespace ephysics {
 			etk::Set<CollisionBody*>::Iterator getBodiesEndIterator() {
 				return m_bodies.end();
 			}
-			/// Create a collision body
+			/**
+			 * @brief Create a collision body and add it to the world
+			 * @param transform etk::Transform3Dation mapping the local-space of the body to world-space
+			 * @return A pointer to the body that has been created in the world
+			 */
 			CollisionBody* createCollisionBody(const etk::Transform3D& transform);
-			/// Destroy a collision body
+			/**
+			 * @brief Destroy a collision body
+			 * @param collisionBody Pointer to the body to destroy
+			 */
 			void destroyCollisionBody(CollisionBody* collisionBody);
 			/**
 			 * @brief Set the collision dispatch configuration
@@ -85,7 +92,12 @@ namespace ephysics {
 			             unsigned short _raycastWithCategoryMaskBits = 0xFFFF) const {
 				m_collisionDetection.raycast(_raycastCallback, _ray, _raycastWithCategoryMaskBits);
 			}
-			/// Test if the AABBs of two bodies overlap
+			/**
+			 * @brief Test if the AABBs of two bodies overlap
+			 * @param _body1 Pointer to the first body to test
+			 * @param _body2 Pointer to the second body to test
+			 * @return True if the AABBs of the two bodies overlap and false otherwise
+			 */
 			bool testAABBOverlap(const CollisionBody* _body1,
 			                     const CollisionBody* _body2) const;
 			/**
@@ -97,23 +109,42 @@ namespace ephysics {
 			                     const ProxyShape* _shape2) const {
 				return m_collisionDetection.testAABBOverlap(_shape1, _shape2);
 			}
-			/// Test and report collisions between a given shape and all the others
-			/// shapes of the world
+			/**
+			 * @brief Test and report collisions between a given shape and all the others shapes of the world.
+			 * @param _shape Pointer to the proxy shape to test
+			 * @param _callback Pointer to the object with the callback method
+			 */
 			virtual void testCollision(const ProxyShape* _shape,
 			                           CollisionCallback* _callback);
-			/// Test and report collisions between two given shapes
+			/**
+			 * @briefTest and report collisions between two given shapes
+			 * @param _shape1 Pointer to the first proxy shape to test
+			 * @param _shape2 Pointer to the second proxy shape to test
+			 * @param _callback Pointer to the object with the callback method
+			 */
 			virtual void testCollision(const ProxyShape* _shape1,
 			                           const ProxyShape* _shape2,
 			                           CollisionCallback* _callback);
-			/// Test and report collisions between a body and all the others bodies of the
-			/// world
+			/**
+			 * @brief Test and report collisions between a body and all the others bodies of the world.
+			 * @param _body Pointer to the first body to test
+			 * @param _callback Pointer to the object with the callback method
+			 */
 			virtual void testCollision(const CollisionBody* _body,
 			                           CollisionCallback* _callback);
-			/// Test and report collisions between two bodies
+			/**
+			 * @brief Test and report collisions between two bodies
+			 * @param _body1 Pointer to the first body to test
+			 * @param _body2 Pointer to the second body to test
+			 * @param _callback Pointer to the object with the callback method
+			 */
 			virtual void testCollision(const CollisionBody* _body1,
 			                           const CollisionBody* _body2,
 			                           CollisionCallback* _callback);
-			/// Test and report collisions between all shapes of the world
+			/**
+			 * @brief Test and report collisions between all shapes of the world
+			 * @param _callback Pointer to the object with the callback method
+			 */
 			virtual void testCollision(CollisionCallback* _callback);
 			friend class CollisionDetection;
 			friend class CollisionBody;
