@@ -42,7 +42,6 @@ void ConcaveMeshShape::initBVHTree() {
 
 void ConcaveMeshShape::getTriangleVerticesWithIndexPointer(int32_t _subPart, int32_t _triangleIndex, vec3* _outTriangleVertices) const {
 	EPHY_ASSERT(_outTriangleVertices != nullptr, "Input check error");
-	
 	// Get the triangle vertex array of the current sub-part
 	TriangleVertexArray* triangleVertexArray = m_triangleMesh->getSubpart(_subPart);
 	if (triangleVertexArray == nullptr) {
