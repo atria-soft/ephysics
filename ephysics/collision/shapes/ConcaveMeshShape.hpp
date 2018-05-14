@@ -17,7 +17,7 @@
 namespace ephysics {
 	class ConcaveMeshShape;
 	class ConcaveMeshRaycastCallback {
-		private :
+		private:
 			etk::Vector<int32_t> m_hitAABBNodes;
 			const DynamicAABBTree& m_dynamicAABBTree;
 			const ConcaveMeshShape& m_concaveMeshShape;
@@ -55,13 +55,22 @@ namespace ephysics {
 	 * this shape for a static mesh.
 	 */
 	class ConcaveMeshShape : public ConcaveShape {
+		public:
+			/// Constructor
+			ConcaveMeshShape(TriangleMesh* _triangleMesh);
+			/// DELETE copy-constructor
+			ConcaveMeshShape(const ConcaveMeshShape& _shape) = delete;
+			/// DELETE assignment operator
+			ConcaveMeshShape& operator=(const ConcaveMeshShape& _shape) = delete;
+			virtual void getLocalBounds(vec3& _min, vec3& _max) const override;
+			virtual void setLocalScaling(const vec3& _scaling) override;
+			virtual void computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const override;
+			virtual void testAllTriangles(TriangleCallback& _callback, const AABB& _localAABB) const override;
+			friend class ConvexTriangleAABBOverlapCallback;
+			friend class ConcaveMeshRaycastCallback;
 		protected:
 			TriangleMesh* m_triangleMesh; //!< Triangle mesh
 			DynamicAABBTree m_dynamicAABBTree; //!< Dynamic AABB tree to accelerate collision with the triangles
-			/// Private copy-constructor
-			ConcaveMeshShape(const ConcaveMeshShape& _shape) = delete;
-			/// Private assignment operator
-			ConcaveMeshShape& operator=(const ConcaveMeshShape& _shape) = delete;
 			virtual bool raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const override;
 			virtual size_t getSizeInBytes() const override;
 			/// Insert all the triangles int32_to the dynamic AABB tree
@@ -71,16 +80,6 @@ namespace ephysics {
 			void getTriangleVerticesWithIndexPointer(int32_t _subPart,
 			                                         int32_t _triangleIndex,
 			                                         vec3* _outTriangleVertices) const;
-		public:
-			/// Constructor
-			ConcaveMeshShape(TriangleMesh* triangleMesh);
-			virtual void getLocalBounds(vec3& min, vec3& max) const override;
-			virtual void setLocalScaling(const vec3& scaling) override;
-			virtual void computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const override;
-			/// Use a callback method on all triangles of the concave shape inside a given AABB
-			virtual void testAllTriangles(TriangleCallback& callback, const AABB& localAABB) const override;
-			friend class ConvexTriangleAABBOverlapCallback;
-			friend class ConcaveMeshRaycastCallback;
 	};
 
 }

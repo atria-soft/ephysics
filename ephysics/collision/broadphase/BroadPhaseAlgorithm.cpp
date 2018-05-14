@@ -71,26 +71,20 @@ void BroadPhaseAlgorithm::removeMovedCollisionShape(int32_t _broadPhaseID) {
 	*/
 }
 
-void BroadPhaseAlgorithm::addProxyCollisionShape(ProxyShape* proxyShape, const AABB& aabb) {
-
+void BroadPhaseAlgorithm::addProxyCollisionShape(ProxyShape* _proxyShape, const AABB& _aabb) {
 	// Add the collision shape int32_to the dynamic AABB tree and get its broad-phase ID
-	int32_t nodeId = m_dynamicAABBTree.addObject(aabb, proxyShape);
-
+	int32_t nodeId = m_dynamicAABBTree.addObject(_aabb, _proxyShape);
 	// Set the broad-phase ID of the proxy shape
-	proxyShape->m_broadPhaseID = nodeId;
-
+	_proxyShape->m_broadPhaseID = nodeId;
 	// Add the collision shape int32_to the array of bodies that have moved (or have been created)
 	// during the last simulation step
-	addMovedCollisionShape(proxyShape->m_broadPhaseID);
+	addMovedCollisionShape(_proxyShape->m_broadPhaseID);
 }
 
-void BroadPhaseAlgorithm::removeProxyCollisionShape(ProxyShape* proxyShape) {
-
-	int32_t broadPhaseID = proxyShape->m_broadPhaseID;
-
+void BroadPhaseAlgorithm::removeProxyCollisionShape(ProxyShape* _proxyShape) {
+	int32_t broadPhaseID = _proxyShape->m_broadPhaseID;
 	// Remove the collision shape from the dynamic AABB tree
 	m_dynamicAABBTree.removeObject(broadPhaseID);
-
 	// Remove the collision shape int32_to the array of shapes that have moved (or have been created)
 	// during the last simulation step
 	removeMovedCollisionShape(broadPhaseID);
@@ -127,18 +121,17 @@ void BroadPhaseAlgorithm::computeOverlappingPairs() {
 		// Ask the dynamic AABB tree to report all collision shapes that overlap with
 		// this AABB. The method BroadPhase::notifiyOverlappingPair() will be called
 		// by the dynamic AABB tree for each potential overlapping pair.
-		m_dynamicAABBTree.reportAllShapesOverlappingWithAABB(shapeAABB, [&](int32_t nodeId) mutable {
+		m_dynamicAABBTree.reportAllShapesOverlappingWithAABB(shapeAABB, [&](int32_t _nodeId) mutable {
 		                                                                	// If both the nodes are the same, we do not create store the overlapping pair
-		                                                                	if (it == nodeId) {
+		                                                                	if (it == _nodeId) {
 		                                                                		return;
 		                                                                	}
 		                                                                	// Add the new potential pair int32_to the array of potential overlapping pairs
-		                                                                	m_potentialPairs.pushBack(etk::makePair(etk::min(it, nodeId), etk::max(it, nodeId) ));
+		                                                                	m_potentialPairs.pushBack(etk::makePair(etk::min(it, _nodeId), etk::max(it, _nodeId) ));
 		                                                                });
 	}
 	// Reset the array of collision shapes that have move (or have been created) during the last simulation step
 	m_movedShapes.clear();
-
 	// Sort the array of potential overlapping pairs in order to remove duplicate pairs
 	m_potentialPairs.sort(0,
 	                      m_potentialPairs.size()-1,
@@ -151,7 +144,6 @@ void BroadPhaseAlgorithm::computeOverlappingPairs() {
 	                      	}
 	                      	return false;
 	                      });
-
 	// Check all the potential overlapping pairs avoiding duplicates to report unique
 	// overlapping pairs
 	uint32_t iii=0;
@@ -178,22 +170,17 @@ void BroadPhaseAlgorithm::computeOverlappingPairs() {
 	}
 }
 
-float BroadPhaseRaycastCallback::operator()(int32_t nodeId, const Ray& ray) {
-
+float BroadPhaseRaycastCallback::operator()(int32_t _nodeId, const Ray& _ray) {
 	float hitFraction = float(-1.0);
-
 	// Get the proxy shape from the node
-	ProxyShape* proxyShape = static_cast<ProxyShape*>(m_dynamicAABBTree.getNodeDataPointer(nodeId));
-
+	ProxyShape* proxyShape = static_cast<ProxyShape*>(m_dynamicAABBTree.getNodeDataPointer(_nodeId));
 	// Check if the raycast filtering mask allows raycast against this shape
 	if ((m_raycastWithCategoryMaskBits & proxyShape->getCollisionCategoryBits()) != 0) {
-
 		// Ask the collision detection to perform a ray cast test against
 		// the proxy shape of this node because the ray is overlapping
 		// with the shape in the broad-phase
-		hitFraction = m_raycastTest.raycastAgainstShape(proxyShape, ray);
+		hitFraction = m_raycastTest.raycastAgainstShape(proxyShape, _ray);
 	}
-
 	return hitFraction;
 }
 
@@ -202,7 +189,6 @@ bool BroadPhaseAlgorithm::testOverlappingShapes(const ProxyShape* _shape1,
 	// Get the two AABBs of the collision shapes
 	const AABB& aabb1 = m_dynamicAABBTree.getFatAABB(_shape1->m_broadPhaseID);
 	const AABB& aabb2 = m_dynamicAABBTree.getFatAABB(_shape2->m_broadPhaseID);
-
 	// Check if the two AABBs are overlapping
 	return aabb1.testCollision(aabb2);
 }

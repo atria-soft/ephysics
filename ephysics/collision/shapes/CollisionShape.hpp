@@ -28,24 +28,13 @@ class CollisionBody;
  * body that is used during the narrow-phase collision detection.
  */
 class CollisionShape {
-	protected :
-		CollisionShapeType m_type; //!< Type of the collision shape
-		vec3 m_scaling; //!< Scaling vector of the collision shape
-		/// Private copy-constructor
-		CollisionShape(const CollisionShape& shape) = delete;
-		/// Private assignment operator
-		CollisionShape& operator=(const CollisionShape& shape) = delete;
-		/// Return true if a point is inside the collision shape
-		virtual bool testPointInside(const vec3& worldPoint, ProxyShape* proxyShape) const=0;
-		/// Raycast method with feedback information
-		virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const=0;
-		/// Return the number of bytes used by the collision shape
-		virtual size_t getSizeInBytes() const = 0;
 	public :
 		/// Constructor
 		CollisionShape(CollisionShapeType _type);
-		/// Destructor
-		virtual ~CollisionShape();
+		/// DELETE copy-constructor
+		CollisionShape(const CollisionShape& shape) = delete;
+		/// DELETE assignment operator
+		CollisionShape& operator=(const CollisionShape& shape) = delete;
 		/**
 		 * @brief Get the type of the collision shapes
 		 * @return The type of the collision shape (box, sphere, cylinder, ...)
@@ -106,6 +95,15 @@ class CollisionShape {
 		                                            CollisionShapeType _shapeType2);
 		friend class ProxyShape;
 		friend class CollisionWorld;
+	protected :
+		CollisionShapeType m_type; //!< Type of the collision shape
+		vec3 m_scaling; //!< Scaling vector of the collision shape
+		/// Return true if a point is inside the collision shape
+		virtual bool testPointInside(const vec3& worldPoint, ProxyShape* proxyShape) const = 0;
+		/// Raycast method with feedback information
+		virtual bool raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const = 0;
+		/// Return the number of bytes used by the collision shape
+		virtual size_t getSizeInBytes() const = 0;
 };
 
 

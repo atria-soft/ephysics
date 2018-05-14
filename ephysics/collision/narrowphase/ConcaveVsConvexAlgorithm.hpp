@@ -138,8 +138,6 @@ namespace ephysics {
 		public :
 			/// Constructor
 			ConcaveVsConvexAlgorithm();
-			/// Destructor
-			virtual ~ConcaveVsConvexAlgorithm();
 			/// Compute a contact info if the two bounding volume collide
 			virtual void testCollision(const CollisionShapeInfo& _shape1Info,
 			                           const CollisionShapeInfo& _shape2Info,

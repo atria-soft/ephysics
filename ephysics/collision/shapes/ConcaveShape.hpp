@@ -28,25 +28,29 @@ namespace ephysics {
 	 * body that is used during the narrow-phase collision detection.
 	 */
 	class ConcaveShape : public CollisionShape {
-		protected :
-			bool m_isSmoothMeshCollisionEnabled; //!< True if the smooth mesh collision algorithm is enabled
-			float m_triangleMargin; //!< Margin use for collision detection for each triangle
-			TriangleRaycastSide m_raycastTestType; //!< Raycast test type for the triangle (front, back, front-back)
-			/// Private copy-constructor
-			ConcaveShape(const ConcaveShape& _shape) = delete;
-			/// Private assignment operator
-			ConcaveShape& operator=(const ConcaveShape& _shape) = delete;
-			virtual bool testPointInside(const vec3& _localPoint, ProxyShape* _proxyShape) const override;
 		public :
 			/// Constructor
 			ConcaveShape(CollisionShapeType _type);
 			/// Destructor
 			virtual ~ConcaveShape();
+			/// DELETE copy-constructor
+			ConcaveShape(const ConcaveShape& _shape) = delete;
+			/// DELETE assignment operator
+			ConcaveShape& operator=(const ConcaveShape& _shape) = delete;
+		protected :
+			bool m_isSmoothMeshCollisionEnabled; //!< True if the smooth mesh collision algorithm is enabled
+			float m_triangleMargin; //!< Margin use for collision detection for each triangle
+			TriangleRaycastSide m_raycastTestType; //!< Raycast test type for the triangle (front, back, front-back)
+			bool testPointInside(const vec3& _localPoint, ProxyShape* _proxyShape) const override;
+		public:
 			/// Return the triangle margin
 			float getTriangleMargin() const;
 			/// Return the raycast test type (front, back, front-back)
 			TriangleRaycastSide getRaycastTestType() const;
-			// Set the raycast test type (front, back, front-back)
+			/**
+			 * @brief Set the raycast test type (front, back, front-back)
+			 * @param testType Raycast test type for the triangle (front, back, front-back)
+			 */
 			void setRaycastTestType(TriangleRaycastSide _testType);
 			/// Return true if the collision shape is convex, false if it is concave
 			virtual bool isConvex() const override;
@@ -54,7 +58,12 @@ namespace ephysics {
 			virtual void testAllTriangles(TriangleCallback& _callback, const AABB& _localAABB) const=0;
 			/// Return true if the smooth mesh collision is enabled
 			bool getIsSmoothMeshCollisionEnabled() const;
-			/// Enable/disable the smooth mesh collision algorithm
+			/**
+			 * @brief Enable/disable the smooth mesh collision algorithm
+			 *
+			 * Smooth mesh collision is used to avoid collisions against some int32_ternal edges of the triangle mesh.
+			 * If it is enabled, collsions with the mesh will be smoother but collisions computation is a bit more expensive.
+			 */
 			void setIsSmoothMeshCollisionEnabled(bool _isEnabled);
 	};
 

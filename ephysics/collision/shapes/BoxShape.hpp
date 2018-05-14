@@ -28,24 +28,31 @@ namespace ephysics {
  * default margin distance by not using the "margin" parameter in the constructor.
  */
 class BoxShape : public ConvexShape {
-	protected :
-		vec3 m_extent; //!< Extent sizes of the box in the x, y and z direction
-		/// Private copy-constructor
-		BoxShape(const BoxShape& _shape) = delete;
-		/// Private assignment operator
-		BoxShape& operator=(const BoxShape& _shape) = delete;
-		vec3 getLocalSupportPointWithoutMargin(const vec3& _direction, void** _cachedCollisionData) const override;
-		bool testPointInside(const vec3& _localPoint, ProxyShape* _proxyShape) const override;
-		bool raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const override;
-		size_t getSizeInBytes() const override;
-	public :
-		/// Constructor
+	public:
+		/**
+		 * @brief Constructor
+		 * @param extent The vector with the three extents of the box (in meters)
+		 * @param margin The collision margin (in meters) around the collision shape
+		 */
 		BoxShape(const vec3& _extent, float _margin = OBJECT_MARGIN);
-		/// Return the extents of the box
+		/// DELETE copy-constructor
+		BoxShape(const BoxShape& _shape) = delete;
+		/// DELETE assignment operator
+		BoxShape& operator=(const BoxShape& _shape) = delete;
+		/**
+		 * @brief Return the extents of the box
+		 * @return The vector with the three extents of the box shape (in meters)
+		 */
 		vec3 getExtent() const;
 		void setLocalScaling(const vec3& _scaling) override;
 		void getLocalBounds(vec3& _min, vec3& _max) const override;
 		void computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const override;
+	protected:
+		vec3 m_extent; //!< Extent sizes of the box in the x, y and z direction
+		vec3 getLocalSupportPointWithoutMargin(const vec3& _direction, void** _cachedCollisionData) const override;
+		bool testPointInside(const vec3& _localPoint, ProxyShape* _proxyShape) const override;
+		bool raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const override;
+		size_t getSizeInBytes() const override;
 };
 
 }

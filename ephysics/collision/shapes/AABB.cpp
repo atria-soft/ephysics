@@ -151,13 +151,19 @@ void AABB::inflate(float _dx, float _dy, float _dz) {
 	m_minCoordinates -= vec3(_dx, _dy, _dz);
 }
 
-bool AABB::testCollision(const AABB& aabb) const {
-	if (m_maxCoordinates.x() < aabb.m_minCoordinates.x() ||
-		aabb.m_maxCoordinates.x() < m_minCoordinates.x()) return false;
-	if (m_maxCoordinates.y() < aabb.m_minCoordinates.y() ||
-		aabb.m_maxCoordinates.y() < m_minCoordinates.y()) return false;
-	if (m_maxCoordinates.z() < aabb.m_minCoordinates.z()||
-		aabb.m_maxCoordinates.z() < m_minCoordinates.z()) return false;
+bool AABB::testCollision(const AABB& _aabb) const {
+	if (    m_maxCoordinates.x() < _aabb.m_minCoordinates.x()
+	     || _aabb.m_maxCoordinates.x() < m_minCoordinates.x()) {
+		return false;
+	}
+	if (    m_maxCoordinates.y() < _aabb.m_minCoordinates.y()
+	     || _aabb.m_maxCoordinates.y() < m_minCoordinates.y()) {
+		return false;
+	}
+	if (    m_maxCoordinates.z() < _aabb.m_minCoordinates.z()
+	     || _aabb.m_maxCoordinates.z() < m_minCoordinates.z()) {
+		return false;
+	}
 	return true;
 }
 

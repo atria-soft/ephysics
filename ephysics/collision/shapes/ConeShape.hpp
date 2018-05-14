@@ -28,24 +28,36 @@ namespace ephysics {
 	 * default margin distance by not using the "margin" parameter in the constructor.
 	 */
 	class ConeShape : public ConvexShape {
+		public :
+			/**
+			 * @brief Constructor
+			 * @param _radius Radius of the cone (in meters)
+			 * @param _height Height of the cone (in meters)
+			 * @param _margin Collision margin (in meters) around the collision shape
+			 */
+			ConeShape(float _radius, float _height, float _margin = OBJECT_MARGIN);
+			/// DELETE copy-constructor
+			ConeShape(const ConeShape& _shape) = delete;
+			/// DELETE assignment operator
+			ConeShape& operator=(const ConeShape& _shape) = delete;
 		protected :
 			float m_radius; //!< Radius of the base
 			float m_halfHeight; //!< Half height of the cone
 			float m_sinTheta; //!< sine of the semi angle at the apex point
-			/// Private copy-constructor
-			ConeShape(const ConeShape& _shape) = delete;
-			/// Private assignment operator
-			ConeShape& operator=(const ConeShape& _shape) = delete;
 			virtual vec3 getLocalSupportPointWithoutMargin(const vec3& _direction, void** _cachedCollisionData) const override;
 			bool testPointInside(const vec3& _localPoint, ProxyShape* _proxyShape) const override;
 			bool raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const override;
 			size_t getSizeInBytes() const override;
-		public :
-			/// Constructor
-			ConeShape(float _radius, float _height, float _margin = OBJECT_MARGIN);
-			/// Return the radius
+		public:
+			/**
+			 * @brief Return the radius
+			 * @return Radius of the cone (in meters)
+			 */
 			float getRadius() const;
-			/// Return the height
+			/**
+			 * @brief Return the height
+			 * @return Height of the cone (in meters)
+			 */
 			float getHeight() const;
 			
 			void setLocalScaling(const vec3& _scaling) override;
