@@ -49,6 +49,17 @@ namespace ephysics {
 	 * The new added point is always kept.
 	 */
 	class ContactManifold {
+		public:
+			/// Constructor
+			ContactManifold(ProxyShape* _shape1,
+			                ProxyShape* _shape2,
+			                int16_t _normalDirectionId);
+			/// Destructor
+			~ContactManifold();
+			/// DELETE copy-constructor
+			ContactManifold(const ContactManifold& _contactManifold) = delete;
+			/// DELETE assignment operator
+			ContactManifold& operator=(const ContactManifold& _contactManifold) = delete;
 		private:
 			ProxyShape* m_shape1; //!< Pointer to the first proxy shape of the contact
 			ProxyShape* m_shape2; //!< Pointer to the second proxy shape of the contact
@@ -62,27 +73,32 @@ namespace ephysics {
 			float m_frictionTwistImpulse; //!< Twist friction constraint accumulated impulse
 			vec3 m_rollingResistanceImpulse; //!< Accumulated rolling resistance impulse
 			bool m_isAlreadyInIsland; //!< True if the contact manifold has already been added int32_to an island
-			/// Private copy-constructor
-			ContactManifold(const ContactManifold& _contactManifold) = delete;
-			/// Private assignment operator
-			ContactManifold& operator=(const ContactManifold& _contactManifold) = delete;
 			/// Return the index of maximum area
 			int32_t getMaxArea(float _area0, float _area1, float _area2, float _area3) const;
-			/// Return the index of the contact with the larger penetration depth.
+			/**
+			 * @brief Return the index of the contact with the larger penetration depth.
+			 *
+			 * This corresponding contact will be kept in the cache. The method returns -1 is
+			 * the new contact is the deepest.
+			 */
 			int32_t getIndexOfDeepestPenetration(ContactPoint* _newContact) const;
-			/// Return the index that will be removed.
+			/**
+			 * @brief Return the index that will be removed.
+			 * The index of the contact point with the larger penetration
+			 * depth is given as a parameter. This contact won't be removed. Given this contact, we compute
+			 * the different area and we want to keep the contacts with the largest area. The new point is also
+			 * kept. In order to compute the area of a quadrilateral, we use the formula :
+			 * Area = 0.5 * | AC x BD | where AC and BD form the diagonals of the quadrilateral. Note that
+			 * when we compute this area, we do not calculate it exactly but we
+			 * only estimate it because we do not compute the actual diagonals of the quadrialteral. Therefore,
+			 * this is only a guess that is faster to compute. This idea comes from the Bullet Physics library
+			 * by Erwin Coumans (http://wwww.bulletphysics.org).
 			int32_t getIndexToRemove(int32_t _indexMaxPenetration, const vec3& _newPoint) const;
 			/// Remove a contact point from the manifold
 			void removeContactPoint(uint32_t _index);
 			/// Return true if the contact manifold has already been added int32_to an island
 			bool isAlreadyInIsland() const;
 		public:
-			/// Constructor
-			ContactManifold(ProxyShape* _shape1,
-			                ProxyShape* _shape2,
-			                int16_t _normalDirectionId);
-			/// Destructor
-			~ContactManifold();
 			/// Return a pointer to the first proxy shape of the contact
 			ProxyShape* getShape1() const;
 			/// Return a pointer to the second proxy shape of the contact
@@ -95,7 +111,15 @@ namespace ephysics {
 			int16_t getNormalDirectionId() const;
 			/// Add a contact point to the manifold
 			void addContactPoint(ContactPoint* _contact);
-			/// Update the contact manifold.
+			/**
+			 * @brief Update the contact manifold.
+			 * 
+			 * First the world space coordinates of the current contacts in the manifold are recomputed from
+			 * the corresponding transforms of the bodies because they have moved. Then we remove the contacts
+			 * with a negative penetration depth (meaning that the bodies are not penetrating anymore) and also
+			 * the contacts with a too large distance between the contact points in the plane orthogonal to the
+			 * contact normal.
+			 */
 			void update(const etk::Transform3D& _transform1,
 			            const etk::Transform3D& _transform2);
 			/// Clear the contact manifold
