@@ -40,8 +40,8 @@ vec3 ConeShape::getLocalSupportPointWithoutMargin(const vec3& _direction, void**
 	return supportPoint;
 }
 
-bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const {
-	const vec3 r = ray.point2 - ray.point1;
+bool ConeShape::raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const {
+	const vec3 r = _ray.point2 - _ray.point1;
 	const float epsilon = float(0.00001);
 	vec3 V(0, m_halfHeight, 0);
 	vec3 centerBase(0, -m_halfHeight, 0);
@@ -49,7 +49,7 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 	float heightSquare = float(4.0) * m_halfHeight * m_halfHeight;
 	float cosThetaSquare = heightSquare / (heightSquare + m_radius * m_radius);
 	float factor = 1.0f - cosThetaSquare;
-	vec3 delta = ray.point1 - V;
+	vec3 delta = _ray.point1 - V;
 	float c0 = -cosThetaSquare * delta.x() * delta.x()  + factor * delta.y() * delta.y() - cosThetaSquare * delta.z() * delta.z();
 	float c1 = -cosThetaSquare * delta.x() * r.x() + factor * delta.y() * r.y() - cosThetaSquare * delta.z() * r.z();
 	float c2 = -cosThetaSquare * r.x() * r.x()  + factor * r.y() * r.y() - cosThetaSquare * r.z() * r.z();
@@ -85,11 +85,11 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 		}
 	}
 	// If the origin of the ray is inside the cone, we return no hit
-	if (testPointInside(ray.point1, NULL)) {
+	if (testPointInside(_ray.point1, NULL)) {
 		return false;
 	}
-	localHitPoint[0] = ray.point1 + tHit[0] * r;
-	localHitPoint[1] = ray.point1 + tHit[1] * r;
+	localHitPoint[0] = _ray.point1 + tHit[0] * r;
+	localHitPoint[1] = _ray.point1 + tHit[1] * r;
 	// Only keep hit points in one side of the double cone (the cone we are int32_terested in)
 	if (axis.dot(localHitPoint[0] - V) < 0.0f) {
 		tHit[0] = float(-1.0);
@@ -107,9 +107,9 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 	// If the ray is in direction of the base plane of the cone
 	if (r.y() > epsilon) {
 		// Compute the int32_tersection with the base plane of the cone
-		tHit[2] = (-ray.point1.y() - m_halfHeight) / (r.y());
+		tHit[2] = (-_ray.point1.y() - m_halfHeight) / (r.y());
 		// Only keep this int32_tersection if it is inside the cone radius
-		localHitPoint[2] = ray.point1 + tHit[2] * r;
+		localHitPoint[2] = _ray.point1 + tHit[2] * r;
 		if ((localHitPoint[2] - centerBase).length2() > m_radius * m_radius) {
 			tHit[2] = float(-1.0);
 		}
@@ -131,7 +131,7 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 	if (hitIndex < 0) {
 		return false;
 	}
-	if (t > ray.maxFraction) {
+	if (t > _ray.maxFraction) {
 		return false;
 	}
 	// Compute the normal direction for hit against side of the cone
@@ -147,11 +147,11 @@ bool ConeShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* pr
 		localNormal[hitIndex].setY(etk::sqrt(x * x + z * z) * rOverH);
 		localNormal[hitIndex].setZ(z);
 	}
-	raycastInfo.body = proxyShape->getBody();
-	raycastInfo.proxyShape = proxyShape;
-	raycastInfo.hitFraction = t;
-	raycastInfo.worldPoint = localHitPoint[hitIndex];
-	raycastInfo.worldNormal = localNormal[hitIndex];
+	_raycastInfo.body = _proxyShape->getBody();
+	_raycastInfo.proxyShape = _proxyShape;
+	_raycastInfo.hitFraction = t;
+	_raycastInfo.worldPoint = localHitPoint[hitIndex];
+	_raycastInfo.worldNormal = localNormal[hitIndex];
 	return true;
 }
 
@@ -163,40 +163,40 @@ float ConeShape::getHeight() const {
 	return float(2.0) * m_halfHeight;
 }
 
-void ConeShape::setLocalScaling(const vec3& scaling) {
-	m_halfHeight = (m_halfHeight / m_scaling.y()) * scaling.y();
-	m_radius = (m_radius / m_scaling.x()) * scaling.x();
-	CollisionShape::setLocalScaling(scaling);
+void ConeShape::setLocalScaling(const vec3& _scaling) {
+	m_halfHeight = (m_halfHeight / m_scaling.y()) * _scaling.y();
+	m_radius = (m_radius / m_scaling.x()) * _scaling.x();
+	CollisionShape::setLocalScaling(_scaling);
 }
 
 size_t ConeShape::getSizeInBytes() const {
 	return sizeof(ConeShape);
 }
 
-void ConeShape::getLocalBounds(vec3& min, vec3& max) const {
+void ConeShape::getLocalBounds(vec3& _min, vec3& _max) const {
 	// Maximum bounds
-	max.setX(m_radius + m_margin);
-	max.setY(m_halfHeight + m_margin);
-	max.setZ(max.x());
+	_max.setX(m_radius + m_margin);
+	_max.setY(m_halfHeight + m_margin);
+	_max.setZ(_max.x());
 	// Minimum bounds
-	min.setX(-max.x());
-	min.setY(-max.y());
-	min.setZ(min.x());
+	_min.setX(-_max.x());
+	_min.setY(-_max.y());
+	_min.setZ(_min.x());
 }
 
-void ConeShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
+void ConeShape::computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const {
 	float rSquare = m_radius * m_radius;
-	float diagXZ = float(0.15) * mass * (rSquare + m_halfHeight);
-	tensor.setValue(diagXZ, 0.0, 0.0,
-	                0.0, float(0.3) * mass * rSquare,
-	                0.0, 0.0, 0.0, diagXZ);
+	float diagXZ = float(0.15) * _mass * (rSquare + m_halfHeight);
+	_tensor.setValue(diagXZ, 0.0, 0.0,
+	                 0.0, float(0.3) * _mass * rSquare,
+	                 0.0, 0.0, 0.0, diagXZ);
 }
 
-bool ConeShape::testPointInside(const vec3& localPoint, ProxyShape* proxyShape) const {
+bool ConeShape::testPointInside(const vec3& _localPoint, ProxyShape* _proxyShape) const {
 	const float radiusHeight =   m_radius
-	                           * (-localPoint.y() + m_halfHeight)
+	                           * (-_localPoint.y() + m_halfHeight)
 	                           / (m_halfHeight * float(2.0));
-	return (    localPoint.y() < m_halfHeight
-	         && localPoint.y() > -m_halfHeight)
-	         && (localPoint.x() * localPoint.x() + localPoint.z() * localPoint.z() < radiusHeight *radiusHeight);
+	return (    _localPoint.y() < m_halfHeight
+	         && _localPoint.y() > -m_halfHeight)
+	         && (_localPoint.x() * _localPoint.x() + _localPoint.z() * _localPoint.z() < radiusHeight *radiusHeight);
 }
