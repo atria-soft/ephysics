@@ -93,6 +93,7 @@ namespace ephysics {
 			 * only estimate it because we do not compute the actual diagonals of the quadrialteral. Therefore,
 			 * this is only a guess that is faster to compute. This idea comes from the Bullet Physics library
 			 * by Erwin Coumans (http://wwww.bulletphysics.org).
+			 */
 			int32_t getIndexToRemove(int32_t _indexMaxPenetration, const vec3& _newPoint) const;
 			/// Remove a contact point from the manifold
 			void removeContactPoint(uint32_t _index);
