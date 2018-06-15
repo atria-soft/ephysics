@@ -77,9 +77,9 @@ namespace ephysics {
 			HeightDataType m_heightDataType; //!< Data type of the height values
 			const void*	m_heightFieldData; //!< Array of data with all the height values of the height field
 			AABB m_AABB; //!< Local AABB of the height field (without scaling)
-			/// Private copy-constructor
+			/// DELETED copy-constructor
 			HeightFieldShape(const HeightFieldShape&) = delete;
-			/// Private assignment operator
+			/// DELETED assignment operator
 			HeightFieldShape& operator=(const HeightFieldShape&) = delete;
 			bool raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const override;
 			size_t getSizeInBytes() const override;
@@ -99,7 +99,17 @@ namespace ephysics {
 			/// Compute the min/max grid coords corresponding to the int32_tersection of the AABB of the height field and the AABB to collide
 			void computeMinMaxGridCoordinates(int32_t* _minCoords, int32_t* _maxCoords, const AABB& _aabbToCollide) const;
 		public:
-			/// Constructor
+			/**
+			 * @brief Contructor
+			 * @param nbGridColumns Number of columns in the grid of the height field
+			 * @param nbGridRows Number of rows in the grid of the height field
+			 * @param minHeight Minimum height value of the height field
+			 * @param maxHeight Maximum height value of the height field
+			 * @param heightFieldData Pointer to the first height value data (note that values are shared and not copied)
+			 * @param dataType Data type for the height values (int32_t, float, double)
+			 * @param upAxis Integer representing the up axis direction (0 for x, 1 for y and 2 for z)
+			 * @param int32_tegerHeightScale Scaling factor used to scale the height values (only when height values type is int32_teger)
+			 */
 			HeightFieldShape(int32_t _nbGridColumns,
 			                 int32_t _nbGridRows,
 			                 float _minHeight,

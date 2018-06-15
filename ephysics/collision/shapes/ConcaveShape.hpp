@@ -31,8 +31,6 @@ namespace ephysics {
 		public :
 			/// Constructor
 			ConcaveShape(CollisionShapeType _type);
-			/// Destructor
-			virtual ~ConcaveShape();
 			/// DELETE copy-constructor
 			ConcaveShape(const ConcaveShape& _shape) = delete;
 			/// DELETE assignment operator

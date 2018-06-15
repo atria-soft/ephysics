@@ -11,23 +11,31 @@
 
 using namespace ephysics;
 
-ConvexMeshShape::ConvexMeshShape(const float* arrayVertices, uint32_t nbVertices, int32_t stride, float margin)
-				: ConvexShape(CONVEX_MESH, margin), m_numberVertices(nbVertices), m_minBounds(0, 0, 0),
-				  m_maxBounds(0, 0, 0), m_isEdgesInformationUsed(false) {
-	assert(nbVertices > 0);
-	assert(stride > 0);
-	const unsigned char* vertexPointer = (const unsigned char*) arrayVertices;
+ConvexMeshShape::ConvexMeshShape(const float* _arrayVertices,
+                                 uint32_t _nbVertices,
+                                 int32_t _stride,
+                                 float _margin):
+  ConvexShape(CONVEX_MESH, _margin),
+  m_numberVertices(_nbVertices),
+  m_minBounds(0, 0, 0),
+  m_maxBounds(0, 0, 0),
+  m_isEdgesInformationUsed(false) {
+	assert(_nbVertices > 0);
+	assert(_stride > 0);
+	const unsigned char* vertexPointer = (const unsigned char*) _arrayVertices;
 	// Copy all the vertices int32_to the int32_ternal array
-	for (uint32_t i=0; i<m_numberVertices; i++) {
+	for (uint32_t iii=0; iii<m_numberVertices; iii++) {
 		const float* newPoint = (const float*) vertexPointer;
 		m_vertices.pushBack(vec3(newPoint[0], newPoint[1], newPoint[2]));
-		vertexPointer += stride;
+		vertexPointer += _stride;
 	}
 	// Recalculate the bounds of the mesh
 	recalculateBounds();
 }
 
-ConvexMeshShape::ConvexMeshShape(TriangleVertexArray* _triangleVertexArray, bool _isEdgesInformationUsed, float _margin):
+ConvexMeshShape::ConvexMeshShape(TriangleVertexArray* _triangleVertexArray,
+                                 bool _isEdgesInformationUsed,
+                                 float _margin):
   ConvexShape(CONVEX_MESH, _margin),
   m_minBounds(0, 0, 0),
   m_maxBounds(0, 0, 0),
@@ -54,9 +62,6 @@ ConvexMeshShape::ConvexMeshShape(TriangleVertexArray* _triangleVertexArray, bool
 	recalculateBounds();
 }
 
-// Constructor.
-/// If you use this constructor, you will need to set the vertices manually one by one using
-/// the addVertex() method.
 ConvexMeshShape::ConvexMeshShape(float _margin):
   ConvexShape(CONVEX_MESH, _margin),
   m_numberVertices(0),
@@ -66,7 +71,8 @@ ConvexMeshShape::ConvexMeshShape(float _margin):
 	
 }
 
-vec3 ConvexMeshShape::getLocalSupportPointWithoutMargin(const vec3& _direction, void** _cachedCollisionData) const {
+vec3 ConvexMeshShape::getLocalSupportPointWithoutMargin(const vec3& _direction,
+                                                        void** _cachedCollisionData) const {
 	assert(m_numberVertices == m_vertices.size());
 	assert(_cachedCollisionData != nullptr);
 	// Allocate memory for the cached collision data if not allocated yet
@@ -158,12 +164,12 @@ void ConvexMeshShape::recalculateBounds() {
 	m_minBounds -= vec3(m_margin, m_margin, m_margin);
 }
 
-bool ConvexMeshShape::raycast(const Ray& ray, RaycastInfo& raycastInfo, ProxyShape* proxyShape) const {
-	return proxyShape->m_body->m_world.m_collisionDetection.m_narrowPhaseGJKAlgorithm.raycast(ray, proxyShape, raycastInfo);
+bool ConvexMeshShape::raycast(const Ray& _ray, RaycastInfo& _raycastInfo, ProxyShape* _proxyShape) const {
+	return _proxyShape->m_body->m_world.m_collisionDetection.m_narrowPhaseGJKAlgorithm.raycast(_ray, _proxyShape, _raycastInfo);
 }
 
-void ConvexMeshShape::setLocalScaling(const vec3& scaling) {
-	ConvexShape::setLocalScaling(scaling);
+void ConvexMeshShape::setLocalScaling(const vec3& _scaling) {
+	ConvexShape::setLocalScaling(_scaling);
 	recalculateBounds();
 }
 
@@ -171,73 +177,72 @@ size_t ConvexMeshShape::getSizeInBytes() const {
 	return sizeof(ConvexMeshShape);
 }
 
-void ConvexMeshShape::getLocalBounds(vec3& min, vec3& max) const {
-	min = m_minBounds;
-	max = m_maxBounds;
+void ConvexMeshShape::getLocalBounds(vec3& _min, vec3& _max) const {
+	_min = m_minBounds;
+	_max = m_maxBounds;
 }
 
-void ConvexMeshShape::computeLocalInertiaTensor(etk::Matrix3x3& tensor, float mass) const {
-	float factor = (1.0f / float(3.0)) * mass;
+void ConvexMeshShape::computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const {
+	float factor = (1.0f / float(3.0)) * _mass;
 	vec3 realExtent = 0.5f * (m_maxBounds - m_minBounds);
 	assert(realExtent.x() > 0 && realExtent.y() > 0 && realExtent.z() > 0);
 	float xSquare = realExtent.x() * realExtent.x();
 	float ySquare = realExtent.y() * realExtent.y();
 	float zSquare = realExtent.z() * realExtent.z();
-	tensor.setValue(factor * (ySquare + zSquare), 0.0, 0.0,
-						0.0, factor * (xSquare + zSquare), 0.0,
-						0.0, 0.0, factor * (xSquare + ySquare));
+	_tensor.setValue(factor * (ySquare + zSquare), 0.0, 0.0,
+	                 0.0, factor * (xSquare + zSquare), 0.0,
+	                 0.0, 0.0, factor * (xSquare + ySquare));
 }
 
-void ConvexMeshShape::addVertex(const vec3& vertex) {
+void ConvexMeshShape::addVertex(const vec3& _vertex) {
 	// Add the vertex in to vertices array
-	m_vertices.pushBack(vertex);
+	m_vertices.pushBack(_vertex);
 	m_numberVertices++;
 	// Update the bounds of the mesh
-	if (vertex.x() * m_scaling.x() > m_maxBounds.x()) {
-		m_maxBounds.setX(vertex.x() * m_scaling.x());
+	if (_vertex.x() * m_scaling.x() > m_maxBounds.x()) {
+		m_maxBounds.setX(_vertex.x() * m_scaling.x());
 	}
-	if (vertex.x() * m_scaling.x() < m_minBounds.x()) {
-		m_minBounds.setX(vertex.x() * m_scaling.x());
+	if (_vertex.x() * m_scaling.x() < m_minBounds.x()) {
+		m_minBounds.setX(_vertex.x() * m_scaling.x());
 	}
-	if (vertex.y() * m_scaling.y() > m_maxBounds.y()) {
-		m_maxBounds.setY(vertex.y() * m_scaling.y());
+	if (_vertex.y() * m_scaling.y() > m_maxBounds.y()) {
+		m_maxBounds.setY(_vertex.y() * m_scaling.y());
 	}
-	if (vertex.y() * m_scaling.y() < m_minBounds.y()) {
-		m_minBounds.setY(vertex.y() * m_scaling.y());
+	if (_vertex.y() * m_scaling.y() < m_minBounds.y()) {
+		m_minBounds.setY(_vertex.y() * m_scaling.y());
 	}
-	if (vertex.z() * m_scaling.z() > m_maxBounds.z()) {
-		m_maxBounds.setZ(vertex.z() * m_scaling.z());
+	if (_vertex.z() * m_scaling.z() > m_maxBounds.z()) {
+		m_maxBounds.setZ(_vertex.z() * m_scaling.z());
 	}
-	if (vertex.z() * m_scaling.z() < m_minBounds.z()) {
-		m_minBounds.setZ(vertex.z() * m_scaling.z());
+	if (_vertex.z() * m_scaling.z() < m_minBounds.z()) {
+		m_minBounds.setZ(_vertex.z() * m_scaling.z());
 	}
 }
 
-void ConvexMeshShape::addEdge(uint32_t v1, uint32_t v2) {
+void ConvexMeshShape::addEdge(uint32_t _v1, uint32_t _v2) {
 	// If the entry for vertex v1 does not exist in the adjacency list
-	if (m_edgesAdjacencyList.count(v1) == 0) {
-		m_edgesAdjacencyList.add(v1, etk::Set<uint32_t>());
+	if (m_edgesAdjacencyList.count(_v1) == 0) {
+		m_edgesAdjacencyList.add(_v1, etk::Set<uint32_t>());
 	}
 	// If the entry for vertex v2 does not exist in the adjacency list
-	if (m_edgesAdjacencyList.count(v2) == 0) {
-		m_edgesAdjacencyList.add(v2, etk::Set<uint32_t>());
+	if (m_edgesAdjacencyList.count(_v2) == 0) {
+		m_edgesAdjacencyList.add(_v2, etk::Set<uint32_t>());
 	}
 	// Add the edge in the adjacency list
-	m_edgesAdjacencyList[v1].add(v2);
-	m_edgesAdjacencyList[v2].add(v1);
+	m_edgesAdjacencyList[_v1].add(_v2);
+	m_edgesAdjacencyList[_v2].add(_v1);
 }
 
 bool ConvexMeshShape::isEdgesInformationUsed() const {
 	return m_isEdgesInformationUsed;
 }
 
-void ConvexMeshShape::setIsEdgesInformationUsed(bool isEdgesUsed) {
-	m_isEdgesInformationUsed = isEdgesUsed;
+void ConvexMeshShape::setIsEdgesInformationUsed(bool _isEdgesUsed) {
+	m_isEdgesInformationUsed = _isEdgesUsed;
 }
 
-bool ConvexMeshShape::testPointInside(const vec3& localPoint,
-											 ProxyShape* proxyShape) const {
+bool ConvexMeshShape::testPointInside(const vec3& _localPoint,
+                                      ProxyShape* _proxyShape) const {
 	// Use the GJK algorithm to test if the point is inside the convex mesh
-	return proxyShape->m_body->m_world.m_collisionDetection.
-		   m_narrowPhaseGJKAlgorithm.testPointInside(localPoint, proxyShape);
+	return _proxyShape->m_body->m_world.m_collisionDetection.m_narrowPhaseGJKAlgorithm.testPointInside(_localPoint, _proxyShape);
 }

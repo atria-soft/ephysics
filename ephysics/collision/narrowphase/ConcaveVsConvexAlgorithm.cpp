@@ -93,7 +93,7 @@ void ConvexVsTriangleCallback::testTriangle(const vec3* _trianglePoints) {
 
 void ConcaveVsConvexAlgorithm::processSmoothMeshCollision(OverlappingPair* _overlappingPair,
                                                           etk::Vector<SmoothMeshContactInfo> _contactPoints,
-                                                          NarrowPhaseCallback* narrowPhaseCallback) {
+                                                          NarrowPhaseCallback* _callback) {
 	// Set with the triangle vertices already processed to void further contacts with same triangle
 	etk::Vector<etk::Pair<int32_t, vec3>> processTriangleVertices;
 	// Sort the list of narrow-phase contacts according to their penetration depth

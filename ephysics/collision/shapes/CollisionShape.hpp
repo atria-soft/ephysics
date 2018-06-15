@@ -35,6 +35,8 @@ class CollisionShape {
 		CollisionShape(const CollisionShape& shape) = delete;
 		/// DELETE assignment operator
 		CollisionShape& operator=(const CollisionShape& shape) = delete;
+		/// Virtualize destructor
+		virtual ~CollisionShape() {};
 		/**
 		 * @brief Get the type of the collision shapes
 		 * @return The type of the collision shape (box, sphere, cylinder, ...)

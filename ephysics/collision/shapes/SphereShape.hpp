@@ -36,7 +36,10 @@ namespace ephysics {
 				return sizeof(SphereShape);
 			}
 		public :
-			/// Constructor
+			/**
+			 * @brief Constructor
+			 * @param[in] radius Radius of the sphere (in meters)
+			 */
 			SphereShape(float _radius);
 			/**
 			 * @brief Get the radius of the sphere

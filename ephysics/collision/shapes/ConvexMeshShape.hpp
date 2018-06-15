@@ -54,7 +54,7 @@ namespace ephysics {
 			size_t getSizeInBytes() const override;
 		public :
 			/**
-			 * @brief  Constructor to initialize with an array of 3D vertices.
+			 * @brief Constructor to initialize with an array of 3D vertices.
 			 * This method creates an int32_ternal copy of the input vertices.
 			 * @param[in] _arrayVertices Array with the vertices of the convex mesh
 			 * @param[in] _nbVertices Number of vertices in the convex mesh
@@ -75,8 +75,12 @@ namespace ephysics {
 			ConvexMeshShape(TriangleVertexArray* _triangleVertexArray,
 			                bool _isEdgesInformationUsed = true,
 			                float _margin = OBJECT_MARGIN);
-			/// Constructor.
+			/**
+			 * @brief Constructor.
+			 * If you use this constructor, you will need to set the vertices manually one by one using the addVertex() method.
+			 */
 			ConvexMeshShape(float _margin = OBJECT_MARGIN);
+		public:
 			void getLocalBounds(vec3& _min, vec3& _max) const override;
 			void computeLocalInertiaTensor(etk::Matrix3x3& _tensor, float _mass) const override;
 			/**
@@ -86,7 +90,7 @@ namespace ephysics {
 			void addVertex(const vec3& _vertex);
 			/**
 			 * @brief Add an edge int32_to the convex mesh by specifying the two vertex indices of the edge.
-			 * Note that the vertex indices start at zero and need to correspond to the order of
+			 * @note that the vertex indices start at zero and need to correspond to the order of
 			 * the vertices in the vertices array in the constructor or the order of the calls
 			 * of the addVertex() methods that you use to add vertices int32_to the convex mesh.
 			 * @param[in] _v1 Index of the first vertex of the edge to add
