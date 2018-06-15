@@ -89,36 +89,49 @@ class TestCollisionWorld {
 		TestCollisionWorld() {
 			// Create the world
 			m_world = ETK_NEW(ephysics::CollisionWorld);
-			// Create the bodies
+			// Create shape
+			m_boxShape = ETK_NEW(ephysics::BoxShape, vec3(3,3,3));
+			m_sphereShape = ETK_NEW(ephysics::SphereShape, 3.0);
+			m_cylinderShape = ETK_NEW(ephysics::CylinderShape, 2, 5);
+			
+			// Create the BOX body
 			etk::Transform3D boxTransform(vec3(10, 0, 0), etk::Quaternion::identity());
 			m_boxBody = m_world->createCollisionBody(boxTransform);
-			m_boxShape = ETK_NEW(ephysics::BoxShape, vec3(3,3,3));
 			m_boxProxyShape = m_boxBody->addCollisionShape(m_boxShape, etk::Transform3D::identity());
-			m_sphereShape = ETK_NEW(ephysics::SphereShape, 3.0);
+			
+			// Create the SPHERE body 1
 			etk::Transform3D sphere1Transform(vec3(10,5, 0), etk::Quaternion::identity());
 			m_sphere1Body = m_world->createCollisionBody(sphere1Transform);
 			m_sphere1ProxyShape = m_sphere1Body->addCollisionShape(m_sphereShape, etk::Transform3D::identity());
+			
+			// Create the SPHERE body 2
 			etk::Transform3D sphere2Transform(vec3(30, 10, 10), etk::Quaternion::identity());
 			m_sphere2Body = m_world->createCollisionBody(sphere2Transform);
 			m_sphere2ProxyShape = m_sphere2Body->addCollisionShape(m_sphereShape, etk::Transform3D::identity());
+			
+			// Create the cylinder
 			etk::Transform3D cylinderTransform(vec3(10, -5, 0), etk::Quaternion::identity());
 			m_cylinderBody = m_world->createCollisionBody(cylinderTransform);
-			m_cylinderShape = ETK_NEW(ephysics::CylinderShape, 2, 5);
 			m_cylinderProxyShape = m_cylinderBody->addCollisionShape(m_cylinderShape, etk::Transform3D::identity());
+			
 			// Assign collision categories to proxy shapes
 			m_boxProxyShape->setCollisionCategoryBits(CATEGORY_1);
 			m_sphere1ProxyShape->setCollisionCategoryBits(CATEGORY_1);
 			m_sphere2ProxyShape->setCollisionCategoryBits(CATEGORY_2);
 			m_cylinderProxyShape->setCollisionCategoryBits(CATEGORY_3);
+			
+			// Set a copy reference on the callback handle...
 			m_collisionCallback.boxBody = m_boxBody;
 			m_collisionCallback.sphere1Body = m_sphere1Body;
 			m_collisionCallback.sphere2Body = m_sphere2Body;
 			m_collisionCallback.cylinderBody = m_cylinderBody;
 		}
 		~TestCollisionWorld() {
+			// delete body shape.
 			ETK_DELETE(ephysics::BoxShape, m_boxShape);
 			ETK_DELETE(ephysics::SphereShape, m_sphereShape);
 			ETK_DELETE(ephysics::CylinderShape, m_cylinderShape);
+			// delete dynamic world.
 			ETK_DELETE(ephysics::CollisionWorld, m_world);
 		}
 };
@@ -127,6 +140,7 @@ class TestCollisionWorld {
 TEST(TestCollisionWorld, testCollisions_1) {
 	TestCollisionWorld tmp;
 	tmp.m_collisionCallback.reset();
+	TEST_WARNING("TEST STEP 1...");
 	tmp.m_world->testCollision(&tmp.m_collisionCallback);
 	EXPECT_EQ(tmp.m_collisionCallback.boxCollideWithSphere1, true);
 	EXPECT_EQ(tmp.m_collisionCallback.boxCollideWithCylinder, true);
@@ -143,6 +157,7 @@ TEST(TestCollisionWorld, testCollisions_1) {
 	EXPECT_EQ(tmp.m_world->testAABBOverlap(tmp.m_sphere1ProxyShape, tmp.m_cylinderProxyShape), false);
 	EXPECT_EQ(tmp.m_world->testAABBOverlap(tmp.m_sphere1ProxyShape, tmp.m_sphere2ProxyShape), false);
 
+	TEST_WARNING("TEST STEP 2...");
 	tmp.m_collisionCallback.reset();
 	tmp.m_world->testCollision(tmp.m_cylinderBody, &tmp.m_collisionCallback);
 	EXPECT_EQ(tmp.m_collisionCallback.boxCollideWithSphere1, false);
@@ -150,6 +165,7 @@ TEST(TestCollisionWorld, testCollisions_1) {
 	EXPECT_EQ(tmp.m_collisionCallback.sphere1CollideWithCylinder, false);
 	EXPECT_EQ(tmp.m_collisionCallback.sphere1CollideWithSphere2, false);
 
+	TEST_WARNING("TEST STEP 3...");
 	tmp.m_collisionCallback.reset();
 	tmp.m_world->testCollision(tmp.m_boxBody, tmp.m_sphere1Body, &tmp.m_collisionCallback);
 	EXPECT_EQ(tmp.m_collisionCallback.boxCollideWithSphere1, true);
@@ -157,6 +173,7 @@ TEST(TestCollisionWorld, testCollisions_1) {
 	EXPECT_EQ(tmp.m_collisionCallback.sphere1CollideWithCylinder, false);
 	EXPECT_EQ(tmp.m_collisionCallback.sphere1CollideWithSphere2, false);
 
+	TEST_WARNING("TEST STEP 4...");
 	tmp.m_collisionCallback.reset();
 	tmp.m_world->testCollision(tmp.m_boxBody, tmp.m_cylinderBody, &tmp.m_collisionCallback);
 	EXPECT_EQ(tmp.m_collisionCallback.boxCollideWithSphere1, false);
@@ -164,6 +181,7 @@ TEST(TestCollisionWorld, testCollisions_1) {
 	EXPECT_EQ(tmp.m_collisionCallback.sphere1CollideWithCylinder, false);
 	EXPECT_EQ(tmp.m_collisionCallback.sphere1CollideWithSphere2, false);
 
+	TEST_WARNING("TEST STEP 4...");
 	tmp.m_collisionCallback.reset();
 	tmp.m_world->testCollision(tmp.m_cylinderProxyShape, &tmp.m_collisionCallback);
 	EXPECT_EQ(tmp.m_collisionCallback.boxCollideWithSphere1, false);
@@ -171,6 +189,7 @@ TEST(TestCollisionWorld, testCollisions_1) {
 	EXPECT_EQ(tmp.m_collisionCallback.sphere1CollideWithCylinder, false);
 	EXPECT_EQ(tmp.m_collisionCallback.sphere1CollideWithSphere2, false);
 
+	TEST_WARNING("TEST STEP 5...");
 	tmp.m_collisionCallback.reset();
 	tmp.m_world->testCollision(tmp.m_boxProxyShape, tmp.m_cylinderProxyShape, &tmp.m_collisionCallback);
 	EXPECT_EQ(tmp.m_collisionCallback.boxCollideWithSphere1, false);
@@ -181,6 +200,7 @@ TEST(TestCollisionWorld, testCollisions_1) {
 	// Move sphere 1 to collide with sphere 2
 	tmp.m_sphere1Body->setTransform(etk::Transform3D(vec3(30, 15, 10), etk::Quaternion::identity()));
 
+	TEST_WARNING("TEST STEP 6...");
 	tmp.m_collisionCallback.reset();
 	tmp.m_world->testCollision(&tmp.m_collisionCallback);
 	EXPECT_EQ(tmp.m_collisionCallback.boxCollideWithSphere1, false);
@@ -188,6 +208,7 @@ TEST(TestCollisionWorld, testCollisions_1) {
 	EXPECT_EQ(tmp.m_collisionCallback.sphere1CollideWithCylinder, false);
 	EXPECT_EQ(tmp.m_collisionCallback.sphere1CollideWithSphere2, true);
 
+	TEST_WARNING("TEST STEP 7...");
 	tmp.m_collisionCallback.reset();
 	tmp.m_world->testCollision(tmp.m_boxBody, tmp.m_sphere1Body, &tmp.m_collisionCallback);
 	EXPECT_EQ(tmp.m_collisionCallback.boxCollideWithSphere1, false);
@@ -195,6 +216,7 @@ TEST(TestCollisionWorld, testCollisions_1) {
 	EXPECT_EQ(tmp.m_collisionCallback.sphere1CollideWithCylinder, false);
 	EXPECT_EQ(tmp.m_collisionCallback.sphere1CollideWithSphere2, false);
 
+	TEST_WARNING("TEST STEP 8...");
 	tmp.m_collisionCallback.reset();
 	tmp.m_world->testCollision(tmp.m_boxBody, tmp.m_cylinderBody, &tmp.m_collisionCallback);
 	EXPECT_EQ(tmp.m_collisionCallback.boxCollideWithSphere1, false);
@@ -207,6 +229,7 @@ TEST(TestCollisionWorld, testCollisions_1) {
 
 	// --------- Test collision with inactive bodies --------- //
 
+	TEST_WARNING("TEST STEP 9...");
 	tmp.m_collisionCallback.reset();
 	tmp.m_boxBody->setIsActive(false);
 	tmp.m_cylinderBody->setIsActive(false);
@@ -240,6 +263,7 @@ TEST(TestCollisionWorld, testCollisions_1) {
 	tmp.m_sphere2ProxyShape->setCollideWithMaskBits(CATEGORY_1);
 	tmp.m_cylinderProxyShape->setCollideWithMaskBits(CATEGORY_1);
 
+	TEST_WARNING("TEST STEP 10...");
 	tmp.m_collisionCallback.reset();
 	tmp.m_world->testCollision(&tmp.m_collisionCallback);
 	EXPECT_EQ(tmp.m_collisionCallback.boxCollideWithSphere1, true);
@@ -250,6 +274,7 @@ TEST(TestCollisionWorld, testCollisions_1) {
 	// Move sphere 1 to collide with sphere 2
 	tmp.m_sphere1Body->setTransform(etk::Transform3D(vec3(30, 15, 10), etk::Quaternion::identity()));
 
+	TEST_WARNING("TEST STEP 11...");
 	tmp.m_collisionCallback.reset();
 	tmp.m_world->testCollision(&tmp.m_collisionCallback);
 	EXPECT_EQ(tmp.m_collisionCallback.boxCollideWithSphere1, false);
@@ -262,6 +287,7 @@ TEST(TestCollisionWorld, testCollisions_1) {
 	tmp.m_sphere2ProxyShape->setCollideWithMaskBits(CATEGORY_3);
 	tmp.m_cylinderProxyShape->setCollideWithMaskBits(CATEGORY_1);
 
+	TEST_WARNING("TEST STEP 12...");
 	tmp.m_collisionCallback.reset();
 	tmp.m_world->testCollision(&tmp.m_collisionCallback);
 	EXPECT_EQ(tmp.m_collisionCallback.boxCollideWithSphere1, false);
