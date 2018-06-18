@@ -11,29 +11,14 @@
 #include <ephysics/collision/narrowphase/NarrowPhaseAlgorithm.hpp>
 #include <ephysics/mathematics/mathematics.hpp>
 #include <ephysics/collision/narrowphase/EPA/TriangleEPA.hpp>
-#include <algorithm>
+#include <ephysics/debug.hpp>
+#include <etk/Set.hpp>
 
 namespace ephysics {
 	/// Maximum number of support points of the polytope
 	const uint32_t MAX_SUPPORT_POINTS = 100;
 	/// Maximum number of facets of the polytope
 	const uint32_t MAX_FACETS = 200;
-	/**
-	 * @brief Class TriangleComparison
-	 * This class allows the comparison of two triangles in the heap
-	 * The comparison between two triangles is made using their square distance to the closest
-	 * point to the origin. The goal is that in the heap, the first triangle is the one with the
-	 * smallest square distance.
-	 */
-	class TriangleComparison {
-		public:
-			/**
-			 * @brief Comparison operator
-			 */
-			bool operator()(const TriangleEPA* face1, const TriangleEPA* face2) {
-				return (face1->getDistSquare() > face2->getDistSquare());
-			}
-	};
 	/**
 	 * @brief Class EPAAlgorithm
 	 * This class is the implementation of the Expanding Polytope Algorithm (EPA).
@@ -50,15 +35,13 @@ namespace ephysics {
 	 */
 	class EPAAlgorithm {
 		private:
-			TriangleComparison m_triangleComparison; //!< Triangle comparison operator
 			/// Private copy-constructor
 			EPAAlgorithm(const EPAAlgorithm& _algorithm);
 			/// Private assignment operator
 			EPAAlgorithm& operator=(const EPAAlgorithm& _algorithm);
 			/// Add a triangle face in the candidate triangle heap
 			void addFaceCandidate(TriangleEPA* _triangle,
-			                      TriangleEPA** _heap,
-			                      uint32_t& _nbTriangles,
+			                      etk::Set<TriangleEPA*>& _heap,
 			                      float _upperBoundSquarePenDepth) {
 				// If the closest point of the affine hull of triangle
 				// points is int32_ternal to the triangle and if the distance
@@ -67,9 +50,11 @@ namespace ephysics {
 				if (    _triangle->isClosestPointInternalToTriangle()
 				     && _triangle->getDistSquare() <= _upperBoundSquarePenDepth) {
 					// Add the triangle face to the list of candidates
-					_heap[_nbTriangles] = _triangle;
-					_nbTriangles++;
-					std::push_heap(&_heap[0], &_heap[_nbTriangles], m_triangleComparison);
+					_heap.add(_triangle);
+					EPHY_INFO("add in heap:");
+					for (size_t iii=0; iii<_heap.size(); ++iii) {
+						EPHY_INFO("    [" << iii << "] " << _heap[iii]->getDistSquare());
+					}
 				}
 			}
 			// Decide if the origin is in the tetrahedron.

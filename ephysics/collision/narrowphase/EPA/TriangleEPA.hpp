@@ -24,11 +24,34 @@ namespace ephysics {
 			float m_lambda1; //!< Lambda1 value such that v = lambda0 * y_0 + lambda1 * y_1 + lambda2 * y_2
 			float m_lambda2; //!< Lambda1 value such that v = lambda0 * y_0 + lambda1 * y_1 + lambda2 * y_2
 			float m_distSquare; //!< Square distance of the point closest point v to the origin
-			/// Private copy-constructor
-			TriangleEPA(const TriangleEPA& _triangle);
-			/// Private assignment operator
-			TriangleEPA& operator=(const TriangleEPA& _triangle);
 		public:
+			/// Private copy-constructor
+			TriangleEPA(const TriangleEPA& _triangle) {
+				memcpy(m_indicesVertices, _triangle.m_indicesVertices, sizeof(m_indicesVertices));
+				m_adjacentEdges[0] = _triangle.m_adjacentEdges[0];
+				m_adjacentEdges[1] = _triangle.m_adjacentEdges[1];
+				m_adjacentEdges[2] = _triangle.m_adjacentEdges[2];
+				m_isObsolete = _triangle.m_isObsolete;
+				m_determinant = _triangle.m_determinant;
+				m_closestPoint = _triangle.m_closestPoint;
+				m_lambda1 = _triangle.m_lambda1;
+				m_lambda2 = _triangle.m_lambda2;
+				m_distSquare = _triangle.m_distSquare;
+			}
+			/// Private assignment operator
+			TriangleEPA& operator=(const TriangleEPA& _triangle) {
+				memcpy(m_indicesVertices, _triangle.m_indicesVertices, sizeof(m_indicesVertices));
+				m_adjacentEdges[0] = _triangle.m_adjacentEdges[0];
+				m_adjacentEdges[1] = _triangle.m_adjacentEdges[1];
+				m_adjacentEdges[2] = _triangle.m_adjacentEdges[2];
+				m_isObsolete = _triangle.m_isObsolete;
+				m_determinant = _triangle.m_determinant;
+				m_closestPoint = _triangle.m_closestPoint;
+				m_lambda1 = _triangle.m_lambda1;
+				m_lambda2 = _triangle.m_lambda2;
+				m_distSquare = _triangle.m_distSquare;
+				return *this;
+			}
 			/// Constructor
 			TriangleEPA();
 			/// Constructor

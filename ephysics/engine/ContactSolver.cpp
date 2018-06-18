@@ -521,7 +521,7 @@ void ContactSolver::solve() {
 			float beta = m_isSplitImpulseActive ? BETA_SPLIT_IMPULSE : BETA;
 			float biasPenetrationDepth = 0.0;
 			if (contactPoint.penetrationDepth > SLOP) biasPenetrationDepth = -(beta/m_timeStep) *
-					max(0.0f, float(contactPoint.penetrationDepth - SLOP));
+					etk::max(0.0f, float(contactPoint.penetrationDepth - SLOP));
 			float b = biasPenetrationDepth + contactPoint.restitutionBias;
 
 			// Compute the Lagrange multiplier lambda

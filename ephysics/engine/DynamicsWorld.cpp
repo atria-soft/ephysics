@@ -329,7 +329,7 @@ ephysics::RigidBody* ephysics::DynamicsWorld::createRigidBody(const etk::Transfo
 	// Compute the body ID
 	ephysics::bodyindex bodyID = computeNextAvailableBodyID();
 	// Largest index cannot be used (it is used for invalid index)
-	assert(bodyID < std::numeric_limits<ephysics::bodyindex>::max());
+	assert(bodyID < UINT64_MAX);
 	// Create the rigid body
 	ephysics::RigidBody* rigidBody = new RigidBody(_transform, *this, bodyID);
 	assert(rigidBody != nullptr);

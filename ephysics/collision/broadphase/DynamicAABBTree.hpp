@@ -8,11 +8,11 @@
 #include <ephysics/configuration.hpp>
 #include <ephysics/collision/shapes/AABB.hpp>
 #include <ephysics/body/CollisionBody.hpp>
+#include <etk/Function.hpp>
 
 namespace ephysics {
 	class BroadPhaseAlgorithm;
 	class BroadPhaseRaycastTestCallback;
-	class DynamicAABBTreeOverlapCallback;
 	struct RaycastTest;
 	/**
 	 * @brief It represents a node of the dynamic AABB tree.
@@ -41,29 +41,6 @@ namespace ephysics {
 		AABB aabb; //!< Fat axis aligned bounding box (AABB) corresponding to the node
 		/// Return true if the node is a leaf of the tree
 		bool isLeaf() const;
-	};
-	
-	/**
-	 * @brief Overlapping callback method that has to be used as parameter of the
-	 * reportAllShapesOverlappingWithNode() method.
-	 */
-	class DynamicAABBTreeOverlapCallback {
-		public :
-			virtual ~DynamicAABBTreeOverlapCallback() = default;
-			// Called when a overlapping node has been found during the call to
-			// DynamicAABBTree:reportAllShapesOverlappingWithAABB()
-			virtual void notifyOverlappingNode(int32_t nodeId)=0;
-	};
-	
-	/**
-	 * @brief Raycast callback in the Dynamic AABB Tree called when the AABB of a leaf
-	 * node is hit by the ray.
-	 */
-	class DynamicAABBTreeRaycastCallback {
-		public:
-			virtual ~DynamicAABBTreeRaycastCallback() = default;
-			// Called when the AABB of a leaf node is hit by a ray
-			virtual float raycastBroadPhaseShape(int32_t nodeId, const Ray& ray)=0;
 	};
 	
 	/**
@@ -123,10 +100,9 @@ namespace ephysics {
 			/// Return the data pointer of a given leaf node of the tree
 			void* getNodeDataPointer(int32_t _nodeID) const;
 			/// Report all shapes overlapping with the AABB given in parameter.
-			void reportAllShapesOverlappingWithAABB(const AABB& _aabb,
-													DynamicAABBTreeOverlapCallback& _callback) const;
+			void reportAllShapesOverlappingWithAABB(const AABB& _aabb, etk::Function<void(int32_t _nodeId)> _callback) const;
 			/// Ray casting method
-			void raycast(const Ray& _ray, DynamicAABBTreeRaycastCallback& _callback) const;
+			void raycast(const Ray& _ray, etk::Function<float(int32_t _nodeId, const ephysics::Ray& _ray)> _callback) const;
 			/// Compute the height of the tree
 			int32_t computeHeight();
 			/// Return the root AABB of the tree

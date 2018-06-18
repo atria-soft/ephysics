@@ -150,7 +150,6 @@ def configure(target, my_module):
 	my_module.compile_version("c++", 2011)
 	# add dependency of the generic C++ library:
 	my_module.add_depend([
-		'cxx',
 		'm',
 		'elog',
 		'etk',

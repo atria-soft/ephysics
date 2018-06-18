@@ -37,7 +37,7 @@ CollisionBody* CollisionWorld::createCollisionBody(const etk::Transform3D& trans
 	// Get the next available body ID
 	bodyindex bodyID = computeNextAvailableBodyID();
 	// Largest index cannot be used (it is used for invalid index)
-	EPHY_ASSERT(bodyID < std::numeric_limits<ephysics::bodyindex>::max(), "index too big");
+	EPHY_ASSERT(bodyID < UINT64_MAX, "index too big");
 	// Create the collision body
 	CollisionBody* collisionBody = new CollisionBody(transform, *this, bodyID);
 	EPHY_ASSERT(collisionBody != nullptr, "empty Body collision");
