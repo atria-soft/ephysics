@@ -26,9 +26,9 @@ class EdgeEPA {
 		/// Constructor
 		EdgeEPA(TriangleEPA* ownerTriangle, int32_t index);
 		/// Copy-constructor
-		EdgeEPA(const EdgeEPA& edge);
-		/// Destructor
-		~EdgeEPA();
+		EdgeEPA(const EdgeEPA& _obj);
+		/// Move-constructor
+		EdgeEPA(EdgeEPA&& _obj);
 		/// Return the pointer to the owner triangle
 		TriangleEPA* getOwnerTriangle() const {
 			return m_ownerTriangle;
@@ -44,9 +44,15 @@ class EdgeEPA {
 		/// Execute the recursive silhouette algorithm from this edge
 		bool computeSilhouette(const vec3* vertices, uint32_t index, TrianglesStore& triangleStore);
 		/// Assignment operator
-		EdgeEPA& operator=(const EdgeEPA& edge) {
-			m_ownerTriangle = edge.m_ownerTriangle;
-			m_index = edge.m_index;
+		EdgeEPA& operator=(const EdgeEPA& _obj) {
+			m_ownerTriangle = _obj.m_ownerTriangle;
+			m_index = _obj.m_index;
+			return *this;
+		}
+		/// Move operator
+		EdgeEPA& operator=(EdgeEPA&& _obj) {
+			etk::swap(m_ownerTriangle, _obj.m_ownerTriangle);
+			etk::swap(m_index, _obj.m_index);
 			return *this;
 		}
 };

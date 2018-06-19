@@ -6,6 +6,7 @@
 #include <ephysics/collision/narrowphase/EPA/EdgeEPA.hpp>
 #include <ephysics/collision/narrowphase/EPA/TriangleEPA.hpp>
 #include <ephysics/collision/narrowphase/EPA/TrianglesStore.hpp>
+#include <etk/types.hpp>
 
 using namespace ephysics;
 
@@ -14,18 +15,22 @@ EdgeEPA::EdgeEPA() {
 	
 }
 
-EdgeEPA::EdgeEPA(TriangleEPA* ownerTriangle, int32_t index)
-		: m_ownerTriangle(ownerTriangle), m_index(index) {
+EdgeEPA::EdgeEPA(TriangleEPA* ownerTriangle, int32_t index):
+  m_ownerTriangle(ownerTriangle),
+  m_index(index) {
 	assert(index >= 0 && index < 3);
 }
 
-EdgeEPA::EdgeEPA(const EdgeEPA& edge) {
-	m_ownerTriangle = edge.m_ownerTriangle;
-	m_index = edge.m_index;
+EdgeEPA::EdgeEPA(const EdgeEPA& _obj):
+  m_ownerTriangle(_obj.m_ownerTriangle),
+  m_index(_obj.m_index) {
+	
 }
 
-EdgeEPA::~EdgeEPA() {
-	
+EdgeEPA::EdgeEPA(EdgeEPA&& _obj):
+  m_ownerTriangle(null) {
+	etk::swap(m_ownerTriangle, _obj.m_ownerTriangle);
+	etk::swap(m_index, _obj.m_index);
 }
 
 uint32_t EdgeEPA::getSourceVertexIndex() const {
@@ -72,7 +77,7 @@ bool EdgeEPA::computeSilhouette(const vec3* _vertices, uint32_t _indexNewVertex,
 				                                                                                                               _indexNewVertex,
 				                                                                                                               _triangleStore)) {
 				m_ownerTriangle->setIsObsolete(false);
-				_triangleStore.setNbTriangles(backup);
+				_triangleStore.resize(backup);
 				TriangleEPA* triangle = _triangleStore.newTriangle(_vertices, _indexNewVertex,
 																  getTargetVertexIndex(),
 																  getSourceVertexIndex());
