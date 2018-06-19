@@ -74,9 +74,9 @@ ConvexMeshShape::ConvexMeshShape(float _margin):
 vec3 ConvexMeshShape::getLocalSupportPointWithoutMargin(const vec3& _direction,
                                                         void** _cachedCollisionData) const {
 	assert(m_numberVertices == m_vertices.size());
-	assert(_cachedCollisionData != nullptr);
+	assert(_cachedCollisionData != null);
 	// Allocate memory for the cached collision data if not allocated yet
-	if ((*_cachedCollisionData) == nullptr) {
+	if ((*_cachedCollisionData) == null) {
 		*_cachedCollisionData = (int32_t*) malloc(sizeof(int32_t));
 		*((int32_t*)(*_cachedCollisionData)) = 0;
 	}

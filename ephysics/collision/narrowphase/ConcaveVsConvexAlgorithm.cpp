@@ -71,7 +71,7 @@ void ConvexVsTriangleCallback::testTriangle(const vec3* _trianglePoints) {
 	// Select the collision algorithm to use between the triangle and the convex shape
 	NarrowPhaseAlgorithm* algo = m_collisionDetection->getCollisionAlgorithm(triangleShape.getType(), m_convexShape->getType());
 	// If there is no collision algorithm between those two kinds of shapes
-	if (algo == nullptr) {
+	if (algo == null) {
 		return;
 	}
 	// Notify the narrow-phase algorithm about the overlapping pair we are going to test

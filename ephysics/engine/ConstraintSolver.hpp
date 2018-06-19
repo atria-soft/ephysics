@@ -30,10 +30,10 @@ namespace ephysics {
 			bool isWarmStartingActive; //!< True if warm starting of the solver is active
 			/// Constructor
 			ConstraintSolverData(const etk::Map<RigidBody*, uint32_t>& refMapBodyToConstrainedVelocityIndex):
-			  linearVelocities(nullptr),
-			  angularVelocities(nullptr),
-			  positions(nullptr),
-			  orientations(nullptr),
+			  linearVelocities(null),
+			  angularVelocities(null),
+			  positions(null),
+			  orientations(null),
 			  mapBodyToConstrainedVelocityIndex(refMapBodyToConstrainedVelocityIndex) {
 				
 			}

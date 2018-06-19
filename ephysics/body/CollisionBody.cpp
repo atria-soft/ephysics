@@ -18,15 +18,15 @@ CollisionBody::CollisionBody(const etk::Transform3D& _transform, CollisionWorld&
   Body(_id),
   m_type(DYNAMIC),
   m_transform(_transform),
-  m_proxyCollisionShapes(nullptr),
+  m_proxyCollisionShapes(null),
   m_numberCollisionShapes(0),
-  m_contactManifoldsList(nullptr),
+  m_contactManifoldsList(null),
   m_world(_world) {
 	
 }
 
 CollisionBody::~CollisionBody() {
-	assert(m_contactManifoldsList == nullptr);
+	assert(m_contactManifoldsList == null);
 
 	// Remove all the proxy collision shapes of the body
 	removeAllCollisionShapes();
@@ -46,7 +46,7 @@ ProxyShape* CollisionBody::addCollisionShape(CollisionShape* _collisionShape,
 	// Create a proxy collision shape to attach the collision shape to the body
 	ProxyShape* proxyShape = ETK_NEW(ProxyShape, this, _collisionShape,_transform, float(1));
 	// Add it to the list of proxy collision shapes of the body
-	if (m_proxyCollisionShapes == nullptr) {
+	if (m_proxyCollisionShapes == null) {
 		m_proxyCollisionShapes = proxyShape;
 	} else {
 		proxyShape->m_next = m_proxyCollisionShapes;
@@ -68,12 +68,12 @@ void CollisionBody::removeCollisionShape(const ProxyShape* _proxyShape) {
 			m_world.m_collisionDetection.removeProxyCollisionShape(current);
 		}
 		ETK_DELETE(ProxyShape, current);
-		current = nullptr;
+		current = null;
 		m_numberCollisionShapes--;
 		return;
 	}
 	// Look for the proxy shape that contains the collision shape in parameter
-	while(current->m_next != nullptr) {
+	while(current->m_next != null) {
 		// If we have found the collision shape to remove
 		if (current->m_next == _proxyShape) {
 			// Remove the proxy collision shape
@@ -83,7 +83,7 @@ void CollisionBody::removeCollisionShape(const ProxyShape* _proxyShape) {
 				m_world.m_collisionDetection.removeProxyCollisionShape(elementToRemove);
 			}
 			ETK_DELETE(ProxyShape, elementToRemove);
-			elementToRemove = nullptr;
+			elementToRemove = null;
 			m_numberCollisionShapes--;
 			return;
 		}
@@ -96,7 +96,7 @@ void CollisionBody::removeCollisionShape(const ProxyShape* _proxyShape) {
 void CollisionBody::removeAllCollisionShapes() {
 	ProxyShape* current = m_proxyCollisionShapes;
 	// Look for the proxy shape that contains the collision shape in parameter
-	while(current != nullptr) {
+	while(current != null) {
 		// Remove the proxy collision shape
 		ProxyShape* nextElement = current->m_next;
 		if (m_isActive) {
@@ -106,26 +106,26 @@ void CollisionBody::removeAllCollisionShapes() {
 		// Get the next element in the list
 		current = nextElement;
 	}
-	m_proxyCollisionShapes = nullptr;
+	m_proxyCollisionShapes = null;
 }
 
 
 void CollisionBody::resetContactManifoldsList() {
 	// Delete the linked list of contact manifolds of that body
 	ContactManifoldListElement* currentElement = m_contactManifoldsList;
-	while (currentElement != nullptr) {
+	while (currentElement != null) {
 		ContactManifoldListElement* nextElement = currentElement->next;
 		// Delete the current element
 		ETK_DELETE(ContactManifoldListElement, currentElement);
 		currentElement = nextElement;
 	}
-	m_contactManifoldsList = nullptr;
+	m_contactManifoldsList = null;
 }
 
 
 void CollisionBody::updateBroadPhaseState() const {
 	// For all the proxy collision shapes of the body
-	for (ProxyShape* shape = m_proxyCollisionShapes; shape != nullptr; shape = shape->m_next) {
+	for (ProxyShape* shape = m_proxyCollisionShapes; shape != null; shape = shape->m_next) {
 		// Update the proxy
 		updateProxyShapeInBroadPhase(shape);
 	}
@@ -147,13 +147,13 @@ void CollisionBody::setIsActive(bool _isActive) {
 	Body::setIsActive(_isActive);
 	// If we have to activate the body
 	if (_isActive == true) {
-		for (ProxyShape* shape = m_proxyCollisionShapes; shape != nullptr; shape = shape->m_next) {
+		for (ProxyShape* shape = m_proxyCollisionShapes; shape != null; shape = shape->m_next) {
 			AABB aabb;
 			shape->getCollisionShape()->computeAABB(aabb, m_transform * shape->m_localToBodyTransform);
 			m_world.m_collisionDetection.addProxyCollisionShape(shape, aabb);
 		}
 	} else {
-		for (ProxyShape* shape = m_proxyCollisionShapes; shape != nullptr; shape = shape->m_next) {
+		for (ProxyShape* shape = m_proxyCollisionShapes; shape != null; shape = shape->m_next) {
 			m_world.m_collisionDetection.removeProxyCollisionShape(shape);
 		}
 		resetContactManifoldsList();
@@ -162,7 +162,7 @@ void CollisionBody::setIsActive(bool _isActive) {
 
 
 void CollisionBody::askForBroadPhaseCollisionCheck() const {
-	for (ProxyShape* shape = m_proxyCollisionShapes; shape != nullptr; shape = shape->m_next) {
+	for (ProxyShape* shape = m_proxyCollisionShapes; shape != null; shape = shape->m_next) {
 		m_world.m_collisionDetection.askForBroadPhaseCollisionCheck(shape);  
 	}
 }
@@ -173,7 +173,7 @@ int32_t CollisionBody::resetIsAlreadyInIslandAndCountManifolds() {
 	int32_t nbManifolds = 0;
 	// Reset the m_isAlreadyInIsland variable of the contact manifolds for this body
 	ContactManifoldListElement* currentElement = m_contactManifoldsList;
-	while (currentElement != nullptr) {
+	while (currentElement != null) {
 		currentElement->contactManifold->m_isAlreadyInIsland = false;
 		currentElement = currentElement->next;
 		nbManifolds++;
@@ -182,7 +182,7 @@ int32_t CollisionBody::resetIsAlreadyInIslandAndCountManifolds() {
 }
 
 bool CollisionBody::testPointInside(const vec3& _worldPoint) const {
-	for (ProxyShape* shape = m_proxyCollisionShapes; shape != nullptr; shape = shape->m_next) {
+	for (ProxyShape* shape = m_proxyCollisionShapes; shape != null; shape = shape->m_next) {
 		if (shape->testPointInside(_worldPoint)) return true;
 	}
 	return false;
@@ -194,7 +194,7 @@ bool CollisionBody::raycast(const Ray& _ray, RaycastInfo& _raycastInfo) {
 	}
 	bool isHit = false;
 	Ray rayTemp(_ray);
-	for (ProxyShape* shape = m_proxyCollisionShapes; shape != nullptr; shape = shape->m_next) {
+	for (ProxyShape* shape = m_proxyCollisionShapes; shape != null; shape = shape->m_next) {
 		// Test if the ray hits the collision shape
 		if (shape->raycast(rayTemp, _raycastInfo)) {
 			rayTemp.maxFraction = _raycastInfo.hitFraction;
@@ -206,11 +206,11 @@ bool CollisionBody::raycast(const Ray& _ray, RaycastInfo& _raycastInfo) {
 
 AABB CollisionBody::getAABB() const {
 	AABB bodyAABB;
-	if (m_proxyCollisionShapes == nullptr) {
+	if (m_proxyCollisionShapes == null) {
 		return bodyAABB;
 	}
 	m_proxyCollisionShapes->getCollisionShape()->computeAABB(bodyAABB, m_transform * m_proxyCollisionShapes->getLocalToBodyTransform());
-	for (ProxyShape* shape = m_proxyCollisionShapes->m_next; shape != nullptr; shape = shape->m_next) {
+	for (ProxyShape* shape = m_proxyCollisionShapes->m_next; shape != null; shape = shape->m_next) {
 		AABB aabb;
 		shape->getCollisionShape()->computeAABB(aabb, m_transform * shape->getLocalToBodyTransform());
 		bodyAABB.mergeWithAABB(aabb);

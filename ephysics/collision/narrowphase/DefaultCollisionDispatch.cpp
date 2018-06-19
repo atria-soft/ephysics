@@ -42,6 +42,6 @@ NarrowPhaseAlgorithm* DefaultCollisionDispatch::selectAlgorithm(int32_t _type1, 
 		// Convex vs Convex algorithm (GJK algorithm)
 		return &m_GJKAlgorithm;
 	} else {
-		return nullptr;
+		return null;
 	}
 }

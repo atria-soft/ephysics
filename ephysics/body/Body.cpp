@@ -18,6 +18,6 @@ ephysics::Body::Body(bodyindex _id):
   m_isActive(true),
   m_isSleeping(false),
   m_sleepTime(0),
-  m_userData(nullptr) {
+  m_userData(null) {
 	
 }

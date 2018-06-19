@@ -15,7 +15,7 @@
 using namespace ephysics;
 
 // Initialization of static variables
-ProfileNode Profiler::m_rootNode("Root", nullptr);
+ProfileNode Profiler::m_rootNode("Root", null);
 ProfileNode* Profiler::m_currentNode = &Profiler::m_rootNode;
 long double Profiler::m_profilingStartTime = Timer::getCurrentSystemTime() * 1000.0;
 uint32_t Profiler::m_frameCounter = 0;
@@ -23,17 +23,17 @@ uint32_t Profiler::m_frameCounter = 0;
 // Constructor
 ProfileNode::ProfileNode(const char* name, ProfileNode* parentNode)
 	:m_name(name), m_numberTotalCalls(0), m_startTime(0), m_totalTime(0),
-	 m_recursionCounter(0), m_parentNode(parentNode), m_childNode(nullptr),
-	 m_siblingNode(nullptr) {
+	 m_recursionCounter(0), m_parentNode(parentNode), m_childNode(null),
+	 m_siblingNode(null) {
 	reset();
 }
 
 // Destructor
 ProfileNode::~ProfileNode() {
 	ETK_DELETE(ProfileNode, m_childNode);
-	m_childNode = nullptr;
+	m_childNode = null;
 	ETK_DELETE(ProfileNode, m_siblingNode);
-	m_siblingNode = nullptr;
+	m_siblingNode = null;
 }
 
 // Return a pointer to a sub node with a given name
@@ -41,7 +41,7 @@ ProfileNode* ProfileNode::findSubNode(const char* name) {
 
 	// Try to find the node among the child nodes
 	ProfileNode* child = m_childNode;
-	while (child != nullptr) {
+	while (child != null) {
 		if (child->m_name == name) {
 			return child;
 		}
@@ -95,12 +95,12 @@ void ProfileNode::reset() {
 	m_totalTime = 0.0;
 
 	// Reset the child node
-	if (m_childNode != nullptr) {
+	if (m_childNode != null) {
 		m_childNode->reset();
 	}
 
 	// Reset the sibling node
-	if (m_siblingNode != nullptr) {
+	if (m_siblingNode != null) {
 		m_siblingNode->reset();
 	}
 }
@@ -108,9 +108,9 @@ void ProfileNode::reset() {
 // Destroy the node
 void ProfileNode::destroy() {
 	ETK_DELETE(ProfileNode, m_childNode);
-	m_childNode = nullptr;
+	m_childNode = null;
 	ETK_DELETE(ProfileNode, m_siblingNode);
-	m_siblingNode = nullptr;
+	m_siblingNode = null;
 }
 
 // Constructor
@@ -123,12 +123,12 @@ ProfileNodeIterator::ProfileNodeIterator(ProfileNode* startingNode)
 // Enter a given child node
 void ProfileNodeIterator::enterChild(int32_t index) {
 	m_currentChildNode = m_currentParentNode->getChildNode();
-	while ((m_currentChildNode != nullptr) && (index != 0)) {
+	while ((m_currentChildNode != null) && (index != 0)) {
 		index--;
 		m_currentChildNode = m_currentChildNode->getSiblingNode();
 	}
 
-	if (m_currentChildNode != nullptr) {
+	if (m_currentChildNode != null) {
 		m_currentParentNode = m_currentChildNode;
 		m_currentChildNode = m_currentParentNode->getChildNode();
 	}
@@ -136,7 +136,7 @@ void ProfileNodeIterator::enterChild(int32_t index) {
 
 // Enter a given parent node
 void ProfileNodeIterator::enterParent() {
-	if (m_currentParentNode->getParentNode() != nullptr) {
+	if (m_currentParentNode->getParentNode() != null) {
 		m_currentParentNode = m_currentParentNode->getParentNode();
 	}
 	m_currentChildNode = m_currentParentNode->getChildNode();
@@ -242,12 +242,12 @@ void Profiler::print32_tRecursiveNodeReport(ProfileNodeIterator* iterator,
 
 // Return true if we are at the root of the profiler tree
 bool ProfileNodeIterator::isRoot() {
-	return (m_currentParentNode->getParentNode() == nullptr);
+	return (m_currentParentNode->getParentNode() == null);
 }
 
 // Return true if we are at the end of a branch of the profiler tree
 bool ProfileNodeIterator::isEnd() {
-	return (m_currentChildNode == nullptr);
+	return (m_currentChildNode == null);
 }
 
 // Return the name of the current node

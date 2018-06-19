@@ -48,7 +48,7 @@ ephysics::DynamicsWorld::~DynamicsWorld() {
 	for (auto &it: m_islands) {
 		// Call the island destructor
 		ETK_DELETE(Island, it);
-		it = nullptr;
+		it = null;
 	}
 	m_islands.clear();
 	// Release the memory allocated for the bodies velocity arrays
@@ -80,7 +80,7 @@ void ephysics::DynamicsWorld::update(float timeStep) {
 	PROFILE("ephysics::DynamicsWorld::update()");
 	m_timeStep = timeStep;
 	// Notify the event listener about the beginning of an int32_ternal tick
-	if (m_eventListener != nullptr) {
+	if (m_eventListener != null) {
 		m_eventListener->beginInternalTick();
 	}
 	// Reset all the contact manifolds lists of each body
@@ -107,7 +107,7 @@ void ephysics::DynamicsWorld::update(float timeStep) {
 		updateSleepingBodies();
 	}
 	// Notify the event listener about the end of an int32_ternal tick
-	if (m_eventListener != nullptr) {
+	if (m_eventListener != null) {
 		m_eventListener->endInternalTick();
 	}
 	// Reset the external force and torque applied to the bodies
@@ -326,7 +326,7 @@ ephysics::RigidBody* ephysics::DynamicsWorld::createRigidBody(const etk::Transfo
 	assert(bodyID < UINT64_MAX);
 	// Create the rigid body
 	ephysics::RigidBody* rigidBody = ETK_NEW(RigidBody, _transform, *this, bodyID);
-	assert(rigidBody != nullptr);
+	assert(rigidBody != null);
 	// Add the rigid body to the physics world
 	m_bodies.add(rigidBody);
 	m_rigidBodies.add(rigidBody);
@@ -341,7 +341,7 @@ void ephysics::DynamicsWorld::destroyRigidBody(RigidBody* _rigidBody) {
 	m_freeBodiesIDs.pushBack(_rigidBody->getID());
 	// Destroy all the joints in which the rigid body to be destroyed is involved
 	for (ephysics::JointListElement* element = _rigidBody->m_jointsList;
-	     element != nullptr;
+	     element != null;
 	     element = element->next) {
 		destroyJoint(element->joint);
 	}
@@ -352,11 +352,11 @@ void ephysics::DynamicsWorld::destroyRigidBody(RigidBody* _rigidBody) {
 	m_rigidBodies.erase(m_rigidBodies.find(_rigidBody));
 	// Call the destructor of the rigid body
 	ETK_DELETE(RigidBody, _rigidBody);
-	_rigidBody = nullptr;
+	_rigidBody = null;
 }
 
 ephysics::Joint* ephysics::DynamicsWorld::createJoint(const ephysics::JointInfo& _jointInfo) {
-	Joint* newJoint = nullptr;
+	Joint* newJoint = null;
 	// Allocate memory to create the new joint
 	switch(_jointInfo.type) {
 		// Ball-and-Socket joint
@@ -377,7 +377,7 @@ ephysics::Joint* ephysics::DynamicsWorld::createJoint(const ephysics::JointInfo&
 			break;
 		default:
 			assert(false);
-			return nullptr;
+			return null;
 	}
 	// If the collision between the two bodies of the constraint is disabled
 	if (!_jointInfo.isCollisionEnabled) {
@@ -393,8 +393,8 @@ ephysics::Joint* ephysics::DynamicsWorld::createJoint(const ephysics::JointInfo&
 }
 
 void ephysics::DynamicsWorld::destroyJoint(Joint* _joint) {
-	if (_joint == nullptr) {
-		EPHY_WARNING("Request destroy nullptr joint");
+	if (_joint == null) {
+		EPHY_WARNING("Request destroy null joint");
 		return;
 	}
 	// If the collision between the two bodies of the constraint was disabled
@@ -413,12 +413,12 @@ void ephysics::DynamicsWorld::destroyJoint(Joint* _joint) {
 	size_t nbBytes = _joint->getSizeInBytes();
 	// Call the destructor of the joint
 	ETK_DELETE(Joint, _joint);
-	_joint = nullptr;
+	_joint = null;
 }
 
 void ephysics::DynamicsWorld::addJointToBody(ephysics::Joint* _joint) {
-	if (_joint == nullptr) {
-		EPHY_WARNING("Request add nullptr joint");
+	if (_joint == null) {
+		EPHY_WARNING("Request add null joint");
 		return;
 	}
 	// Add the joint at the beginning of the linked list of joints of the first body
@@ -433,7 +433,7 @@ void ephysics::DynamicsWorld::computeIslands() {
 	// Clear all the islands
 	for (auto &it: m_islands) {
 		ETK_DELETE(Island, it);
-		it = nullptr;
+		it = null;
 	}
 	// Call the island destructor
 	m_islands.clear();
@@ -448,7 +448,7 @@ void ephysics::DynamicsWorld::computeIslands() {
 	}
 	// Create a stack (using an array) for the rigid bodies to visit during the Depth First Search
 	etk::Vector<ephysics::RigidBody*> stackBodiesToVisit;
-	stackBodiesToVisit.resize(nbBodies, nullptr);
+	stackBodiesToVisit.resize(nbBodies, null);
 	// For each rigid body of the world
 	for (etk::Set<ephysics::RigidBody*>::Iterator it = m_rigidBodies.begin(); it != m_rigidBodies.end(); ++it) {
 		ephysics::RigidBody* body = *it;
@@ -489,7 +489,7 @@ void ephysics::DynamicsWorld::computeIslands() {
 			// For each contact manifold in which the current body is involded
 			ephysics::ContactManifoldListElement* contactElement;
 			for (contactElement = bodyToVisit->m_contactManifoldsList;
-			     contactElement != nullptr;
+			     contactElement != null;
 			     contactElement = contactElement->next) {
 				ephysics::ContactManifold* contactManifold = contactElement->contactManifold;
 				assert(contactManifold->getNbContactPoints() > 0);
@@ -516,7 +516,7 @@ void ephysics::DynamicsWorld::computeIslands() {
 			// For each joint in which the current body is involved
 			ephysics::JointListElement* jointElement;
 			for (jointElement = bodyToVisit->m_jointsList;
-			     jointElement != nullptr;
+			     jointElement != null;
 			     jointElement = jointElement->next) {
 				ephysics::Joint* joint = jointElement->joint;
 				// Check if the current joint has already been added int32_to an island
@@ -615,7 +615,7 @@ void ephysics::DynamicsWorld::testCollision(const ephysics::CollisionBody* _body
 	etk::Set<uint32_t> shapes1;
 	// For each shape of the body
 	for (const ProxyShape* shape = _body->getProxyShapesList();
-	     shape != nullptr;
+	     shape != null;
 	     shape = shape->getNext()) {
 		shapes1.add(shape->m_broadPhaseID);
 	}
@@ -627,12 +627,12 @@ void ephysics::DynamicsWorld::testCollision(const ephysics::CollisionBody* _body
 void ephysics::DynamicsWorld::testCollision(const ephysics::CollisionBody* _body1, const ephysics::CollisionBody* _body2, ephysics::CollisionCallback* _callback) {
 	// Create the sets of shapes
 	etk::Set<uint32_t> shapes1;
-	for (const ProxyShape* shape=_body1->getProxyShapesList(); shape != nullptr;
+	for (const ProxyShape* shape=_body1->getProxyShapesList(); shape != null;
 		 shape = shape->getNext()) {
 		shapes1.add(shape->m_broadPhaseID);
 	}
 	etk::Set<uint32_t> shapes2;
-	for (const ProxyShape* shape=_body2->getProxyShapesList(); shape != nullptr;
+	for (const ProxyShape* shape=_body2->getProxyShapesList(); shape != null;
 		 shape = shape->getNext()) {
 		shapes2.add(shape->m_broadPhaseID);
 	}

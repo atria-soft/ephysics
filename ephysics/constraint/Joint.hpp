@@ -50,8 +50,8 @@ namespace ephysics {
 			bool isCollisionEnabled; //!< True if the two bodies of the joint are allowed to collide with each other
 			/// Constructor
 			JointInfo(JointType _constraintType):
-			  body1(nullptr),
-			  body2(nullptr),
+			  body1(null),
+			  body2(null),
 			  type(_constraintType),
 			  positionCorrectionTechnique(NON_LINEAR_GAUSS_SEIDEL),
 			  isCollisionEnabled(true) {

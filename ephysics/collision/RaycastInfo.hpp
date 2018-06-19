@@ -36,8 +36,8 @@ namespace ephysics {
 			RaycastInfo() :
 			  meshSubpart(-1),
 			  triangleIndex(-1),
-			  body(nullptr),
-			  proxyShape(nullptr) {
+			  body(null),
+			  proxyShape(null) {
 				
 			}
 	

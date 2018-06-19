@@ -15,8 +15,8 @@ Joint::Joint(const JointInfo& jointInfo)
 			m_positionCorrectionTechnique(jointInfo.positionCorrectionTechnique),
 			m_isCollisionEnabled(jointInfo.isCollisionEnabled), m_isAlreadyInIsland(false) {
 
-	assert(m_body1 != nullptr);
-	assert(m_body2 != nullptr);
+	assert(m_body1 != null);
+	assert(m_body2 != null);
 }
 
 Joint::~Joint() {

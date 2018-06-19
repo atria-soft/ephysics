@@ -15,7 +15,7 @@ using namespace std;
 CollisionWorld::CollisionWorld() :
   m_collisionDetection(this),
   m_currentBodyID(0),
-  m_eventListener(nullptr) {
+  m_eventListener(null) {
 	
 }
 
@@ -33,7 +33,7 @@ CollisionBody* CollisionWorld::createCollisionBody(const etk::Transform3D& _tran
 	EPHY_ASSERT(bodyID < UINT64_MAX, "index too big");
 	// Create the collision body
 	CollisionBody* collisionBody = ETK_NEW(CollisionBody, _transform, *this, bodyID);
-	EPHY_ASSERT(collisionBody != nullptr, "empty Body collision");
+	EPHY_ASSERT(collisionBody != null, "empty Body collision");
 	// Add the collision body to the world
 	m_bodies.add(collisionBody);
 	// Return the pointer to the rigid body
@@ -48,7 +48,7 @@ void CollisionWorld::destroyCollisionBody(CollisionBody* _collisionBody) {
 	// Remove the collision body from the list of bodies
 	m_bodies.erase(m_bodies.find(_collisionBody));
 	ETK_DELETE(CollisionBody, _collisionBody);
-	_collisionBody = nullptr;
+	_collisionBody = null;
 }
 
 bodyindex CollisionWorld::computeNextAvailableBodyID() {
@@ -115,7 +115,7 @@ void CollisionWorld::testCollision(const CollisionBody* _body, CollisionCallback
 	etk::Set<uint32_t> shapes1;
 	// For each shape of the body
 	for (const ProxyShape* shape = _body->getProxyShapesList();
-	     shape != nullptr;
+	     shape != null;
 	     shape = shape->getNext()) {
 		shapes1.add(shape->m_broadPhaseID);
 	}
@@ -130,13 +130,13 @@ void CollisionWorld::testCollision(const CollisionBody* _body1, const CollisionB
 	// Create the sets of shapes
 	etk::Set<uint32_t> shapes1;
 	for (const ProxyShape* shape = _body1->getProxyShapesList();
-	     shape != nullptr;
+	     shape != null;
 	     shape = shape->getNext()) {
 		shapes1.add(shape->m_broadPhaseID);
 	}
 	etk::Set<uint32_t> shapes2;
 	for (const ProxyShape* shape = _body2->getProxyShapesList();
-	     shape != nullptr;
+	     shape != null;
 	     shape = shape->getNext()) {
 		shapes2.add(shape->m_broadPhaseID);
 	}

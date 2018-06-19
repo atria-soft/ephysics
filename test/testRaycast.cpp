@@ -29,7 +29,7 @@ class WorldRaycastCallback : public ephysics::RaycastCallback {
 		bool isHit;
 		WorldRaycastCallback() {
 			isHit = false;
-			shapeToTest = nullptr;
+			shapeToTest = null;
 		}
 		virtual float notifyRaycastHit(const ephysics::RaycastInfo& info) {
 			if (shapeToTest->getBody()->getID() == info.body->getID()) {
@@ -44,9 +44,9 @@ class WorldRaycastCallback : public ephysics::RaycastCallback {
 			return 1.0f;
 		}
 		void reset() {
-			raycastInfo.body = nullptr;
+			raycastInfo.body = null;
 			raycastInfo.hitFraction = 0.0f;
-			raycastInfo.proxyShape = nullptr;
+			raycastInfo.proxyShape = null;
 			raycastInfo.worldNormal.setZero();
 			raycastInfo.worldPoint.setZero();
 			isHit = false;

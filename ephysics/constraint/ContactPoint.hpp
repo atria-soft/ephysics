@@ -51,10 +51,10 @@ namespace ephysics {
 				
 			}
 			ContactPointInfo():
-			  shape1(nullptr),
-			  shape2(nullptr),
-			  collisionShape1(nullptr),
-			  collisionShape2(nullptr) {
+			  shape1(null),
+			  shape2(null),
+			  collisionShape1(null),
+			  collisionShape2(null) {
 				// TODO: add it for etk::Vector
 			}
 	};

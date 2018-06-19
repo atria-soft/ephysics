@@ -11,7 +11,7 @@
 using namespace ephysics;
 
 NarrowPhaseAlgorithm::NarrowPhaseAlgorithm():
-  m_currentOverlappingPair(nullptr) {
+  m_currentOverlappingPair(null) {
 	
 }
 

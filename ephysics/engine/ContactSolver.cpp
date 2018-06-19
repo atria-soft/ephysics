@@ -18,10 +18,10 @@ const float ContactSolver::BETA_SPLIT_IMPULSE = float(0.2);
 const float ContactSolver::SLOP = float(0.01);
 
 ContactSolver::ContactSolver(const etk::Map<RigidBody*, uint32_t>& _mapBodyToVelocityIndex) :
-  m_splitLinearVelocities(nullptr),
-  m_splitAngularVelocities(nullptr),
-  m_linearVelocities(nullptr),
-  m_angularVelocities(nullptr),
+  m_splitLinearVelocities(null),
+  m_splitAngularVelocities(null),
+  m_linearVelocities(null),
+  m_angularVelocities(null),
   m_mapBodyToConstrainedVelocityIndex(_mapBodyToVelocityIndex),
   m_isWarmStartingActive(true),
   m_isSplitImpulseActive(true),
@@ -31,11 +31,11 @@ ContactSolver::ContactSolver(const etk::Map<RigidBody*, uint32_t>& _mapBodyToVel
 
 void ContactSolver::initializeForIsland(float _dt, Island* _island) {
 	PROFILE("ContactSolver::initializeForIsland()");
-	assert(_island != nullptr);
+	assert(_island != null);
 	assert(_island->getNbBodies() > 0);
 	assert(_island->getNbContactManifolds() > 0);
-	assert(m_splitLinearVelocities != nullptr);
-	assert(m_splitAngularVelocities != nullptr);
+	assert(m_splitLinearVelocities != null);
+	assert(m_splitAngularVelocities != null);
 	// Set the current time step
 	m_timeStep = _dt;
 	m_contactConstraints.resize(_island->getNbContactManifolds());
@@ -48,8 +48,8 @@ void ContactSolver::initializeForIsland(float _dt, Island* _island) {
 		// Get the two bodies of the contact
 		RigidBody* body1 = static_cast<RigidBody*>(externalManifold->getContactPoint(0)->getBody1());
 		RigidBody* body2 = static_cast<RigidBody*>(externalManifold->getContactPoint(0)->getBody2());
-		assert(body1 != nullptr);
-		assert(body2 != nullptr);
+		assert(body1 != null);
+		assert(body2 != null);
 		// Get the position of the two bodies
 		const vec3& x1 = body1->m_centerOfMassWorld;
 		const vec3& x2 = body2->m_centerOfMassWorld;

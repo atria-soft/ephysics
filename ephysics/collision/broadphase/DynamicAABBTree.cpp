@@ -471,8 +471,8 @@ int32_t DynamicAABBTree::balanceSubTreeAtNode(int32_t _nodeID) {
 
 /// Report all shapes overlapping with the AABB given in parameter.
 void DynamicAABBTree::reportAllShapesOverlappingWithAABB(const AABB& _aabb, etk::Function<void(int32_t nodeId)> _callback) const {
-	if (_callback == nullptr) {
-		EPHY_ERROR("call with nullptr callback");
+	if (_callback == null) {
+		EPHY_ERROR("call with null callback");
 		return;
 	}
 	// Create a stack with the nodes to visit
@@ -507,8 +507,8 @@ void DynamicAABBTree::reportAllShapesOverlappingWithAABB(const AABB& _aabb, etk:
 // Ray casting method
 void DynamicAABBTree::raycast(const ephysics::Ray& _ray, etk::Function<float(int32_t _nodeId, const ephysics::Ray& _ray)> _callback) const {
 	PROFILE("DynamicAABBTree::raycast()");
-	if (_callback == nullptr) {
-		EPHY_ERROR("call with nullptr callback");
+	if (_callback == null) {
+		EPHY_ERROR("call with null callback");
 		return;
 	}
 	float maxFraction = _ray.maxFraction;

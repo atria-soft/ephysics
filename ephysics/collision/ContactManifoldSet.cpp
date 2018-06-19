@@ -77,7 +77,7 @@ void ContactManifoldSet::addContactPoint(ContactPoint* contact) {
 	if (smallestDepthIndex == -1) {
 		// Delete the new contact
 		ETK_DELETE(ContactPoint, contact);
-		contact = nullptr;
+		contact = null;
 		return;
 	}
 	assert(smallestDepthIndex >= 0 && smallestDepthIndex < m_nbManifolds);
@@ -164,7 +164,7 @@ void ContactManifoldSet::removeManifold(int32_t index) {
 	assert(index >= 0 && index < m_nbManifolds);
 	// Delete the new contact
 	ETK_DELETE(ContactManifold, m_manifolds[index]);
-	m_manifolds[index] = nullptr;
+	m_manifolds[index] = null;
 	for (int32_t i=index; (i+1) < m_nbManifolds; i++) {
 		m_manifolds[i] = m_manifolds[i+1];
 	}

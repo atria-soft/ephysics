@@ -23,13 +23,13 @@ RigidBody::RigidBody(const etk::Transform3D& _transform, CollisionWorld& _world,
   m_isGravityEnabled(true),
   m_linearDamping(0.0f),
   m_angularDamping(float(0.0)),
-  m_jointsList(nullptr) {
+  m_jointsList(null) {
 	// Compute the inverse mass
 	m_massInverse = 1.0f / m_initMass;
 }
 
 RigidBody::~RigidBody() {
-	assert(m_jointsList == nullptr);
+	assert(m_jointsList == null);
 }
 
 
@@ -97,23 +97,23 @@ void RigidBody::setMass(float _mass) {
 }
 
 void RigidBody::removeJointFrom_jointsList(const Joint* _joint) {
-	assert(_joint != nullptr);
-	assert(m_jointsList != nullptr);
+	assert(_joint != null);
+	assert(m_jointsList != null);
 	// Remove the joint from the linked list of the joints of the first body
 	if (m_jointsList->joint == _joint) {   // If the first element is the one to remove
 		JointListElement* elementToRemove = m_jointsList;
 		m_jointsList = elementToRemove->next;
 		ETK_DELETE(JointListElement, elementToRemove);
-		elementToRemove = nullptr;
+		elementToRemove = null;
 	}
 	else {  // If the element to remove is not the first one in the list
 		JointListElement* currentElement = m_jointsList;
-		while (currentElement->next != nullptr) {
+		while (currentElement->next != null) {
 			if (currentElement->next->joint == _joint) {
 				JointListElement* elementToRemove = currentElement->next;
 				currentElement->next = elementToRemove->next;
 				ETK_DELETE(JointListElement, elementToRemove);
-				elementToRemove = nullptr;
+				elementToRemove = null;
 				break;
 			}
 			currentElement = currentElement->next;
@@ -129,7 +129,7 @@ ProxyShape* RigidBody::addCollisionShape(CollisionShape* _collisionShape,
 	// Create a new proxy collision shape to attach the collision shape to the body
 	ProxyShape* proxyShape = ETK_NEW(ProxyShape, this, _collisionShape, _transform, _mass);
 	// Add it to the list of proxy collision shapes of the body
-	if (m_proxyCollisionShapes == nullptr) {
+	if (m_proxyCollisionShapes == null) {
 		m_proxyCollisionShapes = proxyShape;
 	} else {
 		proxyShape->m_next = m_proxyCollisionShapes;
@@ -221,7 +221,7 @@ void RigidBody::recomputeMassInformation() {
 	m_centerOfMassLocal *= m_massInverse;
 	m_centerOfMassWorld = m_transform * m_centerOfMassLocal;
 	// Compute the total mass and inertia tensor using all the collision shapes
-	for (ProxyShape* shape = m_proxyCollisionShapes; shape != nullptr; shape = shape->m_next) {
+	for (ProxyShape* shape = m_proxyCollisionShapes; shape != null; shape = shape->m_next) {
 		// Get the inertia tensor of the collision shape in its local-space
 		etk::Matrix3x3 inertiaTensor;
 		shape->getCollisionShape()->computeLocalInertiaTensor(inertiaTensor, shape->getMass());
@@ -254,7 +254,7 @@ void RigidBody::updateBroadPhaseState() const {
 	DynamicsWorld& world = static_cast<DynamicsWorld&>(m_world);
 	const vec3 displacement = world.m_timeStep * m_linearVelocity;
 	// For all the proxy collision shapes of the body
-	for (ProxyShape* shape = m_proxyCollisionShapes; shape != nullptr; shape = shape->m_next) {
+	for (ProxyShape* shape = m_proxyCollisionShapes; shape != null; shape = shape->m_next) {
 		// Recompute the world-space AABB of the collision shape
 		AABB aabb;
 		EPHY_VERBOSE("         : " << aabb.getMin() << " " << aabb.getMax());

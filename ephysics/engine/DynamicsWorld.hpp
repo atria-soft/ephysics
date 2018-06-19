@@ -266,7 +266,7 @@ namespace ephysics {
 			void setTimeBeforeSleep(float timeBeforeSleep);
 			/**
 			 * @brief Set an event listener object to receive events callbacks.
-			 * @note If you use nullptr as an argument, the events callbacks will be disabled.
+			 * @note If you use null as an argument, the events callbacks will be disabled.
 			 * @param[in] _eventListener Pointer to the event listener object that will receive
 			 * event callbacks during the simulation
 			 */

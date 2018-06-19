@@ -59,7 +59,7 @@ void ContactManifold::removeContactPoint(uint32_t index) {
 	// Call the destructor explicitly and tell the memory allocator that
 	// the corresponding memory block is now free
 	ETK_DELETE(ContactPoint, m_contactPoints[index]);
-	m_contactPoints[index] = nullptr;
+	m_contactPoints[index] = null;
 	// If we don't remove the last index
 	if (index < m_nbContactPoints - 1) {
 		m_contactPoints[index] = m_contactPoints[m_nbContactPoints - 1];
@@ -187,7 +187,7 @@ void ContactManifold::clear() {
 		// Call the destructor explicitly and tell the memory allocator that
 		// the corresponding memory block is now free
 		ETK_DELETE(ContactPoint, m_contactPoints[iii]);
-		m_contactPoints[iii] = nullptr;
+		m_contactPoints[iii] = null;
 	}
 	m_nbContactPoints = 0;
 }

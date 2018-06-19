@@ -95,7 +95,7 @@ void CollisionDetection::reportCollisionBetweenShapes(CollisionCallback* _callba
 				                             contactPoint->getLocalPointOnBody1(),
 				                             contactPoint->getLocalPointOnBody2());
 				// Notify the collision callback about this new contact
-				if (_callback != nullptr) {
+				if (_callback != null) {
 					_callback->notifyContact(contactInfo);
 				}
 			}
@@ -134,7 +134,7 @@ void CollisionDetection::computeNarrowPhase() {
 			// TODO : Remove all the contact manifold of the overlapping pair from the contact manifolds list of the two bodies involved
 			// Destroy the overlapping pair
 			ETK_DELETE(OverlappingPair, it->second);
-			it->second = nullptr;
+			it->second = null;
 			it = m_overlappingPairs.erase(it);
 			continue;
 		} else {
@@ -160,7 +160,7 @@ void CollisionDetection::computeNarrowPhase() {
 		const CollisionShapeType shape2Type = shape2->getCollisionShape()->getType();
 		NarrowPhaseAlgorithm* narrowPhaseAlgorithm = m_collisionMatrix[shape1Type][shape2Type];
 		// If there is no collision algorithm between those two kinds of shapes
-		if (narrowPhaseAlgorithm == nullptr) {
+		if (narrowPhaseAlgorithm == null) {
 			continue;
 		}
 		// Notify the narrow-phase algorithm about the overlapping pair we are going to test
@@ -223,7 +223,7 @@ void CollisionDetection::computeNarrowPhaseBetweenShapes(CollisionCallback* _cal
 			// TODO : Remove all the contact manifold of the overlapping pair from the contact manifolds list of the two bodies involved
 			// Destroy the overlapping pair
 			ETK_DELETE(OverlappingPair, it->second);
-			it->second = nullptr;
+			it->second = null;
 			it = m_overlappingPairs.erase(it);
 			continue;
 		} else {
@@ -250,7 +250,7 @@ void CollisionDetection::computeNarrowPhaseBetweenShapes(CollisionCallback* _cal
 		const CollisionShapeType shape2Type = shape2->getCollisionShape()->getType();
 		NarrowPhaseAlgorithm* narrowPhaseAlgorithm = m_collisionMatrix[shape1Type][shape2Type];
 		// If there is no collision algorithm between those two kinds of shapes
-		if (narrowPhaseAlgorithm == nullptr) {
+		if (narrowPhaseAlgorithm == null) {
 			continue;
 		}
 		// Notify the narrow-phase algorithm about the overlapping pair we are going to test
@@ -295,7 +295,7 @@ void CollisionDetection::broadPhaseNotifyOverlappingPair(ProxyShape* _shape1, Pr
 	                                                                      _shape2->getCollisionShape()->getType());
 	// Create the overlapping pair and add it int32_to the set of overlapping pairs
 	OverlappingPair* newPair = ETK_NEW(OverlappingPair, _shape1, _shape2, nbMaxManifolds);
-	assert(newPair != nullptr);
+	assert(newPair != null);
 	m_overlappingPairs.set(pairID, newPair);
 	// Wake up the two bodies
 	_shape1->getBody()->setIsSleeping(false);
@@ -311,7 +311,7 @@ void CollisionDetection::removeProxyCollisionShape(ProxyShape* _proxyShape) {
 			// TODO : Remove all the contact manifold of the overlapping pair from the contact manifolds list of the two bodies involved
 			// Destroy the overlapping pair
 			ETK_DELETE(OverlappingPair, it->second);
-			it->second = nullptr;
+			it->second = null;
 			it = m_overlappingPairs.erase(it);
 		} else {
 			++it;
@@ -359,7 +359,7 @@ void CollisionDetection::addAllContactManifoldsToBodies() {
 }
 
 void CollisionDetection::addContactManifoldToBody(OverlappingPair* _pair) {
-	assert(_pair != nullptr);
+	assert(_pair != null);
 	CollisionBody* body1 = _pair->getShape1()->getBody();
 	CollisionBody* body2 = _pair->getShape2()->getBody();
 	const ContactManifoldSet& manifoldSet = _pair->getContactManifoldSet();
