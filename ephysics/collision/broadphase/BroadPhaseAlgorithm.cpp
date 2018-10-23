@@ -107,6 +107,16 @@ void BroadPhaseAlgorithm::updateProxyCollisionShape(ProxyShape* _proxyShape,
 	}
 }
 
+static bool sortFunction(const etk::Pair<int32_t,int32_t>& _pair1, const etk::Pair<int32_t,int32_t>& _pair2) {
+	if (_pair1.first < _pair2.first) {
+		return true;
+	}
+	if (_pair1.first == _pair2.first) {
+		return _pair1.second < _pair2.second;
+	}
+	return false;
+}
+
 void BroadPhaseAlgorithm::computeOverlappingPairs() {
 	m_potentialPairs.clear();
 	// For all collision shapes that have moved (or have been created) during the
@@ -133,17 +143,7 @@ void BroadPhaseAlgorithm::computeOverlappingPairs() {
 	// Reset the array of collision shapes that have move (or have been created) during the last simulation step
 	m_movedShapes.clear();
 	// Sort the array of potential overlapping pairs in order to remove duplicate pairs
-	m_potentialPairs.sort(0,
-	                      m_potentialPairs.size()-1,
-	                      [](const etk::Pair<int32_t,int32_t>& _pair1, const etk::Pair<int32_t,int32_t>& _pair2) {
-	                      	if (_pair1.first < _pair2.first) {
-	                      		return true;
-	                      	}
-	                      	if (_pair1.first == _pair2.first) {
-	                      		return _pair1.second < _pair2.second;
-	                      	}
-	                      	return false;
-	                      });
+	etk::algorithm::quickSort(m_potentialPairs, sortFunction);
 	// Check all the potential overlapping pairs avoiding duplicates to report unique
 	// overlapping pairs
 	uint32_t iii=0;

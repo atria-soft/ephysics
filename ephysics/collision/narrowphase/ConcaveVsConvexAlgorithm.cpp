@@ -11,6 +11,7 @@
 #include <ephysics/collision/narrowphase/ConcaveVsConvexAlgorithm.hpp>
 #include <ephysics/collision/CollisionDetection.hpp>
 #include <ephysics/engine/CollisionWorld.hpp>
+#include <etk/algorithm.hpp>
 
 using namespace ephysics;
 
@@ -91,17 +92,17 @@ void ConvexVsTriangleCallback::testTriangle(const vec3* _trianglePoints) {
 	algo->testCollision(shapeConvexInfo, shapeConcaveInfo, m_narrowPhaseCallback);
 }
 
+static bool sortFunction(const SmoothMeshContactInfo& _contact1, const SmoothMeshContactInfo& _contact2) {
+	return _contact1.contactInfo.penetrationDepth <= _contact2.contactInfo.penetrationDepth;
+}
+
 void ConcaveVsConvexAlgorithm::processSmoothMeshCollision(OverlappingPair* _overlappingPair,
                                                           etk::Vector<SmoothMeshContactInfo> _contactPoints,
                                                           NarrowPhaseCallback* _callback) {
 	// Set with the triangle vertices already processed to void further contacts with same triangle
 	etk::Vector<etk::Pair<int32_t, vec3>> processTriangleVertices;
 	// Sort the list of narrow-phase contacts according to their penetration depth
-	_contactPoints.sort(0,
-	                   _contactPoints.size()-1,
-	                   [](const SmoothMeshContactInfo& _contact1, const SmoothMeshContactInfo& _contact2) {
-	                    	return _contact1.contactInfo.penetrationDepth < _contact2.contactInfo.penetrationDepth;
-	                    });
+	etk::algorithm::quickSort(_contactPoints, sortFunction);
 	// For each contact point (from smaller penetration depth to larger)
 	etk::Vector<SmoothMeshContactInfo>::Iterator it;
 	for (it = _contactPoints.begin(); it != _contactPoints.end(); ++it) {
