@@ -106,10 +106,7 @@ namespace ephysics {
 			 * @brief Set the current position and orientation
 			 * @param transform The transformation of the body that transforms the local-space of the body int32_to world-space
 			 */
-			void setTransform(const etk::Transform3D& _transform) {
-				m_transform = _transform;
-				updateBroadPhaseState();
-			}
+			virtual void setTransform(const etk::Transform3D& _transform);
 			/**
 			 * @brief Add a collision shape to the body. Note that you can share a collision shape between several bodies using the same collision shape instance to
 			 * when you add the shape to the different bodies. Do not forget to delete the collision shape you have created at the end of your program.

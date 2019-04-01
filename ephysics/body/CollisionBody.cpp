@@ -23,6 +23,13 @@ CollisionBody::CollisionBody(const etk::Transform3D& _transform, CollisionWorld&
   m_contactManifoldsList(null),
   m_world(_world) {
 	
+	EPHY_DEBUG("         set transform: " << _transform);
+	if (isnan(_transform.getPosition().x()) == true) { // check NAN
+		EPHY_CRITICAL("         set transform: " << _transform);
+	}
+	if (isinf(_transform.getOrientation().z()) == true) {
+		EPHY_CRITICAL("         set transform: " << _transform);
+	}
 }
 
 CollisionBody::~CollisionBody() {
@@ -40,6 +47,17 @@ inline void CollisionBody::setType(BodyType _type) {
 	}
 }
 
+void CollisionBody::setTransform(const etk::Transform3D& _transform) {
+	EPHY_DEBUG("         set transform: " << m_transform << " ==> " << _transform);
+	if (isnan(_transform.getPosition().x()) == true) { // check NAN
+		EPHY_CRITICAL("         set transform: " << m_transform << " ==> " << _transform);
+	}
+	if (isinf(_transform.getOrientation().z()) == true) {
+		EPHY_CRITICAL("         set transform: " << m_transform << " ==> " << _transform);
+	}
+	m_transform = _transform;
+	updateBroadPhaseState();
+}
 
 ProxyShape* CollisionBody::addCollisionShape(CollisionShape* _collisionShape,
                                              const etk::Transform3D& _transform) {

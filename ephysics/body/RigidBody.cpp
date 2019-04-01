@@ -182,8 +182,25 @@ void RigidBody::setIsSleeping(bool _isSleeping) {
 	Body::setIsSleeping(_isSleeping);
 }
 
+void RigidBody::updateTransformWithCenterOfMass() {
+	// Translate the body according to the translation of the center of mass position
+	m_transform.setPosition(m_centerOfMassWorld - m_transform.getOrientation() * m_centerOfMassLocal);
+	if (isnan(m_transform.getPosition().x()) == true) {
+		EPHY_CRITICAL("updateTransformWithCenterOfMass: " << m_transform);
+	}
+	if (isinf(m_transform.getOrientation().z()) == true) {
+		EPHY_CRITICAL("         set transform: " << m_transform);
+	}
+}
 
 void RigidBody::setTransform(const etk::Transform3D& _transform) {
+	EPHY_DEBUG("         set transform: " << m_transform << " ==> " << _transform);
+	if (isnan(_transform.getPosition().x()) == true) {
+		EPHY_CRITICAL("         set transform: " << m_transform << " ==> " << _transform);
+	}
+	if (isinf(_transform.getOrientation().z()) == true) {
+		EPHY_CRITICAL("         set transform: " << m_transform << " ==> " << _transform);
+	}
 	m_transform = _transform;
 	const vec3 oldCenterOfMass = m_centerOfMassWorld;
 	// Compute the new center of mass in world-space coordinates
@@ -258,6 +275,7 @@ void RigidBody::updateBroadPhaseState() const {
 		// Recompute the world-space AABB of the collision shape
 		AABB aabb;
 		EPHY_VERBOSE("         : " << aabb.getMin() << " " << aabb.getMax());
+		EPHY_VERBOSE("         m_transform: " << m_transform);
 		shape->getCollisionShape()->computeAABB(aabb, m_transform *shape->getLocalToBodyTransform());
 		EPHY_VERBOSE("         : " << aabb.getMin() << " " << aabb.getMax());
 		// Update the broad-phase state for the proxy collision shape

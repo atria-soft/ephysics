@@ -53,10 +53,7 @@ namespace ephysics {
 			/**
 			 * @brief Update the transform of the body after a change of the center of mass
 			 */
-			void updateTransformWithCenterOfMass() {
-				// Translate the body according to the translation of the center of mass position
-				m_transform.setPosition(m_centerOfMassWorld - m_transform.getOrientation() * m_centerOfMassLocal);
-			}
+			void updateTransformWithCenterOfMass();
 			void updateBroadPhaseState() const override;
 		public :
 			/**
@@ -75,7 +72,7 @@ namespace ephysics {
 			 * @brief Set the current position and orientation
 			 * @param[in] _transform The transformation of the body that transforms the local-space of the body int32_to world-space
 			 */
-			virtual void setTransform(const etk::Transform3D& _transform);
+			void setTransform(const etk::Transform3D& _transform) override;
 			/**
 			 * @brief Get the mass of the body
 			 * @return The mass (in kilograms) of the body
